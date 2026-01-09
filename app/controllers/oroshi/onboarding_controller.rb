@@ -7,10 +7,10 @@ class Oroshi::OnboardingController < ApplicationController
 
   # Ordered onboarding steps grouped by phase
   STEPS = {
-    foundation: %w[welcome company_info],
-    setup: %w[suppliers products inventory],
-    configuration: %w[shipping notifications],
-    completion: %w[review]
+    foundation: %w[company_info supply_reception_time],
+    supply_chain: %w[supplier_organization supplier supply_type supply_type_variation],
+    sales: %w[buyer product product_variation],
+    shipping: %w[shipping_organization shipping_method shipping_receptacle order_category]
   }.freeze
 
   ALL_STEPS = STEPS.values.flatten.freeze
@@ -29,6 +29,12 @@ class Oroshi::OnboardingController < ApplicationController
   end
 
   def update
+    # Save step-specific data
+    unless save_step_data
+      render :show, status: :unprocessable_entity
+      return
+    end
+
     # Mark step complete and redirect to next
     @progress.mark_step_complete!(@step)
     @progress.update!(current_step: next_step)
@@ -66,5 +72,25 @@ class Oroshi::OnboardingController < ApplicationController
   def next_step
     current_index = ALL_STEPS.index(@step)
     ALL_STEPS[current_index + 1] if current_index
+  end
+
+  def save_step_data
+    case @step
+    when "company_info"
+      save_company_info
+    else
+      true
+    end
+  end
+
+  def save_company_info
+    return false if company_settings_params[:name].blank?
+
+    Setting.find_or_initialize_by(name: "oroshi_company_settings")
+           .update(settings: company_settings_params.to_h)
+  end
+
+  def company_settings_params
+    params.require(:company_settings).permit(:name, :postal_code, :address, :phone, :fax, :mail, :web, :invoice_number)
   end
 end

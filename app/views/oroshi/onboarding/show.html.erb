@@ -1,14 +1,11 @@
 <%= form_with url: oroshi_onboarding_path(@step), method: :patch, id: "onboarding-form", local: true do |f| %>
-  <h2 class="mb-4"><%= @step.titleize %></h2>
-  
-  <div class="mb-4">
-    <p class="text-muted">
-      This is the <%= @step %> step. Content will be implemented in future stories.
-    </p>
-  </div>
-  
-  <%# Step-specific content will go here %>
-  <div class="alert alert-info">
-    <strong>Coming soon:</strong> Form fields for <%= @step %> configuration.
-  </div>
+  <% partial_path = "oroshi/onboarding/steps/#{@step}" %>
+  <% if lookup_context.template_exists?(partial_path, [], true) %>
+    <%= render partial: partial_path, locals: { f: f } %>
+  <% else %>
+    <h2 class="mb-4"><%= @step.titleize %></h2>
+    <div class="alert alert-info">
+      <strong>Coming soon:</strong> Form fields for <%= @step %> configuration.
+    </div>
+  <% end %>
 <% end %>

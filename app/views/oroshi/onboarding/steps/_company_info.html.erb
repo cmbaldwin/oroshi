@@ -1,0 +1,90 @@
+<h2 class="mb-4">会社情報 <small class="text-muted">Company Information</small></h2>
+
+<p class="text-muted mb-4">
+  基本的な会社情報を入力してください。この情報は請求書やその他の書類に表示されます。
+</p>
+
+<% settings = Setting.find_or_initialize_by(name: 'oroshi_company_settings') %>
+
+<%= f.fields_for :company_settings do |osf| %>
+  <div class="row">
+    <div class="col-12 mb-3">
+      <%= osf.label 'name', '会社名 *', class: 'form-label' %>
+      <%= osf.text_field 'name',
+                  placeholder: '株式会社〇〇',
+                  value: get_setting(settings, 'name'),
+                  required: true,
+                  class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <%= osf.label 'postal_code', '郵便番号 *', class: 'form-label' %>
+      <div class="input-group">
+        <span class="input-group-text">〒</span>
+        <%= osf.text_field 'postal_code',
+                            placeholder: '〇〇〇-〇〇〇〇',
+                            value: get_setting(settings, 'postal_code'),
+                            required: true,
+                            class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-md-8 mb-3">
+      <%= osf.label 'address', '住所 *', class: 'form-label' %>
+      <%= osf.text_field 'address',
+                  placeholder: '〇〇県〇〇市〇〇町〇〇-〇〇-〇〇',
+                  value: get_setting(settings, 'address'),
+                  required: true,
+                  class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= osf.label 'phone', '電話番号', class: 'form-label' %>
+      <%= osf.text_field 'phone',
+                  placeholder: '〇〇〇-〇〇〇-〇〇〇〇',
+                  value: get_setting(settings, 'phone'),
+                  class: 'form-control' %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= osf.label 'fax', 'FAX番号', class: 'form-label' %>
+      <%= osf.text_field 'fax',
+                  placeholder: '〇〇〇-〇〇〇-〇〇〇〇',
+                  value: get_setting(settings, 'fax'),
+                  class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= osf.label 'mail', 'メールアドレス', class: 'form-label' %>
+      <%= osf.text_field 'mail',
+                  placeholder: 'info@domain.com',
+                  value: get_setting(settings, 'mail'),
+                  class: 'form-control' %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= osf.label 'web', 'ウェブサイト', class: 'form-label' %>
+      <%= osf.text_field 'web',
+                  placeholder: 'www.domain.com',
+                  value: get_setting(settings, 'web'),
+                  class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= osf.label 'invoice_number', '適格請求書発行事業者番号', class: 'form-label' %>
+      <%= osf.text_field 'invoice_number',
+                  placeholder: 'T1234567890123',
+                  value: get_setting(settings, 'invoice_number'),
+                  class: 'form-control' %>
+      <div class="form-text">インボイス制度用の登録番号</div>
+    </div>
+  </div>
+<% end %>

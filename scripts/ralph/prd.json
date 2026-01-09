@@ -587,8 +587,8 @@
         "Typecheck passes"
       ],
       "priority": 34,
-      "passes": false,
-      "notes": "Generate from Japanese to other locales. Maintain YAML formatting and comments."
+      "passes": true,
+      "notes": "Implemented LocaleSync::Generator with dry-run mode, locale targeting, and automatic YAML file writing. Added locale:sync task for detect+generate workflow."
     },
     {
       "id": "US-035",

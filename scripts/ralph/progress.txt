@@ -639,3 +639,29 @@ Learnings:
 - Oroshi-specific glossary defined as frozen hash constant (OROSHI_GLOSSARY.freeze)
 - Test pattern: setup/teardown hooks for ENV variables, WebMock.disable_net_connect! in setup
 - Comprehensive test coverage: success cases, error handling, rate limiting, caching, context support
+
+[2026-01-09 19:45:00] Story: US-034 - Create locale generation rake task
+Implemented: Created LocaleSync::Generator class for AI-powered translation generation
+Files:
+  - lib/tasks/locale_sync.rake (added Generator class + generate/sync tasks)
+  - scripts/ralph/prd.json (updated passes: true)
+Tests: PASSING (rubocop clean, syntax verified, dry-run tested)
+Learnings:
+- Rake tasks can have multiple task definitions in same namespace block
+- Reusing Detector class: detector.instance_variable_set/get to access private state
+- detector.send(:private_method) to call private methods from Generator
+- Namespace-based file routing: common.* → config/locales/en/common.yml, oroshi.dashboard.* → config/locales/en/oroshi/dashboard.yml
+- File path manipulation: file_path.to_s.gsub("/#{target_locale}/", "/#{source_locale}/") for source locale lookup
+- YAML.load_file returns hash with root locale key - must access via yaml[locale] to get data
+- YAML writing: { target_locale => data }.to_yaml creates properly formatted YAML with root key
+- FileUtils.mkdir_p(path.dirname) ensures directory exists before writing file
+- Nested hash value access: parts.each { |part| current = current[part] } pattern for deep key lookup
+- Nested hash value setting: parts[0..-2].each { |part| current[part] ||= {} } creates intermediate hashes
+- Idempotent translation: check get_nested_value(target_data, key) before generating to avoid overwriting
+- TranslationService returns original text on error (graceful fallback when API keys missing)
+- ENV vars in rake tasks: DRY_RUN=true, LOCALE=en, SOURCE_LOCALE=ja for flexible configuration
+- bin/rails -T lists available rake tasks with descriptions
+- Generator tracks counts: @generated_count, @skipped_count, @error_count for summary reporting
+- Instance variables in rake tasks don't persist between method calls - use instance vars for stateful tracking
+- Three rake tasks created: locale:detect (existing), locale:generate (new), locale:sync (new)
+- locale:sync uses Rake::Task["locale:detect"].invoke to chain tasks sequentially

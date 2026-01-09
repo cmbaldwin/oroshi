@@ -180,3 +180,15 @@ Learnings:
 - supply_type_variation_ids HABTM shows empty message when no variations exist yet (created in later step)
 - Step uses same pattern as supplier_organization: table of existing + add form card
 - Partial was already implemented but prd.json wasn't updated to passes: true
+
+[2026-01-09 23:30:00] Story: US-011 - Supply type onboarding step
+Implemented: Created supply type onboarding step partial and controller method
+Files:
+  - app/views/oroshi/onboarding/steps/_supply_type.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_supply_type)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- SupplyType model requires: name, units, handle, liquid (boolean with inclusion validation)
+- liquid field uses inclusion: { in: [true, false] } so checkbox works correctly
+- handle is system identifier for referencing supply types programmatically
+- Same pattern: table + form card, delete via button_to with :deleted return

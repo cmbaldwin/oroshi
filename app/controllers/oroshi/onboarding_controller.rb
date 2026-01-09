@@ -90,6 +90,10 @@ class Oroshi::OnboardingController < ApplicationController
       save_supply_reception_time
     when "supplier_organization"
       save_supplier_organization
+    when "supplier"
+      save_supplier
+    when "supply_type"
+      save_supply_type
     else
       true
     end
@@ -153,5 +157,55 @@ class Oroshi::OnboardingController < ApplicationController
       :entity_name, :entity_type, :country_id, :subregion_id, :micro_region,
       :invoice_number, :fax, :free_entry, supply_reception_time_ids: []
     )
+  end
+
+  def save_supplier
+    # Handle deletion if requested
+    if params[:delete_supplier_id].present?
+      Oroshi::Supplier.find_by(id: params[:delete_supplier_id])&.destroy
+      return :deleted
+    end
+
+    # Add new supplier if form submitted with data
+    sup_params = params[:supplier]
+    if sup_params.present? && sup_params[:company_name].present?
+      supplier = Oroshi::Supplier.new(supplier_params)
+      unless supplier.save
+        flash.now[:alert] = supplier.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    # Validation: at least one must exist to proceed
+    Oroshi::Supplier.any?
+  end
+
+  def supplier_params
+    params.require(:supplier).permit(
+      :company_name, :supplier_number, :representatives, :invoice_number,
+      :supplier_organization_id, supply_type_variation_ids: []
+    )
+  end
+
+  def save_supply_type
+    if params[:delete_supply_type_id].present?
+      Oroshi::SupplyType.find_by(id: params[:delete_supply_type_id])&.destroy
+      return :deleted
+    end
+
+    st_params = params[:supply_type]
+    if st_params.present? && st_params[:name].present?
+      supply_type = Oroshi::SupplyType.new(supply_type_params)
+      unless supply_type.save
+        flash.now[:alert] = supply_type.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    Oroshi::SupplyType.any?
+  end
+
+  def supply_type_params
+    params.require(:supply_type).permit(:name, :units, :handle, :liquid)
   end
 end

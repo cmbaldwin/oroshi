@@ -1,0 +1,106 @@
+<% supply_types = Oroshi::SupplyType.all %>
+
+<h2 class="mb-4">材料タイプ <small class="text-muted">Supply Type</small></h2>
+
+<p class="text-muted mb-4">
+  取り扱う材料の種類を登録してください。例：みかん、レモン、海苔など
+</p>
+
+<% if supply_types.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">登録済みの材料タイプ</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>名前</th>
+              <th>単位</th>
+              <th>ハンドル</th>
+              <th>液体</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% supply_types.each do |st| %>
+              <tr>
+                <td><%= st.name %></td>
+                <td><%= st.units %></td>
+                <td><code><%= st.handle %></code></td>
+                <td><%= st.liquid? ? '✓' : '—' %></td>
+                <td class="text-end">
+                  <%= button_to "削除",
+                                oroshi_onboarding_path(@step, delete_supply_type_id: st.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: "この材料タイプを削除しますか？関連する品種も削除されます。" } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    材料タイプがまだ登録されていません。少なくとも1つ追加してください。
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">新しい材料タイプを追加</h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :supply_type do |st| %>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= st.label :name, '名前 *', class: 'form-label' %>
+          <%= st.text_field :name,
+                           placeholder: '例: みかん、レモン、海苔',
+                           required: supply_types.empty?,
+                           class: 'form-control' %>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= st.label :units, '単位 *', class: 'form-label' %>
+          <%= st.text_field :units,
+                           placeholder: '例: kg、個、枚',
+                           required: supply_types.empty?,
+                           class: 'form-control' %>
+          <div class="form-text">数量を計る単位（kg、個、本など）</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= st.label :handle, 'ハンドル *', class: 'form-label' %>
+          <%= st.text_field :handle,
+                           placeholder: '例: mikan、lemon、nori',
+                           required: supply_types.empty?,
+                           class: 'form-control' %>
+          <div class="form-text">システム識別子（英数字、アンダースコアのみ）</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= st.label :liquid, '液体', class: 'form-label' %>
+          <div class="form-check form-switch mt-2">
+            <%= st.check_box :liquid, class: 'form-check-input' %>
+            <label class="form-check-label text-muted">この材料は液体です</label>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if supply_types.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    続行するには少なくとも1つの材料タイプが必要です。
+  </div>
+<% end %>

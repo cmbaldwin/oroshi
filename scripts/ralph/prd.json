@@ -200,8 +200,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": "Step name: supply_type"
+      "passes": true,
+      "notes": "Created step partial with table of existing types, add form with name/units/handle/liquid fields. Controller handles create/delete with validation."
     },
     {
       "id": "US-012",

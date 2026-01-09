@@ -515,8 +515,8 @@
         "Typecheck passes"
       ],
       "priority": 30,
-      "passes": false,
-      "notes": "Locale file created with 90+ translations covering all steps, phases, buttons, and validation messages. Views need systematic conversion to use t() helpers. Form labels should leverage activerecord.attributes translations."
+      "passes": true,
+      "notes": "Fully completed. Converted onboarding layout, progress indicator, all 13 step partials, and checklist sidebar to use t() helpers. Added 90+ translations to onboarding.yml. All UI text now in Japanese with no mixed languages."
     },
     {
       "id": "US-031",

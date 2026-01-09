@@ -8,3 +8,43 @@ ja:
         password: パスワード
         password_confirmation: 確認用パスワード
         remember_me: 次回から自動的にログイン
+      oroshi/buyer:
+        name: 名前
+        handle: ハンドル
+        color: 色
+        entity_type: 事業体タイプ
+        handling_cost: 手数料
+        daily_cost: 日次費用
+        optional_cost: オプション費用
+        commission_percentage: 手数料率
+      oroshi/product_inventory:
+        manufacture_date: 製造日
+        expiration_date: 消費期限
+        quantity: 数量
+        product_variation: 製品バリエーション
+      oroshi/invoice:
+        start_date: 開始日
+        end_date: 終了日
+        invoice_layout: 請求書レイアウト
+        send_email: メール送信
+        send_at: 送信日時
+        supplier_organizations: 仕入先組織
+    errors:
+      models:
+        oroshi/buyer:
+          attributes:
+            color:
+              invalid_hex: "有効な16進数カラーでなければならない"
+        oroshi/product_inventory:
+          attributes:
+            expiration_date:
+              must_be_after_manufacture: "製造日以降であること"
+            base:
+              immutable_fields: "製造日、消費期限、製品バリエーションは作成後に変更することはできません。"
+          uniqueness_error: "この在庫はもうすでに存在してます"
+        oroshi/invoice:
+          attributes:
+            supplier_organizations:
+              at_least_one: "少なくとも1つ必要です"
+            base:
+              cannot_delete_sent: "送信済みの仕切り書を削除できません。"

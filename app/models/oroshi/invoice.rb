@@ -33,13 +33,13 @@ class Oroshi::Invoice < ApplicationRecord
   private
 
   def at_least_one_supplier_organization
-    errors.add(:supplier_organizations, "\u5C11\u306A\u304F\u3068\u30821\u3064\u5FC5\u8981\u3067\u3059") if supplier_organizations.empty?
+    errors.add(:supplier_organizations, :at_least_one) if supplier_organizations.empty?
   end
 
   def ensure_not_sent
     return unless sent_at.present?
 
-    errors.add(:base, "\u9001\u4FE1\u6E08\u307F\u306E\u4ED5\u5207\u308A\u66F8\u3092\u524A\u9664\u3067\u304D\u307E\u305B\u3093\u3002")
+    errors.add(:base, :cannot_delete_sent)
     throw(:abort)
   end
 end

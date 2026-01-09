@@ -149,8 +149,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": "Step name: supply_reception_time"
+      "passes": true,
+      "notes": "Created partial with table of existing times and add form. Controller handles create/delete. Delete stays on same step with :deleted return."
     },
     {
       "id": "US-009",

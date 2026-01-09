@@ -140,3 +140,16 @@ Learnings:
 - save_step_data pattern: case/when to dispatch to step-specific save methods
 - company_info requires company name validation before proceeding
 - Setting model stores JSONB in settings column, accessed via .settings hash
+
+[2026-01-09 21:00:00] Story: US-008 - Supply reception time onboarding step
+Implemented: Created supply_reception_time step with add/delete functionality
+Files:
+  - app/views/oroshi/onboarding/steps/_supply_reception_time.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_supply_reception_time)
+Tests: PASSING (17 tests, 33 assertions in onboarding controller)
+Learnings:
+- Use :deleted symbol return value to signal deletion action; check in update action to stay on same step
+- Check params[:key].present? before accessing nested params to avoid ActionController::ParameterMissing
+- Required fields only when collection is empty: required: collection.empty?
+- Button_to with method: :patch can include extra params in URL for deletion IDs
+- Oroshi::SupplyReceptionTime requires hour (integer) and time_qualifier (string)

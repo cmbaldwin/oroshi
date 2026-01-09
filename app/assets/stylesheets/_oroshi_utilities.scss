@@ -1,0 +1,125 @@
+// Oroshi Utility Classes
+// Custom utility classes for common inline style patterns
+// These complement Bootstrap's utility classes
+
+// Width utilities
+.min-w-3 {
+  min-width: 3rem;
+}
+.min-w-12 {
+  min-width: 12rem;
+}
+.min-w-15 {
+  min-width: 15rem;
+}
+.min-w-16 {
+  min-width: 16rem;
+}
+.min-w-18 {
+  min-width: 18rem;
+}
+.w-18 {
+  width: 18rem;
+}
+.w-8 {
+  width: 8rem;
+}
+.max-w-150px {
+  max-width: 150px;
+}
+.max-w-800px {
+  max-width: 800px;
+}
+.min-w-270px {
+  min-width: 270px;
+}
+
+// Height utilities
+.min-h-45 {
+  min-height: 45rem;
+}
+.max-h-65vh {
+  max-height: 65vh;
+}
+.max-h-70vh {
+  max-height: 70vh;
+}
+.max-h-75vh {
+  max-height: 75vh;
+}
+
+// Color circle/badge (used in forms for order categories, buyers)
+.color-circle {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+// Order category color display
+.order-category-color {
+  @extend .color-circle;
+}
+
+// Supply subtotal column widths
+.subtotal-width {
+  width: 3rem;
+}
+
+// Supply input handle width
+.supply-handle-input {
+  max-width: 150px;
+}
+
+// Supply disabled field wrapper
+.supply-disabled-field {
+  width: auto;
+}
+
+// Cell padding utilities for order production grid
+.cell-padding-sm {
+  padding: 0.6rem;
+}
+
+.cell-padding-lg {
+  padding: 1.15rem;
+}
+
+// Material navigation card
+.material-nav-card {
+  min-width: 15rem;
+}
+
+.material-nav-list {
+  max-height: 65vh;
+}
+
+// Dashboard navigation
+.dashboard-nav {
+  min-width: 15rem;
+}
+
+// Product variations card
+.product-variations-card {
+  min-width: 18rem;
+  width: 18rem;
+}
+
+.product-variations-body {
+  max-height: 75vh;
+}
+
+// Invoice container
+.invoice-container {
+  max-width: 800px;
+}
+
+// Revenue navigation
+.revenue-nav {
+  min-width: 12rem;
+}
+
+// Shipping columns
+.shipping-col-label {
+  width: 8rem;
+}

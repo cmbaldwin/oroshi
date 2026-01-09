@@ -29,6 +29,9 @@ check_credits() {
     claude)
       test_output=$(echo "Respond with only the word: OK" | timeout 30 claude --print --dangerously-skip-permissions 2>&1) || exit_code=$?
       ;;
+    copilot)
+      test_output=$(timeout 30 copilot -p "Respond with only the word: OK" --allow-all-tools -s 2>&1) || exit_code=$?
+      ;;
     *)
       return 1
       ;;
@@ -61,7 +64,13 @@ select_provider() {
     return 0
   fi
 
-  echo "ERROR: Both providers unavailable." >&2
+  echo "Claude unavailable. Checking copilot..." >&2
+  if check_credits "copilot"; then
+    echo "copilot"
+    return 0
+  fi
+
+  echo "ERROR: All providers unavailable." >&2
   return 1
 }
 
@@ -76,6 +85,9 @@ run_agent() {
       ;;
     claude)
       cat "$prompt_file" | claude --print --dangerously-skip-permissions 2>&1
+      ;;
+    copilot)
+      copilot -p "$(cat "$prompt_file")" --allow-all-tools 2>&1
       ;;
   esac
 }

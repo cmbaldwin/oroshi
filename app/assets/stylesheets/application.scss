@@ -1,0 +1,40 @@
+// Bootstrap 5
+@use "sass:map";
+@import "funabiki"; // Load our custom variables first
+@import "bootstrap";
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
+
+// Animate and Flatpickr
+@import "scaffolds";
+@import "flatpickr/flatpickr"; // flatpickr@4.6.13
+
+// Tippy Theme, Light-border
+@import "tippy.js/light-border";
+
+// Controller specific
+@import "controllers/application";
+
+// Secure Credentials Styling
+.secure-credential-locked {
+  background-color: #f8f9fa !important;
+  border-color: #ffc107 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.secure-credential-unlocked {
+  border-color: #198754 !important;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+  transition: all 0.3s ease;
+}
+
+.secure-credential-unlock-btn {
+  transition: all 0.2s ease;
+}
+
+.secure-credential-unlock-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

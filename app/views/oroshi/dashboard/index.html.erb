@@ -1,0 +1,23 @@
+<%= turbo_frame_tag 'app' do %>
+<% title "Funabiki Online - #{t('.dashboard')}" %>
+<div data-controller="oroshi--dashboard">
+
+    <%= render 'oroshi_modal' %>
+
+    <div class="container-fluid d-flex flex-column flex-md-row align-items-start align-middle justify-content-center gap-2">
+        <div id="dashboard-nav" class="nav flex-column nav-pills me-3 text-center align-self-center align-self-md-start" style="min-width: 15rem;" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <%= dashboard_nav_link(t('.home'), oroshi_dashboard_home_path, active: true) %>
+            <%= dashboard_nav_link(t('.suppliers_organizations'), oroshi_dashboard_suppliers_organizations_path) %>
+            <%= dashboard_nav_link(t('.supply_types'), oroshi_dashboard_supply_types_path) %>
+            <%= dashboard_nav_link(t('.shipping'), oroshi_dashboard_shipping_path) %>
+            <%= dashboard_nav_link(t('.buyers'), oroshi_dashboard_buyers_path) %>
+            <%= dashboard_nav_link(t('.materials'), oroshi_dashboard_materials_path) %>
+            <%= dashboard_nav_link(t('.products'), oroshi_dashboard_products_path) %>
+        </div>
+        <div id="dashboard-tab-pane" class="tab-content flex-grow-1 align-self-stretch card m-0 p-0" id="v-pills-tabContent">
+            <%= dashboard_tab_pane(oroshi_dashboard_home_path) %>
+        </div>
+    </div>
+
+</div>
+<% end %>

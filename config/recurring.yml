@@ -1,0 +1,11 @@
+# Solid Queue Recurring Tasks Configuration
+# https://github.com/rails/solid_queue#recurring-tasks
+#
+# Timezones: All schedules use Asia/Tokyo timezone (JST) for consistency
+
+production:
+  # Oroshi mail check and send (every 10 minutes)
+  oroshi_mail_check_and_send:
+    class: Oroshi::MailerJob
+    schedule: "*/10 * * * * Asia/Tokyo"
+    description: "Check for Oroshi invoice mail that needs to be sent"

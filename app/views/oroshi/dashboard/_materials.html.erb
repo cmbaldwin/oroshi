@@ -1,0 +1,25 @@
+<%= turbo_frame_tag 'dashboard_frame' do %>
+<div class="d-flex justify-content-between justify-items-center align-middle">
+    <h3 class="card-title ms-1 mb-2"><%= t('oroshi.dashboard.index.materials') %></h3>
+    <%= information_tippy('materials') %>
+</div>
+
+<div class="card d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around">
+    <div class="w-100">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <%= dashboard_frame_tab_link('出荷容器', oroshi_shipping_receptacles_path, 'shipping_receptacles', active: true) %>
+                <%= dashboard_frame_tab_link('商品包装', oroshi_packagings_path, 'packagings') %>
+                <%= dashboard_frame_tab_link('製造材料', oroshi_material_categories_path, 'material_categories') %>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="nav-tabContent">
+                <%= dashboard_frame_tab_pane('shipping_receptacles', oroshi_shipping_receptacles_path, active: true) %>
+                <%= dashboard_frame_tab_pane('packagings', oroshi_packagings_path) %>
+                <%= dashboard_frame_tab_pane('material_categories', oroshi_material_categories_path) %>
+            </div>
+        </div>
+    </div>
+</div>
+<% end %>

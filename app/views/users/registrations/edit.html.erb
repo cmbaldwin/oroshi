@@ -1,0 +1,151 @@
+<%= turbo_frame_tag 'app' do %>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <h2>ユーザーアカウント編集</h2>
+
+            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+            <%= f.error_notification %>
+
+            <div class="form-inputs">
+                <%= f.input :email, required: true, autofocus: true %>
+
+                <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+                <% end %>
+
+                <%= f.input :password, autocomplete: "off", hint: "変更したくない場合は入力なし", required: false %>
+                <%= f.input :password_confirmation, required: false %>
+                <%= f.input :current_password, hint: "新しいパスワード確認は必要です。", required: true %>
+            </div>
+
+            <div class="form-actions">
+                <%= f.button :submit, "更新", :class => 'btn-secondary mb-3' %>
+            </div>
+            <% end %>
+
+            <% if resource.admin? %>
+            <% if resource.data %>
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-black">
+                    <h5 class="mb-0">
+                        <i class="bi bi-shield-lock me-2"></i>
+                        Yahoo API 自動処理認証設定
+                    </h5>
+                    <small>Yahoo注文の自動取得・処理に使用されるOAuth認証トークン</small>
+                </div>
+                <div class="card-body">
+                    <%= form_for :yahoo_auth, url: yahoo_token_update_path do |tf| %>
+                    <div class="form-inputs">
+
+                        <!-- Access Token -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <strong>Access Token</strong> <small class="text-muted">(Yahoo API アクセス用)</small>
+                                <% if resource.yahoo_token?('access_token') %>
+                                <span class="badge bg-success ms-2">設定済み</span>
+                                <% else %>
+                                <span class="badge bg-warning ms-2">未設定</span>
+                                <% end %>
+                            </label>
+                            <% if resource.yahoo_token?('access_token') %>
+                            <div class="mb-2">
+                                <small class="text-muted">現在の値:</small>
+                                <code class="d-block bg-light p-2 rounded"><%= resource.masked_yahoo_token('access_token') %></code>
+                            </div>
+                            <% end %>
+                            <%= tf.password_field "data[yahoo][authorization][access_token]",
+                            placeholder: resource.yahoo_token?('access_token') ? '新しいAccess Tokenを入力（変更する場合のみ）' : 'Access Tokenを入力',
+                            value: '',
+                            class: 'form-control',
+                            autocomplete: 'new-password' %>
+                            <small class="form-text text-muted">
+                                <%= resource.yahoo_token?('access_token') ? '変更する場合のみ新しい値を入力してください' : 'Access Tokenを入力してください' %>
+                            </small>
+                        </div>
+
+                        <!-- Refresh Token -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <strong>Refresh Token</strong> <small class="text-muted">(トークン自動更新用)</small>
+                                <% if resource.yahoo_token?('refresh_token') %>
+                                <span class="badge bg-success ms-2">設定済み</span>
+                                <% else %>
+                                <span class="badge bg-warning ms-2">未設定</span>
+                                <% end %>
+                            </label>
+                            <% if resource.yahoo_token?('refresh_token') %>
+                            <div class="mb-2">
+                                <small class="text-muted">現在の値:</small>
+                                <code class="d-block bg-light p-2 rounded"><%= resource.masked_yahoo_token('refresh_token') %></code>
+                            </div>
+                            <% end %>
+                            <%= tf.password_field "data[yahoo][authorization][refresh_token]",
+                            placeholder: resource.yahoo_token?('refresh_token') ? '新しいRefresh Tokenを入力（変更する場合のみ）' : 'Refresh Tokenを入力',
+                            value: '',
+                            class: 'form-control',
+                            autocomplete: 'new-password' %>
+                            <small class="form-text text-muted">
+                                <%= resource.yahoo_token?('refresh_token') ? '変更する場合のみ新しい値を入力してください' : 'Refresh Tokenを入力してください' %>
+                            </small>
+                        </div>
+
+                        <!-- ID Token -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <strong>ID Token</strong> <small class="text-muted">(ユーザー認証用)</small>
+                                <% if resource.yahoo_token?('id_token') %>
+                                <span class="badge bg-success ms-2">設定済み</span>
+                                <% else %>
+                                <span class="badge bg-warning ms-2">未設定</span>
+                                <% end %>
+                            </label>
+                            <% if resource.yahoo_token?('id_token') %>
+                            <div class="mb-2">
+                                <small class="text-muted">現在の値:</small>
+                                <code class="d-block bg-light p-2 rounded"><%= resource.masked_yahoo_token('id_token') %></code>
+                            </div>
+                            <% end %>
+                            <%= tf.password_field "data[yahoo][authorization][id_token]",
+                            placeholder: resource.yahoo_token?('id_token') ? '新しいID Tokenを入力（変更する場合のみ）' : 'ID Tokenを入力',
+                            value: '',
+                            class: 'form-control',
+                            autocomplete: 'new-password' %>
+                            <small class="form-text text-muted">
+                                <%= resource.yahoo_token?('id_token') ? '変更する場合のみ新しい値を入力してください' : 'ID Tokenを入力してください' %>
+                            </small>
+                        </div>
+
+                        <!-- Non-sensitive fields (keep as regular text fields) -->
+                        <div class="mb-3">
+                            <label class="form-label">Expires In</label>
+                            <%= tf.text_field "data[yahoo][authorization][expires_in]",
+                            value: resource.safe_data.dig(:yahoo, :authorization, 'expires_in'),
+                            class: 'form-control' %>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Token Type</label>
+                            <%= tf.text_field "data[yahoo][authorization][token_type]",
+                            value: resource.safe_data.dig(:yahoo, :authorization, 'token_type'),
+                            class: 'form-control' %>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Acquired</label>
+                            <%= tf.text_field "data[yahoo][authorization][acquired]",
+                            value: resource.safe_data.dig(:yahoo, :authorization, :acquired),
+                            class: 'form-control' %>
+                        </div>
+
+                    </div>
+                    <%= tf.submit("Yahoo認証設定を更新", class: 'btn btn-primary') %>
+                    <% end %>
+                </div>
+            </div>
+            <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>
+<% end %>

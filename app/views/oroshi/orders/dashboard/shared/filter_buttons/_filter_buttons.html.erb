@@ -1,0 +1,43 @@
+<% form_path = case view 
+   when 'orders'
+     oroshi_orders_orders_path(date: @date)
+   when 'templates'
+     oroshi_orders_templates_path(date: @date)
+   when 'shipping'
+     oroshi_orders_shipping_path(date: @date)
+    when 'revenue'
+      oroshi_orders_revenue_path(date: @date)
+   end 
+%>
+<% filter_category_name = filter_category.chomp('_ids') %>
+<% category_instance_var_name = "@unique_#{filter_category_name.camelize.underscore.pluralize}"  %>
+<% filter_category_items = instance_variable_get(category_instance_var_name) || [] %>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <% model_name = "Oroshi::#{filter_category_name.camelize}".constantize.model_name.human %>
+        <%= link_to "全ての#{model_name}", 
+                form_path, 
+                class: "nav-link #{'active' unless filter_params&.any?} text-nowrap" %>
+    </li>
+    <% filter_category_items.each do |item| %>
+    <li class="nav-item">
+        <% link_path = case view
+                        when 'orders'
+                          oroshi_orders_orders_path(date: @date, filter_category => [item.id])
+                        when 'templates'
+                          oroshi_orders_templates_path(date: @date, filter_category => [item.id])
+                        when 'shipping'
+                          oroshi_orders_shipping_path(date: @date, filter_category => [item.id])
+                        when 'revenue'
+                          oroshi_orders_revenue_path(date: @date, filter_category => [item.id])
+                        end
+                      %>
+        <%= link_to link_path, 
+                  class: "nav-link d-flex gap-1 #{'active' if filter_params&.include?(item.id.to_s)} text-nowrap" do %>
+        <%= render 'oroshi/shared/color_circle', color: item.color if item.respond_to?(:color) %>
+        <%= item.name %>
+        <% end %>
+    </li>
+    <% end %>
+</ul>

@@ -1,0 +1,2 @@
+module Oroshi::OnboardingHelper
+end

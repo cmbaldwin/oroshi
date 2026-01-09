@@ -1,0 +1,206 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "e2f51e461e0fb3b7c907b266039094d6543e0f47e8d96d69017b05344415abac",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/ec_product_types_controller.rb",
+      "line": 45,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(\"ec_product_types\").permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EcProductTypesController",
+        "method": "ec_product_types_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Used for bulk updates of product types with dynamic attributes. Access restricted to admin users only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "de7e025e252a0c8140a1ea19b3ccb7055013599a6fd1cda842a7438861f90fa5",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/ec_products_controller.rb",
+      "line": 83,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(\"/ec_section_headers\").permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EcProductsController",
+        "method": "ec_section_headers_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Dynamic settings with unknown keys stored as JSON blob. Validated by Setting model. Admin only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "4fe2393496a9c3b7a86c630ffccf6bcf005f8f9844c4131e38f8f67cbdee3292",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/ec_products_controller.rb",
+      "line": 87,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(\"/restaurant_raw_headers\").permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EcProductsController",
+        "method": "restaurant_raw_headers_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Dynamic settings with unknown keys stored as JSON blob. Validated by Setting model. Admin only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "1e10273c03dbb880505bb5179634c4c267e0ed0a69ed04b59f5c15c2b418c49f",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/ec_products_controller.rb",
+      "line": 91,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(\"/restaurant_frozen_headers\").permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EcProductsController",
+        "method": "restaurant_frozen_headers_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Dynamic settings with unknown keys stored as JSON blob. Validated by Setting model. Admin only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "827e79baa7ffe7dd14db9dcb4ee3e68efcaba07fc171801ccb3b87cf9ffa6827",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/ec_products_controller.rb",
+      "line": 108,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(\"ec_products\").permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EcProductsController",
+        "method": "ec_products_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Used for bulk product updates with dynamic attributes. Access restricted to admin users only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "df627d8972c0ad8fe46c14d1f19d07c70e3401cdeb51c1659148f4e473f76763",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/ec_products_controller.rb",
+      "line": 114,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(\"rakuten_processing_settings\").permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EcProductsController",
+        "method": "rakuten_processing_settings_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Used for dynamic rakuten processing settings. Access restricted to admin users only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "99e3b19467268fdd3aa6e8e3aa0b876f3d74b843981ecb3b5a616ca25f2e34ad",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/oroshi/dashboard_controller.rb",
+      "line": 88,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(\"company_settings\").permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Oroshi::DashboardController",
+        "method": "company_settings_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Used for dynamic company settings with unknown keys. Access restricted to admin users only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "497da35c44529a44e5ecbcf03bee06ea6344b8349b8a921f675ba280f8df87a7",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/oroshi/supply_dates_controller.rb",
+      "line": 58,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Oroshi::SupplyDatesController",
+        "method": "supply_prices_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Used for dynamic supply prices with varying product IDs. Prices validated by Oroshi::Supply model. Authenticated users only."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "48f9aed8b52111a635c13543a63e52e2740eeb19a274cfb818d7bad58adec7e8",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/oyster_supplies_controller.rb",
+      "line": 332,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OysterSuppliesController",
+        "method": "action_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": "Documented: Used for dynamic oyster supply data with nested hashes. Structure varies by supplier. Validated by OysterSupply model."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "a9f4b1fd8772de344d0a12beb3dad45152d130d073fbaf1c1fb0f184cd7175dd",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/users_controller.rb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:user).permit(:role, :approved)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "profit_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "note": "Documented: Role changes intentionally allowed. Controller protected by check_status ensuring only approved admin users can access."
+    }
+  ],
+  "updated": "2025-10-10 16:45:00 +0900",
+  "brakeman_version": "7.1.0"
+}

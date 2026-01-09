@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="d-flex justify-content-center my-3">
+        <%= will_paginate @invoices %>
+    </div>
+
+    <div class="row g-3">
+        <% @invoices.each do |invoice| %>
+        <div class="col-12 col-lg-6">
+            <%= turbo_stream_from invoice %>
+            <%= turbo_frame_tag dom_id(invoice), src: invoice, loading: 'lazy' do %>
+            <%= render partial: 'oroshi/shared/spinner' %>
+            <% end %>
+        </div>
+        <% end %>
+    </div>
+
+    <div class="d-flex justify-content-center my-3">
+        <%= will_paginate @invoices %>
+    </div>
+</div>

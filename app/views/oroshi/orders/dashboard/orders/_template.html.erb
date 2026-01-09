@@ -1,0 +1,56 @@
+<%= turbo_frame_tag dom_id(order_template), class: 'w-100' do %>
+<%= cache [order_template.cache_key_with_version, 'order_list_card', order_template.order.updated_at, @date], 
+            expires_in: 24.hours do %>
+
+<% @product_variation = order_template.product_variation %>
+<% shipping_receptacle = order_template.shipping_receptacle %>
+<% product = @product_variation.product %>
+<% default_freight_bundle_quantity = shipping_receptacle.default_freight_bundle_quantity %>
+<% default_per_box = @product_variation.default_per_box %>
+<% spacing_volume_adjustment = @product_variation.spacing_volume_adjustment || 0.90 %>
+<% estimate_per_box_quantity = default_per_box&.positive? ? default_per_box : shipping_receptacle.estimate_per_box_quantity(product, adjustment: spacing_volume_adjustment) %>
+
+<%= form_with(
+    model: [:oroshi, @order],
+    url: oroshi_new_order_from_template_path(order_template),
+    scope: :oroshi_order,
+    class: 'w-100 d-flex justify-content-between align-items-center align-middle position-relative mb-1',
+    data: {
+      controller: 'oroshi--orders--order',
+      oroshi__orders__order_template_view_target: 'orderGridSubItem',
+      default_freight_bundle_quantity: default_freight_bundle_quantity,
+      estimate_per_box_quantity: estimate_per_box_quantity
+    }
+) do |form| %>
+<%= active_order_overlay %>
+<%= form.hidden_field :shipping_date, value: @date %>
+<div class="input-group input-group-sm">
+    <%= order_category_handles(order_template) %>
+    <%= order_title(order_template) %>
+    <%= order_number_field(form, 
+                                :item_quantity, 
+                                value: order_template.item_quantity, 
+                                readonly: 'readonly') %>
+    <span class="input-group-text p-1" alt="数" data-controller="tippy" data-tippy-content="商品数 入力・表示"><%= icon('tag') %></span>
+    <%= order_number_field(form, 
+                                :receptacle_quantity, 
+                                value: order_template.receptacle_quantity) %>
+    <span class="input-group-text p-1" alt="箱" data-controller="tippy" data-tippy-content="箱数 入力・表示"><%= icon('box-seam') %></span>
+    <%= order_number_field(form, 
+                                :freight_quantity, 
+                                value: order_template.freight_quantity, 
+                                readonly: 'readonly') %>
+    <span class="input-group-text p-1" alt="荷" data-controller="tippy" data-tippy-content="荷物数 入力・表示"><%= icon('truck-front') %></span>
+    <%= button_tag type: 'submit', 
+                        class: 'btn btn-sm btn-success border',
+                        data: {
+                          controller: 'tippy',
+                          tippy_content: '注文を作成する'
+                        } do %>
+    <%= icon('plus-circle') %>
+    <% end %>
+</div>
+<% end %>
+
+<% end %>
+<% end %>

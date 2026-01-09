@@ -1,0 +1,44 @@
+<%= turbo_frame_tag 'payment_receipts_dashboard' do %>
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab" tabindex="0">
+        <%= render 'oroshi/payment_receipts/dashboard/search/search_form' %>
+
+        <% if @payment_receipts.present? %>
+        <% total_deposit = @payment_receipts.sum(&:deposit_total) %>
+        <div class="card m-3">
+            <div class="card-header d-flex justify-content-between align-middle bg-secondary text-start">
+                <div><%= display_search_date(params) %><%= t('.payment_receipt_search_results') %></div>
+                <div><%= t('.payment_receipt_deposit_sum_total') %>: <%= number_to_currency(total_deposit) %></div>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item border-2">
+                        <div class="row border-bottom">
+                            <div class="col text-start"><%= Oroshi::PaymentReceipt.human_attribute_name(:deposit_date) %></div>
+                            <div class="col text-start"><%= Oroshi::PaymentReceipt.human_attribute_name(:id) %></div>
+                            <div class="col text-start"><%= Oroshi::PaymentReceipt.human_attribute_name(:id) %></div>
+                            <div class="col text-start">[<%= Oroshi::Buyer.human_attribute_name(:associated_system_id) %>] <%= Oroshi::PaymentReceipt.human_attribute_name(:buyer) %></div>
+                            <div class="col text-end"><%= Oroshi::PaymentReceipt.human_attribute_name(:total) %></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6"></div>
+                            <div class="col text-end"><%= Oroshi::PaymentReceiptAdjustment.human_attribute_name(:id) %></div>
+                            <div class="col text-end"><%= Oroshi::PaymentReceiptAdjustmentType.human_attribute_name(:name) %></div>
+                            <div class="col text-end"><%= Oroshi::PaymentReceiptAdjustment.human_attribute_name(:amount) %></div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-end"><%= Oroshi::PaymentReceipt.human_attribute_name(:deposit_total) %></div>
+                        </div>
+                    </div>
+                    <%= render partial: 'oroshi/payment_receipts/dashboard/search/payment_receipt', collection: @payment_receipts, as: :payment_receipt %>
+                </div>
+            </div>
+        </div>
+        <% else %>
+        <div class="alert alert-info m-3" role="alert">
+            <%= t('.no_payment_receipts_from_params') %>
+        </div>
+        <% end %>
+    </div>
+</div>
+<% end %>

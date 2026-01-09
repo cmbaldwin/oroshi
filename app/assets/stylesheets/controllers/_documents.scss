@@ -1,0 +1,34 @@
+// Documents/Printables styles
+// For the document management page
+
+.storage-card {
+  min-width: 200px;
+}
+
+.progress-thin {
+  height: 8px;
+}
+
+.document-thumbnail {
+  height: 120px;
+  overflow: hidden;
+}
+
+.document-thumbnail-img {
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.document-preview-iframe {
+  height: 600px;
+  border: 1px solid #dee2e6;
+}
+
+.category-name-input {
+  max-width: 200px;
+}
+
+// Fix btn-outline-secondary text visibility (Bootstrap 5 issue with light theme)
+.btn-outline-secondary {
+  color: #212529;
+}

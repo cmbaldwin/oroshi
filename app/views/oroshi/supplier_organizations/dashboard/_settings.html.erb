@@ -1,0 +1,28 @@
+<%= turbo_frame_tag 'supplier_organizations_supplier_settings' do %>
+<% if @supplier_organization&.persisted? %>
+<div class="card d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around">
+    <div class="w-100">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <%= dashboard_frame_tab_link('供給組織', edit_oroshi_supplier_organization_path(@supplier_organization), 'supplier_organization', active: true) %>
+                <%= dashboard_frame_tab_link('供給者', oroshi_supplier_organization_suppliers_path(@supplier_organization), 'suppliers') %>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="nav-tabContent">
+                <%= dashboard_frame_tab_pane('supplier_organization', edit_oroshi_supplier_organization_path(@supplier_organization), active: true) %>
+                <%= dashboard_frame_tab_pane('suppliers', oroshi_supplier_organization_suppliers_path(@supplier_organization)) %>
+            </div>
+        </div>
+    </div>
+</div>
+<% else %>
+<div class="row">
+    <div class="card-body mt-1">
+        <div class="alert alert-warning" role="alert">
+            <%= t('oroshi.dashboard.no_record_warning', model_name: Oroshi::SupplierOrganization.model_name.human) %>
+        </div>
+    </div>
+</div>
+<% end %>
+<% end %>

@@ -1,0 +1,32 @@
+<div class="d-flex flex-wrap place-items-center justify-content-around align-middle gap-2">
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :name, @shipping_organization) %>
+        <%= form.text_field :name, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :handle, @shipping_organization) %>
+        <%= form.text_field :handle, class: 'form-control form-control-sm' %>
+    </div>
+
+
+    <%= render partial: 'oroshi/addresses/edit', 
+            locals: { form: form, addresses: @shipping_organization.addresses } %>
+
+</div>
+
+<% if @shipping_organization.persisted? %>
+<div class="d-flex justify-content-end align-items-center align-middle mt-2 me-1">
+    <div class="form-check form-switch">
+        <%= form.check_box :active, 
+                  { class: 'form-check-input', 
+                    checked: @shipping_organization.active?,
+                    data: {
+                      action: 'click->oroshi--dashboard#toggleActive',
+                      refresh_targets: 'dashboard_frame'
+                    } } %>
+        <%= form.label :active, class: 'form-check-label' %>
+    </div>
+</div>
+<% end %>

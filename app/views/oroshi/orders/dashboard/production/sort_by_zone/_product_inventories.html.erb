@@ -1,0 +1,32 @@
+<% @current_grouped_orders_by_product = @grouped_product_inventories.select { |product_variation, product_inventories| product_variation.product == product } %>
+<% if @current_grouped_orders_by_product.any? %>
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">
+        <%= product.to_s %>
+      </h5>
+    </div>
+    <% @current_grouped_orders_by_product.each do |product_variation, product_inventories| %>
+      <% next if product_inventories.all? { |product_inventory| product_inventory.production_requests.empty? } %>
+
+      <% product_inventories.each do |product_inventory| %>
+        <% @product_variation = product_variation %>
+        <% @product_inventory = product_inventory %>
+        <div class="card-body d-flex justify-content-center align-middle place-items-center">
+          <div class="card">
+            <div class="card-body d-flex justify-content-start">
+              <div class="d-flex flex-column justify-content-start align-items-stretch align-middle gap-2">
+                <h6 class="fw-bold mt-2 align-self-start">
+                  <%= product_variation.to_s %>
+                </h6>
+                <div>
+                  <%= render partial: 'oroshi/product_inventories/product_inventory', product_inventory: product_inventory %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

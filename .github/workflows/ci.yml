@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, develop, "claude/**" ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: oroshi_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/oroshi_test
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.6'
+          bundler-cache: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libpq-dev \
+            libvips-dev \
+            chromium-browser \
+            chromium-chromedriver
+
+      - name: Setup Chrome for system tests
+        run: |
+          echo "CHROME_BIN=/usr/bin/chromium-browser" >> $GITHUB_ENV
+          echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
+
+      - name: Setup database
+        run: |
+          bin/rails db:create
+          bin/rails db:schema:load
+
+      - name: Run model tests
+        run: bin/rails test:models
+
+      - name: Run integration tests
+        run: bin/rails test:integration
+
+      - name: Run job tests
+        run: bin/rails test:jobs
+
+      - name: Run mailer tests
+        run: bin/rails test:mailers
+
+      - name: Run lib tests
+        run: bin/rails test:lib
+
+      - name: Run system tests (non-JS)
+        run: bin/rails test:system
+        env:
+          CAPYBARA_DRIVER: rack_test
+
+      - name: Run system tests (with JavaScript)
+        run: bin/rails test:system
+        env:
+          CAPYBARA_DRIVER: selenium_chrome_headless
+          CHROME_HEADLESS: true
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full git history for TruffleHog
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.6'
+          bundler-cache: true
+
+      - name: Run TruffleHog secret scanner
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+      - name: Run Brakeman security scanner
+        run: |
+          bundle exec brakeman --no-pager --format plain
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.6'
+          bundler-cache: true
+
+      - name: Run Rubocop
+        run: |
+          bundle exec rubocop --parallel

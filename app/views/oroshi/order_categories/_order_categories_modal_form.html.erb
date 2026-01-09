@@ -1,0 +1,11 @@
+<%= turbo_frame_tag 'order_categories_modal_form' do %>
+<%= form_with model: @order_category, 
+                      defaults: { input_html: { class: 'mb-2' } },
+                      data: {
+                        action: 'oroshi--dashboard#modalFormSubmit:prevent',
+                        refresh_target: 'order_categories'
+                      } do |form| %>
+<%= render 'form', form: form %>
+<%= form.submit class: 'btn btn-primary my-2' %>
+<% end %>
+<% end %>

@@ -1,0 +1,14 @@
+<div class="d-flex gap-2 justify-content-end justify-items-end align-middle mb-2" data-oroshi--payment-receipts--dashboard-target="adjustment">
+    <div class="d-flex gap-2 justify-content-end justify-items-center align-middle">
+        <%= label_with_validation_warning(form, :payment_receipt_adjustment_type_id, @payment_receipt, false) %>
+        <%= form.collection_select :payment_receipt_adjustment_type_id, Oroshi::PaymentReceiptAdjustmentType.all, :id, :name, class: 'form-select p-1' %>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end justify-items-center align-middle">
+        <%= label_with_validation_warning(form, :amount, @payment_receipt, false) %>
+        <%= form.number_field :amount, class: 'form-control p-1 text-end',
+                              data: { 
+                                oroshi__payment_receipts__dashboard_target: "adjustmentAmount",
+                                action: "oroshi--payment-receipts--dashboard#depositChange" } %>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<%= turbo_frame_tag 'payment_receipts_dashboard' do %>
+
+<div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around">
+
+    <%= render partial: 'oroshi/payment_receipts/dashboard/quick_entry/buyer_outstanding_list' %>
+
+    <% first_buyer = @unique_buyers_with_outstanding_payments&.first %>
+    <% if first_buyer.present? %>
+      <%= turbo_frame_tag 'buyer_payment_entry',
+                          src: oroshi_payment_receipts_buyer_outstanding_path(first_buyer),
+                          loading: 'lazy',
+                          class: 'container ms-lg-0' do %>
+      <div class="row">
+          <div class="col-12 text-center">
+              <%= render partial: 'oroshi/shared/spinner' %>
+          </div>
+      </div>
+      <% end %>
+    <% else %>
+      <%= turbo_frame_tag 'buyer_payment_entry', class: 'container ms-lg-0' do %>
+        <div class="alert alert-info">未払いの買い手がいません</div>
+      <% end %>
+    <% end %>
+
+</div>
+
+
+<% end %>

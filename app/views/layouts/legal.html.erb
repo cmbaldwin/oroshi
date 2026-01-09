@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= content_for(:title) || "Oroshi - 卸売注文管理システム" %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body class="bg-light">
+  <%= render "layouts/shared/navbar" %>
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card shadow-sm">
+          <div class="card-body p-4 p-md-5">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%= render "layouts/shared/footer" %>
+</body>
+</html>

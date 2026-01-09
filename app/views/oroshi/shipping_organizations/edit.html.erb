@@ -1,0 +1,27 @@
+<%= turbo_frame_tag 'shipping_organization', class: 'card m-1 overflow-y-scroll' do  %>
+<% if @shipping_organization %>
+<div class="card-body">
+    <div class="d-flex justify-content-between align-items-center align-middle">
+        <div class="d-flex justify-content-start align-items-center align-middle">
+            <h5 class="m-0">
+                <%= t('oroshi.dashboard.edit_message', 
+              entity_name: @shipping_organization.name, 
+              model_name: Oroshi::ShippingOrganization.model_name.human) %>
+            </h5>
+        </div>
+        <%= information_tippy('shipping_organizations_edit') %>
+    </div>
+    <%= form_with model: @shipping_organization,
+                    class: 'rounded border bg-light p-2 frame collapse show mt-2',
+                    data: {
+                      controller: 'oroshi--supply-settings-form',
+                    } do |form| %>
+    <%= render partial: 'form', locals: { form: form } %>
+    <% end %>
+</div>
+<% else %>
+<div class="alert alert-warning" role="alert">
+    <%= t('oroshi.dashboard.no_record_warning', model_name: Oroshi::ShippingOrganization.model_name.human) %>
+</div>
+<% end %>
+<% end %>

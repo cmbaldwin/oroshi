@@ -1,0 +1,18 @@
+<footer id="site_footer" class="mt-4 py-3 bg-light border-top w-100" data-turbo-permanent>
+    <div class="container-fluid px-4">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                <small class="text-muted">
+                    &copy; <%= Time.current.year %> MOAB Co., Ltd. All rights reserved.
+                </small>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><%= link_to 'プライバシーポリシー', privacy_policy_path, class: 'text-decoration-none text-muted' %></li>
+                    <li class="list-inline-item">|</li>
+                    <li class="list-inline-item"><%= link_to '利用規約', terms_of_service_path, class: 'text-decoration-none text-muted' %></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,26 @@
+# GitGuardian configuration
+# Documentation: https://docs.gitguardian.com/ggshield-docs/reference/configuration
+
+version: 2
+
+# Exclude template files and examples from scanning
+paths-ignore:
+  - .env.example
+  - "**/*.example"
+  - "**/*.template"
+  - "**/*.sample"
+
+# Exclude test fixtures and mocks
+  - test/fixtures/**
+  - spec/fixtures/**
+  - "**/__mocks__/**"
+
+# Exclude documentation
+  - "**/*.md"
+  - docs/**
+
+# Match type specific exclusions (for false positives in legitimate code)
+matches-ignore:
+  # Ignore generic passwords in example/template files
+  - name: Generic Password in templates
+    match: postgres:postgres  # Test database password in CI

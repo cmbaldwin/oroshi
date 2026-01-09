@@ -1,0 +1,19 @@
+<%= turbo_frame_tag 'orders_dashboard' do %>
+
+<%= render 'oroshi/orders/dashboard/shared/filter_buttons/filter_card', view: 'shipping' %>
+
+<div class="d-flex flex-column justify-content-around align-items-stretch align-middle gap-2 mb-2" data-controller="oroshi--orders--shipping">
+    <% if @grouped_orders.empty? %>
+    <div class="container-xl">
+        <div class="alert alert-warning text-center mb-0" role="alert">
+            <%= t('oroshi.orders.no_orders_warning') %>
+        </div>
+    </div>
+    <% else %>
+    <% @grouped_orders.each do |shipping_organization, orders| %>
+    <%= render 'oroshi/orders/dashboard/shipping/shipping_organization_table', 
+               shipping_organization: shipping_organization, orders: orders %>
+    <% end %>
+    <% end %>
+</div>
+<% end %>

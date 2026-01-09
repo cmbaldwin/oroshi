@@ -1,0 +1,76 @@
+<%= turbo_frame_tag 'supply_type_variations', class: 'card' do %>
+<div class="card-body pb-0 pt-2">
+    <div class="card-title d-flex justify-content-between align-items-center align-middle">
+        <div class="d-flex justify-content-between align-items-center align-middle flex-grow-1 me-2">
+            <div class="d-flex justify-content-start align-items-center align-middle">
+                <h5 class="m-0">
+                    <%= t('oroshi.dashboard.edit_sub_models', 
+                    parent_name: @supply_type.name, 
+                    model_name: Oroshi::SupplyTypeVariation.model_name.human) if @supply_type %>
+                </h5>
+            </div>
+            <div class="d-flex justify-content-between align-items-end align-middle">
+                <%= information_tippy('supply_type_variation_edit') %>
+                <%= content_tag :div, class: 'form-check form-switch d-flex justify-content-between align-items-center align-middle me-3 ms-2' do %>
+                <%= content_tag :input, 
+                            nil, 
+                            class: 'form-check-input me-2', 
+                            type: 'checkbox', 
+                            id: 'activeToggle', 
+                            data: { 
+                              action: 'change->oroshi--dashboard#toggleShowInactive',
+                              target: 'supply_type_variations'
+                            }, 
+                            checked: @show_inactive %>
+                <%= label_tag 'activeToggle', t('oroshi.dashboard.display_all'), class: 'form-check-label' %>
+                <% end %>
+                <%= link_to t('oroshi.dashboard.add_record'),
+                      new_oroshi_supply_type_supply_type_variation_path(@supply_type),
+                      class: 'btn btn-sm btn-success',
+                      data: {
+                        turbo_frame: 'oroshi_modal_content',
+                        action: 'oroshi--dashboard#showModal:passive'
+                      } %>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-body pt-0 frame collapse show">
+    <% if @supply_type %>
+    <div class="list-group d-block position-relative" data-controller="oroshi--positionable" data-position-update-url="<%= update_positions_oroshi_supply_type_variations_path %>">
+        <% unless @supply_type_variations.empty? %>
+        <% @supply_type_variations.each do |supply_type_variation| %>
+        <% frame_class = "positionable-item d-block position-absolute list-group-item list-group-item-primary #{'list-group-item-light opacity-50' unless supply_type_variation.active?}" %>
+        <%= turbo_frame_tag dom_id(supply_type_variation),
+                                class: frame_class,
+                                src: edit_oroshi_supply_type_variation_path(supply_type_variation),
+                                data: {
+                                  oroshi__dashboard_target: 'supplyTypeVariation',
+                                  oroshi__positionable_target: 'positionable',
+                                  active: supply_type_variation.active?,
+                                  position: supply_type_variation.position,
+                                  id: supply_type_variation.id
+                                },
+                                loading: 'lazy' do %>
+        <div class=<%= frame_class %>>
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">
+                    <%= t('oroshi.dashboard.loading') %>
+                </span>
+            </div>
+        </div>
+        <% end %>
+        <% end %>
+        <% else %>
+        <div class="alert alert-warning" role="alert">
+            <%= t('oroshi.dashboard.no_record_warning', model_name: Oroshi::SupplyTypeVariation.model_name.human) %>
+        </div>
+        <% end %>
+    </div>
+    <% else %>
+    <div class="alert alert-warning" role="alert">
+        <%= t('oroshi.dashboard.no_record_warning', model_name: Oroshi::SupplyType.model_name.human) %>
+    </div>
+    <% end %>
+</div>
+<% end %>

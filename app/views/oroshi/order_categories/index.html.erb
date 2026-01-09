@@ -1,0 +1,41 @@
+<%= @order_categories ||= order_categories %>
+
+<%= turbo_frame_tag 'order_categories', class: 'card' do %>
+  <div class="card-body">
+    <div class="card-title d-flex justify-content-between align-items-center align-middle">
+      <div class="d-flex flex-grow-1 justify-content-between align-items-center align-middle me-2">
+        <h4 class="m-0">
+          <%= Oroshi::OrderCategory.model_name.human %>
+        </h4>
+        <%= information_tippy('order_categories') %>
+      </div>
+      <%= link_to t('oroshi.dashboard.add_record'),
+            new_oroshi_order_category_path,
+            class: 'btn btn-sm btn-success',
+            data: {
+              turbo_frame: 'oroshi_modal_content',
+              action: 'oroshi--dashboard#showModal:passive'
+            } %>
+    </div>
+    <% if @order_categories.any? %>
+      <div class="list-group">
+        <% @order_categories.each do |order_category| %>
+          <%= turbo_frame_tag dom_id(order_category),
+                              class: 'list-group-item list-group-item-primary',
+                              src: edit_oroshi_order_category_path(order_category),
+                              loading: 'lazy' do %>
+            <div class="d-flex w-100 text-center justify-content-center align-items-center align-middle">
+              <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">読み込み中...</span>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="alert alert-warning" role="alert">
+        <%= t('oroshi.dashboard.no_record_warning', model_name: Oroshi::OrderCategory.model_name.human) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

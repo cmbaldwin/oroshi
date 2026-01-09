@@ -1,0 +1,28 @@
+<%= turbo_frame_tag 'supply_type_settings' do %>
+<% if @supply_type&.persisted? %>
+<div class="card d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around">
+    <div class="w-100">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <%= dashboard_frame_tab_link('供給種類', edit_oroshi_supply_type_path(@supply_type), 'supply_type', active: true) %>
+                <%= dashboard_frame_tab_link('供給種類変種', oroshi_supply_type_supply_type_variations_path(@supply_type), 'supply_type_variations') %>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="nav-tabContent">
+                <%= dashboard_frame_tab_pane('supply_type', edit_oroshi_supply_type_path(@supply_type), active: true) %>
+                <%= dashboard_frame_tab_pane('supply_type_variations', oroshi_supply_type_supply_type_variations_path(@supply_type)) %>
+            </div>
+        </div>
+    </div>
+</div>
+<% else %>
+<div class="row">
+    <div class="card-body mt-1">
+        <div class="alert alert-warning" role="alert">
+            <%= t('oroshi.dashboard.no_record_warning', model_name: Oroshi::SupplyType.model_name.human) %>
+        </div>
+    </div>
+</div>
+<% end %>
+<% end %>

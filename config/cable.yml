@@ -1,0 +1,12 @@
+development:
+  adapter: async
+  # Use async adapter for development (simpler, no database needed)
+
+test:
+  adapter: async
+
+production:
+  adapter: solid_cable
+  connects_to:
+    database:
+      writing: cable

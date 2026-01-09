@@ -1,0 +1,49 @@
+<% buyer, orders = grouped_orders %>
+<div class="card m-2">
+    <div class="card-header d-flex justify-content-between">
+        <div class="d-flex text-nowrap gap-2 justify-content-center align-items-center h5 fw-bold"><%= buyer_color_and_handle(buyer).html_safe %></div>
+        <div><%= buyer.associated_system_id %></div>
+    </div>
+    <div class="list-group list-group-flush">
+        <div class="list-group-item fw-semibold">
+            <div class="row">
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:id) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:product) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:product_variation) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:shipping_organization) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:shipping_method) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:shipping_date) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:arrival_date) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:item_quantity) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:receptacle_quantity) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:freight_quantity) %></div>
+                <div class="col"><%= Oroshi::Order.human_attribute_name(:sale_price_per_item) %></div>
+            </div>
+        </div>
+        <% orders.each do |order| %>
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col"><%= order.id %></div>
+                <div class="col"><%= order.product %></div>
+                <div class="col"><%= order.product_variation.name %></div>
+                <div class="col"><%= order.shipping_organization.name %></div>
+                <div class="col"><%= order.shipping_method.name %></div>
+                <div class="col"><%= order.shipping_date %></div>
+                <div class="col"><%= order.arrival_date %></div>
+                <div class="col"><%= order.item_quantity %></div>
+                <div class="col">
+                    <%= order.receptacle_quantity %><br>
+                    <small>（<%= order.shipping_receptacle.name %>）</small>
+                </div>
+                <div class="col"><%= order.freight_quantity %></div>
+                <div class="col"><%= order.sale_price_per_item %></div>
+            </div>
+        </div>
+        <% end %>
+    </div>
+    <!--
+    <div class="card-body">
+        Print buttons here
+    </div>
+    -->
+</div>

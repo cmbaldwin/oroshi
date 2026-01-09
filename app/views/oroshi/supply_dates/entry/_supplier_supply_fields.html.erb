@@ -1,0 +1,30 @@
+<% supplies = select_supplies(supplier, supply_type_variation) %>
+
+<div class="d-flex d-lg-none">
+    <%= supply_type_variation.to_s %>【<%= supply_type_variation.units %>】
+</div>
+<% supplies.each_with_index do |supply, index| %>
+<!-- Supply Inputs -->
+<% if supply&.persisted? %>
+<%= turbo_frame_tag dom_id(supply),
+                        src: oroshi_supply_path(supply),
+                        loading: 'eager' do %>
+<%= render partial: 'oroshi/shared/supply_input_spinner' %>
+<% end %>
+<% else %>
+<%= turbo_frame_tag "new_supply_#{supplier.id}_#{supply_type_variation.id}_#{index}" do %>
+<% new_supply = Oroshi::Supply.new(
+    supply_date: @supply_date, 
+    supply_reception_time: @supply_reception_time, 
+    supplier: supplier, 
+    supply_type_variation: supply_type_variation, 
+    entry_index: index) %>
+<%= render 'oroshi/supplies/new', supply: new_supply %>
+<% end %>
+<% end %>
+<% end %>
+<!-- Supplier Supply Type Variation Subtotal -->
+<div class="input-group input-group-sm mb-1 justify-content-center justify-content-lg-end pe-3 pe-lg-1">
+    <span class="input-group-text handle p-1"></span>
+    <span class="supplier-supply-type-variation-subtotal input-group-text flex-lg-grow-1 justify-content-center bg-secondary" data-supply-type-variation="<%= supply_type_variation.id %>">0</span>
+</div>

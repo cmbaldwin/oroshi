@@ -1,0 +1,7 @@
+<%= turbo_frame_tag 'product_inventory' do %>
+  <% if @grouped_product_inventories.any? %>
+    <%= render 'oroshi/orders/dashboard/production/sort_by_zone/sort_by_zone', sort_by: 'shipping_date', output_format: 'product_inventories' %>
+  <% else %>
+    <p><%= l(@date, format: :long) %>の生産依頼はありません。</p>
+  <% end %>
+<% end %>

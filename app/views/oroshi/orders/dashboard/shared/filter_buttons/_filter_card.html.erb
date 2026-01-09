@@ -1,0 +1,12 @@
+<div class="card mb-2">
+    <div class="p-1 d-flex gap-2">
+        <%= filter_orders_templates_button(view) %>
+        <% %w[order_category_ids buyer_category_ids buyer_ids shipping_method_ids].each do |filter_category| %>
+        <% filter_params = instance_variable_get("@#{filter_category}") %>
+        <% show_buttons = @dashboard_settings["show_#{filter_category}"] == "1" || filter_params&.any? %>
+        <% next unless show_buttons %>
+
+        <%= render 'oroshi/orders/dashboard/shared/filter_buttons/filter_buttons', view:, filter_category:, filter_params: %>
+        <% end %>
+    </div>
+</div>

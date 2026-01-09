@@ -1,0 +1,4 @@
+<%= turbo_frame_tag 'manufacture_date_production' do %> 
+  <% @grouped_orders = @orders.group_by { |order| [order.product_variation, order.manufacture_date] } %>
+  <%= render 'oroshi/orders/dashboard/production/sort_by_zone/sort_by_zone', sort_by: 'manufacture_date', output_format: 'production_by_product' %>
+<% end %>

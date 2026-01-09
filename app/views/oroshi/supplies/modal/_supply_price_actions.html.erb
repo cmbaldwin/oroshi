@@ -1,0 +1,6 @@
+<%= content_for :modal_content do %>
+<%= render partial: 'oroshi/supplies/modal/supply_price_actions/index' %>
+<% end %>
+
+<%= render partial: 'oroshi/supplies/modal/shared/action_scaffold',
+           locals: { date_change_path: 'supply_price_actions_oroshi_supply_dates_path' } %>

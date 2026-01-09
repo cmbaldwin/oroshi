@@ -1,0 +1,34 @@
+<% if @buyer_category.errors.any? %>
+<div id="error_explanation" class="m-auto mb-2">
+    <h2>
+        <%= t('oroshi.dashboard.form_error_header', 
+        error_count: @buyer_category.errors.count, 
+        model_name: Oroshi::BuyerCategory.model_name.human) %>
+    </h2>
+
+    <ul>
+        <% @buyer_category.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="d-flex flex-wrap place-items-center justify-content-around align-middle gap-2">
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :name, @buyer_category) %>
+        <%= form.text_field :name, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :symbol, @buyer_category) %>
+        <%= form.text_field :symbol, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle" style="min-width: 3rem;">
+        <%= label_with_validation_warning(form, :color, @buyer_category) %>
+        <%= form.color_field :color, class: 'form-control form-control-sm' %>
+    </div>
+
+</div>

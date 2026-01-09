@@ -1,0 +1,3 @@
+<%= turbo_stream.replace("oroshi_order_template_#{params[:template_id]}",
+                      partial: 'oroshi/orders/order',
+                      locals: { order: @order }) %>

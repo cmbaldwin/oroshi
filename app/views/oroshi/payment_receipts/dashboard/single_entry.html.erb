@@ -1,0 +1,24 @@
+<%= turbo_frame_tag 'payment_receipts_dashboard' do %>
+<%= turbo_frame_tag 'buyer_payment_entry' do %>
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-single-entry" role="tabpanel" aria-labelledby="pills-single-entry-tab" tabindex="0">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0 d-flex justify-content-between align-middle align-items-center">
+                    <div class="me-auto d-flex align-middle align-items-center d-none" data-oroshi--payment-receipts--dashboard-target="paymentReceiptBuyerHeader">
+                        <%= render 'oroshi/shared/color_circle', color: '#ffffff' %>
+                        <div class="fw-bold ms-3 overflow-hidden buyer-name"></div>
+                    </div>
+                    <div class="me-auto d-flex flex-grow-1 align-middle align-items-end justify-content-end text-right">
+                        入金入力
+                    </div>
+                </h5>
+            </div>
+            <div class="card-body">
+                <%= render 'form' %>
+            </div>
+        </div>
+    </div>
+</div>
+<% end %>
+<% end %>

@@ -1,0 +1,66 @@
+<div class="modal-header d-flex flex-column">
+    <div class="d-flex w-100">
+        <% date_change_path ||= @invoice.present? ? 'supply_invoice_actions_oroshi_supply_dates_path' : 'supply_price_actions_oroshi_supply_dates_path' %>
+        <%= form_with url: send(date_change_path),
+                      method: :get, class: 'flex-grow-1',
+                      data: {
+                        oroshi__supplies__calendar_target: 'dateChangeForm',
+                        action: 'oroshi--supplies--calendar#modalChangeDates:prevent'
+                        } do |f| %>
+        <%= f.hidden_field :supply_dates,
+                            value: @supply_dates.pluck(:date).join(','),
+                            data: {
+                              oroshi__supplies__calendar_target: 'supplyDates'
+                            } %>
+        <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
+            <div class="fs-5">供給ツールパネル</div>
+            <div class="d-flex fs-6" id="date_title">
+                <div class="input-group">
+                    <%= f.date_field :start_date, value: @dates.first,
+                                      class: 'form-control text-center',
+                                      data: {
+                                        init_date: @dates.first,
+                                        oroshi__supplies__calendar_target: 'startDate',
+                                      },
+                                      disabled: @invoice&.persisted? %>
+                    <div class="input-group-text cursor-default">~</div>
+                    <%= f.date_field :end_date, value: @dates.last,
+                                      class: 'form-control text-center',
+                                      data: {
+                                        init_date: @dates.last,
+                                        oroshi__supplies__calendar_target: 'endDate',
+                                      },
+                                      disabled: @invoice&.persisted? %>
+                    <button type="submit" class="btn btn-secondary" data-oroshi--supplies--calendar-target="modalChangeDateSubmitButton" disabled>
+                        日付変更
+                    </button>
+                </div>
+            </div>
+        </div>
+        <% end %>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="d-flex mt-2 cursor-pointer" data-oroshi--supplies--calendar-target="selectedSupplyDates">
+        <% joins = @supply_dates.flat_map(&:supply_date_supply_type_variations) %>
+        <% if joins.empty? %>
+        供給なし
+        <% else %>
+        <% supply_dates_with_supply = @supply_dates.select{|supply_date| supply_date.supply.any? } %>
+        <span data-controller='tippy' data-tippy-content="<center><%= supply_dates_with_supply.map{ |supply_date| l(supply_date.date, format: :long) }.join(', ') %></center>">
+            選択した日付の範囲内の供給ある日: <%= supply_dates_with_supply.count %>日
+        </span>
+        <% end %>
+    </div>
+</div>
+<div class="modal-body" data-oroshi--supplies--calendar-target="modalBody">
+    <% if joins.empty? %>
+    <div class="w-100 text-center">
+        供給なしので、反映できません。
+    </div>
+    <% else %>
+    <%= yield :modal_content %>
+    <% end %>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+</div>

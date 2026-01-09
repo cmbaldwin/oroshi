@@ -1,0 +1,37 @@
+<%= turbo_frame_tag 'app' do %>
+<% title "Funabiki Online - 入金記載" %>
+<div data-controller="oroshi--payment-receipts--dashboard">
+
+    <%= render partial: 'oroshi/orders/modal/order_modal' %>
+
+    <div class="container-fluid overflow-x-auto">
+        <div class="card text-center">
+            <div class="card-header d-flex justify-content-between justify-items-center align-middle">
+                <div class="d-flex w-100 justify-content-between justify-items-center align-middle">
+                    <div class="d-flex justify-content-between justify-items-center align-middle">
+                        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                            <%= payment_receipt_nav_item('quick_entry', true) %>
+                            <%= payment_receipt_nav_item('single_entry') %>
+                            <%= payment_receipt_nav_item('search') %>
+                        </ul>
+                    </div>
+                    <div class="pt-2 text-end">
+                        <%= information_tippy('payment_receipt') %>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="min-height: 45rem;">
+                <%= turbo_frame_tag 'payment_receipts_dashboard',
+                            src: oroshi_payment_receipts_quick_entry_path,
+                            loading: 'lazy' do %>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-quick-entry" role="tabpanel" aria-labelledby="pills-quick-entry-tab" tabindex="0">
+                        <%= render 'oroshi/shared/spinner' %>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+<% end %>

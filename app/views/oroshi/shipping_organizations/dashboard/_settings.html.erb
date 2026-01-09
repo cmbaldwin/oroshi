@@ -1,0 +1,28 @@
+<%= turbo_frame_tag 'shipping_organizations_shipping_settings' do %>
+<% if @shipping_organization&.persisted? %>
+<div class="card d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around">
+    <div class="w-100">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <%= dashboard_frame_tab_link('出荷組織', edit_oroshi_shipping_organization_path(@shipping_organization), 'shipping_organization', active: true) %>
+                <%= dashboard_frame_tab_link('出荷方法', oroshi_shipping_organization_shipping_methods_path(@shipping_organization), 'shipping_methods') %>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="nav-tabContent">
+                <%= dashboard_frame_tab_pane('shipping_organization', edit_oroshi_shipping_organization_path(@shipping_organization), active: true) %>
+                <%= dashboard_frame_tab_pane('shipping_methods', oroshi_shipping_organization_shipping_methods_path(@shipping_organization)) %>
+            </div>
+        </div>
+    </div>
+</div>
+<% else %>
+<div class="row">
+    <div class="card-body mt-1">
+        <div class="alert alert-warning" role="alert">
+            <%= t('oroshi.dashboard.no_record_warning', model_name: Oroshi::ShippingOrganization.model_name.human) %>
+        </div>
+    </div>
+</div>
+<% end %>
+<% end %>

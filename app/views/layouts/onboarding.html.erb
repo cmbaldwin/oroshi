@@ -1,0 +1,161 @@
+<!doctype html>
+<html dir="ltr" lang="ja" class="h-100">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Oroshi Onboarding">
+<meta name="author" content="Cody Baldwin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+<head>
+    <title><%= content_for?(:title) ? content_for(:title) : "Oroshi Onboarding" %></title>
+
+    <%= capybara_lockstep if defined?(Capybara::Lockstep) %>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <%# Google Fonts - Playfair Display for OROSHI branding %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+
+    <%= action_cable_meta_tag %>
+    <%= turbo_refreshes_with method: :morph, scroll: :preserve  %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <%= yield :head %>
+
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .onboarding-header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .onboarding-brand {
+            font-family: "Playfair Display", serif;
+            font-weight: 900;
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .onboarding-progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .onboarding-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .onboarding-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 700px;
+            padding: 3rem;
+        }
+
+        .onboarding-footer {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-onboarding-skip {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-onboarding-skip:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .btn-onboarding-back {
+            background: transparent;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn-onboarding-back:hover {
+            background: #f8f9fa;
+            border-color: #6c757d;
+        }
+
+        .btn-onboarding-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-onboarding-next:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #65408b 100%);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .onboarding-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .onboarding-brand {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="onboarding-container">
+    <div class="onboarding-header">
+        <div class="onboarding-brand">OROSHI</div>
+        <%= render 'layouts/onboarding/progress' if @progress %>
+    </div>
+
+    <div class="onboarding-main">
+        <div class="onboarding-card">
+            <%= yield %>
+        </div>
+    </div>
+
+    <div class="onboarding-footer">
+        <%= button_to "Skip for now", skip_oroshi_onboarding_path(@step || 'welcome'), 
+            method: :post, 
+            class: "btn btn-onboarding-skip",
+            form: { data: { turbo_confirm: "Are you sure you want to skip onboarding? You can resume later from your dashboard." } } %>
+        
+        <div class="d-flex gap-2">
+            <% if @step && Oroshi::OnboardingController::ALL_STEPS.index(@step)&.positive? %>
+                <% prev_step = Oroshi::OnboardingController::ALL_STEPS[Oroshi::OnboardingController::ALL_STEPS.index(@step) - 1] %>
+                <%= link_to "Back", oroshi_onboarding_path(prev_step), class: "btn btn-onboarding-back" %>
+            <% end %>
+            
+            <%= button_tag "Next", type: "submit", form: "onboarding-form", class: "btn btn-onboarding-next" %>
+        </div>
+    </div>
+</body>
+</html>

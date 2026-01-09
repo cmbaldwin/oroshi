@@ -1,0 +1,26 @@
+<%= form_with model: supply, 
+              url: oroshi_supplies_path,
+              method: :post,
+              html: { id: "new_supply_form_#{supply.supplier.id}_#{supply.supply_type_variation.id}_#{supply.entry_index}" },
+              data: { 
+                action: 'change->oroshi--supplies--supply-date#onChange',
+                supply_type: supply.supply_type_variation.supply_type.id,
+                supply_type_variation: supply.supply_type_variation.id,
+                supplier: supply.supplier.id,
+                supply_reception_time: supply.supply_reception_time.id
+              } do |f| %>
+<%= f.hidden_field :supply_date_id, value: supply.supply_date_id %>
+<%= f.hidden_field :supplier_id, value: supply.supplier_id %>
+<%= f.hidden_field :supply_type_variation_id, value: supply.supply_type_variation_id %>
+<%= f.hidden_field :supply_reception_time_id, value: supply.supply_reception_time_id %>
+<%= f.hidden_field :entry_index, value: supply.entry_index %>
+
+<div class="input-group input-group-sm mb-1 pe-1 flex-nowrap">
+    <span class="handle input-group-text p-1" style="max-width: 150px;">
+        <div class="d-none"><%= supply.supply_type_variation.to_s %>【<%= supply.supply_type_variation.units %>】</div>
+    </span>
+    <%= supply_quantity_field(f, supply) %>
+    <%= supply_price_field(f, supply) %>
+    <%= oroshi_supply_completion_span(supply) %>
+</div>
+<% end %>

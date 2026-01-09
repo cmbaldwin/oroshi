@@ -1,0 +1,41 @@
+<%= turbo_frame_tag 'payment_receipt_buyer_list' do %>
+<div class="card">
+
+    <div class="card-body">
+        <div class="card-title d-flex justify-content-between align-items-center align-middle">
+            <div class="d-flex flex-grow-1 justify-content-between align-items-center align-middle me-2">
+                <h5 class="mb-0">
+                    <%= Oroshi::Buyer.model_name.human %>
+                </h5>
+            </div>
+        </div>
+        <% if @unique_buyers_with_outstanding_payments.any? %>
+        <div class="list-group mb-3 overflow-auto border" style="max-height: 70vh;">
+            <% @unique_buyers_with_outstanding_payments.each do |buyer| %>
+            <% link_class = 'list-group-item list-group-item-action d-flex justify-content-between align-items-start' %>
+            <% link_class += ' active' if @unique_buyers_with_outstanding_payments.first == buyer %>
+            <%= link_to oroshi_payment_receipts_buyer_outstanding_path(buyer),
+                      class: link_class,
+                      data: {
+                        turbo_frame: 'buyer_payment_entry',
+                        action: 'oroshi--orders--payment-receipts-dashboard#toggleActiveListItem:passive'
+                      } do %>
+            <div class="me-auto d-flex align-middle align-items-center">
+                <%= render 'oroshi/shared/color_circle', color: buyer.color %>
+                <div class="fw-bold ms-3"><%= buyer.name %></div>
+            </div>
+            <span class="badge bg-info rounded-pill">
+                <%= buyer.outstanding_payment_orders.count %>
+            </span>
+            <% end %>
+            <% end %>
+        </div>
+        <% else %>
+        <div class="alert alert-warning" role="alert">
+            <%= t('.no_record_warning', model_name: Oroshi::Buyer.model_name.human) %>
+        </div>
+        <% end %>
+    </div>
+
+</div>
+<% end %>

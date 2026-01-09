@@ -1,0 +1,76 @@
+<!doctype html>
+<html dir="ltr" lang="ja" class="h-100">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Funabiki Online Mangement System">
+<meta name="author" content="Cody Baldwin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+<head>
+    <title><%= content_for?(:title) ? content_for(:title) : "Funabiki Online" %></title>
+
+    <%= capybara_lockstep if defined?(Capybara::Lockstep) %>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="船曳商店" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <%# Google Fonts - Playfair Display for OROSHI branding %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+
+    <%= action_cable_meta_tag %>
+    <%= turbo_refreshes_with method: :morph, scroll: :preserve  %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <%= yield :head %>
+</head>
+
+<body data-spy="scroll" class="d-flex flex-column h-100">
+    <%= render partial: 'layouts/shared/navbar' %>
+
+    <main class="flex-shrink-0">
+        <div id="messages-container" data-controller="messages" data-user-id="<%= current_user.id if user_signed_in? %>" class="d-flex overflow-x-auto overflow-y-visible bg-light mb-3 p-1" data-turbo-permanent>
+            <%= turbo_frame_tag 'messages', class: 'd-flex flex-nowrap', data: { messages_target: 'messagesList' } do %>
+            <% end %>
+        </div>
+
+        <%= yield %>
+
+        <% if user_signed_in? && !current_user.approved? %>
+        <div class="container m-3">
+            <div class="card bg-warning text-white m3">
+                <div class="card-body">
+                    <h5>このアカウントを許可されるまではしばらくお待ちください。</h5>
+                </div>
+            </div>
+        </div>
+        <% end %>
+
+        <% if user_signed_in? %>
+        <div id="notifications" data-turbo-permanent>
+            <!-- Alerts -->
+            <% if notice %>
+            <div class="container notice_container mt-2" data-controller="notice">
+                <div class="alert alert-success"><%= notice %></div>
+            </div>
+            <% end %>
+            <% if alert %>
+            <div class="container alert_container mt-2" data-controller="notice">
+                <div class="alert alert-danger"><%= alert %></div>
+            </div>
+            <% end %>
+        </div>
+        <% end %>
+    </main>
+
+    <%= render 'layouts/shared/footer' %>
+</body>
+
+</html>

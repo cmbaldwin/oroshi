@@ -1,0 +1,90 @@
+<% if @shipping_receptacle.errors.any? %>
+<div id="error_explanation" class="m-auto mb-2">
+    <h2>
+        <%= t('oroshi.dashboard.form_error_header', 
+        error_count: @shipping_receptacle.errors.count, 
+        model_name: Oroshi::ShippingReceptacle.model_name.human) %>
+    </h2>
+
+    <ul>
+        <% @shipping_receptacle.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="d-flex flex-wrap place-items-center justify-content-around align-middle gap-2">
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :name, @shipping_receptacle) %>
+        <%= form.text_field :name, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :handle, @shipping_receptacle) %>
+        <%= form.text_field :handle, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :default_freight_bundle_quantity, @shipping_receptacle) %>
+        <%= form.number_field :default_freight_bundle_quantity, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :cost, @shipping_receptacle) %>
+        <%= form.number_field :cost, class: 'form-control form-control-sm' %>
+    </div>
+    <div class="d-flex flex-fill gap-2 place-items-center justify-content-around align-middle">
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :interior_height, @shipping_receptacle) %>
+            <%= form.number_field :interior_height, class: 'form-control form-control-sm' %>
+        </div>
+
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :interior_width, @shipping_receptacle) %>
+            <%= form.number_field :interior_width, class: 'form-control form-control-sm' %>
+        </div>
+
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :interior_depth, @shipping_receptacle) %>
+            <%= form.number_field :interior_depth, class: 'form-control form-control-sm' %>
+        </div>
+    </div>
+
+    <div class="d-flex flex-fill gap-2 place-items-center justify-content-around align-middle">
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :exterior_height, @shipping_receptacle) %>
+            <%= form.number_field :exterior_height, class: 'form-control form-control-sm' %>
+        </div>
+
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :exterior_width, @shipping_receptacle) %>
+            <%= form.number_field :exterior_width, class: 'form-control form-control-sm' %>
+        </div>
+
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :exterior_depth, @shipping_receptacle) %>
+            <%= form.number_field :exterior_depth, class: 'form-control form-control-sm' %>
+        </div>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :image, @shipping_receptacle) %>
+        <%= form.file_field :image, class: 'form-control form-control-sm' %>
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-end align-items-center align-middle mt-2">
+    <div class="form-check form-switch">
+        <%= form.check_box :active, 
+                  { class: 'form-check-input', 
+                    checked: @shipping_receptacle.active?,
+                    data: {
+                      action: 'click->oroshi--dashboard#toggleActive',
+                      refresh_targets: 'shipping_receptacles'
+                    } } %>
+        <%= form.label :active, class: 'form-check-label', for: 'activeSwitch' %>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<%= turbo_frame_tag 'payment_receipt_adjustment_types_modal_form' do %>
+<%= form_with model: @payment_receipt_adjustment_type, 
+                      defaults: { input_html: { class: 'mb-2' } },
+                      data: {
+                        action: 'oroshi--dashboard#modalFormSubmit:prevent',
+                        refresh_target: 'payment_receipt_adjustment_types'
+                      } do |form| %>
+<%= render 'form', form: form %>
+<%= form.submit class: 'btn btn-primary my-2' %>
+<% end %>
+<% end %>

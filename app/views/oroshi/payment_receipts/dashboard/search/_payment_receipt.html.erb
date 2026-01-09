@@ -1,0 +1,21 @@
+<div class="list-group-item">
+    <div class="row">
+        <div class="col text-start"><%= payment_receipt.deposit_date %></div>
+        <div class="col text-start"><%= payment_receipt.id %></div>
+        <div class="col text-start">[<%= payment_receipt.buyer.associated_system_id %>] <%= payment_receipt.buyer.name %></div>
+        <div class="col text-end"><%= number_to_currency(payment_receipt.total) %></div>
+    </div>
+    <% if payment_receipt.adjustments.any? %>
+    <% payment_receipt.adjustments.each do |adjustment| %>
+    <div class="row">
+        <div class="col-6"></div>
+        <div class="col text-end"><%= adjustment.type.id %></div>
+        <div class="col text-end"><%= adjustment.type.name %></div>
+        <div class="col text-end"><%= number_to_currency(adjustment.amount) %></div>
+    </div>
+    <% end %>
+    <div class="row">
+        <div class="col text-end"><%= number_to_currency(payment_receipt.deposit_total) %></div>
+    </div>
+    <% end %>
+</div>

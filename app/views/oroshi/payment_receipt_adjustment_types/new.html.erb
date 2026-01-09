@@ -1,0 +1,9 @@
+<%= turbo_frame_tag 'oroshi_modal_content', class: 'modal-content' do  %>
+<div class="modal-header">
+    <h5 class="modal-title"><%= t('oroshi.dashboard.new_record', model_name: Oroshi::PaymentReceiptAdjustmentType.model_name.human) %></h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <%= render 'payment_receipt_adjustment_types_modal_form' %>
+</div>
+<% end %>

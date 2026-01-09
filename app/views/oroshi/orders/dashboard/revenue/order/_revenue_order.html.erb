@@ -1,0 +1,17 @@
+<% buyer = order.buyer %>
+<li class="list-group-item">
+  <div class="w-100 d-flex flex-column flex-lg-row justify-content-between align-items-stretch align-top gap-2">
+    <div class="input-group input-group-sm justify-content-center align-middle place-items-center flex-nowrap">
+      <%= order_category_handles(order) %>
+      <%= revenue_order_title_modal_link(order) %>
+    </div>
+    <div class="d-flex flex-column flex-xxl-row gap-1">
+      <!-- Order Revenue from Buyer -->
+      <%= render partial: 'oroshi/orders/dashboard/revenue/order/order_revenue',
+                locals: { order: order, buyer: buyer} %>
+      <!-- Expenses -->
+      <%= render partial: 'oroshi/orders/dashboard/revenue/order/order_expenses',
+                locals: { order: order, buyer: buyer} %>
+    </div>
+  </div>
+</li>

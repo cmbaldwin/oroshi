@@ -1,0 +1,84 @@
+<div class="card w-100" data-shipping-organization="<%= shipping_organization.id %>" data-oroshi--orders--shipping-target="shippingOrganizationCard">
+    <div class="card-header d-flex justify-content-between place-items-center align-middle">
+        <h5 class="card-title mt-2">
+            <%= shipping_organization.name %>
+        </h5>
+        <div class="d-flex justify-content-end place-items-center align-middle">
+            <%= form_with url: oroshi_orders_order_shipping_chart_path(
+                                date: @date, 
+                                format: :pdf), 
+                        method: :get, 
+                        class: 'd-flex align-items-center',
+                        data: { turbo_prefetch: false } do |f| %>
+            <%= f.hidden_field :shipping_organization_id, value: shipping_organization.id %>
+            <%= hidden_fields_for_params(%w[order_category_ids buyer_category_ids buyer_ids shipping_method_ids]) %>
+            <%= f.select :print_empty_buyers, 
+                [['すべでの卸先を表示', 0]] + @unique_buyer_categories.map { |oc| [oc.name, oc.id] }, 
+                { include_blank: '注文なし卸先を表示なし' }, 
+                { class: 'form-select form-select-sm',
+                  data: {
+                    shipping_organization: shipping_organization.id,
+                    action: 'oroshi--orders--shipping#toggleNoOrders',
+                    } } %>
+            <%= button_tag type: 'submit',
+                class: 'btn ms-1',
+                data: {
+                    controller: 'tippy',
+                    tippy_content: '荷物確認用出荷表'
+                } do %>
+            <%= icon('clipboard-check') %>
+            <% end %>
+            <% end %>
+            <%= link_to icon('file-spreadsheet'), 
+                        oroshi_orders_order_shipping_list_path(date: @date), 
+                        class: 'btn ms-1 d-none',
+                        disabled: true,
+                        data: {
+                          controller: 'tippy',
+                          tippy_content: 'まとめた出荷明細表',
+                          turbo_prefetch: false
+                        } %>
+            <%= link_to icon('file-ruled'), 
+                        oroshi_orders_order_shipping_slips_path(date: @date), 
+                        class: 'btn ms-1 d-none',
+                        disabled: true,
+                        data: {
+                          controller: 'tippy',
+                          tippy_content: '卸先用出荷表',
+                          turbo_prefetch: false
+                        } %>
+        </div>
+    </div>
+    <div class="card-body overflow-auto">
+
+        <div class="table-responsive">
+            <table class="table table-striped-columns table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col text-nowrap">卸先</th>
+                        <% @product_freight_total = {} %>
+                        <% @products.each do |product| %>
+                        <% @product_freight_total[product] = 0 %>
+                        <th scope="col text-nowrap"><%= product.name %></th>
+                        <% end %>
+                        <th scope="col text-nowrap">合計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% shipping_organization.buyers.uniq.sort_by(&:associated_system_id).each do |buyer| %>
+                    <%= render 'oroshi/orders/dashboard/shipping/shipping_organization_buyer',
+                       buyer: buyer, shipping_organization: shipping_organization, orders: orders %>
+                    <% end %>
+                    <tr>
+                        <th scope="col text-nowrap"></th>
+                        <% @products.each do |product| %>
+                        <th scope="col text-nowrap"><%= @product_freight_total[product] unless @product_freight_total[product].zero? %></th>
+                        <% end %>
+                        <th scope="col text-nowrap"><%= orders.map(&:freight_quantity).sum %></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

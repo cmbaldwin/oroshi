@@ -1,0 +1,29 @@
+<div class="d-flex flex-column gap-2">
+
+  <%= render 'oroshi/product_inventories/orders/orders' if @product_inventory.orders.any? %>
+
+  <div class="d-flex flex-column flex-fill gap-1 justify-content-start align-items-center align-middle">
+    <div class="fw-bold">生産依頼</div>
+    <%= render partial: 'oroshi/production_requests/production_request', 
+                collection: @product_inventory.production_requests, 
+                as: :production_request %>
+
+    <% new_production_request_path = if @product_inventory.persisted?
+                                    new_oroshi_production_request_path(
+                                      oroshi_production_request: {
+                                        product_inventory_id: @product_inventory.id
+                                      })
+                                  else
+                                    new_oroshi_production_request_path(
+                                      oroshi_production_request: {
+                                        product_inventory_attributes: {
+                                          product_variation_id: @product_inventory.product_variation_id,
+                                          manufacture_date: @product_inventory.manufacture_date,
+                                          expiration_date: @product_inventory.expiration_date
+                                        }})
+                                  end %>
+    <%= turbo_frame_tag 'new_production_request', 
+                        src: new_production_request_path %>                        
+  </div>
+
+</div>

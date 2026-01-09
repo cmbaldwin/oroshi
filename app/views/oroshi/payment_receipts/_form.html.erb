@@ -1,0 +1,123 @@
+<%= form_with(model: @payment_receipt, local: true) do |form| %>
+
+<% if @payment_receipt.errors.any? %>
+<div id="error_explanation" class="m-auto mb-2">
+    <h2>
+        <%= t('oroshi.dashboard.form_error_header', 
+            error_count: @payment_receipt.errors.count, 
+            model_name: Oroshi::PaymentReceipt.model_name.human) %>
+    </h2>
+
+    <ul>
+        <% @payment_receipt.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="d-flex gap-2 justify-content-start justify-items-center align-middle mb-2">
+    <%= label_with_validation_warning(form, :buyer_id, @payment_receipt, false) %>
+    <% if @payment_receipt.buyer %>
+    <%= form.collection_select :buyer_id, [@payment_receipt.buyer], :id, :name, { selected: @payment_receipt.buyer.id }, { class: 'form-select p-1', disabled: true } %>
+    <%= form.hidden_field :buyer_id, value: @payment_receipt.buyer.id %>
+    <% else %>
+    <%= form.select :buyer_id, buyer_select_options,
+    { prompt: true },
+    { class: 'form-select p-1', 
+      data: { 
+        oroshi__payment_receipts__dashboard_target: 'buyerSelect',
+        action: 'oroshi--payment-receipts--dashboard#setBuyerOutstandingPaymentOrders
+                 oroshi--payment-receipts--dashboard#updateBuyerColor' } } %>
+    <% end %>
+</div>
+
+<div class="d-flex gap-2 justify-content-start justify-items-center align-middle mb-2">
+    <%= label_with_validation_warning(form, :deposit_date, @payment_receipt, false) %>
+    <%= form.text_field :deposit_date, 
+            class: "form-control form-control-sm",
+            data: {
+                controller: "flatpickr",
+                init_date_time: params[:deposit_date] || Time.zone.today
+              } %>
+</div>
+
+<div class="d-flex gap-2 justify-content-start justify-items-center align-middle mb-2">
+    <%= label_with_validation_warning(form, :issue_date, @payment_receipt, false) %>
+    <%= form.text_field :issue_date, 
+            class: "form-control form-control-sm",
+            data: {
+                controller: "flatpickr",
+                init_date_time: params[:issue_date] || Time.zone.today
+              } %>
+</div>
+
+<div class="d-flex gap-2 justify-content-start justify-items-center align-middle mb-2">
+    <%= label_with_validation_warning(form, :deadline_date, @payment_receipt, false) %>
+    <small><%= t('oroshi.payment_receipts.form.orders_date_select') %></small>
+    <%= form.text_field :deadline_date,
+                        class: 'form-control form-control-sm', 
+                        data: { controller: 'flatpickr', 
+                        init_date_time: params[:deadline_date] || nil,
+                        oroshi__payment_receipts__dashboard_target: 'orderSelectDatePicker', 
+                        action: 'change->oroshi--payment-receipts--dashboard#filterOrdersByEndDate:prevent' } %>
+</div>
+
+<div class="d-flex flex-column rounded border gap-2 justify-content-start justify-items-center align-middle mb-2 p-2">
+    <div class="d-flex justify-content-start justify-items-center align-middle">
+        <%= label_with_validation_warning(form, :order_ids, @payment_receipt, false) %>
+    </div>
+    <div>
+        <%= form.collection_select :order_ids, 
+                                    @payment_receipt.buyer&.outstanding_payment_orders&.sort_by(&:shipping_date) || [], 
+                                    :id, :to_s, {}, multiple: true, class: 'form-select p-1', 
+                                    data: { oroshi__payment_receipts__dashboard_target: "orderIdsSelect" } %>
+    </div>
+</div>
+
+<div class="d-flex flex-column rounded border gap-2 justify-content-start justify-items-center align-middle p-2">
+
+    <div class="d-flex gap-2 justify-content-start justify-items-center align-middle mb-2">
+        <%= label_with_validation_warning(form, :total, @payment_receipt, false) %>
+        <%= form.number_field :total, class: 'form-control p-1 text-end',
+                            value: @payment_receipt.total.zero? ? 0 : @payment_receipt.total,
+                            data: { oroshi__payment_receipts__dashboard_target: 'total',
+                                    action: "oroshi--payment-receipts--dashboard#depositChange" }  %>
+    </div>
+
+    <div class="d-flex flex-column gap-2 justify-content-end justify-items-end align-middle text-right mb-2" data-oroshi--payment-receipts--dashboard-target="adjustments">
+        <div class="adjustments d-flex flex-column gap-2 justify-content-end justify-items-end align-middle text-right mb-2" data-oroshi--payment-receipts--dashboard-target="adjustments">
+            <% if @payment_receipt.payment_receipt_adjustments.any? %>
+            <%= form.fields_for :payment_receipt_adjustments do |adjustment_form| %>
+            <%= render 'payment_receipt_adjustment_fields', form: adjustment_form %>
+            <% end %>
+            <% end %>
+        </div>
+        <div class="d-flex justify-content-end justify-items-end align-middle gap-2">
+            <%= link_to t('oroshi.payment_receipts.form.remove_adjustment'), '#', 
+                    class: 'remove_fields btn btn-sm btn-warning',
+                    data: {
+                        action: 'oroshi--payment-receipts--dashboard#removeAdjustment:prevent'
+                    } %>
+            <%= link_to_add_fields t('.add_adjustment'), form, :payment_receipt_adjustments %>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-start justify-items-center align-middle mb-2">
+        <%= label_with_validation_warning(form, :deposit_total, @payment_receipt, false) %>
+        <%= form.number_field :deposit_total, class: 'form-control p-1 text-end',
+                            value: @payment_receipt.deposit_total.zero? ? 0 : @payment_receipt.deposit_total,
+                            data: { oroshi__payment_receipts__dashboard_target: 'depositTotal' }, readonly: true %>
+    </div>
+
+</div>
+
+<div class="d-flex gap-2 justify-content-start justify-items-center align-middle mb-2">
+    <%= label_with_validation_warning(form, :note, @payment_receipt, false) %>
+    <%= form.text_area :note, class: 'form-control p-1' %>
+</div>
+
+<div class="actions">
+    <%= form.submit class: 'btn btn-success' %>
+</div>
+<% end %>

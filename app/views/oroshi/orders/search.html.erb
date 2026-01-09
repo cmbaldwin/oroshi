@@ -1,0 +1,21 @@
+<%= turbo_frame_tag 'app' do %>
+<% title "Funabiki Online - 卸注文表検索" %>
+
+<%= render 'oroshi/orders/search/search_form' %>
+
+<% if @orders.present? %>
+<div class="card m-3">
+    <div class="card-header bg-secondary">
+        <%= t('.order_search_results') %>
+    </div>
+    <div class="card-body d-flex flex-column">
+        <%= render partial: 'oroshi/orders/search/buyer_orders', collection: @orders, as: :grouped_orders %>
+    </div>
+</div>
+<% else %>
+<div class="alert alert-info m-3" role="alert">
+    <%= t('.no_orders_from_search_params') %>
+</div>
+<% end %>
+
+<% end %>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  completed_at: 2026-01-08 13:48:19
+  skipped_at: 2026-01-08 13:48:19
+  current_step: MyString
+  completed_steps: 
+
+two:
+  user: two
+  completed_at: 2026-01-08 13:48:19
+  skipped_at: 2026-01-08 13:48:19
+  current_step: MyString
+  completed_steps: 

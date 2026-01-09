@@ -1,0 +1,391 @@
+{
+  "project": "Oroshi",
+  "branchName": "ralph/user-onboarding",
+  "description": "User Onboarding & Dashboard Setup - Step-by-step wizard for new users with persistent checklist sidebar",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Ensure dashboard loads without data",
+      "description": "As a new user, I want the dashboard to load without errors even when no data exists.",
+      "acceptanceCriteria": [
+        "Dashboard index action handles nil/empty associations gracefully",
+        "All dashboard partials render without errors when collections are empty",
+        "Empty state messages shown where appropriate (e.g., 'No suppliers yet')",
+        "./bin/dev starts without errors on Ruby 4.0.0",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Added missing set_supply_type, set_shipping_organization, set_product methods. Added empty state handling for supply reception times."
+    },
+    {
+      "id": "US-022",
+      "title": "Create initial dev user on first boot",
+      "description": "As a developer, I want an initial user created automatically when booting the app for the first time in development.",
+      "acceptanceCriteria": [
+        "Create db/seeds.rb or update existing to create default user in development",
+        "User created with email: dev@oroshi.local, password: password",
+        "User has admin role/permissions",
+        "Only create if no users exist (idempotent)",
+        "Output confirmation message when user is created",
+        "Runs automatically via bin/setup or documented in README",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Created seeds.rb with dev@oroshi.local user. Used User.insert to skip Devise confirmation email callbacks. Runs via bin/setup."
+    },
+    {
+      "id": "US-002",
+      "title": "Replace logo with OROSHI text",
+      "description": "As a user, I want to see 'OROSHI' text branding instead of the current logo.",
+      "acceptanceCriteria": [
+        "Remove <div id='logo'> from navbar partial",
+        "Add 'OROSHI' text with Playfair Display Black 900 font",
+        "Apply tight letter-spacing (custom kerning) and reduced line-height",
+        "Font loaded via Google Fonts",
+        "Text links to root path like current logo",
+        "Responsive sizing for mobile/desktop",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Already implemented. OROSHI text in navbar uses Playfair Display 900, letter-spacing -0.03em, line-height 1, responsive sizing."
+    },
+    {
+      "id": "US-003",
+      "title": "Create onboarding progress tracking model",
+      "description": "As a developer, I need to track user onboarding progress in the database.",
+      "acceptanceCriteria": [
+        "Create Oroshi::OnboardingProgress model with fields: user_id (references), completed_at (datetime), skipped_at (datetime), current_step (string), completed_steps (jsonb, default [])",
+        "Add association: User has_one :onboarding_progress",
+        "Generate and run migration successfully",
+        "Add helper methods: completed?, skipped?, step_completed?(step_name), mark_step_complete!(step_name)",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Model created with all fields and methods. Migration successful. Tested in console."
+    },
+    {
+      "id": "US-004",
+      "title": "Create onboarding controller with step navigation",
+      "description": "As a developer, I need a controller to manage the onboarding wizard flow.",
+      "acceptanceCriteria": [
+        "Create Oroshi::OnboardingController with actions: index, show, update, skip, resume",
+        "Define STEPS constant with ordered step names grouped by phase",
+        "index redirects to current incomplete step",
+        "show renders the step form",
+        "update saves step data, marks complete, advances to next",
+        "skip sets skipped_at and redirects to dashboard",
+        "resume clears skipped_at and returns to wizard",
+        "Add routes: resources :onboarding, only: [:index, :show, :update] with member routes for skip/resume",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Controller created with all actions. STEPS defined with foundation, setup, configuration, completion phases. Routes configured."
+    },
+    {
+      "id": "US-005",
+      "title": "Create fullscreen wizard layout",
+      "description": "As a user, I want a clean fullscreen wizard experience for onboarding.",
+      "acceptanceCriteria": [
+        "Create app/views/layouts/onboarding.html.erb - fullscreen, minimal chrome",
+        "Include progress indicator showing current phase and step number",
+        "Add 'Skip for now' button that calls skip action",
+        "Add 'Back' and 'Next/Save' navigation buttons",
+        "Style consistent with existing Bootstrap/Oroshi design",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Layout created with gradient design, progress indicator partial, skip/back/next buttons. Controller configured to use onboarding layout."
+    },
+    {
+      "id": "US-006",
+      "title": "Add before_action to redirect incomplete users to onboarding",
+      "description": "As a developer, I need to automatically redirect new users to onboarding.",
+      "acceptanceCriteria": [
+        "Add before_action :check_onboarding to ApplicationController or Oroshi base controller",
+        "Skip for OnboardingController and devise controllers",
+        "Redirect to onboarding_path if user has no onboarding_progress or progress is incomplete and not skipped",
+        "Create onboarding_progress for user if none exists on first check",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Company info onboarding step",
+      "description": "As a user, I want to enter my company information as the first onboarding step.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_company_info.html.erb",
+        "Form saves to Setting with name 'oroshi_company_settings'",
+        "Required fields: company_name, basic address info",
+        "On save, mark step complete and redirect to next step",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Step name: company_info"
+    },
+    {
+      "id": "US-008",
+      "title": "Supply reception time onboarding step",
+      "description": "As a user, I want to set up material reception times for tracking supplies.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_supply_reception_time.html.erb",
+        "Form creates Oroshi::SupplyReceptionTime records",
+        "Fields: hour, time_qualifier",
+        "Can add multiple reception times via nested form or turbo",
+        "At least one required to proceed (validation message if none)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Step name: supply_reception_time"
+    },
+    {
+      "id": "US-009",
+      "title": "Supplier organization onboarding step",
+      "description": "As a user, I want to create at least one supplier organization.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_supplier_organization.html.erb",
+        "Form creates Oroshi::SupplierOrganization",
+        "Required fields: entity_type, entity_name, country_id, subregion_id, invoice_number, fax, free_entry",
+        "Dynamic subregion dropdown based on country selection (use existing dashboard subregions endpoint)",
+        "Associate with supply_reception_times via checkboxes",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Step name: supplier_organization"
+    },
+    {
+      "id": "US-010",
+      "title": "Supplier onboarding step",
+      "description": "As a user, I want to create at least one supplier within an organization.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_supplier.html.erb",
+        "Form creates Oroshi::Supplier under organization from previous step",
+        "Show organization name in step header for context",
+        "Required fields per Supplier model validations",
+        "Can add multiple suppliers",
+        "At least one required to proceed",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "Step name: supplier"
+    },
+    {
+      "id": "US-011",
+      "title": "Supply type onboarding step",
+      "description": "As a user, I want to create at least one supply type for tracking materials.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_supply_type.html.erb",
+        "Form creates Oroshi::SupplyType",
+        "Required fields: name, units, handle, liquid (boolean checkbox)",
+        "Placeholder examples for common supply types",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": "Step name: supply_type"
+    },
+    {
+      "id": "US-012",
+      "title": "Supply type variation onboarding step",
+      "description": "As a user, I want to create at least one variation for my supply type.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_supply_type_variation.html.erb",
+        "Form creates Oroshi::SupplyTypeVariation for supply type from previous step",
+        "Required fields: name, default_container_count",
+        "Multi-select to associate with suppliers",
+        "At least one required to proceed",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": "Step name: supply_type_variation. End of Phase 1 (Supply Chain)."
+    },
+    {
+      "id": "US-013",
+      "title": "Buyer onboarding step",
+      "description": "As a user, I want to create at least one buyer to sell to.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_buyer.html.erb",
+        "Form creates Oroshi::Buyer",
+        "Required fields: name, handle, handling_cost, daily_cost, entity_type, optional_cost, commission_percentage, color",
+        "Color picker input for buyer color",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": "Step name: buyer. Start of Phase 2 (Sales/Orders)."
+    },
+    {
+      "id": "US-014",
+      "title": "Product onboarding step",
+      "description": "As a user, I want to create at least one product.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_product.html.erb",
+        "Form creates Oroshi::Product",
+        "Required fields: name, units, supply_type_id (select from created supply types)",
+        "Dimensions default to 0 if not provided",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": "Step name: product"
+    },
+    {
+      "id": "US-015",
+      "title": "Product variation onboarding step",
+      "description": "As a user, I want to create at least one product variation.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_product_variation.html.erb",
+        "Form creates Oroshi::ProductVariation for product from previous step",
+        "Multi-select to link to supply_type_variations",
+        "Required fields per ProductVariation model validations",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": "Step name: product_variation"
+    },
+    {
+      "id": "US-016",
+      "title": "Shipping organization onboarding step",
+      "description": "As a user, I want to create at least one shipping organization.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_shipping_organization.html.erb",
+        "Form creates Oroshi::ShippingOrganization",
+        "Required fields: name, handle",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": "Step name: shipping_organization"
+    },
+    {
+      "id": "US-017",
+      "title": "Shipping method onboarding step",
+      "description": "As a user, I want to create at least one shipping method.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_shipping_method.html.erb",
+        "Form creates Oroshi::ShippingMethod for shipping organization from previous step",
+        "Required fields: name, handle, daily_cost, per_shipping_receptacle_cost, per_freight_unit_cost",
+        "Multi-select to associate with buyers",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": "Step name: shipping_method"
+    },
+    {
+      "id": "US-018",
+      "title": "Shipping receptacle onboarding step",
+      "description": "As a user, I want to create at least one shipping receptacle (box/container).",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_shipping_receptacle.html.erb",
+        "Form creates Oroshi::ShippingReceptacle",
+        "Required fields: name, handle, cost, default_freight_bundle_quantity",
+        "Dimension fields with sensible defaults",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": "Step name: shipping_receptacle"
+    },
+    {
+      "id": "US-019",
+      "title": "Order category onboarding step",
+      "description": "As a user, I want to create at least one order category.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/steps/_order_category.html.erb",
+        "Form creates Oroshi::OrderCategory",
+        "Required fields: name, color",
+        "Color picker input for category color",
+        "This is the final step - on save, mark onboarding complete",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": "Step name: order_category. Final step - completing marks onboarding done."
+    },
+    {
+      "id": "US-020",
+      "title": "Create checklist sidebar component",
+      "description": "As a user who skipped onboarding, I want to see a persistent checklist of incomplete setup steps.",
+      "acceptanceCriteria": [
+        "Create app/views/oroshi/onboarding/_checklist_sidebar.html.erb partial",
+        "Render in dashboard layout when onboarding skipped but not complete",
+        "List all steps grouped by phase (Supply Chain / Sales) with completion checkmarks",
+        "Clicking incomplete step links to that onboarding step",
+        "Add 'Dismiss' button that shows warning modal",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Add functionality warnings and dismissal persistence",
+      "description": "As a user, I want to understand limited functionality and have my dismissal remembered.",
+      "acceptanceCriteria": [
+        "Add checklist_dismissed_at column to onboarding_progress table via migration",
+        "Dismiss button shows modal with warnings: 'Cannot create material tracking invoices' (Phase 1 incomplete), 'Cannot create orders' (Phase 2 incomplete)",
+        "Confirming dismiss sets checklist_dismissed_at and hides sidebar",
+        "Sidebar stays hidden across sessions when dismissed",
+        "Add 'Resume Setup' link in dashboard settings or nav to clear dismissed status",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-023",
+      "title": "Refactor inline CSS to stylesheets",
+      "description": "As a developer, I want all inline styles removed from views to maintain clean separation of concerns and follow Rails conventions.",
+      "acceptanceCriteria": [
+        "Scan all view files in app/views/ for style=\"...\" attributes",
+        "Scan all layouts for embedded <style> tags",
+        "Extract inline styles to appropriate stylesheet files in app/assets/stylesheets/",
+        "Replace inline styles with Bootstrap 5 utility classes where possible",
+        "Create custom CSS classes in stylesheets for styles that cannot use Bootstrap",
+        "Special handling: onboarding.html.erb layout <style> block → new app/assets/stylesheets/onboarding.css",
+        "Remove all style= attributes from view files (20+ violations found)",
+        "Test affected views render correctly with new stylesheets",
+        "No visual regressions - pages should look identical",
+        "All tests passing after refactor",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": "Found 20+ inline style violations in views: buyers/_form.html.erb (min-width, background-color circles), supply_dates views (max-width, width sizing), orders views (min-height, color circles), onboarding layout (entire embedded <style> block). Need to extract to stylesheets."
+    }
+  ]
+}

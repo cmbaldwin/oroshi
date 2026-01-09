@@ -1,0 +1,111 @@
+<% if @supplier_organization.errors.any? %>
+<div id="error_explanation" class="m-auto mb-2">
+    <h2>
+        <%= t('oroshi.dashboard.form_error_header', 
+        error_count: @supplier_organization.errors.count, 
+        model_name: Oroshi::SupplierOrganization.model_name.human) %>
+    </h2>
+
+    <ul>
+        <% @supplier_organization.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="d-flex flex-wrap place-items-center justify-content-around align-middle gap-2">
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :entity_name, @supplier_organization) %>
+        <%= form.text_field :entity_name, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :entity_type, @supplier_organization) %>
+        <%= form.select :entity_type,
+                  Oroshi::SupplierOrganization.entity_types
+                    .keys.map { |type| [I18n.t("enums.oroshi_supplier_organization.entity_type.#{type}"), type] }, 
+                  { },
+                  { class: 'form-select form-select-sm' } %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :invoice_name, @supplier_organization) %>
+        <%= form.text_field :invoice_name, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :honorific_title, @supplier_organization) %>
+        <%= form.text_field :honorific_title, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="country-subregion-select d-flex flex-fill place-items-center justify-content-around align-middle gap-2">
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :country_id, @supplier_organization) %>
+            <%= form.select :country_id, 
+                    Carmen::Country.all.map { |c| [c.name, c.numeric_code] }, 
+                    { selected: '392' },
+                    { class: 'form-select form-select-sm',
+                      data: {
+                        action: 'change->oroshi--dashboard#updateSubregions'
+                      }} %>
+        </div>
+
+        <div class="subregion-select d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :subregion_id, @supplier_organization) %>
+            <%= form.select :subregion_id, 
+                  Carmen::Country.coded('JP').subregions
+                    .map{ |s| [s.name, s.code] }, 
+                  { },
+                  { class: 'form-select form-select-sm' } %>
+        </div>
+
+
+        <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+            <%= label_with_validation_warning(form, :micro_region, @supplier_organization) %>
+            <%= form.text_field :micro_region, class: 'form-control form-control-sm' %>
+        </div>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :invoice_number, @supplier_organization) %>
+        <%= form.text_field :invoice_number, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :fax, @supplier_organization) %>
+        <%= form.text_field :fax, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :email, @supplier_organization) %>
+        <%= form.text_field :email, class: 'form-control form-control-sm' %>
+    </div>
+
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle">
+        <%= label_with_validation_warning(form, :free_entry, @supplier_organization) %>
+        <div class="form-check form-switch">
+            <%= form.check_box :free_entry, 
+                    { class: 'form-check-input', 
+                      checked: @supplier_organization.free_entry? } %>
+        </div>
+    </div>
+
+    <%= render partial: 'oroshi/addresses/edit', 
+            locals: { form: form, addresses: @supplier_organization.addresses } %>
+
+    <% if @supplier_organization.persisted? %>
+    <div class="d-flex flex-fill align-self-end justify-content-end align-items-center align-middle me-1">
+        <div class="form-check form-switch">
+            <%= form.check_box :active, 
+                        { class: 'form-check-input', 
+                        checked: @supplier_organization.active?,
+                        data: {
+                            action: 'click->oroshi--dashboard#toggleActive',
+                            refresh_targets: 'dashboard_frame'
+                        } } %>
+            <%= form.label :active, class: 'form-check-label' %>
+        </div>
+    </div>
+    <% end %>

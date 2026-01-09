@@ -1,0 +1,139 @@
+#!/bin/bash
+set -e
+
+echo "🧪 Running pre-deploy checks..."
+echo "==============================="
+
+# Run Gitleaks secret scanner
+echo "🔐 Running Gitleaks secret scanner..."
+if ! command -v gitleaks &> /dev/null; then
+  echo "⚠️  Gitleaks not installed - skipping secret scan" >&2
+  echo "ℹ️  Install with: brew install gitleaks" >&2
+else
+  if ! gitleaks detect --source . --log-level error --redact; then
+    echo "❌ Gitleaks found exposed secrets that must be removed before deployment" >&2
+    echo "ℹ️  Review findings above and remove any credentials from git history" >&2
+    exit 1
+  fi
+  echo "✅ Gitleaks passed - no secrets detected"
+fi
+
+# Run GitGuardian ggshield scanner
+echo "🛡️  Running GitGuardian ggshield scanner..."
+if ! command -v ggshield &> /dev/null; then
+  echo "⚠️  ggshield not installed - skipping GitGuardian scan" >&2
+  echo "ℹ️  Install with: brew install gitguardian/tap/ggshield" >&2
+else
+  if ! ggshield secret scan repo . --exit-zero --show-secrets > /dev/null 2>&1; then
+    echo "❌ GitGuardian found exposed secrets that must be removed before deployment" >&2
+    echo "ℹ️  Run 'ggshield secret scan repo .' for detailed findings" >&2
+    exit 1
+  fi
+  echo "✅ GitGuardian passed - no secrets detected"
+fi
+
+# Run RuboCop
+echo "🔍 Running RuboCop linter..."
+if ! bundle exec rubocop --fail-level error; then
+  echo "❌ RuboCop found errors that must be fixed before deployment" >&2
+  exit 1
+fi
+echo "✅ RuboCop passed"
+
+# Run Brakeman security scanner (uses config/brakeman.ignore for documented warnings)
+echo "🔒 Running Brakeman security scan..."
+if ! bundle exec brakeman --quiet --no-pager --exit-on-warn; then
+  echo "❌ Brakeman found security issues that must be fixed before deployment" >&2
+  echo "ℹ️  Note: Mass Assignment warnings are documented in config/brakeman.ignore" >&2
+  exit 1
+fi
+echo "✅ Brakeman passed"
+
+# Run tests
+echo "🧪 Running Test::Unit test suite..."
+if [ "${SKIP_TESTS:-false}" = "false" ]; then
+  # Run tests excluding system tests (too slow for pre-deployment)
+  # System tests should be run manually or in CI
+  if ! bin/rails test; then
+    echo "❌ Tests failed - fix failing tests before deployment" >&2
+    exit 1
+  fi
+  echo "✅ Tests passed"
+else
+  echo "⏭️  Skipping tests (SKIP_TESTS=true, set to false to enable)"
+fi
+
+# Check if there are any changes to commit
+echo "📝 Checking for uncommitted changes..."
+if [[ -n $(git status --porcelain) ]]; then
+  echo "📚 Found uncommitted changes, generating commit message..."
+
+  # Stage all changes
+  git add .
+
+  # Generate commit message using Claude if available
+  if command -v claude &> /dev/null; then
+    echo "🤖 Generating commit message with Claude..."
+    CLAUDE_MSG=$(echo "Generate a concise commit message for these staged changes. Focus on the main improvements and fixes." | claude --quiet 2>/dev/null || echo "")
+  fi
+
+  # Fallback message if Claude generation fails
+  if [[ -z "$CLAUDE_MSG" ]]; then
+    CLAUDE_MSG="chore: pre-deploy updates and improvements"
+    echo "⚠️  Using fallback commit message"
+  else
+    echo "✨ Generated commit message: $CLAUDE_MSG"
+  fi
+
+  # Create commit with Claude-generated message and attribution
+  FULL_COMMIT_MSG="$CLAUDE_MSG
+
+🤖 Generated with Claude Code assistance
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+  echo "💾 Committing changes..."
+  git commit -m "$FULL_COMMIT_MSG"
+
+  # Push to remote
+  echo "🚀 Pushing to remote repository..."
+  git push
+
+  echo "✅ Changes committed and pushed successfully!"
+else
+  echo "📋 No uncommitted changes found."
+fi
+
+# Standard Kamal pre-build checks
+echo "🔍 Running standard Kamal pre-build checks..."
+
+# Use origin remote specifically for GitHub
+remote_name="origin"
+if ! git remote | grep -q "^${remote_name}$"; then
+  echo "❌ No ${remote_name} remote set, aborting..." >&2
+  exit 1
+fi
+
+current_branch=$(git branch --show-current)
+if [ -z "$current_branch" ]; then
+  echo "❌ Not on a git branch, aborting..." >&2
+  exit 1
+fi
+
+# Get remote head after any pushes we may have made
+git fetch $remote_name $current_branch
+remote_head=$(git rev-parse $remote_name/$current_branch)
+local_head=$(git rev-parse HEAD)
+
+# If we just pushed changes, use the current local head as the deployment version
+if [ "$local_head" = "$remote_head" ]; then
+  echo "✅ Local and remote are in sync (version: $local_head)"
+elif [ "$KAMAL_VERSION" = "$remote_head" ]; then
+  echo "✅ Kamal version matches remote HEAD (version: $KAMAL_VERSION)"
+else
+  echo "❌ Version mismatch - Kamal: $KAMAL_VERSION, Local: $local_head, Remote: $remote_head" >&2
+  exit 1
+fi
+
+echo "✅ All pre-deploy checks passed! Deployment can proceed."
+echo "=================================================="

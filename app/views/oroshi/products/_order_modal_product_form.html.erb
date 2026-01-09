@@ -1,0 +1,17 @@
+<%= turbo_frame_tag 'orders_modal_content', class: 'modal-content overflow-hidden' do  %>
+  <div class="modal-header">
+    <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
+      <div class="fs-5"><%= @product.name %>の商品を編集する</div>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body" data-refresh="true">
+    <%= form_with model: @product,
+                  class: 'rounded border bg-light p-2 frame collapse show mt-2',
+                  data: {
+                    controller: 'oroshi--supply-settings-form',
+                  } do |form| %>
+      <%= render partial: 'form', locals: { form: form } %>
+    <% end %>
+  </div>
+<% end %>

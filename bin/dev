@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+if ! gem list foreman -i --silent; then
+  echo "Installing foreman..."
+  gem install foreman
+fi
+
+# Get the gem directory and construct the path to foreman
+GEM_DIR=$(gem environment gemdir)
+FOREMAN_BIN="$GEM_DIR/gems/foreman-0.90.0/bin/foreman"
+
+# Use the full path to foreman
+exec "$FOREMAN_BIN" start -f Procfile.dev "$@"

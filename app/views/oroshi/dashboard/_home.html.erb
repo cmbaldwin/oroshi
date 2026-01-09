@@ -1,0 +1,117 @@
+<%= turbo_frame_tag 'dashboard_frame' do %>
+<div class="d-flex justify-content-between justify-items-center align-middle">
+    <div class="card-title">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-main-tab" data-bs-toggle="pill" data-bs-target="#pills-main" type="button" role="tab" aria-controls="pills-main" aria-selected="true">
+                    <%= t('.home') %>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-reception-times-tab" data-bs-toggle="pill" data-bs-target="#pills-reception-times" type="button" role="tab" aria-controls="pills-reception-times" aria-selected="false">
+                    <%= Oroshi::SupplyReceptionTime.model_name.human %>
+                </button>
+            </li>
+            <!--
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-production-zones-tab" data-bs-toggle="pill" data-bs-target="#pills-production-zones" type="button" role="tab" aria-controls="pills-production-zones" aria-selected="false">
+                    <%= Oroshi::ProductionZone.model_name.human %>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-order-categories-tab" data-bs-toggle="pill" data-bs-target="#pills-order-categories" type="button" role="tab" aria-controls="pills-order-categories" aria-selected="false">
+                    <%= Oroshi::OrderCategory.model_name.human %>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-buyer-categories-tab" data-bs-toggle="pill" data-bs-target="#pills-buyer-categories" type="button" role="tab" aria-controls="pills-buyer-categories" aria-selected="false">
+                    <%= Oroshi::BuyerCategory.model_name.human %>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-payment-receipt-adjustment-types-tab" data-bs-toggle="pill" data-bs-target="#pills-payment-receipt-adjustment-types" type="button" role="tab" aria-controls="pills-payment-receipt-adjustment-types" aria-selected="false">
+                    <%= Oroshi::PaymentReceiptAdjustmentType.model_name.human %>
+                </button>
+            </li>
+            -->
+        </ul>
+    </div>
+    <%= information_tippy('home') %>
+</div>
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab" tabindex="0">
+        <div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around">
+            <div class="d-flex flex-grow-1 align-self-stretch" style="min-width: 16rem;">
+                <%= turbo_frame_tag 'oroshi_dashboard_company', 
+                              src: oroshi_dashboard_company_path, 
+                              loading: 'lazy', 
+                              class: 'card w-100 m-1' do %>
+                <%= render partial: 'oroshi/shared/card_body_spinner' %>
+                <% end %>
+            </div>
+            <div class="d-flex flex-grow-1 align-self-stretch" style="min-width: 16rem;">
+                <%# turbo_frame_tag 'oroshi_dashboard_stats', 
+                              src: oroshi_dashboard_stats_path, 
+                              loading: 'lazy', 
+                              class: 'card w-100 m-1' do %>
+                <%# render partial: 'oroshi/shared/card_body_spinner' %>
+                <%# end %>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="pills-reception-times" role="tabpanel" aria-labelledby="pills-reception-times-tab" tabindex="0">
+        <% if @supplier_organization %>
+          <%= turbo_frame_tag 'supply_reception_times', 
+                            src: oroshi_supply_reception_times_path(supplier_organization_id: @supplier_organization.id), 
+                            loading: 'lazy', 
+                            class: 'card m-1 overflow-y-scroll',
+                            style: 'max-height: 500px;' do %>
+          <%= render partial: 'oroshi/shared/card_body_spinner' %>
+          <% end %>
+        <% else %>
+          <div class="card m-1">
+            <div class="card-body text-center text-muted">
+              <p><%= t('.no_suppliers_yet') %></p>
+              <p><small><%= t('.create_supplier_first') %></small></p>
+            </div>
+          </div>
+        <% end %>
+    </div>
+    <div class="tab-pane fade" id="pills-production-zones" role="tabpanel" aria-labelledby="pills-production-zones-tab" tabindex="0">
+        <%= turbo_frame_tag 'production_zones', 
+                          src: oroshi_production_zones_path, 
+                          loading: 'lazy', 
+                          class: 'card m-1 overflow-y-scroll',
+                          style: 'max-height: 500px;' do %>
+        <%= render partial: 'oroshi/shared/card_body_spinner' %>
+        <% end %>
+    </div>
+    <div class="tab-pane fade" id="pills-order-categories" role="tabpanel" aria-labelledby="pills-order-categories-tab" tabindex="0">
+        <%= turbo_frame_tag 'order_categories', 
+                          src: oroshi_order_categories_path, 
+                          loading: 'lazy', 
+                          class: 'card m-1 overflow-y-scroll',
+                          style: 'max-height: 500px;' do %>
+        <%= render partial: 'oroshi/shared/card_body_spinner' %>
+        <% end %>
+    </div>
+    <div class="tab-pane fade" id="pills-buyer-categories" role="tabpanel" aria-labelledby="pills-buyer-categories-tab" tabindex="0">
+        <%= turbo_frame_tag 'buyer_categories', 
+                          src: oroshi_buyer_categories_path, 
+                          loading: 'lazy', 
+                          class: 'card m-1 overflow-y-scroll',
+                          style: 'max-height: 500px;' do %>
+        <%= render partial: 'oroshi/shared/card_body_spinner' %>
+        <% end %>
+    </div>
+    <div class="tab-pane fade" id="pills-payment-receipt-adjustment-types" role="tabpanel" aria-labelledby="pills-payment-receipt-adjustment-types-tab" tabindex="0">
+        <%= turbo_frame_tag 'payment_receipt_adjustment_types', 
+                          src: oroshi_payment_receipt_adjustment_types_path, 
+                          loading: 'lazy', 
+                          class: 'card m-1 overflow-y-scroll',
+                          style: 'max-height: 500px;' do %>
+        <%= render partial: 'oroshi/shared/card_body_spinner' %>
+        <% end %>
+    </div>
+</div>
+<% end %>

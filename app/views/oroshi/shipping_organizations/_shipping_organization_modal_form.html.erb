@@ -1,0 +1,26 @@
+<%= turbo_frame_tag 'shipping_organization_modal_form' do %>
+<%= form_with model: @shipping_organization, 
+                      defaults: { input_html: { class: 'mb-2' } },
+                      data: {
+                        action: 'oroshi--dashboard#modalFormSubmit:prevent',
+                        refresh_target: 'dashboard_frame'
+                      } do |form| %>
+<% if @shipping_organization.errors.any? %>
+<div id="error_explanation" class="m-auto mb-2">
+    <h2>
+        <%= t('oroshi.dashboard.form_error_header', 
+            error_count: @shipping_organization.errors.count, 
+            model_name: Oroshi::ShippingOrganization.model_name.human) %>
+    </h2>
+
+    <ul>
+        <% @shipping_organization.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+<%= render partial: 'form', locals: { form: form } %>
+<%= form.submit class: 'btn btn-primary my-2' %>
+<% end %>
+<% end %>

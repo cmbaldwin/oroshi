@@ -1,0 +1,63 @@
+<% form_path = case view 
+   when 'orders'
+     oroshi_orders_orders_path(date: @date)
+   when 'templates'
+     oroshi_orders_templates_path(date: @date)
+   when 'shipping'
+     oroshi_orders_shipping_path(date: @date)
+    when 'revenue'
+      oroshi_orders_revenue_path(date: @date)
+   end 
+%>
+
+<div class="d-flex flex-column w-100 h-100 bg-light border borders-secondary rounded p-1 text-center" data-oroshi--orders--order-dashboard-target="orderFilterForm">
+    <%= form_with url: form_path, 
+                method: :get, 
+                html: { 
+                  class: 'd-flex flex-column gap-2 p-2'
+                },
+                data: { 
+                  turbo_frame: 'orders_dashboard', 
+                } do |form| %>
+
+    <!-- Select Fields -->
+    <%= form.label :order_category_ids, '注文カテゴリー選択', class: 'form-label' %>
+    <%= form.select :order_category_ids, 
+                    @unique_order_categories.map { |oc| [oc.name, oc.id] }, 
+                    { selected: @order_category_ids }, 
+                    { multiple: true, class: 'form-select form-select-sm' } %>
+    <%= form.label :buyer_category_ids, '注文カテゴリー選択', class: 'form-label' %>
+    <%= form.select :buyer_category_ids, 
+                    @unique_buyer_categories.map { |oc| [oc.name, oc.id] }, 
+                    { selected: @buyer_category_ids }, 
+                    { multiple: true, class: 'form-select form-select-sm' } %>
+    <%= form.label :buyer_ids, '卸先選択', class: 'form-label' %>
+    <%= form.select :buyer_ids, 
+                    @unique_buyers.map { |buyer| [buyer.name, buyer.id] }, 
+                    { selected: @buyer_ids }, 
+                    { multiple: true, class: 'form-select form-select-sm' } %>
+    <%= form.label :shipping_method_ids, '配送方法選択', class: 'form-label' %>
+    <%= form.select :shipping_method_ids, 
+                    @unique_shipping_methods.map { |shipping_method| [shipping_method.name, shipping_method.id] }, 
+                    { selected: @shipping_method_ids }, 
+                    { multiple: true, class: 'form-select form-select-sm' } %>
+
+    <!-- Toggle Switches -->
+    <% %w[order_category_ids buyer_category_ids buyer_ids shipping_method_ids].each do |filter_param| %>
+    <% toggle_param = "show_#{filter_param}" %>
+    <% toggle_state = !@dashboard_settings[toggle_param].to_i.zero? %>
+    <% model_name = "Oroshi::#{filter_param.chomp('_ids').camelize}".constantize.model_name.human %>
+
+    <div class="form-check form-switch">
+        <%= form.check_box toggle_param, 
+                           { checked: toggle_state, class: 'form-check-input' }, '1', '0' %>
+        <%= form.label toggle_param, "#{model_name}のボタンを表示する", class: 'form-check-label' %>
+    </div>
+    <% end %>
+
+    <!-- Submit Buttons -->
+    <%= form.submit "フィルター", class: 'btn btn-sm btn-primary' %>
+    <%= form.submit 'リセット', class: 'btn btn-sm btn-secondary', data: { action: 'oroshi--orders--order-dashboard#resetOrderFilters:passive' } %>
+
+    <% end %>
+</div>

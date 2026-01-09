@@ -1,0 +1,18 @@
+<%= turbo_frame_tag 'buyer_payment_entry' do %>
+<div class="card">
+    <div class="card-header <%= 'bg-info text-white' if @payment_receipt.persisted? %>">
+        <h5 class="mb-0 d-flex justify-content-between align-middle align-items-center">
+            <div class="me-auto d-flex align-middle align-items-center">
+                <%= render 'oroshi/shared/color_circle', color: @payment_receipt.buyer.color %>
+                <div class="fw-bold ms-3 overflow-hidden"><%= @payment_receipt.buyer.name %></div>
+            </div>
+            <div class="me-auto d-flex flex-grow-1 align-middle align-items-end justify-content-end text-right">
+                <%= @payment_receipt.persisted? ? "入金伝票番号:#{@payment_receipt.id}" : '入金入力' %>
+            </div>
+        </h5>
+    </div>
+    <div class="card-body">
+        <%= render 'form' %>
+    </div>
+</div>
+<% end %>

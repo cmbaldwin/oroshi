@@ -1,15 +1,15 @@
 <% order_categories = Oroshi::OrderCategory.all %>
 
-<h2 class="mb-4">注文カテゴリ <small class="text-muted">Order Category</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <p class="text-muted mb-4">
-  注文を分類するためのカテゴリを登録してください。例：通常、急ぎ、予約など
+  <%= t('.description') %>
 </p>
 
 <% if order_categories.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの注文カテゴリ</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_categories') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -27,11 +27,11 @@
                 <td><span class="color-circle" style="background-color: <%= cat.color %>;"></span></td>
                 <td><%= cat.name %></td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_order_category_id: cat.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "このカテゴリを削除しますか？" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_category') } %>
                 </td>
               </tr>
             <% end %>
@@ -43,13 +43,13 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    注文カテゴリがまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">新しい注文カテゴリを追加</h5>
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_category') %></h5>
   </div>
   <div class="card-body">
     <%= f.fields_for :order_category do |oc| %>
@@ -78,11 +78,11 @@
 <% if order_categories.empty? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの注文カテゴリが必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>
 
 <div class="alert alert-success mt-4">
   <i class="bi bi-check-circle me-2"></i>
-  <strong>最終ステップです！</strong> 保存すると、オンボーディングが完了します。
+  <%= t('oroshi.onboarding.messages.final_step_success') %>
 </div>

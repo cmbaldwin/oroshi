@@ -28,11 +28,13 @@ ja:
       send: "送信"
       resend: "再送"
       download: "ダウンロード"
+      skip_for_now: "今はスキップ"
 
     confirmations:
       are_you_sure: "よろしいですか？"
       delete_confirm: "本当に削除しますか？"
       unsaved_changes: "保存されていない変更があります。このページを離れますか？"
+      skip_onboarding: "オンボーディングをスキップしますか？後でダッシュボードから再開できます。"
 
     messages:
       loading: "読み込み中..."
@@ -48,6 +50,9 @@ ja:
       continue_setup: "セットアップを続ける"
       dismiss_checklist_title: "チェックリストを非表示にしますか？"
       dismiss_checklist_warning: "セットアップが不完全な場合、以下の機能が制限される可能性があります："
+      dismiss_checklist_limitation_1: "材料追跡請求書の作成"
+      dismiss_checklist_limitation_2: "注文の作成と管理"
+      dismiss_checklist_limitation_3: "配送スケジュールの設定"
       dismiss_checklist_info: "後からダッシュボードの設定メニューから再開できます。"
 
     empty_states:

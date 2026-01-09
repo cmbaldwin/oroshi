@@ -15,10 +15,10 @@
   
   <div class="d-flex align-items-center gap-2">
     <span class="fw-semibold">
-      <%= current_phase.to_s.titleize if current_phase %>
+      <%= t("oroshi.onboarding.phases.#{current_phase}") if current_phase %>
     </span>
     <span class="opacity-75">
-      Step <%= current_index + 1 %> of <%= all_steps.length %>
+      <%= t('oroshi.onboarding.progress.step', current: current_index + 1, total: all_steps.length) %>
     </span>
   </div>
   

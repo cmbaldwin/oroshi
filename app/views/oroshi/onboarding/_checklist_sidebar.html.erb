@@ -16,7 +16,7 @@
   <% Oroshi::OnboardingController::STEPS.each do |phase, steps| %>
     <div class="mb-3">
       <small class="text-muted text-uppercase fw-bold">
-        <%= I18n.t("onboarding.phases.#{phase}", default: phase.to_s.titleize) %>
+        <%= t("oroshi.onboarding.phases.#{phase}") %>
       </small>
       <ul class="list-unstyled mt-1 mb-0">
         <% steps.each do |step| %>
@@ -24,10 +24,10 @@
           <li class="py-1">
             <% if completed %>
               <i class="bi bi-check-circle-fill text-success me-2"></i>
-              <span class="text-muted"><%= I18n.t("onboarding.steps.#{step}", default: step.titleize) %></span>
+              <span class="text-muted"><%= t("oroshi.onboarding.steps.#{step}.title") %></span>
             <% else %>
               <i class="bi bi-circle text-secondary me-2"></i>
-              <%= link_to I18n.t("onboarding.steps.#{step}", default: step.titleize),
+              <%= link_to t("oroshi.onboarding.steps.#{step}.title"),
                           oroshi_onboarding_path(step),
                           class: 'text-decoration-none' %>
             <% end %>
@@ -59,9 +59,9 @@
       <div class="modal-body">
         <p><%= t('common.messages.dismiss_checklist_warning') %></p>
         <ul class="text-muted">
-          <li>材料追跡請求書の作成</li>
-          <li>注文の作成と管理</li>
-          <li>配送スケジュールの設定</li>
+          <li><%= t('common.messages.dismiss_checklist_limitation_1') %></li>
+          <li><%= t('common.messages.dismiss_checklist_limitation_2') %></li>
+          <li><%= t('common.messages.dismiss_checklist_limitation_3') %></li>
         </ul>
         <p class="mb-0"><%= t('common.messages.dismiss_checklist_info') %></p>
       </div>

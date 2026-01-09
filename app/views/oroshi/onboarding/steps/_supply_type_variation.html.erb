@@ -2,7 +2,7 @@
 <% supply_type_variations = Oroshi::SupplyTypeVariation.all %>
 <% suppliers = Oroshi::Supplier.all %>
 
-<h2 class="mb-4">品種 <small class="text-muted">Supply Type Variation</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <% if supply_type.present? %>
   <div class="alert alert-info mb-4">
@@ -12,13 +12,13 @@
 <% end %>
 
 <p class="text-muted mb-4">
-  材料タイプの品種（バリエーション）を登録してください。例：みかんの「早生」「青島」など
+  <%= t('.description') %>
 </p>
 
 <% if supply_type_variations.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの品種</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_variations') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -40,11 +40,11 @@
                 <td><%= stv.default_container_count %></td>
                 <td><%= stv.suppliers.pluck(:company_name).join(', ').presence || '—' %></td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_supply_type_variation_id: stv.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "この品種を削除しますか？" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_variation') } %>
                 </td>
               </tr>
             <% end %>
@@ -56,13 +56,13 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    品種がまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">新しい品種を追加</h5>
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_variation') %></h5>
   </div>
   <div class="card-body">
     <%= f.fields_for :supply_type_variation do |stv| %>
@@ -117,7 +117,7 @@
         </div>
       <% else %>
         <div class="form-text text-muted mb-3">
-          仕入先は前のステップで設定されています。
+          <%= t('oroshi.onboarding.steps.supplier.configured_previously') %>
         </div>
       <% end %>
     <% end %>
@@ -127,6 +127,6 @@
 <% if supply_type_variations.empty? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの品種が必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>

@@ -5,7 +5,7 @@
 <% shipping_receptacles = Oroshi::ShippingReceptacle.all %>
 <% production_zones = Oroshi::ProductionZone.all %>
 
-<h2 class="mb-4">商品バリエーション <small class="text-muted">Product Variation</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <% if product.present? %>
   <div class="alert alert-info mb-4">
@@ -15,26 +15,21 @@
 <% end %>
 
 <p class="text-muted mb-4">
-  商品のバリエーション（サイズ、産地違いなど）を登録してください。
+  <%= t('.description') %>
 </p>
 
 <% if shipping_receptacles.empty? || production_zones.empty? %>
   <div class="alert alert-warning mb-4">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    <strong>注意:</strong> 商品バリエーションの完全な設定には、発送容器と生産地域が必要です。
-    <% if shipping_receptacles.empty? %>
-      <br>発送容器がまだ登録されていません。後のステップで設定できます。
-    <% end %>
-    <% if production_zones.empty? %>
-      <br>生産地域がまだ登録されていません。ダッシュボードから設定できます。
-    <% end %>
+    <%= t('.dependency_warning').html_safe %>
+    <%= t('.skip_if_dependencies_missing') %>
   </div>
 <% end %>
 
 <% if product_variations.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの商品バリエーション</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_product_variations') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -58,11 +53,11 @@
                 <td><%= pv.primary_content_volume %> <%= pv.product&.supply_type&.units %></td>
                 <td><%= pv.region&.name rescue '—' %></td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_product_variation_id: pv.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "この商品バリエーションを削除しますか？" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_product_variation') } %>
                 </td>
               </tr>
             <% end %>
@@ -74,14 +69,14 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    商品バリエーションがまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <% if shipping_receptacles.any? && production_zones.any? %>
   <div class="card">
     <div class="card-header">
-      <h5 class="mb-0">新しい商品バリエーションを追加</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_product_variation') %></h5>
     </div>
     <div class="card-body" data-controller="oroshi--dashboard">
       <%= f.fields_for :product_variation do |pv| %>
@@ -127,7 +122,7 @@
             <%= pv.label :default_shipping_receptacle_id, '発送容器 *', class: 'form-label' %>
             <%= pv.select :default_shipping_receptacle_id,
                          shipping_receptacles.map { |sr| [sr.name, sr.id] },
-                         { prompt: '選択してください' },
+                         { prompt: t('oroshi.onboarding.select_prompt') },
                          { class: 'form-select', required: product_variations.empty? } %>
           </div>
 
@@ -155,7 +150,7 @@
             <%= pv.label :primary_content_subregion_id, '産地（都道府県） *', class: 'form-label' %>
             <%= pv.select :primary_content_subregion_id,
                          Carmen::Country.coded('JP').subregions.map { |s| [s.name, s.code] },
-                         { prompt: '選択してください' },
+                         { prompt: t('oroshi.onboarding.select_prompt') },
                          { class: 'form-select', required: product_variations.empty? } %>
           </div>
         </div>
@@ -208,8 +203,8 @@
     <div class="card-body text-center py-5">
       <i class="bi bi-info-circle display-4 text-muted"></i>
       <p class="mt-3 text-muted">
-        商品バリエーションを追加するには、先に発送容器と生産地域を設定する必要があります。<br>
-        このステップをスキップして後で設定することができます。
+        <%= t('.dependency_warning').html_safe %>
+        <%= t('.skip_if_dependencies_missing') %>
       </p>
     </div>
   </div>
@@ -218,6 +213,6 @@
 <% if product_variations.empty? && shipping_receptacles.any? && production_zones.any? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの商品バリエーションが必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>

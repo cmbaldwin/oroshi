@@ -1,15 +1,15 @@
 <% buyers = Oroshi::Buyer.all %>
 
-<h2 class="mb-4">仕入先（販売先） <small class="text-muted">Buyer</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <p class="text-muted mb-4">
-  商品を販売する取引先（市場、小売店、会社など）を登録してください。
+  <%= t('.description') %>
 </p>
 
 <% if buyers.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの販売先</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_buyers') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -33,11 +33,11 @@
                 <td><%= I18n.t("enums.oroshi_buyer.entity_type.#{buyer.entity_type}", default: buyer.entity_type) %></td>
                 <td><%= number_to_percentage(buyer.commission_percentage, precision: 1) %></td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_buyer_id: buyer.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "この販売先を削除しますか？" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_buyer') } %>
                 </td>
               </tr>
             <% end %>
@@ -49,13 +49,13 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    販売先がまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">新しい販売先を追加</h5>
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_buyer') %></h5>
   </div>
   <div class="card-body">
     <%= f.fields_for :buyer do |b| %>
@@ -83,7 +83,7 @@
                        Oroshi::Buyer.entity_types.keys.map { |type|
                          [I18n.t("enums.oroshi_buyer.entity_type.#{type}", default: type.titleize), type]
                        },
-                       { prompt: '選択してください' },
+                       { prompt: t('oroshi.onboarding.select_prompt') },
                        { class: 'form-select', required: buyers.empty? } %>
         </div>
       </div>
@@ -148,6 +148,6 @@
 <% if buyers.empty? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの販売先が必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>

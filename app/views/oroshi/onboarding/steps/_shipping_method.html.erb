@@ -3,7 +3,7 @@
 <% shipping_methods = Oroshi::ShippingMethod.all %>
 <% buyers = Oroshi::Buyer.all %>
 
-<h2 class="mb-4">配送方法 <small class="text-muted">Shipping Method</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <% if shipping_organization.present? %>
   <div class="alert alert-info mb-4">
@@ -13,13 +13,13 @@
 <% end %>
 
 <p class="text-muted mb-4">
-  配送方法と料金体系を登録してください。例：宅配便、クール便など
+  <%= t('.description') %>
 </p>
 
 <% if shipping_methods.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの配送方法</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_shipping_methods') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -43,11 +43,11 @@
                 <td><%= number_to_currency(sm.daily_cost, unit: '¥', precision: 0) %></td>
                 <td><%= number_to_currency(sm.per_shipping_receptacle_cost, unit: '¥', precision: 0) %></td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_shipping_method_id: sm.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "この配送方法を削除しますか？" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_shipping_method') } %>
                 </td>
               </tr>
             <% end %>
@@ -59,13 +59,13 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    配送方法がまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">新しい配送方法を追加</h5>
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_shipping_method') %></h5>
   </div>
   <div class="card-body">
     <%= f.fields_for :shipping_method do |sm| %>
@@ -168,6 +168,6 @@
 <% if shipping_methods.empty? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの配送方法が必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>

@@ -1,16 +1,16 @@
 <% products = Oroshi::Product.all %>
 <% supply_types = Oroshi::SupplyType.all %>
 
-<h2 class="mb-4">商品 <small class="text-muted">Product</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <p class="text-muted mb-4">
-  販売する商品を登録してください。商品は材料タイプに紐づきます。
+  <%= t('.description') %>
 </p>
 
 <% if products.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの商品</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_products') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -38,11 +38,11 @@
                   <% end %>
                 </td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_product_id: product.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "この商品を削除しますか？" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_product') } %>
                 </td>
               </tr>
             <% end %>
@@ -54,13 +54,13 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    商品がまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">新しい商品を追加</h5>
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_product') %></h5>
   </div>
   <div class="card-body">
     <%= f.fields_for :product do |p| %>
@@ -87,7 +87,7 @@
           <% if supply_types.any? %>
             <%= p.select :supply_type_id,
                          supply_types.map { |st| ["#{st.name} (#{st.units})", st.id] },
-                         { prompt: '選択してください' },
+                         { prompt: t('oroshi.onboarding.select_prompt') },
                          { class: 'form-select', required: products.empty? } %>
           <% else %>
             <div class="form-text text-danger">材料タイプが登録されていません</div>
@@ -142,6 +142,6 @@
 <% if products.empty? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの商品が必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>

@@ -1,7 +1,7 @@
-<h2 class="mb-4">入荷時間帯 <small class="text-muted">Supply Reception Times</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <p class="text-muted mb-4">
-  材料の入荷時間帯を設定してください。複数の時間帯を追加できます。
+  <%= t('.description') %>
 </p>
 
 <% supply_reception_times = Oroshi::SupplyReceptionTime.all %>
@@ -9,15 +9,15 @@
 <% if supply_reception_times.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの入荷時間帯</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_times') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
         <table class="table table-sm mb-0">
           <thead>
             <tr>
-              <th>時間帯</th>
-              <th>時刻</th>
+              <th><%= t('oroshi.onboarding.labels.time_qualifier') %></th>
+              <th><%= t('oroshi.onboarding.labels.hour') %></th>
               <th></th>
             </tr>
           </thead>
@@ -25,13 +25,13 @@
             <% supply_reception_times.each do |srt| %>
               <tr>
                 <td><%= srt.time_qualifier %></td>
-                <td><%= srt.hour %>時</td>
+                <td><%= srt.hour %><%= t('oroshi.onboarding.labels.hour_unit') %></td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_supply_reception_time_id: srt.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "この入荷時間帯を削除しますか？" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_time') } %>
                 </td>
               </tr>
             <% end %>
@@ -43,28 +43,28 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    入荷時間帯がまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">新しい入荷時間帯を追加</h5>
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_time') %></h5>
   </div>
   <div class="card-body">
     <%= f.fields_for :supply_reception_time do |srt| %>
       <div class="row">
         <div class="col-md-6 mb-3">
-          <%= srt.label :time_qualifier, '時間帯名 *', class: 'form-label' %>
+          <%= srt.label :time_qualifier, "#{t('oroshi.onboarding.labels.time_qualifier')} *", class: 'form-label' %>
           <%= srt.text_field :time_qualifier,
                              placeholder: '例: 朝一、午前中、午後',
                              required: supply_reception_times.empty?,
                              class: 'form-control' %>
-          <div class="form-text">この時間帯の呼び名（例：朝一、午前中、午後一）</div>
+          <div class="form-text"><%= t('oroshi.onboarding.labels.time_qualifier_help') %></div>
         </div>
 
         <div class="col-md-6 mb-3">
-          <%= srt.label :hour, '時刻 *', class: 'form-label' %>
+          <%= srt.label :hour, "#{t('oroshi.onboarding.labels.hour')} *", class: 'form-label' %>
           <div class="input-group">
             <%= srt.number_field :hour,
                                  min: 0,
@@ -72,9 +72,9 @@
                                  placeholder: '8',
                                  required: supply_reception_times.empty?,
                                  class: 'form-control' %>
-            <span class="input-group-text">時</span>
+            <span class="input-group-text"><%= t('oroshi.onboarding.labels.hour_unit') %></span>
           </div>
-          <div class="form-text">24時間表記（0〜23）</div>
+          <div class="form-text"><%= t('oroshi.onboarding.labels.hour_help') %></div>
         </div>
       </div>
     <% end %>
@@ -84,6 +84,6 @@
 <% if supply_reception_times.empty? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの入荷時間帯が必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>

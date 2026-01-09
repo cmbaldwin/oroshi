@@ -1,15 +1,15 @@
 <% supply_types = Oroshi::SupplyType.all %>
 
-<h2 class="mb-4">材料タイプ <small class="text-muted">Supply Type</small></h2>
+<h2 class="mb-4"><%= t('.title') %></h2>
 
 <p class="text-muted mb-4">
-  取り扱う材料の種類を登録してください。例：みかん、レモン、海苔など
+  <%= t('.description') %>
 </p>
 
 <% if supply_types.any? %>
   <div class="card mb-4">
     <div class="card-header">
-      <h5 class="mb-0">登録済みの材料タイプ</h5>
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_types') %></h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -31,11 +31,11 @@
                 <td><code><%= st.handle %></code></td>
                 <td><%= st.liquid? ? '✓' : '—' %></td>
                 <td class="text-end">
-                  <%= button_to "削除",
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
                                 oroshi_onboarding_path(@step, delete_supply_type_id: st.id),
                                 method: :patch,
                                 class: "btn btn-sm btn-outline-danger",
-                                data: { turbo_confirm: "この材料タイプを削除しますか？関連する品種も削除されます。" } %>
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_type') } %>
                 </td>
               </tr>
             <% end %>
@@ -47,13 +47,13 @@
 <% else %>
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
-    材料タイプがまだ登録されていません。少なくとも1つ追加してください。
+    <%= t('.no_records_warning') %>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">新しい材料タイプを追加</h5>
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_type') %></h5>
   </div>
   <div class="card-body">
     <%= f.fields_for :supply_type do |st| %>
@@ -101,6 +101,6 @@
 <% if supply_types.empty? %>
   <div class="alert alert-warning mt-3">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    続行するには少なくとも1つの材料タイプが必要です。
+    <%= t('.validation_error') %>
   </div>
 <% end %>

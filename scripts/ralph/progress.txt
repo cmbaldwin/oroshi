@@ -192,3 +192,16 @@ Learnings:
 - liquid field uses inclusion: { in: [true, false] } so checkbox works correctly
 - handle is system identifier for referencing supply types programmatically
 - Same pattern: table + form card, delete via button_to with :deleted return
+
+[2026-01-09 23:45:00] Story: US-012 - Supply type variation onboarding step
+Implemented: Created supply type variation onboarding step with supplier association
+Files:
+  - app/views/oroshi/onboarding/steps/_supply_type_variation.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_supply_type_variation)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- SupplyTypeVariation requires: supply_type_id, name, default_container_count
+- HABTM with suppliers via supplier_ids: [] in params.permit
+- Shows first supply_type in info alert for context
+- Checkbox multi-select uses { multiple: true } option
+- End of supply_chain phase - next is sales phase (buyer)

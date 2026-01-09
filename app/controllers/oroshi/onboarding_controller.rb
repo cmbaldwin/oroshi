@@ -94,6 +94,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_supplier
     when "supply_type"
       save_supply_type
+    when "supply_type_variation"
+      save_supply_type_variation
     else
       true
     end
@@ -207,5 +209,27 @@ class Oroshi::OnboardingController < ApplicationController
 
   def supply_type_params
     params.require(:supply_type).permit(:name, :units, :handle, :liquid)
+  end
+
+  def save_supply_type_variation
+    if params[:delete_supply_type_variation_id].present?
+      Oroshi::SupplyTypeVariation.find_by(id: params[:delete_supply_type_variation_id])&.destroy
+      return :deleted
+    end
+
+    stv_params = params[:supply_type_variation]
+    if stv_params.present? && stv_params[:name].present?
+      variation = Oroshi::SupplyTypeVariation.new(supply_type_variation_params)
+      unless variation.save
+        flash.now[:alert] = variation.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    Oroshi::SupplyTypeVariation.any?
+  end
+
+  def supply_type_variation_params
+    params.require(:supply_type_variation).permit(:supply_type_id, :name, :default_container_count, supplier_ids: [])
   end
 end

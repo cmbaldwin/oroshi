@@ -217,8 +217,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": "Step name: supply_type_variation. End of Phase 1 (Supply Chain)."
+      "passes": true,
+      "notes": "Created step partial with supply_type select, name, default_container_count. Multi-select checkboxes for supplier association. Controller handles create/delete."
     },
     {
       "id": "US-013",

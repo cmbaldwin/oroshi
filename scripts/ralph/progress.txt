@@ -114,3 +114,14 @@ Learnings:
 - Both tools provide complementary detection patterns (gitleaks + GitGuardian database)
 - Pre-build hook now runs TWO secret scanners before linting/testing
 - Command: ggshield secret scan repo . --exit-zero --show-secrets
+
+[2026-01-09 18:00:00] Story: US-006 - Add before_action to redirect incomplete users to onboarding
+Implemented: Added check_onboarding before_action to ApplicationController with proper skip conditions
+Files: app/controllers/application_controller.rb
+Tests: PASSING (controller tests pass, rubocop clean)
+Learnings:
+- Use controller_path == "oroshi/onboarding" to skip specific controllers
+- devise_controller? helper available in ApplicationController for skipping Devise
+- Auto-create onboarding_progress if missing: current_user.onboarding_progress || current_user.create_onboarding_progress!
+- Return early guards for cleaner conditionals: return if progress.completed? || progress.skipped?
+- Added to ApplicationController since all Oroshi controllers inherit from it directly (not Oroshi::ApplicationController)

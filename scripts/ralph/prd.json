@@ -116,8 +116,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added check_onboarding to ApplicationController. Uses controller_path check to skip OnboardingController, devise_controller? helper for Devise."
     },
     {
       "id": "US-007",

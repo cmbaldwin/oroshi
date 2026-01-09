@@ -375,3 +375,28 @@ Learnings:
 - Asset precompilation with rails assets:precompile verifies SCSS compilation
 - Remove public/assets/.manifest.json to force asset recompilation in development
 
+[2026-01-09 23:45:00] Story: US-025 - Create intuitive locale file directory structure
+Implemented: Organized locale file structure with nested directories mirroring application structure
+Files:
+  - config/application.rb (added i18n.load_path configuration)
+  - config/locales/README.md (comprehensive documentation)
+  - config/locales/ja/common.yml (shared translations)
+  - config/locales/ja/layouts/application.yml (layout translations)
+  - config/locales/ja/oroshi/ (created directory for oroshi namespace)
+  - config/locales/ja/layouts/ (created directory for layouts)
+  - config/locales/ja/devise/ (created directory for devise)
+  - config/locales/en/ (created parallel English structure)
+Tests: PASSING (rubocop clean, server starts successfully, translations accessible)
+Learnings:
+- Rails i18n.load_path configuration: config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.yml")]
+- Nested directory structure improves maintainability: ja/{common,layouts,oroshi,devise}
+- common.yml should contain frequently reused translations (buttons, labels, confirmations, messages)
+- layouts/application.yml contains navbar, footer, flash message translations
+- Locale files can mirror app/views/ structure for easy navigation (ja/oroshi/ maps to app/views/oroshi/)
+- Use lazy lookup t('.key') in views for automatic namespace resolution
+- Use absolute paths t('common.buttons.save') for shared translations
+- I18n.load_path shows all loaded locale files including nested ones
+- Translations are accessible via I18n.t('common.buttons.save') and I18n.t('layouts.application.navbar.brand')
+- Test suite crashes on Ruby 4.0.0 (known issue) - validate with rubocop and server start instead
+- README.md should document: structure, conventions, usage guidelines, migration plan
+- Directory structure should support future locale generation/sync tasks (US-032 to US-035)

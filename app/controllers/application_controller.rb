@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
   before_action :check_user
+  before_action :check_onboarding
   before_action :configure_permitted_parameters, if: :devise_controller?
   after_action :set_access_control_headers
 
@@ -22,6 +23,18 @@ class ApplicationController < ActionController::Base
     return if current_user.admin?
 
     authentication_notice
+  end
+
+  def check_onboarding
+    return unless current_user
+    return if devise_controller?
+    return if controller_path == "oroshi/onboarding"
+
+    progress = current_user.onboarding_progress || current_user.create_onboarding_progress!
+
+    return if progress.completed? || progress.skipped?
+
+    redirect_to oroshi_onboarding_index_path
   end
 
   def check_vip

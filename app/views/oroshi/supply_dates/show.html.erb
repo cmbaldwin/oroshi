@@ -1,5 +1,5 @@
 <%= turbo_frame_tag 'app' do %>
-  <% title "Funabiki Online - #{@supply_date.date} 生産原料供給記載表" %>
+  <% title "Funabiki Online - #{@supply_date.date} #{t('oroshi.supply_dates.show.page_title_suffix')}" %>
 
   <%= content_tag :div,
                   class: "container-fluid",

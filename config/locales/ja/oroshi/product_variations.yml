@@ -1,0 +1,15 @@
+ja:
+  oroshi:
+    product_variations:
+      index:
+        no_variations_warning: "商品変種が登録されていません。まずは商品変種を登録してください。"
+      edit:
+        title: "%{name}の商品変種を編集する"
+        no_variations_warning: "商品変種が登録されていません。まずは商品変種を登録してください。"
+      form:
+        select_prompt: "選択してください"
+      cost:
+        per_box: "一箱"
+        subtotal: "小計"
+      modal:
+        edit_title: "%{name}の商品変種を編集する"

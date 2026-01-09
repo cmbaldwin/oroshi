@@ -1,0 +1,7 @@
+ja:
+  oroshi:
+    supplier_organizations:
+      dashboard:
+        settings:
+          supplier_organization_tab: "仕入先組織"
+          supply_reception_times_tab: "仕入受取時間"

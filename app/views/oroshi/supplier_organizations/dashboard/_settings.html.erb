@@ -4,8 +4,8 @@
     <div class="w-100">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
-                <%= dashboard_frame_tab_link('供給組織', edit_oroshi_supplier_organization_path(@supplier_organization), 'supplier_organization', active: true) %>
-                <%= dashboard_frame_tab_link('供給者', oroshi_supplier_organization_suppliers_path(@supplier_organization), 'suppliers') %>
+                <%= dashboard_frame_tab_link(t('oroshi.supplier_organizations.dashboard.settings.supplier_organization_tab'), edit_oroshi_supplier_organization_path(@supplier_organization), 'supplier_organization', active: true) %>
+                <%= dashboard_frame_tab_link(Oroshi::Supplier.model_name.human(count: 2), oroshi_supplier_organization_suppliers_path(@supplier_organization), 'suppliers') %>
             </ul>
         </div>
         <div class="card-body">

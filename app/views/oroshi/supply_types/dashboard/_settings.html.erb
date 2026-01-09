@@ -4,8 +4,8 @@
     <div class="w-100">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
-                <%= dashboard_frame_tab_link('供給種類', edit_oroshi_supply_type_path(@supply_type), 'supply_type', active: true) %>
-                <%= dashboard_frame_tab_link('供給種類変種', oroshi_supply_type_supply_type_variations_path(@supply_type), 'supply_type_variations') %>
+                <%= dashboard_frame_tab_link(t('oroshi.supply_types.dashboard.settings.supply_type_tab'), edit_oroshi_supply_type_path(@supply_type), 'supply_type', active: true) %>
+                <%= dashboard_frame_tab_link(t('oroshi.supply_types.dashboard.settings.supply_type_variations_tab'), oroshi_supply_type_supply_type_variations_path(@supply_type), 'supply_type_variations') %>
             </ul>
         </div>
         <div class="card-body">

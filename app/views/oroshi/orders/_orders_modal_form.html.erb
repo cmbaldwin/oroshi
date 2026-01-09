@@ -1,7 +1,7 @@
 <%= turbo_frame_tag 'orders_modal_content', class: 'modal-content overflow-hidden' do  %>
   <div class="modal-header">
     <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
-      <div class="fs-5">新規注文</div>
+      <div class="fs-5"><%= t('oroshi.orders.modal.new_order_title') %></div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
@@ -16,9 +16,9 @@
       <%= render 'form', form: form %>
     </div>
     <div class="modal-footer justify-content-around">
-      <%= link_to '削除', @order, 
+      <%= link_to t('common.buttons.delete'), @order, 
                   data: { turbo_method: 'delete', 
-                          turbo_confirm: 'この注文を削除する?', 
+                          turbo_confirm: t('oroshi.orders.modal.delete_confirm'), 
                           action: 'oroshi--orders--order-dashboard#onDestroyOrderFromModal:passive' }, 
                   class: 'btn btn-danger' if @order.persisted? %>
       <div class="d-flex gap-2 flex-fill justify-content-end place-items-center align-middle">
@@ -26,14 +26,14 @@
           <% if @order.order_template.present? %>
             <div class="form-check form-switch d-flex align-items-center justify-content-center align-middle text-center">
               <%= form.check_box :copy_template, { class: "form-check-input" } %>
-              <%= form.label :copy_template, 'テンプレートをコピーして作成', class: "ms-1 form-check-label" %>
+              <%= form.label :copy_template, t('oroshi.orders.modal.copy_template_label'), class: "ms-1 form-check-label" %>
             </div>
           <% end %>
-          <%= form.submit '更新', class: 'btn btn-primary my-2' %>
+          <%= form.submit t('common.buttons.update'), class: 'btn btn-primary my-2' %>
         <% else %>
-          <%= form.submit '作成', class: 'btn btn-primary my-2' %>
+          <%= form.submit t('common.buttons.create'), class: 'btn btn-primary my-2' %>
         <% end %>
-        <button type="button" class="btn btn-secondary my-2" data-bs-dismiss="modal">閉じる</button>
+        <button type="button" class="btn btn-secondary my-2" data-bs-dismiss="modal"><%= t('oroshi.orders.modal.close_button') %></button>
       </div>
     </div>
   <% end %>

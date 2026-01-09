@@ -66,7 +66,7 @@
                 <% object = shipping_method.object %>
                 <div class="form-check form-check-inline mb-0" data-controller="tippy" data-tippy-content="<center>
                   <%= object.shipping_organization.name %> - <%= object.name %>:<br>
-                  <%= object.daily_cost %>日 + <%= object.per_shipping_receptacle_cost %>容器 + <%= object.per_freight_unit_cost %>貨物
+                  <%= t('oroshi.product_variations.cost.per_box', count: object.daily_cost) %> + <%= object.per_shipping_receptacle_cost %> + <%= object.per_freight_unit_cost %>
                 </center>
                 ">
                     <%= shipping_method.check_box class: "form-check-input" %>

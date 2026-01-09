@@ -30,7 +30,7 @@
         <%= label_with_validation_warning(form, :product_id, @product_variation) %>
         <%= form.select :product_id, 
                   @products.map { |p| [p.name, p.id] }, 
-                  { selected: @product_variation.product_id || '1', prompt: '商品を選択してください' },
+                  { selected: @product_variation.product_id || '1', prompt: t('oroshi.product_variations.form.select_prompt') },
                   { class: 'form-select form-select-sm',
                     data: {
                       action: 'change->oroshi--product-variations--form#updatePackagings'
@@ -44,7 +44,7 @@
                           loading: 'lazy' do %>
         <div class="d-flex w-100 text-center justify-content-center align-items-center align-middle">
             <div class="spinner-border spinner-border-sm" role="status">
-                <span class="visually-hidden">読み込み中...</span>
+                <span class="visually-hidden"><%= t('oroshi.products.form.loading') %></span>
             </div>
         </div>
         <% end %>
@@ -53,7 +53,7 @@
             <%= label_with_validation_warning(form, :default_shipping_receptacle_id, @product_variation) %>
             <%= form.select :default_shipping_receptacle_id,
                     @shipping_receptacles.map { |s| [s.name, s.id] },
-                    { prompt: '発送容器を選択してください' },
+                    { prompt: t('oroshi.product_variations.form.select_prompt') },
                     { class: 'form-select form-select-sm',
                       data: {
                         action: 'change->oroshi--dashboard#updateImage',
@@ -72,7 +72,7 @@
             <%= label_with_validation_warning(form, :primary_content_country_id, @product_variation) %>
             <%= form.select :primary_content_country_id, 
                     Carmen::Country.all.map { |c| [c.name, c.numeric_code] }, 
-                    { selected: '392', prompt: '国を選択してください' },
+                    { selected: '392', prompt: t('oroshi.product_variations.form.select_prompt') },
                     { class: 'form-select form-select-sm',
                       data: {
                         action: 'change->oroshi--dashboard#updateSubregions'
@@ -84,7 +84,7 @@
             <%= form.select :primary_content_subregion_id, 
                     Carmen::Country.coded('JP').subregions
                       .map{ |s| [s.name, s.code] }, 
-                    { prompt: '都道府県を選択してください' },
+                    { prompt: t('oroshi.product_variations.form.select_prompt') },
                     { class: 'form-select form-select-sm' } %>
         </div>
     </div>
@@ -132,7 +132,7 @@
                       loading: 'lazy' do %>
     <div class="d-flex w-100 text-center justify-content-center align-items-center align-middle">
         <div class="spinner-border spinner-border-sm" role="status">
-            <span class="visually-hidden">読み込み中...</span>
+            <span class="visually-hidden"><%= t('oroshi.products.form.loading') %></span>
         </div>
     </div>
     <% end %>

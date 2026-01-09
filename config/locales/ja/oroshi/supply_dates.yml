@@ -1,0 +1,14 @@
+ja:
+  oroshi:
+    supply_dates:
+      show:
+        page_title_suffix: "生産原料供給記載表"
+        header_title: "牡蠣供給記載表"
+        reception_date_label: "受け入れ日付"
+        price_display_toggle: "値段表示"
+        reception_list: "受け入り表"
+      entry:
+        supplier_name: "生産者名"
+        supplier_number: "生産者番号"
+        total_label: "%{name}合計【%{units}】"
+        supplier_disabled_tooltip: "この生産者はこの種類変種を生産しない設定になっている"

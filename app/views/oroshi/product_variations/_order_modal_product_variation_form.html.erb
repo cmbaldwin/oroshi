@@ -1,7 +1,7 @@
 <%= turbo_frame_tag 'orders_modal_content', class: 'modal-content overflow-hidden' do  %>
   <div class="modal-header">
     <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
-      <div class="fs-5"><%= @product_variation.name %>の商品を編集する</div>
+      <div class="fs-5"><%= t('oroshi.product_variations.modal.edit_title', name: @product_variation.name) %></div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>

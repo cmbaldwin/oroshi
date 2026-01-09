@@ -1,0 +1,7 @@
+ja:
+  oroshi:
+    supply_types:
+      dashboard:
+        settings:
+          supply_type_tab: "供給種別"
+          supply_type_variations_tab: "供給種別変種"

@@ -4,7 +4,7 @@
     <div class="card product-variations-card">
         <div class="card-body overflow-auto product-variations-body">
             <div class="card-title d-flex justify-content-between align-items-center align-middle">
-                <h5 class="mb-0"><%= "#{@product.name}の" if @product %>商品変種</h5>
+                <h5 class="mb-0"><%= "#{@product.name}の" if @product %><%= Oroshi::ProductVariation.model_name.human %></h5>
                 <%= link_to icon('arrow-clockwise'), oroshi_product_product_variations_path(@product), class: 'btn btn-sm btn-light', data: { turbo_frame: 'product_variations' } %>
             </div>
             <% if @product_variations %>
@@ -27,7 +27,7 @@
             </div>
             <% else %>
             <div class="alert alert-warning" role="alert">
-                商品変種が登録されていません。まずは商品変種を登録してください。
+                <%= t('oroshi.product_variations.index.no_variations_warning') %>
             </div>
             <% end %>
             <h6 class="card-subtitle mb-2 d-flex justify-content-between align-items-center align-middle">

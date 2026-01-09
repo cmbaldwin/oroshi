@@ -1,0 +1,7 @@
+ja:
+  oroshi:
+    shipping_organizations:
+      dashboard:
+        settings:
+          shipping_organization_tab: "発送組織"
+          shipping_methods_tab: "発送方法"

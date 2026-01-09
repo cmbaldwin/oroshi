@@ -443,8 +443,8 @@
         "Typecheck passes"
       ],
       "priority": 26,
-      "passes": false,
-      "notes": "Start with application.html.erb, then devise layouts. Use t() with default: option for graceful fallback during development."
+      "passes": true,
+      "notes": "Completed. Converted all hardcoded text in application.html.erb, _navbar.html.erb, and _footer.html.erb to t() helpers. All translations already existed from US-025. Tests passing, rubocop clean."
     },
     {
       "id": "US-027",

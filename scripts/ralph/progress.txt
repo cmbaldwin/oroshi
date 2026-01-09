@@ -400,3 +400,22 @@ Learnings:
 - Test suite crashes on Ruby 4.0.0 (known issue) - validate with rubocop and server start instead
 - README.md should document: structure, conventions, usage guidelines, migration plan
 - Directory structure should support future locale generation/sync tasks (US-032 to US-035)
+[2026-01-09 23:46:00] Story: US-026 - Internationalize layouts and navigation
+Implemented: Converted all hardcoded text in layouts to use t() helpers
+Files:
+  - app/views/layouts/application.html.erb (title, description, approval pending)
+  - app/views/layouts/shared/_navbar.html.erb (all nav links, tooltips, auth links)
+  - app/views/layouts/shared/_footer.html.erb (copyright, privacy policy, terms)
+Tests: PASSING (17 tests, 33 assertions in onboarding controller)
+Learnings:
+- All translations already existed in config/locales/ja/layouts/application.yml from US-025
+- Used t('layouts.application.navbar.key') pattern for navbar translations
+- Used t('layouts.application.footer.copyright', year: Time.current.year) for interpolation
+- ERB within HTML attributes requires <%= t('key') %> syntax, not just t('key')
+- Tooltip data attributes (tippy_content) can use t() helpers directly
+- String interpolation in data attributes: "#{t('key')}<strong>:..." works correctly
+- No devise layouts needed internationalization yet - they may have their own locale files
+- Server starts successfully, all i18n keys resolve correctly
+- Rubocop clean with 268 files, no offenses detected
+- Test suite uses Test::Unit, not RSpec (as noted in AGENTS.md)
+

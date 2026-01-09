@@ -363,8 +363,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 22,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added checklist_dismissed_at column via migration. Sidebar hides when dismissed. Resume clears dismissed status. Play icon in navbar to resume."
     },
     {
       "id": "US-023",

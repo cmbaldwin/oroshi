@@ -24,8 +24,15 @@
         <ul class="navbar-nav">
             <% if user_signed_in? %>
             <span class="navbar-text">
-                <div class="btn-group" role="group" aria-label="Basic">
-                    <%= button_to destroy_user_session_path,
+                                <div class="btn-group" role="group" aria-label="Basic">
+                                    <% if current_user.onboarding_progress&.checklist_dismissed? %>
+                                    <%= link_to icon("play-circle", class: 'text-success'),
+                                          resume_oroshi_onboarding_path(current_user.onboarding_progress.current_step || 'company_info'),
+                                          method: :post,
+                                          class: 'navbar-link btn btn-info tippy',
+                                          data: { tippy_content: "セットアップを再開" } %>
+                                    <% end %>
+                                    <%= button_to destroy_user_session_path,
                             id: "sign_out",
                             class: "bg-info border-0 p-0 m-0", 
                             method: :delete, 

@@ -14,6 +14,11 @@ class Oroshi::OnboardingProgress < ApplicationRecord
     skipped_at.present?
   end
 
+  # Check if checklist was dismissed
+  def checklist_dismissed?
+    checklist_dismissed_at.present?
+  end
+
   # Check if a specific step has been completed
   def step_completed?(step_name)
     completed_steps.include?(step_name.to_s)

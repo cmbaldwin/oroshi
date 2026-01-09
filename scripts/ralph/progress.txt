@@ -307,3 +307,19 @@ Learnings:
 - step_completed? method checks if step is in completed_steps array
 - Modal with Bootstrap for dismiss confirmation
 - dismiss_checklist action uses respond_to? check for column (US-021 will add column)
+
+[2026-01-10 02:00:00] Story: US-021 - Add functionality warnings and dismissal persistence
+Implemented: Added dismissal persistence with migration and resume link
+Files:
+  - db/migrate/*_add_checklist_dismissed_at_to_oroshi_onboarding_progresses.rb (new)
+  - app/models/oroshi/onboarding_progress.rb (added checklist_dismissed? method)
+  - app/views/oroshi/onboarding/_checklist_sidebar.html.erb (check dismissed status)
+  - app/views/layouts/shared/_navbar.html.erb (added resume setup icon)
+  - app/controllers/oroshi/onboarding_controller.rb (resume clears dismissed, dismiss sets it)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- Added checklist_dismissed_at datetime column to onboarding_progresses
+- Sidebar condition: skipped? && !completed? && !checklist_dismissed?
+- Resume action clears both skipped_at AND checklist_dismissed_at
+- Play icon in navbar only shows when checklist_dismissed?
+- Modal warns about limited functionality when dismissing

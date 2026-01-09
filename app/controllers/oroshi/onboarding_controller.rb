@@ -30,7 +30,15 @@ class Oroshi::OnboardingController < ApplicationController
 
   def update
     # Save step-specific data
-    unless save_step_data
+    save_result = save_step_data
+
+    # Handle deletion - stay on same step
+    if save_result == :deleted
+      redirect_to oroshi_onboarding_path(@step), notice: "削除しました"
+      return
+    end
+
+    unless save_result
       render :show, status: :unprocessable_entity
       return
     end
@@ -78,6 +86,8 @@ class Oroshi::OnboardingController < ApplicationController
     case @step
     when "company_info"
       save_company_info
+    when "supply_reception_time"
+      save_supply_reception_time
     else
       true
     end
@@ -92,5 +102,26 @@ class Oroshi::OnboardingController < ApplicationController
 
   def company_settings_params
     params.require(:company_settings).permit(:name, :postal_code, :address, :phone, :fax, :mail, :web, :invoice_number)
+  end
+
+  def save_supply_reception_time
+    # Handle deletion if requested
+    if params[:delete_supply_reception_time_id].present?
+      Oroshi::SupplyReceptionTime.find_by(id: params[:delete_supply_reception_time_id])&.destroy
+      return :deleted
+    end
+
+    # Add new supply reception time if form submitted with data
+    srt_params = params[:supply_reception_time]
+    if srt_params.present? && srt_params[:time_qualifier].present? && srt_params[:hour].present?
+      Oroshi::SupplyReceptionTime.create!(supply_reception_time_params)
+    end
+
+    # Validation: at least one must exist to proceed
+    Oroshi::SupplyReceptionTime.any?
+  end
+
+  def supply_reception_time_params
+    params.require(:supply_reception_time).permit(:time_qualifier, :hour)
   end
 end

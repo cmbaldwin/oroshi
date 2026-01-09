@@ -1,6 +1,17 @@
-/* Coolors Exported Palette - https://coolors.co/2d3142-4f5d75-bfc0c0-ffffff-26b3f0-79c94a-dc7632-2d32c4-e8411c */
+/* Oroshi Brand Color Palette - Analogous Harmony
+ * Adobe Color: https://color.adobe.com/Oroshi-color-theme-448defe9-27e0-4e1c-94b2-9f54c1057172/
+ * Colors: Greenish Cyan, Lynx Screen Blue, Frozen State, Synthetic Spearmint, Clear Blue, Poseidon Jr
+ */
 
-// /* RGB */
+// Oroshi Brand Colors (Analogous Blue-Green Harmony)
+$greenish-cyan: #4ecdc4;      // Primary brand color - vibrant cyan
+$lynx-screen-blue: #6ba3d4;   // Secondary blue
+$frozen-state: #a8dadc;        // Light blue/cyan for backgrounds
+$synthetic-spearmint: #72dda5; // Fresh green accent
+$clear-blue: #1e90ff;          // Bright clear blue
+$poseidon-jr: #2b7a8e;         // Deep blue-green
+
+// Supporting Neutral Colors
 $gunmetal: rgba(45, 49, 66, 1);
 $blackcoral: rgba(79, 93, 117, 1);
 $silver: rgba(191, 192, 192, 1);
@@ -8,18 +19,42 @@ $white: rgba(255, 255, 255, 1);
 $ochre: rgba(239, 131, 84, 1);
 $terra: rgba(204, 75, 75, 1);
 
-/* Theme Colors */
+/* Bootstrap Variable Overrides
+ * These must be defined before Bootstrap is imported
+ * Bootstrap uses these variables throughout its SCSS for calculations
+ */
+
+// Override Bootstrap's default theme color variables
+$primary: $greenish-cyan;       // Main brand color - cyan
+$secondary: $lynx-screen-blue;  // Secondary actions - soft blue
+$success: $synthetic-spearmint; // Success states - fresh green
+$info: $clear-blue;             // Informational - bright blue
+$warning: $ochre;               // Warnings - warm orange
+$danger: $terra;                // Errors - red
+$light: $frozen-state;          // Light backgrounds - pale cyan
+$dark: $poseidon-jr;            // Dark text/elements - deep blue-green
+
+// Override body and text colors for better integration
+$body-bg: $white;
+$body-color: $gunmetal;
+$link-color: $primary;
+$link-hover-color: darken($primary, 15%);
+
+/* Bootstrap Theme Color Map (optional, for adding custom colors)
+ * Bootstrap automatically generates this map from the variables above
+ * We can extend it with custom colors like 'yellow'
+ */
 
 $theme-colors: (
-  "primary": #84f5f5,
-  "secondary": #d7fcfc,
-  "success": #79c94a,
-  "info": #2d32c4,
-  "warning": #dc7632,
-  "danger": #e8411c,
-  "light": #e9fdfe,
-  "dark": #364b44,
-  "yellow": #ffed94,
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+  "yellow": #ffed94,  // Custom utility color
 );
 
 /* Custom Colors */

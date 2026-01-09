@@ -218,3 +218,15 @@ Learnings:
 - color_field helper generates HTML5 color picker input
 - entity_type enum: wholesale_market, retailer, company, individual, other
 - Use I18n.t with default: for graceful fallback when translation missing
+
+[2026-01-10 00:15:00] Story: US-014 - Product onboarding step
+Implemented: Created product onboarding step with supply type association
+Files:
+  - app/views/oroshi/onboarding/steps/_product.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_product)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- Product requires: name, units, supply_type_id
+- exterior_height/width/depth validated with greater_than_or_equal_to: 0
+- Dimensions are optional, default to 0 using value: 0 in number_field
+- Table displays dimensions as HxWxD mm or dash if all zero

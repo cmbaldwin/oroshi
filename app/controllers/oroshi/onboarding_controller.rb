@@ -98,6 +98,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_supply_type_variation
     when "buyer"
       save_buyer
+    when "product"
+      save_product
     else
       true
     end
@@ -257,6 +259,30 @@ class Oroshi::OnboardingController < ApplicationController
     params.require(:buyer).permit(
       :name, :handle, :entity_type, :handling_cost, :daily_cost,
       :optional_cost, :commission_percentage, :color
+    )
+  end
+
+  def save_product
+    if params[:delete_product_id].present?
+      Oroshi::Product.find_by(id: params[:delete_product_id])&.destroy
+      return :deleted
+    end
+
+    product_params_hash = params[:product]
+    if product_params_hash.present? && product_params_hash[:name].present?
+      product = Oroshi::Product.new(product_params)
+      unless product.save
+        flash.now[:alert] = product.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    Oroshi::Product.any?
+  end
+
+  def product_params
+    params.require(:product).permit(
+      :name, :units, :supply_type_id, :exterior_height, :exterior_width, :exterior_depth
     )
   end
 end

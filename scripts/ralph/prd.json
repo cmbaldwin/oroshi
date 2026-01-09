@@ -166,8 +166,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": "Step name: supplier_organization"
+      "passes": true,
+      "notes": "Created partial with entity fields, country/subregion selection using oroshi--dashboard controller, supply_reception_time checkboxes. Controller handles create/delete."
     },
     {
       "id": "US-010",

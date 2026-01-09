@@ -153,3 +153,17 @@ Learnings:
 - Required fields only when collection is empty: required: collection.empty?
 - Button_to with method: :patch can include extra params in URL for deletion IDs
 - Oroshi::SupplyReceptionTime requires hour (integer) and time_qualifier (string)
+
+[2026-01-09 22:00:00] Story: US-009 - Supplier organization onboarding step
+Implemented: Created supplier_organization step with form and controller logic
+Files:
+  - app/views/oroshi/onboarding/steps/_supplier_organization.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_supplier_organization)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- SupplierOrganization model uses Carmen gem for country/subregion with numeric country_id and coded subregion_id
+- Reuse existing oroshi--dashboard Stimulus controller for dynamic subregion updates (data-action: 'change->oroshi--dashboard#updateSubregions')
+- Wrap country/subregion selects in .country-subregion-select container with .subregion-select inner div for Stimulus targeting
+- HABTM association with supply_reception_times uses supply_reception_time_ids: [] in params.permit
+- Check free_entry inclusion validation requires explicit true/false, not just presence
+- Entity types enum: union, company, individual, other - use I18n.t("enums.oroshi_supplier_organization.entity_type.#{type}") for display

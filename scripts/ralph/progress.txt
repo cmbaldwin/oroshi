@@ -167,3 +167,16 @@ Learnings:
 - HABTM association with supply_reception_times uses supply_reception_time_ids: [] in params.permit
 - Check free_entry inclusion validation requires explicit true/false, not just presence
 - Entity types enum: union, company, individual, other - use I18n.t("enums.oroshi_supplier_organization.entity_type.#{type}") for display
+
+[2026-01-09 23:15:00] Story: US-010 - Supplier onboarding step
+Implemented: Pre-existing - verified implementation complete
+Files:
+  - app/views/oroshi/onboarding/steps/_supplier.html.erb (already exists)
+  - app/controllers/oroshi/onboarding_controller.rb (save_supplier already exists)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- Supplier model requires: company_name, supplier_number, representatives, invoice_number, supplier_organization_id
+- supplier_number is 1-19, displayed as circled number (①-⑲) using Unicode codepoints 9312-9331
+- supply_type_variation_ids HABTM shows empty message when no variations exist yet (created in later step)
+- Step uses same pattern as supplier_organization: table of existing + add form card
+- Partial was already implemented but prd.json wasn't updated to passes: true

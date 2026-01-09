@@ -184,8 +184,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": "Step name: supplier"
+      "passes": true,
+      "notes": "Step partial and controller already implemented. Shows first org in header, table for existing suppliers, form with all required fields. Delete via button_to with PATCH."
     },
     {
       "id": "US-011",
@@ -386,6 +386,227 @@
       "priority": 23,
       "passes": false,
       "notes": "Found 20+ inline style violations in views: buyers/_form.html.erb (min-width, background-color circles), supply_dates views (max-width, width sizing), orders views (min-height, color circles), onboarding layout (entire embedded <style> block). Need to extract to stylesheets."
+    },
+    {
+      "id": "US-024",
+      "title": "Update color scheme using Bootstrap customization",
+      "description": "As a user, I want the website to use the Oroshi brand color palette for a cohesive visual identity.",
+      "acceptanceCriteria": [
+        "Create app/assets/stylesheets/_bootstrap_variables.scss to override Bootstrap SCSS variables",
+        "Extract hex color values from Adobe Color palette: https://color.adobe.com/Oroshi-color-theme-448defe9-27e0-4e1c-94b2-9f54c1057172/",
+        "Colors in palette: Greenish Cyan, Lynx Screen Blue, Frozen State, Synthetic Spearmint, Clear Blue, Poseidon Jr (analogous harmony)",
+        "Map colors to Bootstrap theme variables: $primary, $secondary, $success, $info, $warning, $danger, $light, $dark",
+        "Import _bootstrap_variables.scss before Bootstrap in application stylesheet",
+        "Update navbar, buttons, links, and form elements to use new theme colors",
+        "Ensure sufficient color contrast for accessibility (WCAG AA minimum)",
+        "Test all major views render correctly with new color scheme",
+        "No visual regressions in existing functionality",
+        "Typecheck passes",
+        "Verify in browser using web-browser skill"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": "Use Bootstrap 5 SCSS customization. May need to adjust $body-bg, $body-color, $link-color. Consider generating color shades for hover/active states."
+    },
+    {
+      "id": "US-025",
+      "title": "Create intuitive locale file directory structure",
+      "description": "As a developer, I want an organized locale file structure that is easy to maintain and edit.",
+      "acceptanceCriteria": [
+        "Create config/locales/ directory structure organized by feature/namespace",
+        "Structure: config/locales/{locale}/{namespace}.yml (e.g., config/locales/ja/oroshi/dashboard.yml)",
+        "Create base directories: config/locales/ja/, config/locales/en/",
+        "Within each locale: oroshi/, devise/, common/, layouts/, errors/",
+        "Configure Rails to load all nested locale files in config/application.rb",
+        "Create config/locales/ja/common.yml for shared translations (buttons, actions, confirmations)",
+        "Create config/locales/ja/layouts/application.yml for navbar, footer, flash messages",
+        "Document structure in config/locales/README.md",
+        "Typecheck passes"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": "Japanese (ja) is the primary locale. Structure mirrors app/views/ for easy navigation. Use Rails I18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.yml')]"
+    },
+    {
+      "id": "US-026",
+      "title": "Internationalize layouts and navigation",
+      "description": "As a user, I want all layout text (navbar, footer, flash messages) to be translatable.",
+      "acceptanceCriteria": [
+        "Convert all hardcoded text in app/views/layouts/ to use t() helper",
+        "Convert navbar links, brand text, dropdown items",
+        "Convert footer text and links",
+        "Convert flash message templates (notice, alert, error)",
+        "Convert devise-related layout text",
+        "Create corresponding Japanese translations in config/locales/ja/layouts/",
+        "Use lazy lookup where possible (t('.key') within partials)",
+        "Test all layouts render correctly with Japanese locale",
+        "Typecheck passes"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": "Start with application.html.erb, then devise layouts. Use t() with default: option for graceful fallback during development."
+    },
+    {
+      "id": "US-027",
+      "title": "Internationalize common UI elements",
+      "description": "As a user, I want all common buttons, labels, and actions to be translatable.",
+      "acceptanceCriteria": [
+        "Create config/locales/ja/common.yml with shared translations",
+        "Include: save, cancel, edit, delete, create, update, back, next, previous, submit",
+        "Include: confirm dialogs, loading states, empty states",
+        "Include: form labels (name, email, password, etc.)",
+        "Include: table headers (actions, created_at, updated_at)",
+        "Include: pagination text",
+        "Convert all matching hardcoded text in views to use t('common.key')",
+        "Typecheck passes"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": "Use t('common.save') pattern for shared text. Avoid duplicating translations across namespaces."
+    },
+    {
+      "id": "US-028",
+      "title": "Internationalize Oroshi dashboard views",
+      "description": "As a user, I want all dashboard text to be translatable.",
+      "acceptanceCriteria": [
+        "Create config/locales/ja/oroshi/dashboard.yml",
+        "Convert all hardcoded text in app/views/oroshi/dashboard/ to t()",
+        "Include page titles, section headers, stat labels",
+        "Include empty state messages",
+        "Include date/time format labels",
+        "Use lazy lookup (t('.title')) within dashboard views",
+        "Test dashboard renders correctly with Japanese locale",
+        "Typecheck passes"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": "Dashboard is high-visibility - ensure all user-facing text is translated."
+    },
+    {
+      "id": "US-029",
+      "title": "Internationalize Oroshi model views (suppliers, buyers, products)",
+      "description": "As a user, I want all CRUD views for core models to be translatable.",
+      "acceptanceCriteria": [
+        "Create locale files for each model namespace under config/locales/ja/oroshi/",
+        "Convert text in: suppliers/, supplier_organizations/, buyers/, products/, product_variations/",
+        "Convert text in: supply_types/, supply_type_variations/, supply_dates/",
+        "Convert text in: orders/, order_categories/, shipping_organizations/, shipping_methods/",
+        "Include index/show/new/edit page titles, form labels, flash messages",
+        "Include model-specific terminology and status labels",
+        "Use Rails model name translations (activerecord.models, activerecord.attributes)",
+        "Typecheck passes"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": "Large task - may need to split by model if too big. Use activerecord.attributes.model_name.attribute for form labels."
+    },
+    {
+      "id": "US-030",
+      "title": "Internationalize onboarding wizard",
+      "description": "As a user, I want the onboarding wizard fully translatable.",
+      "acceptanceCriteria": [
+        "Create config/locales/ja/oroshi/onboarding.yml",
+        "Convert all step titles, descriptions, instructions",
+        "Convert progress indicator text",
+        "Convert button labels (Skip, Back, Next, Complete)",
+        "Convert validation error messages",
+        "Convert empty state and helper text",
+        "Test full onboarding flow with Japanese locale",
+        "Typecheck passes"
+      ],
+      "priority": 30,
+      "passes": false,
+      "notes": "Critical for new user experience. Ensure wizard flow is fully localized."
+    },
+    {
+      "id": "US-031",
+      "title": "Internationalize error pages and validation messages",
+      "description": "As a user, I want error pages and validation messages in my language.",
+      "acceptanceCriteria": [
+        "Create config/locales/ja/errors.yml for error pages (404, 500, etc.)",
+        "Configure ActiveRecord validation messages in Japanese",
+        "Include custom validation error messages for Oroshi models",
+        "Convert public/404.html, public/500.html to use translations (or make dynamic)",
+        "Ensure form error messages display in Japanese",
+        "Typecheck passes"
+      ],
+      "priority": 31,
+      "passes": false,
+      "notes": "Use activerecord.errors.messages and activerecord.errors.models for model-specific errors."
+    },
+    {
+      "id": "US-032",
+      "title": "Create locale sync detection rake task",
+      "description": "As a developer, I want to detect missing and outdated translations.",
+      "acceptanceCriteria": [
+        "Create lib/tasks/locale_sync.rake with detect task",
+        "Task scans all view files for t() calls and extracts keys",
+        "Compares extracted keys against existing locale files",
+        "Reports: missing keys (in code but not in locale), orphaned keys (in locale but not in code)",
+        "Outputs report to stdout and optionally to file",
+        "Support filtering by locale and namespace",
+        "Command: bin/rails locale:detect",
+        "Typecheck passes"
+      ],
+      "priority": 32,
+      "passes": false,
+      "notes": "Parse t('.key') lazy lookups by resolving view path. Handle t('full.key.path') absolute keys."
+    },
+    {
+      "id": "US-033",
+      "title": "Create OpenRouter translation service",
+      "description": "As a developer, I want a service to translate locale keys using OpenRouter API.",
+      "acceptanceCriteria": [
+        "Create lib/oroshi/translation_service.rb",
+        "Configure OpenRouter API credentials via Rails credentials or ENV",
+        "Method: translate(text, from_locale, to_locale) returns translated text",
+        "Method: translate_batch(keys_hash, from_locale, to_locale) for bulk translation",
+        "Handle API rate limiting with exponential backoff",
+        "Cache translations to avoid duplicate API calls",
+        "Log translation requests and responses for debugging",
+        "Include context hints for technical/domain terms",
+        "Typecheck passes"
+      ],
+      "priority": 33,
+      "passes": false,
+      "notes": "Use OpenRouter API (openrouter.ai). Consider using claude-3-haiku for cost efficiency. Include glossary for Oroshi-specific terms."
+    },
+    {
+      "id": "US-034",
+      "title": "Create locale generation rake task",
+      "description": "As a developer, I want to automatically generate missing translations.",
+      "acceptanceCriteria": [
+        "Create bin/rails locale:generate task",
+        "Uses locale:detect to find missing keys",
+        "For each missing key, uses TranslationService to generate translation",
+        "Writes generated translations to appropriate locale files",
+        "Preserves existing translations (does not overwrite)",
+        "Supports --dry-run flag to preview changes",
+        "Supports --locale flag to target specific locale",
+        "Outputs summary of generated translations",
+        "Typecheck passes"
+      ],
+      "priority": 34,
+      "passes": false,
+      "notes": "Generate from Japanese to other locales. Maintain YAML formatting and comments."
+    },
+    {
+      "id": "US-035",
+      "title": "Integrate locale sync into Kamal deployment",
+      "description": "As a developer, I want locale translations auto-generated during deployment.",
+      "acceptanceCriteria": [
+        "Add locale:detect and locale:generate to .kamal/hooks/pre-build script",
+        "Only run if LOCALE_SYNC_ENABLED=true environment variable set",
+        "Generate translations for all configured locales",
+        "Fail build if critical translations are missing (configurable)",
+        "Log sync results to deployment output",
+        "Add manual trigger command: bin/rails locale:sync (runs detect + generate)",
+        "Document locale sync workflow in config/locales/README.md",
+        "Typecheck passes"
+      ],
+      "priority": 35,
+      "passes": false,
+      "notes": "Make opt-in for deployment to avoid unexpected API costs. Ensure OpenRouter credentials available in build environment."
     }
   ]
 }

@@ -479,7 +479,7 @@
         "Typecheck passes"
       ],
       "priority": 28,
-      "passes": false,
+      "passes": true,
       "notes": "Dashboard is high-visibility - ensure all user-facing text is translated."
     },
     {

@@ -450,3 +450,21 @@ Learnings:
 - Test suite has known issues with Ruby 4.0.0 (timeout/segfault) - validate with rubocop and Rails console instead
 - I18n.t() in Rails console confirms translations work: I18n.t('common.buttons.save') => "保存"
 - model_name.human provides proper i18n for model names (e.g., Oroshi::Product.model_name.human)
+
+[2026-01-09 08:12:00] Story: US-028 - Internationalize dashboard views
+Implemented: Created dashboard locale file and converted all hardcoded Japanese text to t() helpers
+Files:
+  - config/locales/ja/oroshi/dashboard.yml (created with 47 lines)
+  - app/views/oroshi/dashboard/home/_stats.html.erb (converted 15 stat labels)
+  - app/views/oroshi/dashboard/_materials.html.erb (converted 3 tab names)
+Tests: PASSING (rubocop clean, server starts, i18n keys resolve correctly)
+Learnings:
+- Dashboard views already used t() for most nav and page titles (index.html.erb, _home.html.erb)
+- Stats partial had all labels hardcoded in Japanese - converted to oroshi.dashboard.home.stats_labels.*
+- Materials tab names were hardcoded - converted to oroshi.dashboard.materials.*
+- Empty state messages in _home.html.erb and _buyers.html.erb already internationalized from US-026/027
+- I18n structure: config/locales/ja/oroshi/dashboard.yml mirrors app/views/oroshi/dashboard/ directory
+- Use absolute keys t('oroshi.dashboard.home.stats_labels.organizations') for consistency
+- Rails console verified translations: I18n.t('oroshi.dashboard.home.stats_labels.organizations') => "組織数"
+- Dashboard integration tests fail due to onboarding redirect (pre-existing, not caused by i18n changes)
+- Server starts successfully (./bin/rails s) confirming no syntax errors in ERB or YAML

@@ -230,3 +230,17 @@ Learnings:
 - exterior_height/width/depth validated with greater_than_or_equal_to: 0
 - Dimensions are optional, default to 0 using value: 0 in number_field
 - Table displays dimensions as HxWxD mm or dash if all zero
+
+[2026-01-10 00:30:00] Story: US-015 - Product variation onboarding step
+Implemented: Created product variation onboarding step with dependency handling
+Files:
+  - app/views/oroshi/onboarding/steps/_product_variation.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_product_variation)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- ProductVariation requires: name, handle, default_shipping_receptacle_id, production_zones, primary_content_volume, country_id, subregion_id
+- Has complex dependencies: ShippingReceptacle and ProductionZone must exist
+- Step allows skip if dependencies missing (skip_if_dependencies_missing logic)
+- Uses Carmen gem for country/subregion with oroshi--dashboard Stimulus controller
+- HABTM: production_zone_ids: [], supply_type_variation_ids: []
+- Graceful fallback: shows info message when dependencies missing, hides form

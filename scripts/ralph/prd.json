@@ -265,8 +265,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": "Step name: product_variation"
+      "passes": true,
+      "notes": "Created step with all fields. Allows skip if ShippingReceptacle or ProductionZone not created yet. Uses oroshi--dashboard controller for country/subregion."
     },
     {
       "id": "US-016",

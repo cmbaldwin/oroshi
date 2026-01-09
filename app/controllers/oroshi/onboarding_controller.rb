@@ -100,6 +100,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_buyer
     when "product"
       save_product
+    when "product_variation"
+      save_product_variation
     else
       true
     end
@@ -283,6 +285,33 @@ class Oroshi::OnboardingController < ApplicationController
   def product_params
     params.require(:product).permit(
       :name, :units, :supply_type_id, :exterior_height, :exterior_width, :exterior_depth
+    )
+  end
+
+  def save_product_variation
+    if params[:delete_product_variation_id].present?
+      Oroshi::ProductVariation.find_by(id: params[:delete_product_variation_id])&.destroy
+      return :deleted
+    end
+
+    pv_params = params[:product_variation]
+    if pv_params.present? && pv_params[:name].present?
+      variation = Oroshi::ProductVariation.new(product_variation_params)
+      unless variation.save
+        flash.now[:alert] = variation.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    skip_if_dependencies_missing = Oroshi::ShippingReceptacle.none? || Oroshi::ProductionZone.none?
+    Oroshi::ProductVariation.any? || skip_if_dependencies_missing
+  end
+
+  def product_variation_params
+    params.require(:product_variation).permit(
+      :product_id, :name, :handle, :primary_content_volume, :default_shipping_receptacle_id,
+      :primary_content_country_id, :primary_content_subregion_id, :shelf_life,
+      production_zone_ids: [], supply_type_variation_ids: []
     )
   end
 end

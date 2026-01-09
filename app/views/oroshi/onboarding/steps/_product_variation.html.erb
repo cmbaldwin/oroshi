@@ -1,0 +1,223 @@
+<% product = Oroshi::Product.first %>
+<% products = Oroshi::Product.all %>
+<% product_variations = Oroshi::ProductVariation.all %>
+<% supply_type_variations = Oroshi::SupplyTypeVariation.all %>
+<% shipping_receptacles = Oroshi::ShippingReceptacle.all %>
+<% production_zones = Oroshi::ProductionZone.all %>
+
+<h2 class="mb-4">商品バリエーション <small class="text-muted">Product Variation</small></h2>
+
+<% if product.present? %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-box me-2"></i>
+    <strong><%= product.name %></strong> のバリエーションを追加します
+  </div>
+<% end %>
+
+<p class="text-muted mb-4">
+  商品のバリエーション（サイズ、産地違いなど）を登録してください。
+</p>
+
+<% if shipping_receptacles.empty? || production_zones.empty? %>
+  <div class="alert alert-warning mb-4">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <strong>注意:</strong> 商品バリエーションの完全な設定には、発送容器と生産地域が必要です。
+    <% if shipping_receptacles.empty? %>
+      <br>発送容器がまだ登録されていません。後のステップで設定できます。
+    <% end %>
+    <% if production_zones.empty? %>
+      <br>生産地域がまだ登録されていません。ダッシュボードから設定できます。
+    <% end %>
+  </div>
+<% end %>
+
+<% if product_variations.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">登録済みの商品バリエーション</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>商品</th>
+              <th>名前</th>
+              <th>ハンドル</th>
+              <th>内容量</th>
+              <th>産地</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% product_variations.each do |pv| %>
+              <tr>
+                <td><%= pv.product&.name %></td>
+                <td><%= pv.name %></td>
+                <td><code><%= pv.handle %></code></td>
+                <td><%= pv.primary_content_volume %> <%= pv.product&.supply_type&.units %></td>
+                <td><%= pv.region&.name rescue '—' %></td>
+                <td class="text-end">
+                  <%= button_to "削除",
+                                oroshi_onboarding_path(@step, delete_product_variation_id: pv.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: "この商品バリエーションを削除しますか？" } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    商品バリエーションがまだ登録されていません。少なくとも1つ追加してください。
+  </div>
+<% end %>
+
+<% if shipping_receptacles.any? && production_zones.any? %>
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">新しい商品バリエーションを追加</h5>
+    </div>
+    <div class="card-body" data-controller="oroshi--dashboard">
+      <%= f.fields_for :product_variation do |pv| %>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <%= pv.label :product_id, '商品 *', class: 'form-label' %>
+            <%= pv.select :product_id,
+                         products.map { |p| [p.name, p.id] },
+                         { selected: product&.id },
+                         { class: 'form-select', required: product_variations.empty? } %>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <%= pv.label :name, '名前 *', class: 'form-label' %>
+            <%= pv.text_field :name,
+                             placeholder: '例: 5kg箱（静岡産）',
+                             required: product_variations.empty?,
+                             class: 'form-control' %>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <%= pv.label :handle, 'ハンドル *', class: 'form-label' %>
+            <%= pv.text_field :handle,
+                             placeholder: '例: mikan_5kg_shizuoka',
+                             required: product_variations.empty?,
+                             class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <%= pv.label :primary_content_volume, '内容量 *', class: 'form-label' %>
+            <%= pv.number_field :primary_content_volume,
+                               min: 0.01,
+                               step: 0.01,
+                               placeholder: '例: 5',
+                               required: product_variations.empty?,
+                               class: 'form-control' %>
+            <div class="form-text">商品1つあたりの材料量（材料タイプの単位で）</div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <%= pv.label :default_shipping_receptacle_id, '発送容器 *', class: 'form-label' %>
+            <%= pv.select :default_shipping_receptacle_id,
+                         shipping_receptacles.map { |sr| [sr.name, sr.id] },
+                         { prompt: '選択してください' },
+                         { class: 'form-select', required: product_variations.empty? } %>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <%= pv.label :shelf_life, '賞味期限（日）', class: 'form-label' %>
+            <%= pv.number_field :shelf_life,
+                               min: 1,
+                               placeholder: '例: 14',
+                               class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="row country-subregion-select">
+          <div class="col-md-6 mb-3">
+            <%= pv.label :primary_content_country_id, '産地（国） *', class: 'form-label' %>
+            <%= pv.select :primary_content_country_id,
+                         Carmen::Country.all.map { |c| [c.name, c.numeric_code] },
+                         { selected: '392' },
+                         { class: 'form-select',
+                           required: product_variations.empty?,
+                           data: { action: 'change->oroshi--dashboard#updateSubregions' } } %>
+          </div>
+
+          <div class="col-md-6 mb-3 subregion-select">
+            <%= pv.label :primary_content_subregion_id, '産地（都道府県） *', class: 'form-label' %>
+            <%= pv.select :primary_content_subregion_id,
+                         Carmen::Country.coded('JP').subregions.map { |s| [s.name, s.code] },
+                         { prompt: '選択してください' },
+                         { class: 'form-select', required: product_variations.empty? } %>
+          </div>
+        </div>
+
+        <% if production_zones.any? %>
+          <div class="mb-3">
+            <%= pv.label :production_zone_ids, '生産地域 *', class: 'form-label' %>
+            <div class="row">
+              <% production_zones.each do |zone| %>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <%= pv.check_box :production_zone_ids,
+                                    { multiple: true, class: 'form-check-input' },
+                                    zone.id,
+                                    nil %>
+                    <label class="form-check-label"><%= zone.name %></label>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="form-text">この商品が生産される地域を選択してください（必須）</div>
+          </div>
+        <% end %>
+
+        <% if supply_type_variations.any? %>
+          <div class="mb-3">
+            <%= pv.label :supply_type_variation_ids, '材料品種との紐付け', class: 'form-label' %>
+            <div class="row">
+              <% supply_type_variations.each do |stv| %>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <%= pv.check_box :supply_type_variation_ids,
+                                    { multiple: true, class: 'form-check-input' },
+                                    stv.id,
+                                    nil %>
+                    <label class="form-check-label">
+                      <%= stv.supply_type&.name %> - <%= stv.name %>
+                    </label>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="card">
+    <div class="card-body text-center py-5">
+      <i class="bi bi-info-circle display-4 text-muted"></i>
+      <p class="mt-3 text-muted">
+        商品バリエーションを追加するには、先に発送容器と生産地域を設定する必要があります。<br>
+        このステップをスキップして後で設定することができます。
+      </p>
+    </div>
+  </div>
+<% end %>
+
+<% if product_variations.empty? && shipping_receptacles.any? && production_zones.any? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    続行するには少なくとも1つの商品バリエーションが必要です。
+  </div>
+<% end %>

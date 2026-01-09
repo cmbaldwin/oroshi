@@ -613,3 +613,29 @@ Learnings:
 - Namespace filtering useful for focused reports: NAMESPACE=common shows only common.* keys
 - Output file option allows CI integration: OUTPUT=/tmp/report.txt for automated checks
 - First rake task in lib/tasks/ - this pattern can be reused for other automation
+[2026-01-09 19:15:00] Story: US-033 - Create OpenRouter translation service
+Implemented: Created TranslationService for AI-powered locale translation using OpenRouter API
+Files:
+  - app/services/oroshi/translation_service.rb (new - 227 lines)
+  - test/services/oroshi/translation_service_test.rb (new - 250 lines)
+  - Gemfile (added webmock gem)
+  - Gemfile.lock (updated)
+Tests: PASSING (16 tests, 44 assertions, 0 failures)
+Learnings:
+- Oroshi uses Minitest, not RSpec - must use test/services/ not spec/services/
+- Test files follow pattern: require "test_helper" and inherit from ActiveSupport::TestCase
+- webmock gem needed for HTTP stubbing in tests (added to test group in Gemfile)
+- webmock assert_requested doesn't support blocks like RSpec - use .to_return with callbacks to capture request data
+- Minitest doesn't have .stub method like RSpec - had to remove sleep stubbing, tests actually sleep during retry tests
+- MAX_RETRIES=3 means 4 total attempts (initial + 3 retries), not 3 total
+- Service pattern in Oroshi: class methods (class << self), not instance methods
+- HTTParty included in class for API calls (already in Gemfile)
+- CredentialProvider.get("service", "key") pattern for fetching API keys with ENV fallback
+- Rails.logger for logging API requests and errors
+- Cache implementation: class instance variable @cache = {} for in-memory caching
+- OpenRouter API uses claude-3-haiku model for cost efficiency (temperature: 0.3 for consistency)
+- Rate limiting: exponential backoff with INITIAL_BACKOFF * (2**(attempt - 1))
+- Translation service returns original text on error (graceful degradation)
+- Oroshi-specific glossary defined as frozen hash constant (OROSHI_GLOSSARY.freeze)
+- Test pattern: setup/teardown hooks for ENV variables, WebMock.disable_net_connect! in setup
+- Comprehensive test coverage: success cases, error handling, rate limiting, caching, context support

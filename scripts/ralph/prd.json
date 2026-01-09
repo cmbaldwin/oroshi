@@ -568,8 +568,8 @@
         "Typecheck passes"
       ],
       "priority": 33,
-      "passes": false,
-      "notes": "Use OpenRouter API (openrouter.ai). Consider using claude-3-haiku for cost efficiency. Include glossary for Oroshi-specific terms."
+      "passes": true,
+      "notes": "Implemented in app/services/oroshi/translation_service.rb using HTTParty and Claude Haiku. Includes exponential backoff, caching, context support, and Oroshi glossary. Comprehensive Minitest test suite with webmock."
     },
     {
       "id": "US-034",

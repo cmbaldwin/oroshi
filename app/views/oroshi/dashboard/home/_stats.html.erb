@@ -7,91 +7,91 @@
     </div>
     <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            組織数
+            <%= t('oroshi.dashboard.home.stats_labels.organizations') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::SupplierOrganization.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            生産者数
+            <%= t('oroshi.dashboard.home.stats_labels.suppliers') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::Supplier.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            供給種類数
+            <%= t('oroshi.dashboard.home.stats_labels.supply_types') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::SupplyType.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            供給種類数種品数
+            <%= t('oroshi.dashboard.home.stats_labels.supply_type_variations') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::SupplyTypeVariation.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            出荷組織数
+            <%= t('oroshi.dashboard.home.stats_labels.shipping_organizations') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::ShippingOrganization.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            出荷数
+            <%= t('oroshi.dashboard.home.stats_labels.shipping_methods') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::ShippingMethod.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            卸先数
+            <%= t('oroshi.dashboard.home.stats_labels.buyers') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::Buyer.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            出荷容器数
+            <%= t('oroshi.dashboard.home.stats_labels.shipping_receptacles') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::ShippingReceptacle.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            商品包装数
+            <%= t('oroshi.dashboard.home.stats_labels.packagings') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::Packaging.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            製造材料
+            <%= t('oroshi.dashboard.home.stats_labels.materials') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::Material.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            商品数
+            <%= t('oroshi.dashboard.home.stats_labels.products') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::Product.active.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            商品変種数
+            <%= t('oroshi.dashboard.home.stats_labels.product_variations') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::ProductVariation.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            供給品数
+            <%= t('oroshi.dashboard.home.stats_labels.supplies') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::Supply.with_quantity.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            供給ある日数
+            <%= t('oroshi.dashboard.home.stats_labels.supply_dates') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::SupplyDate.with_supplies.count %>
             </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            注文テンプレート数
+            <%= t('oroshi.dashboard.home.stats_labels.order_templates') %>
             <span class="badge text-bg-primary rounded-pill">
                 <%= Oroshi::OrderTemplate.count %>
             </span>

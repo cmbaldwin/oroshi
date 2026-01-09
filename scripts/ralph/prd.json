@@ -607,6 +607,82 @@
       "priority": 35,
       "passes": false,
       "notes": "Make opt-in for deployment to avoid unexpected API costs. Ensure OpenRouter credentials available in build environment."
+    },
+    {
+      "id": "US-036",
+      "title": "Internationalize onboarding checklist sidebar and buttons",
+      "description": "As a user, I want all onboarding UI text to be in Japanese using locale files.",
+      "acceptanceCriteria": [
+        "Convert all hardcoded English text in _checklist_sidebar.html.erb to t() helpers",
+        "Convert onboarding.html.erb layout buttons (Skip for now, Back, Next) to t() with Japanese",
+        "Convert turbo_confirm messages to Japanese using t()",
+        "Create/update config/locales/ja.yml with onboarding.buttons and onboarding.messages keys",
+        "Ensure no mixed English/Japanese in the onboarding UI",
+        "All button labels in Japanese: スキップ, 戻る, 次へ, 今はスキップ",
+        "Confirmation dialogs in Japanese",
+        "Typecheck passes",
+        "Verify in browser using web-browser skill"
+      ],
+      "priority": 36,
+      "passes": false,
+      "notes": "Related to US-030. Japanese is primary language. Follow claude.md i18n guidelines."
+    },
+    {
+      "id": "US-037",
+      "title": "Fix onboarding skip showing incorrect completion status",
+      "description": "As a user who skipped onboarding, I want to see accurate completion status for each step.",
+      "acceptanceCriteria": [
+        "Skipping onboarding should NOT mark any steps as completed",
+        "Company info step shows as incomplete if Setting 'oroshi_company_settings' is missing or empty",
+        "Each step's completion status reflects actual data presence, not just skip status",
+        "step_completed? method checks for actual data, not just presence in completed_steps array",
+        "Checklist sidebar shows accurate completion status for all steps",
+        "Users can click incomplete items to navigate directly to that step",
+        "Add helper method data_exists_for_step?(step) in OnboardingProgress model",
+        "Typecheck passes"
+      ],
+      "priority": 37,
+      "passes": false,
+      "notes": "Bug: skip function marks steps as completed incorrectly. Need to verify actual data exists for each step."
+    },
+    {
+      "id": "US-038",
+      "title": "Make checklist links open onboarding overlay",
+      "description": "As a user, I want checklist links to open the onboarding wizard overlay instead of navigating to unstyled pages.",
+      "acceptanceCriteria": [
+        "Clicking checklist item links opens the onboarding wizard in a modal/overlay",
+        "Overlay uses the same styling as the initial onboarding flow (gradient background, card design)",
+        "Overlay can be closed to return to dashboard",
+        "After completing a step in overlay, user returns to dashboard with updated checklist",
+        "Use Turbo Frame or Turbo Stream for seamless overlay experience",
+        "Reuse existing onboarding.html.erb layout styles in overlay",
+        "Back button in overlay returns to dashboard, not previous step",
+        "Typecheck passes",
+        "Verify in browser using web-browser skill"
+      ],
+      "priority": 38,
+      "passes": false,
+      "notes": "Current behavior opens pages in main frame without onboarding styling. Should feel like the original wizard experience."
+    },
+    {
+      "id": "US-039",
+      "title": "Style onboarding checklist to match site theme",
+      "description": "As a user, I want the onboarding checklist sidebar styling to match the rest of the site.",
+      "acceptanceCriteria": [
+        "Checklist sidebar uses site's color palette (defined in US-024)",
+        "Remove inline styles from _checklist_sidebar.html.erb",
+        "Move all styles to app/assets/stylesheets/_oroshi_utilities.scss or dedicated checklist.scss",
+        "Sidebar background, borders, and text colors match Bootstrap theme",
+        "Icons and checkmarks use consistent color scheme",
+        "Modal styling matches site theme (not default Bootstrap)",
+        "Hover states and focus indicators consistent with site",
+        "Responsive design for mobile (collapse or hide on small screens)",
+        "Typecheck passes",
+        "Verify in browser using web-browser skill"
+      ],
+      "priority": 39,
+      "passes": false,
+      "notes": "Related to US-024 (site color palette). Depends on color palette being defined first. Extract inline styles per CSS conventions."
     }
   ]
 }

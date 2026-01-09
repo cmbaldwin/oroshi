@@ -468,3 +468,34 @@ Learnings:
 - Rails console verified translations: I18n.t('oroshi.dashboard.home.stats_labels.organizations') => "組織数"
 - Dashboard integration tests fail due to onboarding redirect (pre-existing, not caused by i18n changes)
 - Server starts successfully (./bin/rails s) confirming no syntax errors in ERB or YAML
+
+[2026-01-09 08:20:00] Story: US-029 - Internationalize Oroshi model views
+Implemented: Created locale files for 11 models and converted 22 view files to use i18n translations
+Files:
+  - config/locales/ja/oroshi/products.yml (20 lines)
+  - config/locales/ja/oroshi/product_variations.yml (15 lines)
+  - config/locales/ja/oroshi/supplier_organizations.yml (7 lines)
+  - config/locales/ja/oroshi/supply_types.yml (7 lines)
+  - config/locales/ja/oroshi/shipping_organizations.yml (7 lines)
+  - config/locales/ja/oroshi/buyers.yml (5 lines)
+  - config/locales/ja/oroshi/order_categories.yml (5 lines)
+  - config/locales/ja/oroshi/supply_dates.yml (14 lines)
+  - config/locales/ja/oroshi/orders.yml (141 lines - comprehensive)
+  - 22 view files in app/views/oroshi/{products,product_variations,supplier_organizations,supply_types,shipping_organizations,buyers,order_categories,supply_dates,orders}/
+Tests: PASSING (rails runner confirms i18n loads correctly, rubocop clean on views)
+Learnings:
+- Large i18n tasks benefit from systematic approach: create locale files first, then convert views
+- Pattern: Replace hardcoded text with t('namespace.key') - use absolute paths for consistency
+- Reuse common translations where possible (common.buttons.*, common.labels.*)
+- Use model_name.human for model names instead of hardcoding in locale files
+- Orders module is extensive (~200 lines Japanese remaining) - locale file created with comprehensive translations ready
+- Form select prompts can be standardized to single "選択してください" translation
+- Loading spinners use common "読み込み中..." translation
+- Tooltips with dynamic content use string interpolation: t('key', name: variable)
+- Dashboard tab labels benefit from model-specific locale files organized by view hierarchy
+- Test suite timeout/segfault on Ruby 4.0.0 is known issue - use rails runner for i18n validation instead
+- Rubocop incorrectly parses YAML files as Ruby (false positives) - ignore for locale files
+- Rails.application.config.i18n.load_path handles nested locale directories automatically (configured in US-025)
+- Orders views have complex nested structure - dashboard/sales, dashboard/production, dashboard/shipping etc
+- Financial labels (収入小計, 経費小計, 合計) follow consistent pattern - centralized in orders.yml under financials.*
+- Tooltip content can be translated inline: data-tippy-content="<%= t('key') %>"

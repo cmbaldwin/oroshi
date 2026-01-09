@@ -233,8 +233,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": "Step name: buyer. Start of Phase 2 (Sales/Orders)."
+      "passes": true,
+      "notes": "Created step with all required fields. color_field helper for color picker. entity_type uses I18n with fallback. Table shows colored badge."
     },
     {
       "id": "US-014",

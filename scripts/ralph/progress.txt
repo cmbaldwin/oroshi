@@ -205,3 +205,16 @@ Learnings:
 - Shows first supply_type in info alert for context
 - Checkbox multi-select uses { multiple: true } option
 - End of supply_chain phase - next is sales phase (buyer)
+
+[2026-01-10 00:00:00] Story: US-013 - Buyer onboarding step
+Implemented: Created buyer onboarding step with all required fields
+Files:
+  - app/views/oroshi/onboarding/steps/_buyer.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_buyer)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- Buyer model requires: name, handle, handling_cost, daily_cost, entity_type, optional_cost, commission_percentage, color
+- color field uses regex validation: /\A#(?:[0-9a-fA-F]{3}){1,2}\z/
+- color_field helper generates HTML5 color picker input
+- entity_type enum: wholesale_market, retailer, company, individual, other
+- Use I18n.t with default: for graceful fallback when translation missing

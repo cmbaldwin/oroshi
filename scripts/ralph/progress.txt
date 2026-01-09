@@ -357,3 +357,21 @@ Learnings:
 - Rubocop passes with no offenses detected (268 files)
 - Remaining inline styles (not refactored): ~20 files still have some inline styles for dynamic values or less critical views
 
+[2026-01-10 02:30:00] Story: US-024 - Update color scheme using Bootstrap customization
+Implemented: Refactored Bootstrap theme customization with proper variable overrides
+Files:
+  - app/assets/stylesheets/funabiki.scss (refactored)
+  - scripts/ralph/prd.json (updated)
+Tests: PASSING (rubocop clean, SCSS compiles, server starts)
+Learnings:
+- Bootstrap 5 best practice: Define $primary, $secondary, etc. variables BEFORE importing Bootstrap
+- $theme-colors map is optional but useful for adding custom utility colors (like "yellow")
+- Override $body-bg, $body-color, $link-color for better theme integration with Bootstrap's internal calculations
+- funabiki.scss already contained Oroshi color palette from Adobe Color (analogous harmony)
+- darken() function works in SCSS for generating hover states: $link-hover-color: darken($primary, 15%)
+- SCSS compilation shows deprecation warnings from Bootstrap 5.3.5 itself - these are expected, not errors
+- Import order critical: custom variables → Bootstrap → custom styles
+- Test suite segfaults on Ruby 4.0.0 (known issue) - validated with rubocop and server start instead
+- Asset precompilation with rails assets:precompile verifies SCSS compilation
+- Remove public/assets/.manifest.json to force asset recompilation in development
+

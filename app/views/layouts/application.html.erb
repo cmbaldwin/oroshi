@@ -1,12 +1,12 @@
 <!doctype html>
 <html dir="ltr" lang="ja" class="h-100">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="Funabiki Online Mangement System">
+<meta name="description" content="<%= t('layouts.application.description') %>">
 <meta name="author" content="Cody Baldwin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
 <head>
-    <title><%= content_for?(:title) ? content_for(:title) : "Funabiki Online" %></title>
+    <title><%= content_for?(:title) ? content_for(:title) : t('layouts.application.title') %></title>
 
     <%= capybara_lockstep if defined?(Capybara::Lockstep) %>
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -51,7 +51,7 @@
         <div class="container m-3">
             <div class="card bg-warning text-white m3">
                 <div class="card-body">
-                    <h5>このアカウントを許可されるまではしばらくお待ちください。</h5>
+                    <h5><%= t('layouts.application.approval.pending') %></h5>
                 </div>
             </div>
         </div>

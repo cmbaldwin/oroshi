@@ -37,7 +37,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: '4.0.0'
           bundler-cache: true
 
       - name: Install system dependencies
@@ -97,7 +97,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: '4.0.0'
           bundler-cache: true
 
       - name: Run TruffleHog secret scanner
@@ -119,7 +119,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: '4.0.0'
           bundler-cache: true
 
       - name: Run Rubocop

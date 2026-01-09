@@ -346,8 +346,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 21,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created _checklist_sidebar.html.erb with step completion checkmarks, dismiss modal, and resume button. Route and controller action added."
     },
     {
       "id": "US-021",

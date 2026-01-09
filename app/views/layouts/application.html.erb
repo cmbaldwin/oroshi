@@ -43,6 +43,10 @@
 
         <%= yield %>
 
+        <% if user_signed_in? %>
+          <%= render partial: 'oroshi/onboarding/checklist_sidebar' %>
+        <% end %>
+
         <% if user_signed_in? && !current_user.approved? %>
         <div class="container m-3">
             <div class="card bg-warning text-white m3">

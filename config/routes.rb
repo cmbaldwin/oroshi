@@ -21,6 +21,9 @@ Rails.application.routes.draw do
         post :skip
         post :resume
       end
+      collection do
+        post :dismiss_checklist
+      end
     end
 
     namespace :dashboard do

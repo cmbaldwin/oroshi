@@ -292,3 +292,18 @@ Learnings:
 - Color picker uses color_field helper like Buyer
 - Final step shows success alert indicating onboarding completion
 - Tests for last step need to create OrderCategory first (save_step_data returns false without any)
+
+[2026-01-10 01:45:00] Story: US-020 - Create checklist sidebar component
+Implemented: Created sidebar checklist for skipped onboarding users
+Files:
+  - app/views/oroshi/onboarding/_checklist_sidebar.html.erb (new)
+  - app/views/layouts/application.html.erb (render sidebar)
+  - app/controllers/oroshi/onboarding_controller.rb (added dismiss_checklist action)
+  - config/routes.rb (added dismiss_checklist collection route)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- Sidebar only shows when progress.skipped? && !progress.completed?
+- Uses STEPS constant from OnboardingController to group by phase
+- step_completed? method checks if step is in completed_steps array
+- Modal with Bootstrap for dismiss confirmation
+- dismiss_checklist action uses respond_to? check for column (US-021 will add column)

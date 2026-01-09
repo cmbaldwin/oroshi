@@ -66,6 +66,11 @@ class Oroshi::OnboardingController < ApplicationController
     redirect_to oroshi_onboarding_index_path, notice: "Resuming onboarding..."
   end
 
+  def dismiss_checklist
+    @progress.update!(checklist_dismissed_at: Time.current) if @progress.respond_to?(:checklist_dismissed_at=)
+    redirect_to oroshi_root_path, notice: "チェックリストを非表示にしました"
+  end
+
   private
 
   def find_or_create_progress

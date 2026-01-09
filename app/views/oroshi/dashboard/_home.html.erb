@@ -41,18 +41,18 @@
 <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab" tabindex="0">
         <div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around">
-            <div class="d-flex flex-grow-1 align-self-stretch" style="min-width: 16rem;">
-                <%= turbo_frame_tag 'oroshi_dashboard_company', 
-                              src: oroshi_dashboard_company_path, 
-                              loading: 'lazy', 
+            <div class="d-flex flex-grow-1 align-self-stretch min-w-16">
+                <%= turbo_frame_tag 'oroshi_dashboard_company',
+                              src: oroshi_dashboard_company_path,
+                              loading: 'lazy',
                               class: 'card w-100 m-1' do %>
                 <%= render partial: 'oroshi/shared/card_body_spinner' %>
                 <% end %>
             </div>
-            <div class="d-flex flex-grow-1 align-self-stretch" style="min-width: 16rem;">
-                <%# turbo_frame_tag 'oroshi_dashboard_stats', 
-                              src: oroshi_dashboard_stats_path, 
-                              loading: 'lazy', 
+            <div class="d-flex flex-grow-1 align-self-stretch min-w-16">
+                <%# turbo_frame_tag 'oroshi_dashboard_stats',
+                              src: oroshi_dashboard_stats_path,
+                              loading: 'lazy',
                               class: 'card w-100 m-1' do %>
                 <%# render partial: 'oroshi/shared/card_body_spinner' %>
                 <%# end %>

@@ -27,7 +27,7 @@
           <tbody>
             <% buyers.each do |buyer| %>
               <tr>
-                <td><span class="badge rounded-circle p-2" style="background-color: <%= buyer.color %>;">&nbsp;</span></td>
+                <td><span class="color-circle" style="background-color: <%= buyer.color %>;"></span></td>
                 <td><%= buyer.name %></td>
                 <td><code><%= buyer.handle %></code></td>
                 <td><%= I18n.t("enums.oroshi_buyer.entity_type.#{buyer.entity_type}", default: buyer.entity_type) %></td>

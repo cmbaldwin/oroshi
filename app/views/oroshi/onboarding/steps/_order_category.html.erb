@@ -24,7 +24,7 @@
           <tbody>
             <% order_categories.each do |cat| %>
               <tr>
-                <td><span class="badge rounded-circle p-2" style="background-color: <%= cat.color %>;">&nbsp;</span></td>
+                <td><span class="color-circle" style="background-color: <%= cat.color %>;"></span></td>
                 <td><%= cat.name %></td>
                 <td class="text-end">
                   <%= button_to "削除",

@@ -123,3 +123,40 @@
 .shipping-col-label {
   width: 8rem;
 }
+
+// Onboarding checklist sidebar
+.onboarding-checklist-sidebar {
+  position: fixed;
+  right: 0;
+  top: 80px;
+  width: 300px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  z-index: 1030;
+}
+
+// Progress bar for onboarding
+.progress-onboarding {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.progress-onboarding .progress-bar {
+  background: white;
+}
+
+// Max width utilities
+.max-w-300px {
+  max-width: 300px;
+}
+
+// Scroll container for supplier organizations
+.scroll-container-70vh {
+  max-height: 70vh;
+}
+
+// Scroll container for supply type variations
+.scroll-container-150px {
+  max-height: 150px;
+  overflow-y: auto;
+}

@@ -118,7 +118,7 @@
           <label class="form-label">品種紐付け</label>
           <% supply_type_variations = Oroshi::SupplyTypeVariation.all %>
           <% if supply_type_variations.any? %>
-            <div class="border rounded p-2" style="max-height: 150px; overflow-y: auto;">
+            <div class="border rounded p-2 scroll-container-150px">
               <% supply_type_variations.each do |stv| %>
                 <div class="form-check">
                   <%= s.check_box :supply_type_variation_ids,

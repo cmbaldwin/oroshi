@@ -1,8 +1,8 @@
 <%= turbo_frame_tag 'product_variations' do %>
 
 <div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around gap-2">
-    <div class="card" style="min-width: 18rem; width: 18rem;">
-        <div class="card-body overflow-auto" style="max-height: 75vh;">
+    <div class="card product-variations-card">
+        <div class="card-body overflow-auto product-variations-body">
             <div class="card-title d-flex justify-content-between align-items-center align-middle">
                 <h5 class="mb-0"><%= "#{@product.name}の" if @product %>商品変種</h5>
                 <%= link_to icon('arrow-clockwise'), oroshi_product_product_variations_path(@product), class: 'btn btn-sm btn-light', data: { turbo_frame: 'product_variations' } %>

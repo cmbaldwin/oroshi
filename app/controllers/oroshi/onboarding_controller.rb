@@ -106,6 +106,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_shipping_organization
     when "shipping_method"
       save_shipping_method
+    when "shipping_receptacle"
+      save_shipping_receptacle
     else
       true
     end
@@ -363,6 +365,32 @@ class Oroshi::OnboardingController < ApplicationController
     params.require(:shipping_method).permit(
       :shipping_organization_id, :name, :handle, :daily_cost,
       :per_shipping_receptacle_cost, :per_freight_unit_cost, buyer_ids: []
+    )
+  end
+
+  def save_shipping_receptacle
+    if params[:delete_shipping_receptacle_id].present?
+      Oroshi::ShippingReceptacle.find_by(id: params[:delete_shipping_receptacle_id])&.destroy
+      return :deleted
+    end
+
+    sr_params = params[:shipping_receptacle]
+    if sr_params.present? && sr_params[:name].present?
+      receptacle = Oroshi::ShippingReceptacle.new(shipping_receptacle_params)
+      unless receptacle.save
+        flash.now[:alert] = receptacle.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    Oroshi::ShippingReceptacle.any?
+  end
+
+  def shipping_receptacle_params
+    params.require(:shipping_receptacle).permit(
+      :name, :handle, :cost, :default_freight_bundle_quantity,
+      :interior_height, :interior_width, :interior_depth,
+      :exterior_height, :exterior_width, :exterior_depth
     )
   end
 end

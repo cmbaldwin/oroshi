@@ -267,3 +267,15 @@ Learnings:
 - All cost fields validate >= 0
 - HABTM with buyers via buyer_ids: []
 - number_to_currency helper for displaying costs in table
+
+[2026-01-10 01:15:00] Story: US-018 - Shipping receptacle onboarding step
+Implemented: Created shipping receptacle onboarding step with dimension fields
+Files:
+  - app/views/oroshi/onboarding/steps/_shipping_receptacle.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_shipping_receptacle)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- ShippingReceptacle requires: name, handle, cost, default_freight_bundle_quantity
+- Interior dimensions: interior_height/width/depth (for per_box_quantity calculation)
+- Exterior dimensions optional: exterior_height/width/depth
+- default_freight_bundle_quantity validates > 0, defaults to 10

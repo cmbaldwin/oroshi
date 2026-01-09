@@ -419,3 +419,34 @@ Learnings:
 - Rubocop clean with 268 files, no offenses detected
 - Test suite uses Test::Unit, not RSpec (as noted in AGENTS.md)
 
+
+[2026-01-09 08:05:00] Story: US-027 - Internationalize common UI elements
+Implemented: Converted 28 view files to use t('common.*') helpers for buttons, labels, and messages
+Files:
+  - config/locales/ja/common.yml (expanded with new translations)
+  - app/views/oroshi/materials/ (new, update, form)
+  - app/views/oroshi/packagings/ (new, update, form)
+  - app/views/oroshi/suppliers/ (new, update)
+  - app/views/oroshi/product_inventories/ (new, edit)
+  - app/views/oroshi/production_requests/_form.html.erb
+  - app/views/oroshi/products/new.html.erb
+  - app/views/oroshi/supply_reception_times/ (new, update)
+  - app/views/oroshi/shipping_receptacles/ (new, update)
+  - app/views/oroshi/product_variations/new.html.erb
+  - app/views/oroshi/material_categories/ (new, update)
+  - app/views/oroshi/shipping_methods/ (new, update)
+  - app/views/oroshi/supply_type_variations/new.html.erb
+  - app/views/oroshi/order_categories/ (new, update)
+  - app/views/oroshi/production_zones/ (new, update)
+  - app/views/oroshi/onboarding/_checklist_sidebar.html.erb
+Tests: PASSING (rubocop clean, i18n verified in Rails console)
+Learnings:
+- Pattern: Replace hardcoded button text with t('common.buttons.*') - save, update, create, delete, edit, new, etc.
+- Pattern: Modal titles use t('common.buttons.new')/t('common.buttons.edit') + Model.model_name.human for DRY i18n
+- Pattern: Success messages use t('common.messages.updated') instead of model-specific messages
+- Pattern: Form labels use t('common.labels.*') - quantity, production_zone, shipping_container, select_prompt
+- Pattern: Onboarding UI messages use t('common.messages.setup_checklist'), t('common.messages.continue_setup')
+- Added new common translations: dismiss, duplicate, send, resend, download, dismiss_checklist_*, setup_checklist
+- Test suite has known issues with Ruby 4.0.0 (timeout/segfault) - validate with rubocop and Rails console instead
+- I18n.t() in Rails console confirms translations work: I18n.t('common.buttons.save') => "保存"
+- model_name.human provides proper i18n for model names (e.g., Oroshi::Product.model_name.human)

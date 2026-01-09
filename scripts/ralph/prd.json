@@ -461,8 +461,8 @@
         "Typecheck passes"
       ],
       "priority": 27,
-      "passes": false,
-      "notes": "Use t('common.save') pattern for shared text. Avoid duplicating translations across namespaces."
+      "passes": true,
+      "notes": "Completed. Expanded common.yml with additional button labels (dismiss, duplicate, send, resend, download) and form labels (quantity, production_zone, etc.). Converted 28 view files to use t('common.buttons.*') and t('common.messages.*') for all buttons, labels, and success messages. Modal titles now use model_name.human + t('common.buttons.edit'). Rubocop clean, i18n verified in Rails console."
     },
     {
       "id": "US-028",

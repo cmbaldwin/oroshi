@@ -279,3 +279,16 @@ Learnings:
 - Interior dimensions: interior_height/width/depth (for per_box_quantity calculation)
 - Exterior dimensions optional: exterior_height/width/depth
 - default_freight_bundle_quantity validates > 0, defaults to 10
+
+[2026-01-10 01:30:00] Story: US-019 - Order category onboarding step
+Implemented: Created order category onboarding step (final step)
+Files:
+  - app/views/oroshi/onboarding/steps/_order_category.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_order_category)
+  - test/controllers/oroshi/onboarding_controller_test.rb (updated to create OrderCategory)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- OrderCategory is simple: only requires name and color
+- Color picker uses color_field helper like Buyer
+- Final step shows success alert indicating onboarding completion
+- Tests for last step need to create OrderCategory first (save_step_data returns false without any)

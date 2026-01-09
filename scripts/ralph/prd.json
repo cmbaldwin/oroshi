@@ -329,8 +329,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 20,
-      "passes": false,
-      "notes": "Step name: order_category. Final step - completing marks onboarding done."
+      "passes": true,
+      "notes": "Created step with name and color fields. Success alert indicates final step. Updated tests to create OrderCategory."
     },
     {
       "id": "US-020",

@@ -108,6 +108,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_shipping_method
     when "shipping_receptacle"
       save_shipping_receptacle
+    when "order_category"
+      save_order_category
     else
       true
     end
@@ -392,5 +394,27 @@ class Oroshi::OnboardingController < ApplicationController
       :interior_height, :interior_width, :interior_depth,
       :exterior_height, :exterior_width, :exterior_depth
     )
+  end
+
+  def save_order_category
+    if params[:delete_order_category_id].present?
+      Oroshi::OrderCategory.find_by(id: params[:delete_order_category_id])&.destroy
+      return :deleted
+    end
+
+    oc_params = params[:order_category]
+    if oc_params.present? && oc_params[:name].present?
+      category = Oroshi::OrderCategory.new(order_category_params)
+      unless category.save
+        flash.now[:alert] = category.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    Oroshi::OrderCategory.any?
+  end
+
+  def order_category_params
+    params.require(:order_category).permit(:name, :color)
   end
 end

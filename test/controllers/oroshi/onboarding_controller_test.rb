@@ -70,6 +70,7 @@ class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
 
   test "update on last step marks onboarding complete" do
     last_step = Oroshi::OnboardingController::ALL_STEPS.last
+    Oroshi::OrderCategory.create!(name: "Test Category", color: "#3498db")
     progress = @user.create_onboarding_progress!(current_step: last_step)
     patch oroshi_onboarding_path(last_step)
     assert_not_nil progress.reload.completed_at
@@ -77,6 +78,7 @@ class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
 
   test "update on last step redirects to dashboard" do
     last_step = Oroshi::OnboardingController::ALL_STEPS.last
+    Oroshi::OrderCategory.create!(name: "Test Category", color: "#3498db")
     @user.create_onboarding_progress!(current_step: last_step)
     patch oroshi_onboarding_path(last_step)
     assert_redirected_to oroshi_root_path

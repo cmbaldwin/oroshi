@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :oroshi_invoice, class: "Oroshi::Invoice" do
+  factory :oroshi_invoice, class: 'Oroshi::Invoice' do
     start_date { Time.zone.today.beginning_of_month }
     end_date { Time.zone.today }
-    send_email { [ true, false ].sample }
+    send_email { [true, false].sample }
     send_at { Time.zone.now + 1.hour }
     sent_at { Time.zone.now + 2.hours }
     invoice_layout { Oroshi::Invoice.invoice_layouts.keys.sample }

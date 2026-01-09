@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiInvoiceSupplyDates < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_invoice_supply_dates do |t|

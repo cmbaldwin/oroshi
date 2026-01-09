@@ -11,6 +11,6 @@
 
 module Oroshi
   def self.table_name_prefix
-    "oroshi_"
+    'oroshi_'
   end
 end

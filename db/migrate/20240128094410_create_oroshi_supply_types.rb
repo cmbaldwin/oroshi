@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiSupplyTypes < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_supply_types do |t|

@@ -56,8 +56,8 @@ development:
 test:
   <<: *default
   database: oroshi_test
-  username: root
-  password: root
+  username: postgres
+  password: postgres
   host: localhost
 
 # As with config/secrets.yml, you never want to store sensitive information,

@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :service_configuration do
-    service { "google_cloud_storage" }
+    service { 'google_cloud_storage' }
     enabled { false }
-    description { "Google Cloud Storage configuration" }
+    description { 'Google Cloud Storage configuration' }
 
     trait :enabled do
       enabled { true }
@@ -15,23 +15,23 @@ FactoryBot.define do
     end
 
     trait :sendgrid do
-      service { "sendgrid" }
-      description { "SendGrid email service" }
+      service { 'sendgrid' }
+      description { 'SendGrid email service' }
     end
 
     trait :rakuten do
-      service { "rakuten" }
-      description { "Rakuten e-commerce API" }
+      service { 'rakuten' }
+      description { 'Rakuten e-commerce API' }
     end
 
     trait :hetzner_storage do
-      service { "hetzner_object_storage" }
-      description { "Hetzner S3-compatible object storage" }
+      service { 'hetzner_object_storage' }
+      description { 'Hetzner S3-compatible object storage' }
     end
 
     trait :local_storage do
-      service { "local_storage" }
-      description { "Local file system storage" }
+      service { 'local_storage' }
+      description { 'Local file system storage' }
     end
   end
 end

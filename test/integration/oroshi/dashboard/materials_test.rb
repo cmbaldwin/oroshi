@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 module Oroshi
   module Dashboard
@@ -10,7 +10,7 @@ module Oroshi
         sign_in @admin
       end
 
-      test "renders materials dashboard partial with turbo frames" do
+      test 'renders materials dashboard partial with turbo frames' do
         get oroshi_dashboard_materials_path
 
         assert_response :success
@@ -20,7 +20,7 @@ module Oroshi
         assert_match(/turbo-frame[^>]*id="material_categories"/, response.body)
       end
 
-      test "renders materials dashboard with data" do
+      test 'renders materials dashboard with data' do
         create_list(:oroshi_material_category, 2)
         create_list(:oroshi_material, 5)
 

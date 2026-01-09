@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPositionToOroshiProducts < ActiveRecord::Migration[7.1]
   def change
     add_column :oroshi_products, :position, :integer

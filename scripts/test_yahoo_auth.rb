@@ -11,7 +11,7 @@
 
 require_relative '../config/environment'
 
-puts "\n" + ('=' * 80)
+puts "\n#{'=' * 80}"
 puts 'YAHOO API - QUICK AUTH TEST'
 puts '=' * 80
 puts "\n"
@@ -51,7 +51,7 @@ if authorized
   end
 
   # Test API connectivity (read-only)
-  puts "\n" + ('-' * 80)
+  puts "\n#{'-' * 80}"
   puts 'Testing API Connectivity (read-only, no DB changes)'
   puts '-' * 80
   puts "\n"
@@ -134,5 +134,5 @@ else
   end
 end
 
-puts "\n" + ('=' * 80)
+puts "\n#{'=' * 80}"
 puts "\n"

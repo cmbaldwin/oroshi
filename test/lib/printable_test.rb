@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 class PrintableTest < ActiveSupport::TestCase
   # Receipt tests
-  test "creates receipt pdf without error" do
+  test 'creates receipt pdf without error' do
     assert_nothing_raised do
       pdf_data = Receipt.new(
-        "sales_date" => "2021\u5E7401\u670801\u65E5",
-        "order_id" => "1234567890",
-        "purchaser" => "\u5C71\u7530\u592A\u90CE",
-        "title" => "\u69D8",
-        "amount" => "1000",
-        "expense_name" => "\u304A\u54C1\u4EE3\u3068\u3057\u3066",
-        "oysis" => "1",
-        "tax_8_amount" => "100",
-        "tax_8_tax" => "8",
-        "tax_10_amount" => "100",
-        "tax_10_tax" => "10"
+        'sales_date' => "2021\u5E7401\u670801\u65E5",
+        'order_id' => '1234567890',
+        'purchaser' => "\u5C71\u7530\u592A\u90CE",
+        'title' => "\u69D8",
+        'amount' => '1000',
+        'expense_name' => "\u304A\u54C1\u4EE3\u3068\u3057\u3066",
+        'oysis' => '1',
+        'tax_8_amount' => '100',
+        'tax_8_tax' => '8',
+        'tax_10_amount' => '100',
+        'tax_10_tax' => '10'
       )
       pdf = pdf_data.render
       assert_predicate pdf, :present?
@@ -25,7 +25,7 @@ class PrintableTest < ActiveSupport::TestCase
   end
 
   # ShellCard tests
-  test "creates expiration card pdf without error" do
+  test 'creates expiration card pdf without error' do
     assert_nothing_raised do
       card = ExpirationCard.new(
         product_name: "\u6BBB\u4ED8\u304D \u304B\u304D",
@@ -50,27 +50,27 @@ class PrintableTest < ActiveSupport::TestCase
   class OnlineShopPackingListTest < ActiveSupport::TestCase
     setup do
       # Create required Setting for headers (using development environment data patterns)
-      @setting = Setting.find_or_create_by(name: "ec_headers") do |s|
+      @setting = Setting.find_or_create_by(name: 'ec_headers') do |s|
         s.settings = %w[500g セル セット その他]
       end
 
       # Create product types as they exist in development
       @product_types = [
-        EcProductType.find_or_create_by(name: "500g") do |pt|
-          pt.counter = "p"
-          pt.section = "default"
+        EcProductType.find_or_create_by(name: '500g') do |pt|
+          pt.counter = 'p'
+          pt.section = 'default'
         end,
         EcProductType.find_or_create_by(name: "\u30BB\u30EB") do |pt|
           pt.counter = "\u30BB\u30EB"
-          pt.section = "default"
+          pt.section = 'default'
         end,
         EcProductType.find_or_create_by(name: "\u30BB\u30C3\u30C8") do |pt|
           pt.counter = "\u30BB\u30C3\u30C8"
-          pt.section = "default"
+          pt.section = 'default'
         end,
         EcProductType.find_or_create_by(name: "\u305D\u306E\u4ED6") do |pt|
           pt.counter = "\u500B"
-          pt.section = "default"
+          pt.section = 'default'
         end
       ]
 
@@ -78,32 +78,32 @@ class PrintableTest < ActiveSupport::TestCase
       @ec_products = [
         EcProduct.find_or_create_by(name: "\u3080\u304D\u8EAB2kg") do |p|
           p.ec_product_type = @product_types[0]
-          p.cross_reference_ids = [ "10000001" ] # m2
-          p.quantity = "2000"
+          p.cross_reference_ids = ['10000001'] # m2
+          p.quantity = '2000'
           p.frozen_item = false
           p.memo_name = "\u30C6\u30B9\u30C8\u5546\u54C1"
-          p.extra_shipping_cost = "0"
+          p.extra_shipping_cost = '0'
         end,
         EcProduct.find_or_create_by(name: "\u304B\u304D\u30BB\u30C3\u30C81kg") do |p|
           p.ec_product_type = @product_types[2]
-          p.cross_reference_ids = [ "10000015" ] # k10
-          p.quantity = "1000"
+          p.cross_reference_ids = ['10000015'] # k10
+          p.quantity = '1000'
           p.frozen_item = false
           p.memo_name = "\u30C6\u30B9\u30C8\u5546\u54C1"
-          p.extra_shipping_cost = "0"
+          p.extra_shipping_cost = '0'
         end,
         EcProduct.find_or_create_by(name: "\u305D\u306E\u4ED6\u5546\u54C1") do |p|
           p.ec_product_type = @product_types[3]
-          p.cross_reference_ids = [ "OYSTER-500G" ]
-          p.quantity = "500"
+          p.cross_reference_ids = ['OYSTER-500G']
+          p.quantity = '500'
           p.frozen_item = false
           p.memo_name = "\u30C6\u30B9\u30C8\u5546\u54C1"
-          p.extra_shipping_cost = "0"
+          p.extra_shipping_cost = '0'
         end
       ]
     end
 
-    test "creates blank shipping list without error (core PDF functionality)" do
+    test 'creates blank shipping list without error (core PDF functionality)' do
       assert_nothing_raised do
         pdf_data = OnlineShopPackingList.new(
           ship_date: Time.zone.today,
@@ -118,14 +118,14 @@ class PrintableTest < ActiveSupport::TestCase
     # Complex order-based packing lists require specific data configurations
     # These tests are covered by the comprehensive testing scripts
     # Focus on core PDF generation functionality for pre-deploy suite
-    test "initializes with settings and validates core components" do
+    test 'initializes with settings and validates core components' do
       assert_predicate @setting, :present?
       assert_equal %w[500g セル セット その他], @setting.settings
       assert_equal 4, @product_types.length
       assert_equal 3, @ec_products.length
     end
 
-    test "validates PDF generation dependencies are available" do
+    test 'validates PDF generation dependencies are available' do
       assert_predicate OnlineShopPackingList, :present?
       assert_predicate Receipt, :present?
       assert_predicate ShellCard, :present?
@@ -150,14 +150,14 @@ class PrintableTest < ActiveSupport::TestCase
       @supply_date = create(:oroshi_supply_date, :with_supplies, date: @start_date)
     end
 
-    test "creates organization invoice pdf without error" do
+    test 'creates organization invoice pdf without error' do
       assert_nothing_raised do
         pdf_data = OroshiInvoice.new(
           @start_date,
           @end_date,
           supplier_organization: @supplier_organization.id.to_s,
-          invoice_format: "organization",
-          layout: "simple"
+          invoice_format: 'organization',
+          layout: 'simple'
         )
         pdf = pdf_data.render
         assert_predicate pdf, :present?
@@ -165,14 +165,14 @@ class PrintableTest < ActiveSupport::TestCase
       end
     end
 
-    test "creates supplier invoice pdf without error" do
+    test 'creates supplier invoice pdf without error' do
       assert_nothing_raised do
         pdf_data = OroshiInvoice.new(
           @start_date,
           @end_date,
           supplier_organization: @supplier_organization.id.to_s,
-          invoice_format: "supplier",
-          layout: "simple"
+          invoice_format: 'supplier',
+          layout: 'simple'
         )
         pdf = pdf_data.render
         assert_predicate pdf, :present?
@@ -180,14 +180,14 @@ class PrintableTest < ActiveSupport::TestCase
       end
     end
 
-    test "creates standard layout invoice pdf without error" do
+    test 'creates standard layout invoice pdf without error' do
       assert_nothing_raised do
         pdf_data = OroshiInvoice.new(
           @start_date,
           @end_date,
           supplier_organization: @supplier_organization.id.to_s,
-          invoice_format: "organization",
-          layout: "standard"
+          invoice_format: 'organization',
+          layout: 'standard'
         )
         pdf = pdf_data.render
         assert_predicate pdf, :present?

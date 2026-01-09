@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiMaterialCategory < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_material_categories do |t|

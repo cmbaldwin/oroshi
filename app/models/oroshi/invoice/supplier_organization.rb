@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
-class Oroshi::Invoice::SupplierOrganization < ApplicationRecord
-  # Associations
-  belongs_to :invoice, class_name: "Oroshi::Invoice"
-  belongs_to :supplier_organization, class_name: "Oroshi::SupplierOrganization"
+module Oroshi
+  module Invoice
+    class SupplierOrganization < ApplicationRecord
+      # Associations
+      belongs_to :invoice, class_name: 'Oroshi::Invoice'
+      belongs_to :supplier_organization, class_name: 'Oroshi::SupplierOrganization'
 
-  # Attachments
-  has_many_attached :invoices
+      # Attachments
+      has_many_attached :invoices
 
-  # Callbacks
-  after_destroy :purge_invoices
+      # Callbacks
+      after_destroy :purge_invoices
 
-  private
+      private
 
-  def purge_invoices
-    invoices.purge
+      def purge_invoices
+        invoices.purge
+      end
+    end
   end
 end

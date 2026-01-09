@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 module Oroshi
   module Dashboard
@@ -10,7 +10,7 @@ module Oroshi
         sign_in @admin
       end
 
-      test "renders buyers dashboard partial with turbo frames when empty" do
+      test 'renders buyers dashboard partial with turbo frames when empty' do
         get oroshi_dashboard_buyers_path
 
         assert_response :success
@@ -19,7 +19,7 @@ module Oroshi
         assert_match(/turbo-frame[^>]*id="buyer"/, response.body)
       end
 
-      test "renders buyers dashboard partial with existing buyers" do
+      test 'renders buyers dashboard partial with existing buyers' do
         create_list(:oroshi_buyer, 3)
 
         get oroshi_dashboard_buyers_path

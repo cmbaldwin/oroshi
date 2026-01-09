@@ -5,21 +5,23 @@ class Credential < ApplicationRecord
   encrypts :value
 
   # Associations
-  belongs_to :user, optional: true  # nil = system-wide credential
+  belongs_to :user, optional: true # nil = system-wide credential
 
   # Enums
   enum :status, { active: 0, expired: 1, revoked: 2 }, prefix: true
 
   # Validations
   validates :service, :key_name, presence: true
-  validates :key_name, uniqueness: { scope: [ :service, :user_id ] }
+  validates :key_name, uniqueness: { scope: %i[service user_id] }
   validates :value, presence: true
 
   # Scopes
-  scope :active, -> { where(status: :active).where("expires_at IS NULL OR expires_at > ?", Time.current) }
+  scope :active, -> { where(status: :active).where('expires_at IS NULL OR expires_at > ?', Time.current) }
   scope :for_service, ->(service) { where(service: service) }
   scope :system_wide, -> { where(user_id: nil) }
-  scope :expiring_soon, ->(days = 30) { where("expires_at IS NOT NULL AND expires_at BETWEEN ? AND ?", Time.current, days.days.from_now) }
+  scope :expiring_soon, lambda { |days = 30|
+    where('expires_at IS NOT NULL AND expires_at BETWEEN ? AND ?', Time.current, days.days.from_now)
+  }
 
   # Auto-expire credentials based on expires_at
   before_validation :check_expiration

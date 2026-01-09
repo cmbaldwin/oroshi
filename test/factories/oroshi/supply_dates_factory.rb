@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :oroshi_supply_date, class: "Oroshi::SupplyDate" do
+  factory :oroshi_supply_date, class: 'Oroshi::SupplyDate' do
     date do
       if Oroshi::SupplyDate.any?
         Oroshi::SupplyDate.last.date + 1.day

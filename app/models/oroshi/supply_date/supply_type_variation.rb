@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-class Oroshi::SupplyDate::SupplyTypeVariation < ApplicationRecord
-  belongs_to :supply_date, class_name: "Oroshi::SupplyDate"
-  belongs_to :supply_type_variation, class_name: "Oroshi::SupplyTypeVariation"
+module Oroshi
+  module SupplyDate
+    class SupplyTypeVariation < ApplicationRecord
+      belongs_to :supply_date, class_name: 'Oroshi::SupplyDate'
+      belongs_to :supply_type_variation, class_name: 'Oroshi::SupplyTypeVariation'
 
-  validates :total, numericality: { greater_than_or_equal_to: 0 }
+      validates :total, numericality: { greater_than_or_equal_to: 0 }
+    end
+  end
 end

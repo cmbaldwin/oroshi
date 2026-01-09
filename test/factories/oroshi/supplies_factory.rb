@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :oroshi_supply, class: "Oroshi::Supply" do
+  factory :oroshi_supply, class: 'Oroshi::Supply' do
     supplier { create(:oroshi_supplier) }
     supply_date { create(:oroshi_supply_date) }
     supply_reception_time do

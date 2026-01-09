@@ -5,11 +5,11 @@ class ApplicationRecord < ActiveRecord::Base
   include ApplicationHelper
 
   def yenify(number)
-    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: "")
+    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: '')
   end
 
   def yenify_with_decimal(number)
-    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: "", precision: 1)
+    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: '', precision: 1)
   end
 
   def sales_date_to_datetime
@@ -52,7 +52,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def calculate_shipping(prefecture, box_size)
-    return 0 unless [ 60, 80, 100 ].include?(box_size)
+    return 0 unless [60, 80, 100].include?(box_size)
 
     shipping = 0
     calculated_shipping = shipping_cost_hash.map do |pref_keys, val_hash|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateJoinTableOroshiSupplierOrganizationsOroshiSupplyReceptionTimes < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_supplier_organizations_oroshi_supply_reception_times do |t|

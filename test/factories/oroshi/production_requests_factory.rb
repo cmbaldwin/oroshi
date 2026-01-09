@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :oroshi_production_request, class: "Oroshi::ProductionRequest" do
+  factory :oroshi_production_request, class: 'Oroshi::ProductionRequest' do
     request_quantity { rand(1..100) }
     fulfilled_quantity { rand(1..100) }
     status { Oroshi::ProductionRequest.statuses.keys.sample }
@@ -9,7 +9,7 @@ FactoryBot.define do
       if Oroshi::ProductVariation.none?
         create(:oroshi_product_variation)
       else
-        Oroshi::ProductVariation.order("RANDOM()").first
+        Oroshi::ProductVariation.order('RANDOM()').first
       end
     end
     product_inventory do
@@ -24,14 +24,14 @@ FactoryBot.define do
       if Oroshi::ProductionZone.none?
         create(:oroshi_production_zone)
       else
-        Oroshi::ProductionZone.order("RANDOM()").first
+        Oroshi::ProductionZone.order('RANDOM()').first
       end
     end
     shipping_receptacle do
       if Oroshi::ShippingReceptacle.none?
         create(:oroshi_shipping_receptacle)
       else
-        Oroshi::ShippingReceptacle.order("RANDOM()").first
+        Oroshi::ShippingReceptacle.order('RANDOM()').first
       end
     end
   end

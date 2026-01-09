@@ -20,21 +20,21 @@ class OroshiOrderDocument < Printable
 
   def page_size
     case @document_type
-    when "shipping_chart" || "shipping_list" then "B4"
-    else "A4"
+    when 'shipping_chart' || 'shipping_list' then 'B4'
+    else 'A4'
     end
   end
 
   def margin
     case @document_type
-    when "shipping_chart" || "shipping_list" then [ 15, 15, 15, 15 ]
-    else [ 15, 15, 30, 15 ]
+    when 'shipping_chart' || 'shipping_list' then [15, 15, 15, 15]
+    else [15, 15, 30, 15]
     end
   end
 
   def page_layout
     case @document_type
-    when "shipping_list"
+    when 'shipping_list'
       :landscape
     else
       :portrait
@@ -44,27 +44,27 @@ class OroshiOrderDocument < Printable
   def init_vars(shipping_organization_id, print_empty_buyers)
     filter_orders
     group_by_shipping_organization(shipping_organization_id)
-    @buyers = if print_empty_buyers == "0"
+    @buyers = if print_empty_buyers == '0'
                 @shipping_organization.buyers.uniq.sort_by(&:associated_system_id)
-    elsif print_empty_buyers.to_i.positive?
+              elsif print_empty_buyers.to_i.positive?
                 Oroshi::Buyer.joins(:buyer_categories).where(buyer_categories: { id: print_empty_buyers })
                              .sort_by(&:associated_system_id)
-    else
+              else
                 @orders.map(&:buyer).uniq.sort_by(&:associated_system_id)
-    end
+              end
     @products = Oroshi::Product.all.includes(%i[product_variations supply_type])
   end
 
   def filter_orders
     conditions = { shipping_date: @date }
-    conditions[:buyer_id] = @options["buyer_ids"] if @options["buyer_ids"].present?
-    conditions[:shipping_method_id] = @options["shipping_method_ids"] if @options["shipping_method_ids"].present?
+    conditions[:buyer_id] = @options['buyer_ids'] if @options['buyer_ids'].present?
+    conditions[:shipping_method_id] = @options['shipping_method_ids'] if @options['shipping_method_ids'].present?
 
     @orders = Oroshi::Order.non_template.includes(:buyer, :product, :shipping_organization)
 
-    if @options["order_category_ids"].present?
+    if @options['order_category_ids'].present?
       @orders = @orders.joins(:order_order_categories)
-                       .where(order_order_categories: { order_category_id: @options["order_category_ids"] })
+                       .where(order_order_categories: { order_category_id: @options['order_category_ids'] })
     end
 
     @orders = @orders.where(conditions)
@@ -82,13 +82,13 @@ class OroshiOrderDocument < Printable
     table(table_data, header: true, width: bounds.width, column_widths: { 0 => 5 }) do
       row(0).font_style = :bold
       row(0).align = :center
-      row(0).background_color = "f0f0f0"
+      row(0).background_color = 'f0f0f0'
       cells.border_width = 0.5
     end
   end
 
   def table_data
-    [ header_row, *order_rows, product_totals_row ]
+    [header_row, *order_rows, product_totals_row]
   end
 
   def print_title
@@ -96,11 +96,11 @@ class OroshiOrderDocument < Printable
 
     if @options.present?
       option_details = []
-      if @options["order_category_ids"].present?
+      if @options['order_category_ids'].present?
         option_details << "#{Oroshi::OrderCategory.model_name.human}:#{fetch_order_category_names}"
       end
-      option_details << "#{Oroshi::Buyer.model_name.human}:#{fetch_buyer_names}" if @options["buyer_ids"].present?
-      if @options["shipping_method_ids"].present?
+      option_details << "#{Oroshi::Buyer.model_name.human}:#{fetch_buyer_names}" if @options['buyer_ids'].present?
+      if @options['shipping_method_ids'].present?
         option_details << "#{Oroshi::ShippingMethod.model_name.human}:#{fetch_shipping_method_names}"
       end
       title += " (#{option_details.join(', ')})"
@@ -112,19 +112,19 @@ class OroshiOrderDocument < Printable
   end
 
   def fetch_order_category_names
-    Oroshi::OrderCategory.where(id: @options["order_category_ids"]).pluck(:name).join(", ")
+    Oroshi::OrderCategory.where(id: @options['order_category_ids']).pluck(:name).join(', ')
   end
 
   def fetch_buyer_names
-    Oroshi::Buyer.where(id: @options["buyer_ids"]).pluck(:name).join(", ")
+    Oroshi::Buyer.where(id: @options['buyer_ids']).pluck(:name).join(', ')
   end
 
   def fetch_shipping_method_names
-    Oroshi::ShippingMethod.where(id: @options["shipping_method_ids"]).pluck(:name).join(", ")
+    Oroshi::ShippingMethod.where(id: @options['shipping_method_ids']).pluck(:name).join(', ')
   end
 
   def header_row
-    [ { content: Oroshi::Buyer.model_name.human, colspan: 2 }, *@products.map(&:name), "\u5408\u8A08" ]
+    [{ content: Oroshi::Buyer.model_name.human, colspan: 2 }, *@products.map(&:name), "\u5408\u8A08"]
   end
 
   def order_rows
@@ -143,11 +143,11 @@ class OroshiOrderDocument < Printable
   end
 
   def order_row
-    [ buyer_color_cell, @current_buyer.handle, *product_columns, total_column ]
+    [buyer_color_cell, @current_buyer.handle, *product_columns, total_column]
   end
 
   def buyer_color_cell
-    { content: "", background_color: @current_buyer.color.delete("#") }
+    { content: '', background_color: @current_buyer.color.delete('#') }
   end
 
   def product_columns
@@ -166,10 +166,10 @@ class OroshiOrderDocument < Printable
   end
 
   def product_totals_row
-    [ { content: "\u5408\u8A08", colspan: 2 }, *product_total_strings, @product_totals.values.sum ]
+    [{ content: "\u5408\u8A08", colspan: 2 }, *product_total_strings, @product_totals.values.sum]
   end
 
   def product_total_strings
-    @product_totals.values.map { |total| total.zero? ? "" : total }
+    @product_totals.values.map { |total| total.zero? ? '' : total }
   end
 end

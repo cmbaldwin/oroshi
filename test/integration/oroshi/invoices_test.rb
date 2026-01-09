@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 module Oroshi
   # NOTE: Invoice create/update/destroy actions use turbo_stream responses
@@ -25,39 +25,39 @@ module Oroshi
                        price: 100)
     end
 
-    test "GET /oroshi/invoices returns success" do
+    test 'GET /oroshi/invoices returns success' do
       get oroshi_invoices_path
       assert_response :success
     end
 
-    test "GET /oroshi/invoices with existing invoices lists invoices" do
-      create(:oroshi_invoice, supply_dates: [ @supply_date ])
+    test 'GET /oroshi/invoices with existing invoices lists invoices' do
+      create(:oroshi_invoice, supply_dates: [@supply_date])
 
       get oroshi_invoices_path
       assert_response :success
     end
 
-    test "GET /oroshi/invoices/:id returns success" do
-      invoice = create(:oroshi_invoice, supply_dates: [ @supply_date ])
+    test 'GET /oroshi/invoices/:id returns success' do
+      invoice = create(:oroshi_invoice, supply_dates: [@supply_date])
 
       get oroshi_invoice_path(invoice)
       assert_response :success
     end
 
-    test "associates invoice with supply dates" do
-      invoice = create(:oroshi_invoice, supply_dates: [ @supply_date ])
+    test 'associates invoice with supply dates' do
+      invoice = create(:oroshi_invoice, supply_dates: [@supply_date])
 
       assert_includes invoice.supply_dates, @supply_date
     end
 
-    test "can access supplies through supply dates" do
-      invoice = create(:oroshi_invoice, supply_dates: [ @supply_date ])
+    test 'can access supplies through supply dates' do
+      invoice = create(:oroshi_invoice, supply_dates: [@supply_date])
 
       assert_includes invoice.supply_dates.flat_map(&:supplies), @supply
     end
 
-    test "can associate with supplier organizations" do
-      invoice = create(:oroshi_invoice, supply_dates: [ @supply_date ])
+    test 'can associate with supplier organizations' do
+      invoice = create(:oroshi_invoice, supply_dates: [@supply_date])
       invoice.supplier_organizations << @supplier_org
       invoice.reload
 

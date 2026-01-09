@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 module Oroshi
   module Dashboard
@@ -10,7 +10,7 @@ module Oroshi
         sign_in @admin
       end
 
-      test "renders supply_types dashboard partial with turbo frames" do
+      test 'renders supply_types dashboard partial with turbo frames' do
         get oroshi_dashboard_supply_types_path
 
         assert_response :success
@@ -18,7 +18,7 @@ module Oroshi
         assert_match(/turbo-frame[^>]*id="supply_type_settings"/, response.body)
       end
 
-      test "renders supply types dashboard with data" do
+      test 'renders supply types dashboard with data' do
         create_list(:oroshi_supply_type, 3)
         create_list(:oroshi_supply_type_variation, 5)
 

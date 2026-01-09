@@ -29,7 +29,7 @@ class YahooSandboxTester
   end
 
   def run_all_tests
-    puts "\n" + ('=' * 80)
+    puts "\n#{'=' * 80}"
     puts 'YAHOO JAPAN SHOPPING API - SANDBOX TESTING'
     puts '=' * 80
     puts "\nStarted at: #{Time.current.strftime('%Y-%m-%d %H:%M:%S %Z')}"
@@ -240,7 +240,7 @@ class YahooSandboxTester
 
         # Display items
         if details['Item']
-          items = details['Item'].is_a?(Array) ? details['Item'] : [ details['Item'] ]
+          items = details['Item'].is_a?(Array) ? details['Item'] : [details['Item']]
           puts "    ✓ Items: #{items.count}"
           items.first(2).each do |item|
             puts "      - #{item['Title']} (#{item['ItemId']})"
@@ -281,8 +281,8 @@ class YahooSandboxTester
       # NOTE: We can't easily test rate limiting without hitting the limit
       # This just verifies the error class exists
 
-      raise YahooAPI::RateLimitError.new('Test rate limit')
-    rescue YahooAPI::RateLimitError => e
+      raise YahooAPI::RateLimitError, 'Test rate limit'
+    rescue YahooAPI::RateLimitError
       puts '    ✓ RateLimitError class defined'
       puts '    ✓ Can be caught correctly'
       true
@@ -300,7 +300,7 @@ class YahooSandboxTester
   end
 
   def enable_sandbox_mode
-    puts "\n" + ('-' * 80)
+    puts "\n#{'-' * 80}"
     puts 'SANDBOX MODE ENABLED'
     puts '-' * 80
     @config.use_test_environment = true
@@ -309,13 +309,13 @@ class YahooSandboxTester
 
   def disable_sandbox_mode
     @config.use_test_environment = false
-    puts "\n" + ('-' * 80)
+    puts "\n#{'-' * 80}"
     puts 'SANDBOX MODE DISABLED'
     puts '-' * 80
   end
 
   def section(title)
-    puts "\n" + ('-' * 80)
+    puts "\n#{'-' * 80}"
     puts title
     puts '-' * 80
   end
@@ -354,7 +354,7 @@ class YahooSandboxTester
   end
 
   def print_summary
-    puts "\n" + ('=' * 80)
+    puts "\n#{'=' * 80}"
     puts 'TEST SUMMARY'
     puts '=' * 80
 

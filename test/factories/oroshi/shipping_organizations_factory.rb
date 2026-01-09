@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :oroshi_shipping_organization, class: "Oroshi::ShippingOrganization" do
+  factory :oroshi_shipping_organization, class: 'Oroshi::ShippingOrganization' do
     transient do
       buyers do
-        Oroshi::Buyer.order("RANDOM()").limit(rand(1..3)) ||
+        Oroshi::Buyer.order('RANDOM()').limit(rand(1..3)) ||
           create_list(:oroshi_buyer, rand(1..3))
       end
     end

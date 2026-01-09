@@ -8,26 +8,26 @@
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum; this matches the default thread size of Active Record.
 #
-threads_count = Integer(ENV["RAILS_MAX_THREADS"] || 5)
+threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads threads_count, threads_count
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
-port ENV.fetch("PORT", 3000)
+port ENV.fetch('PORT', 3000)
 
 # Specifies the `environment` that Puma will run in.
 #
-environment ENV.fetch("RACK_ENV", "development")
+environment ENV.fetch('RACK_ENV', 'development')
 
 # Specifies the `pidfile` that Puma will use.
-pidfile ENV.fetch("PIDFILE", "tmp/pids/server.pid")
+pidfile ENV.fetch('PIDFILE', 'tmp/pids/server.pid')
 
 # Specifies the number of `workers` to boot in clustered mode.
 # macOS + forked workers can crash when hitting native frameworks (seen in pg).
-if ENV.fetch("RACK_ENV", "development") == "development"
+if ENV.fetch('RACK_ENV', 'development') == 'development'
   workers 0
 else
-  workers Integer(ENV["WEB_CONCURRENCY"] || 1)
+  workers Integer(ENV['WEB_CONCURRENCY'] || 1)
   on_worker_boot do
     # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
     ActiveRecord::Base.establish_connection

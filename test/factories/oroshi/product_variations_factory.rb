@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :oroshi_product_variation, class: "Oroshi::ProductVariation" do
+  factory :oroshi_product_variation, class: 'Oroshi::ProductVariation' do
     product { Oroshi::Product.last || create(:oroshi_product) }
     default_shipping_receptacle { Oroshi::ShippingReceptacle.last || create(:oroshi_shipping_receptacle) }
     name { FFaker::LoremJA.words(2).join }
     sequence(:handle) { |n| "#{FFaker::Lorem.word}_#{n}" }
     primary_content_volume { rand(1.0..100.0).round(2) }
-    primary_content_country_id { "392" } # Japan's ISO numeric_code
+    primary_content_country_id { '392' } # Japan's ISO numeric_code
     primary_content_subregion_id { rand(1..47) } # Japan has 47 subregions
     shelf_life { rand(1..365) }
     active { true }
@@ -28,16 +28,17 @@ FactoryBot.define do
 
     after(:create) do |product_variation|
       # Create optional associated records after creation
-      create_list(:oroshi_packaging, rand(1..2), product_variations: [ product_variation ])
-      create_list(:oroshi_supply_type_variation, rand(1..3), product_variations: [ product_variation ])
+      create_list(:oroshi_packaging, rand(1..2), product_variations: [product_variation])
+      create_list(:oroshi_supply_type_variation, rand(1..3), product_variations: [product_variation])
       # NOTE: production_requests are NOT created automatically as they require product_inventory
       # Create them explicitly in tests that need them
 
-      # Attach an image from a URL
+      # Attach a simple 1x1 pixel PNG image for testing
+      png_data = "\x89PNG\r\n\x1A\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\b\x06\x00\x00\x00\x1F\x15\xC4\x89\x00\x00\x00\nIDATx\x9Cc\x00\x01\x00\x00\x05\x00\x01\r\n-\xB4\x00\x00\x00\x00IEND\xAEB`\x82".dup.force_encoding('ASCII-8BIT')
       product_variation.image.attach(
-        io: URI.open("https://placehold.co/600x400"),
-        filename: "placeholder.png",
-        content_type: "image/png"
+        io: StringIO.new(png_data),
+        filename: 'placeholder.png',
+        content_type: 'image/png'
       )
     end
   end

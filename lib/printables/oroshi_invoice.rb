@@ -17,9 +17,9 @@ class OroshiInvoice < Printable
   # @param [String] format -> 'organization' or 'supplier'
   # @param [String] layout -> 'simple' or 'standard' for now
   # @param [String] password
-  def initialize(start_date, end_date, supplier_organization: "1", invoice_format: "organization", layout: "simple",
+  def initialize(start_date, end_date, supplier_organization: '1', invoice_format: 'organization', layout: 'simple',
                  password: nil, invoice_date: nil)
-    super(margin: [ 15, 15, 30, 15 ])
+    super(margin: [15, 15, 30, 15])
     @date_range = start_date..end_date
     @supplier_organization = Oroshi::SupplierOrganization.find(supplier_organization)
     @password = password
@@ -62,7 +62,7 @@ class OroshiInvoice < Printable
 
     @supplies = Oroshi::Supply.joins(:supply_date, :supplier).where(query_params).where.not(quantity: 0)
                               .includes(:supply_date, :supply_type_variation, :supplier)
-                              .order("supply_date.date")
+                              .order('supply_date.date')
     @supplies
   end
 

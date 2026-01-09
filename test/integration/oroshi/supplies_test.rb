@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 module Oroshi
   class SuppliesTest < ActionDispatch::IntegrationTest
@@ -15,20 +15,20 @@ module Oroshi
       @reception_time = @supplier_org.supply_reception_times.first
     end
 
-    test "GET /oroshi/supplies returns success" do
+    test 'GET /oroshi/supplies returns success' do
       get oroshi_supplies_path
       assert_response :success
     end
 
-    test "renders the supplies calendar interface" do
+    test 'renders the supplies calendar interface' do
       get oroshi_supplies_path
-      assert_includes response.body, "supplies"
+      assert_includes response.body, 'supplies'
     end
 
     # POST and PATCH specs removed - controller methods work but have issues with test setup
     # Integration tests below verify the model behavior which is what matters
 
-    test "accesses related associations" do
+    test 'accesses related associations' do
       supply = create(:oroshi_supply,
                       supply_date: @supply_date,
                       supplier: @supplier,
@@ -39,7 +39,7 @@ module Oroshi
       assert_equal @supply_type_variation, supply.supply_type_variation
     end
 
-    test "calculates supplier_organization correctly" do
+    test 'calculates supplier_organization correctly' do
       supply = create(:oroshi_supply,
                       supply_date: @supply_date,
                       supplier: @supplier,
@@ -49,25 +49,25 @@ module Oroshi
       assert_equal @supplier_org, supply.supplier_organization
     end
 
-    test "has valid quantity and price" do
+    test 'has valid quantity and price' do
       supply = create(:oroshi_supply,
                       supply_date: @supply_date,
                       supplier: @supplier,
                       supply_type_variation: @supply_type_variation,
                       supply_reception_time: @reception_time)
 
-      assert supply.quantity > 0
+      assert supply.quantity.positive?
       assert supply.price >= 0
     end
 
-    test "can be locked/unlocked" do
+    test 'can be locked/unlocked' do
       supply = create(:oroshi_supply,
                       supply_date: @supply_date,
                       supplier: @supplier,
                       supply_type_variation: @supply_type_variation,
                       supply_reception_time: @reception_time)
 
-      assert_includes [ true, false ], supply.locked
+      assert_includes [true, false], supply.locked
     end
   end
 end

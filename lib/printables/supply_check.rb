@@ -62,6 +62,6 @@ class SupplyCheck < Printable
   end
 
   def spacer
-    [ { content: "", colspan: 8, padding: 2 } ]
+    [{ content: '', colspan: 8, padding: 2 }]
   end
 end

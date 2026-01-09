@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiBuyer < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_buyers do |t|

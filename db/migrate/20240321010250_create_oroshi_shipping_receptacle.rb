@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiShippingReceptacle < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_shipping_receptacles do |t|

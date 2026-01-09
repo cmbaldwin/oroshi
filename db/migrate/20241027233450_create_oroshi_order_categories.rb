@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiOrderCategories < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_order_categories do |t|

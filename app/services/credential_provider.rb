@@ -9,10 +9,10 @@ class CredentialProvider
     # @return [String, nil] The credential value or nil if not found
     def get(service, key_name, user: nil)
       credential = Credential.active
-        .where(service: service.to_s, key_name: key_name.to_s)
-        .where(user_id: user&.id)
-        .order(created_at: :desc)
-        .first
+                             .where(service: service.to_s, key_name: key_name.to_s)
+                             .where(user_id: user&.id)
+                             .order(created_at: :desc)
+                             .first
 
       # Return database value if found, otherwise fallback to ENV
       credential&.value || env_fallback(service, key_name)
@@ -24,11 +24,11 @@ class CredentialProvider
     # @return [Hash] Hash of key_name => value pairs
     def for_service(service, user: nil)
       Credential.active
-        .where(service: service.to_s)
-        .where(user_id: user&.id)
-        .each_with_object({}) do |cred, hash|
-          hash[cred.key_name.to_sym] = cred.value
-        end
+                .where(service: service.to_s)
+                .where(user_id: user&.id)
+                .each_with_object({}) do |cred, hash|
+                  hash[cred.key_name.to_sym] = cred.value
+      end
     end
 
     # Check if a service is fully configured
@@ -52,7 +52,7 @@ class CredentialProvider
           configured: false,
           enabled: false,
           missing_credentials: [],
-          error: "Service not found"
+          error: 'Service not found'
         }
       end
 
@@ -81,42 +81,42 @@ class CredentialProvider
     # Map service/key combinations to legacy ENV variable names
     def env_variable_mapping(service, key_name)
       case service
-      when "google_cloud_storage", "gcs"
+      when 'google_cloud_storage', 'gcs'
         case key_name
-        when "project" then "GCLOUD_PROJECT"
-        when "bucket" then "GCLOUD_BUCKET"
-        when "credentials_path" then "GCLOUD_CREDENTIALS_PATH"
-        when "bucket_prefix" then "GBUCKET_PREFIX"
+        when 'project' then 'GCLOUD_PROJECT'
+        when 'bucket' then 'GCLOUD_BUCKET'
+        when 'credentials_path' then 'GCLOUD_CREDENTIALS_PATH'
+        when 'bucket_prefix' then 'GBUCKET_PREFIX'
         end
-      when "sendgrid"
+      when 'sendgrid'
         case key_name
-        when "api_username" then "SENDGRID_TWILIO_API_USERNAME"
-        when "api_password" then "SENDGRID_TWILIO_API_PASSWORD"
-        when "mail_sender" then "MAIL_SENDER"
+        when 'api_username' then 'SENDGRID_TWILIO_API_USERNAME'
+        when 'api_password' then 'SENDGRID_TWILIO_API_PASSWORD'
+        when 'mail_sender' then 'MAIL_SENDER'
         end
-      when "rakuten"
+      when 'rakuten'
         case key_name
-        when "api_key" then "RAKUTEN_API"
-        when "service_secret" then "RAKUTEN_SERVICE_SECRET"
-        when "license_key" then "RAKUTEN_LICENSE_KEY"
+        when 'api_key' then 'RAKUTEN_API'
+        when 'service_secret' then 'RAKUTEN_SERVICE_SECRET'
+        when 'license_key' then 'RAKUTEN_LICENSE_KEY'
         end
-      when "yahoo_v2"
+      when 'yahoo_v2'
         case key_name
-        when "client_id" then "YAHOO_CLIENT_V2"
-        when "client_secret" then "YAHOO_SECRET_V2"
-        when "seller_id" then "YAHOO_SELLER_ID"
+        when 'client_id' then 'YAHOO_CLIENT_V2'
+        when 'client_secret' then 'YAHOO_SECRET_V2'
+        when 'seller_id' then 'YAHOO_SELLER_ID'
         end
-      when "yahoo_v1"
+      when 'yahoo_v1'
         case key_name
-        when "secret" then "YAHOO_SECRET"
-        when "client_id" then "YAHOO_CLIENT_ID"
-        when "pem_file" then "YAHOO_PEM_FILE"
-        when "pem_pass" then "YAHOO_PEM_PASS"
+        when 'secret' then 'YAHOO_SECRET'
+        when 'client_id' then 'YAHOO_CLIENT_ID'
+        when 'pem_file' then 'YAHOO_PEM_FILE'
+        when 'pem_pass' then 'YAHOO_PEM_PASS'
         end
-      when "infomart"
+      when 'infomart'
         case key_name
-        when "login" then "INFOMART_LOGIN"
-        when "password" then "INFOMART_PASS"
+        when 'login' then 'INFOMART_LOGIN'
+        when 'password' then 'INFOMART_PASS'
         end
       end
     end

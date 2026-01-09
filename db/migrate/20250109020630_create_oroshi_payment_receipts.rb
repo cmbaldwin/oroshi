@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiPaymentReceipts < ActiveRecord::Migration[8.0]
   def change
     create_table :oroshi_payment_receipts do |t|

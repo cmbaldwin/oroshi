@@ -23,7 +23,7 @@ module SupplyPriceAssignment
   def process_price_assignments
     clean_supply_dates
     @results = {}
-    supply_prices_params["prices"].each do |supplier_organization_id, baskets|
+    supply_prices_params['prices'].each do |supplier_organization_id, baskets|
       @current_organization = supplier_organization_id
       process_baskets(baskets)
     end
@@ -35,8 +35,8 @@ module SupplyPriceAssignment
 
   def process_baskets(baskets)
     baskets.each_value do |basket_hash|
-      supplier_ids = basket_hash["supplier_ids"].compact_blank
-      basket_prices = basket_hash["basket_prices"]
+      supplier_ids = basket_hash['supplier_ids'].compact_blank
+      basket_prices = basket_hash['basket_prices']
       next if supplier_ids.empty? || basket_prices.values.map(&:to_f).sum.zero?
 
       process_supply_prices(supplier_ids, basket_prices)
@@ -46,7 +46,7 @@ module SupplyPriceAssignment
   def process_supply_prices(supplier_ids, basket_prices)
     @supplies ||= Oroshi::Supply.includes(:supplier, :supply_type_variation)
                                 .where(supply_date: @supply_dates.pluck(:id))
-                                .where("quantity > 0").to_a
+                                .where('quantity > 0').to_a
     basket_prices.each do |supply_type_variation_id, price|
       next if price.to_f.zero?
 
@@ -104,7 +104,7 @@ module SupplyPriceAssignment
     org_results = @results[@current_organization] ||= {}
     date_results = org_results[supply_date_date] ||= {}
     supplier_results = date_results[supplier_name] ||= {}
-    init_array = [ 0, price, @current_supply_type_variation_units ]
+    init_array = [0, price, @current_supply_type_variation_units]
     supplier_results[@current_supply_type_variation_name] ||= init_array
   end
 end

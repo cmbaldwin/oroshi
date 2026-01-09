@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :oroshi_material_category, class: "Oroshi::MaterialCategory" do
+  factory :oroshi_material_category, class: 'Oroshi::MaterialCategory' do
     name { FFaker::LoremJA.words(2).join }
     active { true }
 

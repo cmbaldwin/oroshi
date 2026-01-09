@@ -6,16 +6,16 @@
 
 require_relative '../config/environment'
 
-puts "=== PDF Generation Testing Script ==="
-puts "Creating dummy data for PDF generation tests..."
+puts '=== PDF Generation Testing Script ==='
+puts 'Creating dummy data for PDF generation tests...'
 
 begin
   # Create required settings
   puts "\n1. Creating Settings..."
-  settings = Setting.find_or_create_by(name: 'ec_headers') do |s|
+  Setting.find_or_create_by(name: 'ec_headers') do |s|
     s.settings = %w[500g セル セット その他]
   end
-  puts "✓ EC headers setting created"
+  puts '✓ EC headers setting created'
 
   # Create product types
   puts "\n2. Creating EcProductTypes..."
@@ -38,10 +38,10 @@ begin
   puts "\n3. Creating EcProducts..."
   ec_products = []
   [
-    { name: 'むき身2kg', cross_reference_ids: [ '10000001' ], type: product_types[0], quantity: '2000' },
-    { name: 'かきセット1kg', cross_reference_ids: [ '10000015' ], type: product_types[2], quantity: '1000' },
-    { name: 'セルパック', cross_reference_ids: [ 'CELL001' ], type: product_types[1], quantity: '1' },
-    { name: 'その他商品', cross_reference_ids: [ 'OYSTER-500G' ], type: product_types[3], quantity: '500' }
+    { name: 'むき身2kg', cross_reference_ids: ['10000001'], type: product_types[0], quantity: '2000' },
+    { name: 'かきセット1kg', cross_reference_ids: ['10000015'], type: product_types[2], quantity: '1000' },
+    { name: 'セルパック', cross_reference_ids: ['CELL001'], type: product_types[1], quantity: '1' },
+    { name: 'その他商品', cross_reference_ids: ['OYSTER-500G'], type: product_types[3], quantity: '500' }
   ].each do |product_data|
     product = EcProduct.find_or_create_by(name: product_data[:name]) do |p|
       p.ec_product_type = product_data[:type]
@@ -103,16 +103,15 @@ begin
   # Clean up test data
   puts "\n7. Cleaning up test data..."
   card.destroy
-  puts "✓ Test ExpirationCard cleaned up"
+  puts '✓ Test ExpirationCard cleaned up'
 
   puts "\n=== All PDF Generation Tests Passed! ==="
-  puts "✓ Receipt PDFs working"
-  puts "✓ Shell Card PDFs working"
-  puts "✓ Blank Packing List PDFs working"
+  puts '✓ Receipt PDFs working'
+  puts '✓ Shell Card PDFs working'
+  puts '✓ Blank Packing List PDFs working'
   puts "\nNote: Complex order-based PDFs may require actual order data"
-  puts "The PDF generation core functionality is working correctly!"
-
-rescue => e
+  puts 'The PDF generation core functionality is working correctly!'
+rescue StandardError => e
   puts "\n❌ Error during PDF generation testing:"
   puts "#{e.class}: #{e.message}"
   puts e.backtrace.first(5).join("\n")

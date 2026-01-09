@@ -5,21 +5,21 @@ module ApplicationHelper
 
   # Company settings helper
   def company_setting(key, default_value = nil)
-    company_settings = Rails.cache.fetch("oroshi_company_settings", expires_in: 1.hour) do
-      Setting.find_by(name: "oroshi_company_settings")&.settings
+    company_settings = Rails.cache.fetch('oroshi_company_settings', expires_in: 1.hour) do
+      Setting.find_by(name: 'oroshi_company_settings')&.settings
     end
     company_settings&.dig(key) || default_value
   end
 
   def company_info
     {
-      name: company_setting("name", "\u8239\u66F3\u5546\u5E97"),
-      postal_code: company_setting("postal_code", "529-3202"),
-      address: company_setting("address", "\u6ECB\u8CC0\u770C\u6E56\u5317\u753A\u901F\u6C342780-7"),
-      phone: company_setting("phone", "0749-79-0315"),
-      fax: company_setting("fax"),
-      mail: company_setting("mail", "info@funabiki.info"),
-      web: company_setting("web")
+      name: company_setting('name', "\u8239\u66F3\u5546\u5E97"),
+      postal_code: company_setting('postal_code', '529-3202'),
+      address: company_setting('address', "\u6ECB\u8CC0\u770C\u6E56\u5317\u753A\u901F\u6C342780-7"),
+      phone: company_setting('phone', '0749-79-0315'),
+      fax: company_setting('fax'),
+      mail: company_setting('mail', 'info@funabiki.info'),
+      web: company_setting('web')
     }
   end
 
@@ -87,7 +87,8 @@ module ApplicationHelper
 
   def weekday_japanese(num)
     # d.strftime("%w") to Japanese
-    weekdays = { 0 => "\u65E5", 1 => "\u6708", 2 => "\u706B", 3 => "\u6C34", 4 => "\u6728", 5 => "\u91D1", 6 => "\u571F" }
+    weekdays = { 0 => "\u65E5", 1 => "\u6708", 2 => "\u706B", 3 => "\u6C34", 4 => "\u6728", 5 => "\u91D1",
+                 6 => "\u571F" }
     weekdays[num]
   end
 
@@ -116,15 +117,15 @@ module ApplicationHelper
   end
 
   def yenify(number)
-    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: "")
+    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: '')
   end
 
   def yenify_with_decimal(number)
-    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: "", precision: 1)
+    ActionController::Base.helpers.number_to_currency(number, locale: :ja, unit: '', precision: 1)
   end
 
   def cycle_table_rows
-    cycle("even", "odd")
+    cycle('even', 'odd')
   end
 
   def nengapi_today
@@ -138,7 +139,7 @@ module ApplicationHelper
   def icon(icon, options = {})
     classes = "bi bi-#{icon}"
     classes += " #{options[:class]}" if options[:class].present?
-    style = ""
+    style = ''
     if options[:size].present?
       style = "font-size: #{options[:size]}px; width: #{options[:size]}px; height: #{options[:size]}px;"
     end
@@ -163,7 +164,7 @@ module ApplicationHelper
     cards = counts.values[3]
     anago = counts.values[7]
     results = { headers: counts.keys, values: counts.values, anago:, cards: }
-    [ "\u30BB\u30EB\u30AB\u30FC\u30C9", "\u7A74\u5B50(g)" ].each do |t|
+    ["\u30BB\u30EB\u30AB\u30FC\u30C9", "\u7A74\u5B50(g)"].each do |t|
       i = results[:headers].index(t)
       %i[headers values].each { |k| results[k].delete_at(i) }
     end
@@ -179,60 +180,60 @@ module ApplicationHelper
     types_arr = %w[生むき身 生セル 小殻付 セルカード 冷凍むき身 冷凍セル 穴子(件) 穴子(g) 干しムキエビ(80g) 干し殻付エビ(80g) タコ サーモン オイスタソース サムライ佃煮　サムライゴールド]
     types_arr.each { |w| counts[w] = 0 }
     count_hash = {
-      "kakiset302" => [ 2, 30, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "kakiset202" => [ 2, 20, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "kakiset301" => [ 1, 30, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "kakiset201" => [ 1, 20, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "kakiset101" => [ 1, 10, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "karatsuki100" => [ 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "karatsuki50" => [ 0, 50, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "karatsuki40" => [ 0, 40, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "karatsuki30" => [ 0, 30, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "karatsuki20" => [ 0, 20, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "karatsuki10" => [ 0, 10, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "mukimi04" => [ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "mukimi03" => [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "mukimi02" => [ 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "mukimi01" => [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pkara100" => [ 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pkara50" => [ 0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pkara40" => [ 0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pkara30" => [ 0, 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pkara20" => [ 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pkara10" => [ 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pmuki04" => [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pmuki03" => [ 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pmuki02" => [ 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "pmuki01" => [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "tako1k" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ],
-      "tako1k2-3b" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ],
-      "mebi80x5" => [ 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0 ],
-      "mebi80x3" => [ 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0 ],
-      "hebi80x10" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0 ],
-      "hebi80x5" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0 ],
-      "anago600" => [ 0, 0, 0, 0, 0, 0, 1, 600, 0, 0, 0, 0, 0, 0, 0 ],
-      "anago480" => [ 0, 0, 0, 0, 0, 0, 1, 480, 0, 0, 0, 0, 0, 0, 0 ],
-      "anago350" => [ 0, 0, 0, 0, 0, 0, 1, 350, 0, 0, 0, 0, 0, 0, 0 ],
-      "syoukara1kg" => [ 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "syoukara2kg" => [ 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "syoukara3kg" => [ 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "syoukara5kg" => [ 0, 0, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "reoysalmon" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ],
-      "oyster38" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ],
-      "tsukuani" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0 ],
-      "tsukudani" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0 ],
-      "tsukuani6" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0 ],
-      "tsukudani6" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0 ],
-      "sbt-10" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10 ],
-      "sbt-20" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20 ],
-      "sbt-30" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30 ],
-      "sbt-40" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40 ],
-      "sbt-50" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50 ],
-      "sbt-60" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60 ],
-      "sbt-70" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70 ],
-      "sbt-80" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80 ],
-      "sbt-90" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90 ],
-      "sbt-100" => [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100 ]
+      'kakiset302' => [2, 30, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'kakiset202' => [2, 20, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'kakiset301' => [1, 30, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'kakiset201' => [1, 20, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'kakiset101' => [1, 10, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'karatsuki100' => [0, 100, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'karatsuki50' => [0, 50, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'karatsuki40' => [0, 40, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'karatsuki30' => [0, 30, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'karatsuki20' => [0, 20, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'karatsuki10' => [0, 10, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'mukimi04' => [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'mukimi03' => [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'mukimi02' => [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'mukimi01' => [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pkara100' => [0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pkara50' => [0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pkara40' => [0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pkara30' => [0, 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pkara20' => [0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pkara10' => [0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pmuki04' => [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pmuki03' => [0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pmuki02' => [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'pmuki01' => [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'tako1k' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+      'tako1k2-3b' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+      'mebi80x5' => [0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0],
+      'mebi80x3' => [0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0],
+      'hebi80x10' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0],
+      'hebi80x5' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0],
+      'anago600' => [0, 0, 0, 0, 0, 0, 1, 600, 0, 0, 0, 0, 0, 0, 0],
+      'anago480' => [0, 0, 0, 0, 0, 0, 1, 480, 0, 0, 0, 0, 0, 0, 0],
+      'anago350' => [0, 0, 0, 0, 0, 0, 1, 350, 0, 0, 0, 0, 0, 0, 0],
+      'syoukara1kg' => [0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'syoukara2kg' => [0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'syoukara3kg' => [0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'syoukara5kg' => [0, 0, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      'reoysalmon' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+      'oyster38' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+      'tsukuani' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0],
+      'tsukudani' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0],
+      'tsukuani6' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0],
+      'tsukudani6' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0],
+      'sbt-10' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10],
+      'sbt-20' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20],
+      'sbt-30' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30],
+      'sbt-40' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40],
+      'sbt-50' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50],
+      'sbt-60' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60],
+      'sbt-70' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70],
+      'sbt-80' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80],
+      'sbt-90' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90],
+      'sbt-100' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100]
     }
     orders.each do |order|
       next if order.item_ids.nil? # unless cancelled or no item ids
@@ -248,7 +249,7 @@ module ApplicationHelper
     cards = counts.values[3]
     anago = counts.values[7]
     results = { headers: counts.keys, values: counts.values, anago:, cards: }
-    [ "\u30BB\u30EB\u30AB\u30FC\u30C9", "\u7A74\u5B50(g)" ].each do |t|
+    ["\u30BB\u30EB\u30AB\u30FC\u30C9", "\u7A74\u5B50(g)"].each do |t|
       i = results[:headers].index(t)
       %i[headers values].each { |k| results[k].delete_at(i) }
     end
@@ -275,13 +276,13 @@ module ApplicationHelper
 
   def infomart_count_title(i)
     # [ nama_500, nama_1k, nama_shell, frz_l, frz_ll, frz_shell_co, frz_shell_hako, jp_shell, oyster38 ]
-    [ "\u751F\u3080\u304D\u8EAB 500g", "\u751F\u3080\u304D\u8EAB 1k", "\u751F\u6BBB\u4ED8\u304D\u7261\u8823", "\u30C7\u30AB\u30D7\u30EA 500g (L)", "\u30C7\u30AB\u30D7\u30EA 500g (LL)", "\u51B7\u51CD\u6BBB\u4ED8\u304D\u7261\u8823\uFF081\u500B\uFF09", "\u51B7\u51CD\u6BBB\u4ED8\u304D\u7261\u8823\uFF08100\u500B\u5358\u4F4D\uFF09",
-     "\u5C0F \u51B7\u51CD\u6BBB\u4ED8\u304D\u7261\u8823\uFF08120\u500B\u5358\u4F4D\uFF09", "\u30AA\u30A4\u30B9\u30BF\u30BD\u30FC\u30B9" ][i]
+    ["\u751F\u3080\u304D\u8EAB 500g", "\u751F\u3080\u304D\u8EAB 1k", "\u751F\u6BBB\u4ED8\u304D\u7261\u8823", "\u30C7\u30AB\u30D7\u30EA 500g (L)", "\u30C7\u30AB\u30D7\u30EA 500g (LL)", "\u51B7\u51CD\u6BBB\u4ED8\u304D\u7261\u8823\uFF081\u500B\uFF09", "\u51B7\u51CD\u6BBB\u4ED8\u304D\u7261\u8823\uFF08100\u500B\u5358\u4F4D\uFF09",
+     "\u5C0F \u51B7\u51CD\u6BBB\u4ED8\u304D\u7261\u8823\uFF08120\u500B\u5358\u4F4D\uFF09", "\u30AA\u30A4\u30B9\u30BF\u30BD\u30FC\u30B9"][i]
   end
 
   def infomart_counts(orders)
     counts = orders.map { |order| order.counts unless order.cancelled }
-    counts.each_with_object([ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]) do |c, m|
+    counts.each_with_object([0, 0, 0, 0, 0, 0, 0, 0, 0]) do |c, m|
       c&.each_with_index { |v, i| m[i] += v }
     end
   end
@@ -293,9 +294,9 @@ module ApplicationHelper
 
   def item_count_cell_array(type, count)
     if type.respond_to?(:name) && type.respond_to?(:counter)
-      [ type.name, "#{count}#{type.counter}" ]
+      [type.name, "#{count}#{type.counter}"]
     else
-      [ type, count.to_s ]
+      [type, count.to_s]
     end
   end
 
@@ -314,8 +315,8 @@ module ApplicationHelper
       next if @temp_type && product[frozen_item] != temp_type_from_boolean
 
       if product
-        memo[product["ec_product_type"]] ||= 0
-        memo[product["ec_product_type"]] += count * product["quantity"].to_i
+        memo[product['ec_product_type']] ||= 0
+        memo[product['ec_product_type']] += count * product['quantity'].to_i
       else
         memo[item_id] ||= 0
         memo[item_id] += count
@@ -333,11 +334,11 @@ module ApplicationHelper
   end
 
   def create_count_table(counts_table)
-    content_tag(:div, class: "row align-items-center text-center m-1 mb-2") do
+    content_tag(:div, class: 'row align-items-center text-center m-1 mb-2') do
       counts_table.map do |type, count|
-        content_tag(:div, class: "col-lg-3 col-6 mb-2") do
-          content_tag(:h6, type, class: "font-weight-bolder p-2") +
-            content_tag(:span, count, class: "btn btn-sm btn-primary").html_safe
+        content_tag(:div, class: 'col-lg-3 col-6 mb-2') do
+          content_tag(:h6, type, class: 'font-weight-bolder p-2') +
+            content_tag(:span, count, class: 'btn btn-sm btn-primary').html_safe
         end
       end.join.html_safe
     end

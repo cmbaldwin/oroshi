@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 module Oroshi
   # NOTE: Complex turbo_stream modal endpoints (supply_price_actions, supply_invoice_actions,
@@ -26,29 +26,29 @@ module Oroshi
                        price: 100)
     end
 
-    test "GET /oroshi/supply_dates/:date returns success for existing supply date" do
+    test 'GET /oroshi/supply_dates/:date returns success for existing supply date' do
       get oroshi_supply_date_path(date: @supply_date.date.to_s)
       assert_response :success
     end
 
-    test "creates and shows supply date for new date" do
+    test 'creates and shows supply date for new date' do
       new_date = Time.zone.today + 30.days
 
-      assert_difference("Oroshi::SupplyDate.count", 1) do
+      assert_difference('Oroshi::SupplyDate.count', 1) do
         get oroshi_supply_date_path(date: new_date.to_s)
       end
       assert_response :success
     end
 
-    test "associates supplies with supply date" do
+    test 'associates supplies with supply date' do
       assert_includes @supply_date.supplies, @supply
     end
 
-    test "tracks supplier organizations through supplies" do
+    test 'tracks supplier organizations through supplies' do
       assert_includes @supply_date.supplier_organizations, @supplier_org
     end
 
-    test "can update supply prices" do
+    test 'can update supply prices' do
       original_price = @supply.price
       @supply.update!(price: 200)
       @supply.reload
@@ -57,12 +57,12 @@ module Oroshi
       refute_equal original_price, @supply.price
     end
 
-    test "validates price is non-negative" do
+    test 'validates price is non-negative' do
       @supply.price = -10
       refute @supply.valid?
     end
 
-    test "validates price is present" do
+    test 'validates price is present' do
       @supply.price = nil
       refute @supply.valid?
     end

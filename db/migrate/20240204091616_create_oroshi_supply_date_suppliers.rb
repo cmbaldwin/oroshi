@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiSupplyDateSuppliers < ActiveRecord::Migration[7.1]
   def change
     create_table :oroshi_supply_date_suppliers do |t|
@@ -6,7 +8,9 @@ class CreateOroshiSupplyDateSuppliers < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :oroshi_supply_date_suppliers, [:supply_date_id, :supplier_id], unique: true, name: 'index_supply_date_suppliers_on_ids'
-    add_index :oroshi_supply_date_suppliers, [:supplier_id, :supply_date_id], name: 'index_suppliers_supply_dates_on_ids'
+    add_index :oroshi_supply_date_suppliers, %i[supply_date_id supplier_id], unique: true,
+                                                                             name: 'index_supply_date_suppliers_on_ids'
+    add_index :oroshi_supply_date_suppliers, %i[supplier_id supply_date_id],
+              name: 'index_suppliers_supply_dates_on_ids'
   end
 end

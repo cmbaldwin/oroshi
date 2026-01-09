@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCredentials < ActiveRecord::Migration[8.0]
   def change
     create_table :credentials do |t|
@@ -12,7 +14,8 @@ class CreateCredentials < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :credentials, [ :service, :key_name, :user_id ], unique: true, name: "index_credentials_on_service_key_user"
+    add_index :credentials, %i[service key_name user_id], unique: true,
+                                                          name: 'index_credentials_on_service_key_user'
     add_index :credentials, :status
     add_index :credentials, :expires_at
   end

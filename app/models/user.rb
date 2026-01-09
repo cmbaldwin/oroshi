@@ -9,7 +9,7 @@ class User < ApplicationRecord
   enum :role, { user: 0, vip: 1, admin: 2, supplier: 3, employee: 4 }
 
   # Associations
-  has_one :onboarding_progress, class_name: "Oroshi::OnboardingProgress", dependent: :destroy
+  has_one :onboarding_progress, class_name: 'Oroshi::OnboardingProgress', dependent: :destroy
 
   attr_writer :login
 
@@ -24,8 +24,8 @@ class User < ApplicationRecord
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if (login = conditions.delete(:login))
-      where(conditions.to_h).where([ "lower(username) = :value OR lower(email) = :value",
-                                    { value: login.downcase } ]).first
+      where(conditions.to_h).where(['lower(username) = :value OR lower(email) = :value',
+                                    { value: login.downcase }]).first
     elsif conditions.key?(:username) || conditions.key?(:email)
       where(conditions.to_h).first
     end
@@ -40,5 +40,5 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable,
-         authentication_keys: [ :login ]
+         authentication_keys: [:login]
 end

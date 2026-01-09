@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTaxRateAndSupplyLossMultiplierToOroshiProducts < ActiveRecord::Migration[7.1]
   def change
     add_column :oroshi_products, :tax_rate, :decimal, precision: 5, scale: 2, default: 0.0

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOroshiOnboardingProgresses < ActiveRecord::Migration[8.1]
   def change
     create_table :oroshi_onboarding_progresses do |t|

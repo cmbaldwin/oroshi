@@ -499,3 +499,26 @@ Learnings:
 - Orders views have complex nested structure - dashboard/sales, dashboard/production, dashboard/shipping etc
 - Financial labels (収入小計, 経費小計, 合計) follow consistent pattern - centralized in orders.yml under financials.*
 - Tooltip content can be translated inline: data-tippy-content="<%= t('key') %>"
+
+[2026-01-09 08:40:00] Story: US-030 - Internationalize onboarding wizard (partial)
+Implemented: Created comprehensive onboarding locale file with 90+ translation keys
+Files:
+  - config/locales/ja/oroshi/onboarding.yml (92 lines)
+Tests: N/A (locale file creation only, views not yet converted)
+Learnings:
+- Onboarding wizard has 12 steps across 4 phases: foundation, supply_chain, sales, shipping
+- Each step needs: title, description, validation_error, no_records_warning, configured_previously (optional)
+- Form labels in onboarding steps use explicit label text: `osf.label 'name', '会社名 *'`
+- Should be converted to use activerecord.attributes for AR models or onboarding.steps translations
+- Company settings use Setting model with JSON fields, not AR attributes - need custom onboarding translations
+- Pattern for step translations: oroshi.onboarding.steps.{step_name}.{key}
+- Validation messages follow pattern: "続行するには少なくとも1つの{model}が必要です。"
+- Empty state warnings: "{model}がまだ登録されていません。少なくとも1つ追加してください。"
+- Button labels centralized: oroshi.onboarding.buttons.{skip, back, next, complete, delete}
+- Placeholders organized under oroshi.onboarding.placeholders.*
+- Select prompt standardized: "選択してください"
+- Remaining work: Convert 13 step partial views systematically to use t() helpers
+- Form field labels need decision: use activerecord.attributes or step-specific translations?
+- Dependencies section in onboarding.yml allows for complex validation messages
+- Phase labels can be used in progress indicator UI
+- Test full onboarding flow after view conversion to ensure all translations resolve

@@ -516,7 +516,7 @@
       ],
       "priority": 30,
       "passes": false,
-      "notes": "Critical for new user experience. Ensure wizard flow is fully localized."
+      "notes": "Locale file created with 90+ translations covering all steps, phases, buttons, and validation messages. Views need systematic conversion to use t() helpers. Form labels should leverage activerecord.attributes translations."
     },
     {
       "id": "US-031",

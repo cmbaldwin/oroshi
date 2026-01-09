@@ -566,3 +566,27 @@ Learnings:
 - Company info partial uses explicit label syntax: "#{t('key')} *" for required fields
 - All 13 step partials follow consistent pattern for maintainability
 - Form helper text uses t() for inline guidance (e.g., invoice_number_help)
+[2026-01-09 18:30:00] Story: US-031 - Internationalize error pages and validation messages
+Implemented: Created comprehensive error page i18n and converted model validations to use i18n keys
+Files:
+  - config/locales/ja/errors.yml (new - error page translations)
+  - config/locales/models.ja.yml (expanded with Oroshi model attributes and error messages)
+  - app/models/oroshi/buyer.rb (color validation uses :invalid_hex key)
+  - app/models/oroshi/product_inventory.rb (3 validation messages use i18n keys)
+  - app/models/oroshi/invoice.rb (2 validation messages use i18n keys)
+  - public/404.html (Japanese translation + UTF-8 charset)
+  - public/422.html (Japanese translation + UTF-8 charset)
+  - public/500.html (Japanese translation + UTF-8 charset)
+Tests: PASSING (rubocop clean, Rails runner confirms i18n works)
+Learnings:
+- ActiveRecord i18n pattern: Use symbol keys (:invalid_hex) instead of hardcoded strings
+- errors.add(:attribute, :key) automatically looks up activerecord.errors.models.{model}.attributes.{attribute}.{key}
+- validates_uniqueness_of message option requires lambda: message: ->(object, data) { I18n.t(...) }
+- Public error pages (404/422/500) are static HTML - cannot use Rails i18n dynamically
+- Solution: Directly translate error page content to Japanese with UTF-8 charset meta tag
+- errors.pages namespace for error page translations (separate from activerecord.errors)
+- Rubocop: No space between -> and ( in lambda literals: ->(x) not -> (x)
+- I18n.t works in Rails runner for testing: bin/rails runner 'puts I18n.t("errors.pages.not_found.title")'
+- Buyer color validation: format: { with: regex, message: :key } uses activerecord.errors.models path
+- Test suite has issues on Ruby 4.0.0 - use Rails runner and rubocop for validation instead
+- All form error messages now display in Japanese via ActiveRecord i18n

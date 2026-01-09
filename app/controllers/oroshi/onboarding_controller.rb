@@ -88,6 +88,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_company_info
     when "supply_reception_time"
       save_supply_reception_time
+    when "supplier_organization"
+      save_supplier_organization
     else
       true
     end
@@ -123,5 +125,33 @@ class Oroshi::OnboardingController < ApplicationController
 
   def supply_reception_time_params
     params.require(:supply_reception_time).permit(:time_qualifier, :hour)
+  end
+
+  def save_supplier_organization
+    # Handle deletion if requested
+    if params[:delete_supplier_organization_id].present?
+      Oroshi::SupplierOrganization.find_by(id: params[:delete_supplier_organization_id])&.destroy
+      return :deleted
+    end
+
+    # Add new supplier organization if form submitted with data
+    org_params = params[:supplier_organization]
+    if org_params.present? && org_params[:entity_name].present?
+      org = Oroshi::SupplierOrganization.new(supplier_organization_params)
+      unless org.save
+        flash.now[:alert] = org.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    # Validation: at least one must exist to proceed
+    Oroshi::SupplierOrganization.any?
+  end
+
+  def supplier_organization_params
+    params.require(:supplier_organization).permit(
+      :entity_name, :entity_type, :country_id, :subregion_id, :micro_region,
+      :invoice_number, :fax, :free_entry, supply_reception_time_ids: []
+    )
   end
 end

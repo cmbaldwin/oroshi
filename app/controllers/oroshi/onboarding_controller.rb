@@ -104,6 +104,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_product_variation
     when "shipping_organization"
       save_shipping_organization
+    when "shipping_method"
+      save_shipping_method
     else
       true
     end
@@ -337,5 +339,30 @@ class Oroshi::OnboardingController < ApplicationController
 
   def shipping_organization_params
     params.require(:shipping_organization).permit(:name, :handle)
+  end
+
+  def save_shipping_method
+    if params[:delete_shipping_method_id].present?
+      Oroshi::ShippingMethod.find_by(id: params[:delete_shipping_method_id])&.destroy
+      return :deleted
+    end
+
+    sm_params = params[:shipping_method]
+    if sm_params.present? && sm_params[:name].present?
+      method = Oroshi::ShippingMethod.new(shipping_method_params)
+      unless method.save
+        flash.now[:alert] = method.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    Oroshi::ShippingMethod.any?
+  end
+
+  def shipping_method_params
+    params.require(:shipping_method).permit(
+      :shipping_organization_id, :name, :handle, :daily_cost,
+      :per_shipping_receptacle_cost, :per_freight_unit_cost, buyer_ids: []
+    )
   end
 end

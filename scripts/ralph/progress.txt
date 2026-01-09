@@ -255,3 +255,15 @@ Learnings:
 - ShippingOrganization is simple: only requires name and handle
 - handle has uniqueness validation
 - Examples: ヤマト運輸, 佐川急便
+
+[2026-01-10 01:00:00] Story: US-017 - Shipping method onboarding step
+Implemented: Created shipping method onboarding step with buyer association
+Files:
+  - app/views/oroshi/onboarding/steps/_shipping_method.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_shipping_method)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- ShippingMethod requires: name, handle, shipping_organization_id, daily_cost, per_shipping_receptacle_cost, per_freight_unit_cost
+- All cost fields validate >= 0
+- HABTM with buyers via buyer_ids: []
+- number_to_currency helper for displaying costs in table

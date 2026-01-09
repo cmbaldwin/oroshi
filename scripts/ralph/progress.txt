@@ -244,3 +244,14 @@ Learnings:
 - Uses Carmen gem for country/subregion with oroshi--dashboard Stimulus controller
 - HABTM: production_zone_ids: [], supply_type_variation_ids: []
 - Graceful fallback: shows info message when dependencies missing, hides form
+
+[2026-01-10 00:45:00] Story: US-016 - Shipping organization onboarding step
+Implemented: Created shipping organization onboarding step
+Files:
+  - app/views/oroshi/onboarding/steps/_shipping_organization.html.erb (new)
+  - app/controllers/oroshi/onboarding_controller.rb (added save_shipping_organization)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- ShippingOrganization is simple: only requires name and handle
+- handle has uniqueness validation
+- Examples: ヤマト運輸, 佐川急便

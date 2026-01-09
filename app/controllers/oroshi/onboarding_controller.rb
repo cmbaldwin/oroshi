@@ -102,6 +102,8 @@ class Oroshi::OnboardingController < ApplicationController
       save_product
     when "product_variation"
       save_product_variation
+    when "shipping_organization"
+      save_shipping_organization
     else
       true
     end
@@ -313,5 +315,27 @@ class Oroshi::OnboardingController < ApplicationController
       :primary_content_country_id, :primary_content_subregion_id, :shelf_life,
       production_zone_ids: [], supply_type_variation_ids: []
     )
+  end
+
+  def save_shipping_organization
+    if params[:delete_shipping_organization_id].present?
+      Oroshi::ShippingOrganization.find_by(id: params[:delete_shipping_organization_id])&.destroy
+      return :deleted
+    end
+
+    so_params = params[:shipping_organization]
+    if so_params.present? && so_params[:name].present?
+      org = Oroshi::ShippingOrganization.new(shipping_organization_params)
+      unless org.save
+        flash.now[:alert] = org.errors.full_messages.join(", ")
+        return false
+      end
+    end
+
+    Oroshi::ShippingOrganization.any?
+  end
+
+  def shipping_organization_params
+    params.require(:shipping_organization).permit(:name, :handle)
   end
 end

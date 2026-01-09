@@ -11,6 +11,75 @@ PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
 LAST_BRANCH_FILE="$SCRIPT_DIR/.last-branch"
 
+# ============================================================
+# Provider Credit Check Functions
+# ============================================================
+
+# Check if a provider has available credits
+# Returns 0 if credits available, 1 if rate limited
+check_credits() {
+  local provider=$1
+  local test_output=""
+  local exit_code=0
+
+  case "$provider" in
+    amp)
+      test_output=$(echo "Respond with only the word: OK" | timeout 30 amp --dangerously-allow-all 2>&1) || exit_code=$?
+      ;;
+    claude)
+      test_output=$(echo "Respond with only the word: OK" | timeout 30 claude --print --dangerously-skip-permissions 2>&1) || exit_code=$?
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+
+  # Check for rate limit indicators
+  if echo "$test_output" | grep -qiE "rate.?limit|quota|too many|capacity|overloaded|try again|exceeded"; then
+    return 1
+  fi
+
+  # Check for timeout or empty response
+  if [ $exit_code -ne 0 ] || [ -z "$test_output" ]; then
+    return 1
+  fi
+
+  return 0
+}
+
+# Select best available provider (amp preferred, fallback to claude)
+select_provider() {
+  echo "Checking amp credits..." >&2
+  if check_credits "amp"; then
+    echo "amp"
+    return 0
+  fi
+
+  echo "Amp unavailable. Checking claude..." >&2
+  if check_credits "claude"; then
+    echo "claude"
+    return 0
+  fi
+
+  echo "ERROR: Both providers unavailable." >&2
+  return 1
+}
+
+# Run the AI agent with the given prompt file
+run_agent() {
+  local provider=$1
+  local prompt_file=$2
+
+  case "$provider" in
+    amp)
+      cat "$prompt_file" | amp --dangerously-allow-all 2>&1
+      ;;
+    claude)
+      cat "$prompt_file" | claude --print --dangerously-skip-permissions 2>&1
+      ;;
+  esac
+}
+
 # Archive previous run if branch changed
 if [ -f "$PRD_FILE" ] && [ -f "$LAST_BRANCH_FILE" ]; then
   CURRENT_BRANCH=$(jq -r '.branchName // empty' "$PRD_FILE" 2>/dev/null || echo "")
@@ -59,8 +128,19 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "  Ralph Iteration $i of $MAX_ITERATIONS"
   echo "═══════════════════════════════════════════════════════"
   
-  # Run amp with the ralph prompt
-  OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
+  # Select provider with credits (amp preferred, fallback to claude)
+  PROVIDER=$(select_provider) || {
+    echo "No providers available. Waiting 5 minutes before retry..."
+    sleep 300
+    PROVIDER=$(select_provider) || {
+      echo "Still no providers available. Exiting."
+      exit 1
+    }
+  }
+  echo "Selected provider: $PROVIDER"
+  
+  # Run the agent with selected provider
+  OUTPUT=$(run_agent "$PROVIDER" "$SCRIPT_DIR/prompt.md" | tee /dev/stderr) || true
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then

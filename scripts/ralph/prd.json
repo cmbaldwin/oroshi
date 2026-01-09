@@ -280,8 +280,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 17,
-      "passes": false,
-      "notes": "Step name: shipping_organization"
+      "passes": true,
+      "notes": "Simple step with name and handle fields only."
     },
     {
       "id": "US-017",

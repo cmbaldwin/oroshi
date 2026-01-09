@@ -549,8 +549,8 @@
         "Typecheck passes"
       ],
       "priority": 32,
-      "passes": false,
-      "notes": "Parse t('.key') lazy lookups by resolving view path. Handle t('full.key.path') absolute keys."
+      "passes": true,
+      "notes": "Implemented LocaleSync::Detector class with full scanning, lazy lookup resolution, and filtering. ENV vars: LOCALE, NAMESPACE, OUTPUT."
     },
     {
       "id": "US-033",

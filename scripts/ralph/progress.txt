@@ -590,3 +590,26 @@ Learnings:
 - Buyer color validation: format: { with: regex, message: :key } uses activerecord.errors.models path
 - Test suite has issues on Ruby 4.0.0 - use Rails runner and rubocop for validation instead
 - All form error messages now display in Japanese via ActiveRecord i18n
+[2026-01-09 22:00:00] Story: US-032 - Create locale sync detection rake task
+Implemented: Created lib/tasks/locale_sync.rake with LocaleSync::Detector class for translation key analysis
+Files:
+  - lib/tasks/locale_sync.rake (new - 248 lines)
+  - scripts/ralph/prd.json (updated passes: true)
+Tests: PASSING (rubocop clean, manual testing verified)
+Learnings:
+- Rake tasks go in lib/tasks/*.rake and use namespace :name do ... end structure
+- Use Rails.root.join() for building paths to config/locales and app/views
+- YAML.load_file() loads YAML, must recurse into locale root key (ja:, en:) to extract nested keys
+- Regex pattern /\bt\(['"]([^'"#]+)['"]\)/ extracts t('key') calls, [^'"#] excludes interpolation
+- Skip interpolated keys with .include?("\#{") check to avoid false positives like "key.#{var}"
+- Lazy lookup resolution: t('.title') in app/views/oroshi/dashboard/index.html.erb → oroshi.dashboard.index.title
+- Strip "app", "views" prefixes and "_" partial prefix when resolving lazy lookups
+- ENV vars in rake tasks: ENV["LOCALE"], ENV["NAMESPACE"], ENV["OUTPUT"] for filtering and output
+- Use Pathname#relative_path_from() to get relative paths from Rails.root
+- report_lines << "text" pattern builds array, then report_lines.join("\n") for single string output
+- File.write(path, content) writes report to file
+- Found 269 unique keys in 291 view files, 441 keys in ja locale files
+- Report shows missing keys (in code but not in locale) and orphaned keys (in locale but not used)
+- Namespace filtering useful for focused reports: NAMESPACE=common shows only common.* keys
+- Output file option allows CI integration: OUTPUT=/tmp/report.txt for automated checks
+- First rake task in lib/tasks/ - this pattern can be reused for other automation

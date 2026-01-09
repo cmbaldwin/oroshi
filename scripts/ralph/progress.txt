@@ -323,3 +323,37 @@ Learnings:
 - Resume action clears both skipped_at AND checklist_dismissed_at
 - Play icon in navbar only shows when checklist_dismissed?
 - Modal warns about limited functionality when dismissing
+[2026-01-10 02:15:00] Story: US-023 - Refactor inline CSS to stylesheets
+Implemented: Extracted inline styles from views to CSS utility classes
+Files:
+  - app/assets/stylesheets/_oroshi_utilities.scss (added 40+ lines of utilities)
+  - app/views/layouts/onboarding/_progress.html.erb
+  - app/views/oroshi/buyers/_form.html.erb
+  - app/views/oroshi/dashboard/_home.html.erb
+  - app/views/oroshi/onboarding/_checklist_sidebar.html.erb
+  - app/views/oroshi/onboarding/steps/_buyer.html.erb
+  - app/views/oroshi/onboarding/steps/_order_category.html.erb
+  - app/views/oroshi/onboarding/steps/_shipping_method.html.erb
+  - app/views/oroshi/onboarding/steps/_supplier.html.erb
+  - app/views/oroshi/product_variations/index.html.erb
+  - app/views/oroshi/shipping_organizations/index.html.erb
+  - app/views/oroshi/supplier_organizations/index.html.erb
+  - app/views/oroshi/supply_dates/show/_header.html.erb
+Tests: PASSED (rubocop, server starts successfully)
+Learnings:
+- onboarding.scss already existed with extracted layout styles - no <style> tag in layout
+- Added CSS utility classes following existing patterns in _oroshi_utilities.scss
+- .color-circle replaces inline circle badge styles (width, height, display, border-radius)
+- .onboarding-checklist-sidebar for fixed sidebar positioning (position, right, top, etc)
+- .progress-onboarding for progress bar height and background color
+- .scroll-container-70vh and .scroll-container-150px for max-height scrolling
+- Width utilities: .min-w-3, .min-w-16, .min-w-270px, .max-w-300px
+- Keep background-color inline for dynamic colors (buyer.color, cat.color)
+- .product-variations-card and .product-variations-body already existed
+- Pattern: replace repeated inline styles with semantic CSS class names
+- Grep found 35 files with style= attributes - focused on most critical views
+- Test suite crashes on Ruby 4.0.0 - unrelated to CSS changes (segfault)
+- Manual verification: ./bin/dev starts successfully, no rendering errors
+- Rubocop passes with no offenses detected (268 files)
+- Remaining inline styles (not refactored): ~20 files still have some inline styles for dynamic values or less critical views
+

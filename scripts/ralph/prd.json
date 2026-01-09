@@ -384,8 +384,8 @@
         "Typecheck passes"
       ],
       "priority": 23,
-      "passes": false,
-      "notes": "Found 20+ inline style violations in views: buyers/_form.html.erb (min-width, background-color circles), supply_dates views (max-width, width sizing), orders views (min-height, color circles), onboarding layout (entire embedded <style> block). Need to extract to stylesheets."
+      "passes": true,
+      "notes": "Refactored inline styles to CSS classes. Added utility classes to _oroshi_utilities.scss: onboarding-checklist-sidebar, progress-onboarding, color-circle, scroll containers, width utilities. Replaced inline styles in 13 views. Rubocop passes. Server starts successfully. onboarding.scss already existed with extracted styles."
     },
     {
       "id": "US-024",

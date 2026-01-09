@@ -1,0 +1,92 @@
+ja:
+  oroshi:
+    onboarding:
+      phases:
+        foundation: "基礎設定"
+        supply_chain: "供給チェーン"
+        sales: "販売管理"
+        shipping: "出荷管理"
+      steps:
+        company_info:
+          title: "会社情報"
+          description: "基本的な会社情報を入力してください。この情報は請求書やその他の書類に表示されます。"
+        supply_reception_time:
+          title: "入荷時間帯"
+          description: "材料の入荷時間帯を設定してください。複数の時間帯を追加できます。"
+          validation_error: "続行するには少なくとも1つの入荷時間帯が必要です。"
+          no_records_warning: "入荷時間帯がまだ登録されていません。少なくとも1つ追加してください。"
+        supplier_organization:
+          title: "仕入先組織"
+          description: "仕入先組織を登録してください。組合、会社、個人などの形態を選択できます。"
+          validation_error: "続行するには少なくとも1つの仕入先組織が必要です。"
+          no_records_warning: "仕入先組織がまだ登録されていません。少なくとも1つ追加してください。"
+        supplier:
+          title: "仕入先"
+          description: "仕入先組織に属する仕入先（生産者・出荷者）を登録してください。"
+          configured_previously: "仕入先は前のステップで設定されています。"
+          validation_error: "続行するには少なくとも1つの仕入先が必要です。"
+          no_records_warning: "仕入先がまだ登録されていません。少なくとも1つ追加してください。"
+        supply_type:
+          title: "材料タイプ"
+          description: "取り扱う材料の種類を登録してください。例：みかん、レモン、海苔など"
+          validation_error: "続行するには少なくとも1つの材料タイプが必要です。"
+          no_records_warning: "材料タイプがまだ登録されていません。少なくとも1つ追加してください。"
+        supply_type_variation:
+          title: "材料品種"
+          description: "材料タイプの品種（バリエーション）を登録してください。例：みかんの「早生」「青島」など"
+          validation_error: "続行するには少なくとも1つの品種が必要です。"
+          no_records_warning: "品種がまだ登録されていません。少なくとも1つ追加してください。"
+          configured_later: "品種は後のステップで設定します"
+        buyer:
+          title: "販売先"
+          description: "商品を販売する取引先（市場、小売店、会社など）を登録してください。"
+          validation_error: "続行するには少なくとも1つの販売先が必要です。"
+          no_records_warning: "販売先がまだ登録されていません。少なくとも1つ追加してください。"
+        product:
+          title: "商品"
+          description: "販売する商品を登録してください。商品は材料タイプに紐づきます。"
+          validation_error: "続行するには少なくとも1つの商品が必要です。"
+          no_records_warning: "商品がまだ登録されていません。少なくとも1つ追加してください。"
+        product_variation:
+          title: "商品バリエーション"
+          description: "商品のバリエーション（サイズ、産地違いなど）を登録してください。"
+          dependency_warning: "商品バリエーションを追加するには、先に発送容器と生産地域を設定する必要があります。<br>"
+          skip_if_dependencies_missing: "このステップをスキップして後で設定することができます。"
+          validation_error: "続行するには少なくとも1つの商品バリエーションが必要です。"
+          no_records_warning: "商品バリエーションがまだ登録されていません。少なくとも1つ追加してください。"
+        shipping_organization:
+          title: "発送組織"
+          description: "商品を発送する運送会社や物流センターを登録してください。"
+          validation_error: "続行するには少なくとも1つの発送組織が必要です。"
+          no_records_warning: "発送組織がまだ登録されていません。少なくとも1つ追加してください。"
+        shipping_method:
+          title: "配送方法"
+          description: "配送方法と料金体系を登録してください。例：宅配便、クール便など"
+          validation_error: "続行するには少なくとも1つの配送方法が必要です。"
+          no_records_warning: "配送方法がまだ登録されていません。少なくとも1つ追加してください。"
+        shipping_receptacle:
+          title: "発送容器"
+          description: "商品を発送するための容器（箱、ケースなど）を登録してください。"
+          validation_error: "続行するには少なくとも1つの発送容器が必要です。"
+          no_records_warning: "発送容器がまだ登録されていません。少なくとも1つ追加してください。"
+        order_category:
+          title: "注文カテゴリ"
+          description: "注文を分類するためのカテゴリを登録してください。例：通常、急ぎ、予約など"
+          validation_error: "続行するには少なくとも1つの注文カテゴリが必要です。"
+          no_records_warning: "注文カテゴリがまだ登録されていません。少なくとも1つ追加してください。"
+      buttons:
+        skip: "スキップ"
+        back: "戻る"
+        next: "次へ"
+        complete: "完了"
+        delete: "削除"
+      select_prompt: "選択してください"
+      placeholders:
+        company_name: "株式会社〇〇"
+        shipping_method: "例: 通常、急ぎ、予約"
+        product_units: "例: 箱、袋、パック"
+        product_name: "例: 東京青果市場"
+        micro_region: "例: 浜松市"
+        height: "高さ"
+        width: "幅"
+        depth: "奥行"

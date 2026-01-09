@@ -132,8 +132,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": "Step name: company_info"
+      "passes": true,
+      "notes": "Created _company_info.html.erb partial with form fields for name, postal_code, address, phone, fax, mail, web, invoice_number. Added save_company_info method in controller. Updated STEPS to match prd.json structure."
     },
     {
       "id": "US-008",

@@ -125,3 +125,18 @@ Learnings:
 - Auto-create onboarding_progress if missing: current_user.onboarding_progress || current_user.create_onboarding_progress!
 - Return early guards for cleaner conditionals: return if progress.completed? || progress.skipped?
 - Added to ApplicationController since all Oroshi controllers inherit from it directly (not Oroshi::ApplicationController)
+
+[2026-01-09 20:15:00] Story: US-007 - Company info onboarding step
+Implemented: Created company_info step partial with form saving to Setting
+Files:
+  - app/controllers/oroshi/onboarding_controller.rb (updated STEPS, added save_step_data)
+  - app/views/oroshi/onboarding/show.html.erb (dynamic partial rendering)
+  - app/views/oroshi/onboarding/steps/_company_info.html.erb (new)
+  - test/controllers/oroshi/onboarding_controller_test.rb (updated for new steps)
+Tests: PASSING (17 tests, 33 assertions)
+Learnings:
+- STEPS constant now uses: foundation, supply_chain, sales, shipping phases
+- lookup_context.template_exists?(path, [], true) for checking partial existence
+- save_step_data pattern: case/when to dispatch to step-specific save methods
+- company_info requires company name validation before proceeding
+- Setting model stores JSONB in settings column, accessed via .settings hash

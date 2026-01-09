@@ -41,36 +41,36 @@
     </span>
     <% else %>
     <% production_zones = @product_variation.production_zones %>
-    <span class="input-group-text">生産ゾーン</span>
+    <span class="input-group-text"><%= t('common.labels.production_zone') %></span>
     <%= form.collection_select :production_zone_id, 
                                 production_zones, :id, :name, 
-                                { prompt: '選択してください',
+                                { prompt: t('common.labels.select_prompt'),
                                   selected: production_zones.first.id }, 
                                 { class: 'form-select' } %>
-    <span class="input-group-text">発送容器</span>
+    <span class="input-group-text"><%= t('common.labels.shipping_container') %></span>
     <%= form.collection_select :shipping_receptacle_id, 
                                 Oroshi::ShippingReceptacle.active, :id, :name, 
-                                { prompt: '選択してください',
+                                { prompt: t('common.labels.select_prompt'),
                                   selected: @product_variation.default_shipping_receptacle_id }, 
                                 { class: 'form-select' } %>
     <% end %>
-    <span class="input-group-text">依頼数量</span>
+    <span class="input-group-text"><%= t('common.labels.request_quantity') %></span>
     <%= form.number_field :request_quantity, value: @production_request.request_quantity || 0, class: 'form-control text-end', style: 'max-width: 5rem' %>
     <span class="input-group-text">
         <%= @product_variation.product.units %>
     </span>
     <% if @production_request.persisted? %>
-    <span class="input-group-text">充足量</span>
+    <span class="input-group-text"><%= t('common.labels.fulfilled_quantity') %></span>
     <%= form.number_field :fulfilled_quantity, class: 'form-control text-end disabled', style: 'max-width: 5rem' %>
     <span class="input-group-text">
         <%= @product_variation.product.units %>
     </span>
     <% end %>
     <% if @production_request.persisted? %>
-    <%= form.submit '更新', class: 'btn btn-sm btn-secondary border' %>
-    <%= link_to '削除', @production_request, turbo_method: 'delete', data: { turbo_method: 'delete', turbo_confirm: '削除する？' }, class: 'btn btn-sm btn-danger' %>
+    <%= form.submit t('common.buttons.update'), class: 'btn btn-sm btn-secondary border' %>
+    <%= link_to t('common.buttons.delete'), @production_request, turbo_method: 'delete', data: { turbo_method: 'delete', turbo_confirm: t('common.confirmations.delete_confirm') }, class: 'btn btn-sm btn-danger' %>
     <% else %>
-    <%= form.submit '作成', class: 'btn btn-sm btn-success border' %>
+    <%= form.submit t('common.buttons.create'), class: 'btn btn-sm btn-success border' %>
     <% end %>
 
 </div>

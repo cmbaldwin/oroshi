@@ -23,6 +23,11 @@ ja:
       new: "新規"
       add: "追加"
       remove: "削除"
+      dismiss: "非表示にする"
+      duplicate: "複製する"
+      send: "送信"
+      resend: "再送"
+      download: "ダウンロード"
 
     confirmations:
       are_you_sure: "よろしいですか？"
@@ -39,6 +44,11 @@ ja:
       error: "エラーが発生しました"
       success: "成功しました"
       no_results: "結果がありません"
+      setup_checklist: "セットアップチェックリスト"
+      continue_setup: "セットアップを続ける"
+      dismiss_checklist_title: "チェックリストを非表示にしますか？"
+      dismiss_checklist_warning: "セットアップが不完全な場合、以下の機能が制限される可能性があります："
+      dismiss_checklist_info: "後からダッシュボードの設定メニューから再開できます。"
 
     empty_states:
       no_data: "データがありません"
@@ -57,6 +67,12 @@ ja:
       created_at: "作成日"
       updated_at: "更新日"
       actions: "操作"
+      quantity: "数量"
+      production_zone: "生産ゾーン"
+      shipping_container: "発送容器"
+      request_quantity: "依頼数量"
+      fulfilled_quantity: "充足量"
+      select_prompt: "選択してください"
 
     table:
       actions: "操作"

@@ -26,10 +26,10 @@
     <%= form.hidden_field :manufacture_date, value: @product_inventory.manufacture_date %>
     
     <div class="input-group input-group-sm">
-      <span class="input-group-text">数量</span>
+      <span class="input-group-text"><%= t('common.labels.quantity') %></span>
       <%= form.number_field :quantity, class: 'form-control text-end' %>
       <span class="input-group-text"><%= @product_inventory.product_variation.product.units %></span>
-      <%= form.submit '更新', class: 'btn btn-sm btn-secondary border' %>
+      <%= form.submit t('common.buttons.update'), class: 'btn btn-sm btn-secondary border' %>
     </div>
 
   <% end %>

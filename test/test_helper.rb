@@ -2,9 +2,8 @@
 
 ENV["RAILS_ENV"] ||= "test"
 
-# Load the dummy application for engine testing
-require_relative "dummy/config/environment"
-ActiveRecord::Migrator.migrations_paths = [File.expand_path("../db/migrate", __dir__)]
+# For now, use the main application (we'll switch to dummy app later)
+require_relative "../config/environment"
 require "rails/test_help"
 
 class ActiveSupport::TestCase

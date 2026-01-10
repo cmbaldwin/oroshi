@@ -92,19 +92,28 @@ class Printable < Prawn::Document
 
   def mplus_font_paths
     {
-      normal: root(".fonts/MPLUS1p-Regular.ttf"),
-      bold: root(".fonts/MPLUS1p-Bold.ttf"),
-      light: root(".fonts/MPLUS1p-Light.ttf")
+      normal: font_path("MPLUS1p-Regular.ttf"),
+      bold: font_path("MPLUS1p-Bold.ttf"),
+      light: font_path("MPLUS1p-Light.ttf")
     }
   end
 
   def sawarabi_font_paths
     # Must be used for names, this font includes almost all Japanese characters
-    { normal: root(".fonts/SawarabiMincho-Regular.ttf") }
+    { normal: font_path("SawarabiMincho-Regular.ttf") }
   end
 
   def takao_font_path
-    { normal: root(".fonts/TakaoPMincho.ttf") }
+    { normal: font_path("TakaoPMincho.ttf") }
+  end
+
+  def font_path(font_name)
+    # Use engine font path if available, otherwise fall back to Rails.root
+    if defined?(Oroshi::Fonts)
+      Oroshi::Fonts.font_path(font_name)
+    else
+      Rails.root.join("app/assets/fonts/#{font_name}").to_s
+    end
   end
 
   def root(file)

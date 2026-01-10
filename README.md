@@ -54,6 +54,41 @@ bin/rails db:schema:load:cable
 bin/dev
 ```
 
+### First Login
+
+On first boot in development, the system automatically creates an initial user:
+
+- **Email**: dev@oroshi.local
+- **Password**: password
+- **Role**: admin
+
+Login to access the dashboard and complete the onboarding wizard.
+
+### Onboarding
+
+New users are guided through a step-by-step onboarding wizard to set up:
+
+1. **Company Information** - Business details and invoice settings
+2. **Supply Chain** - Reception times, supplier organizations, suppliers, supply types
+3. **Sales** - Buyers and products with variations
+4. **Shipping** - Organizations, methods, receptacles, and order categories
+
+The wizard can be skipped and resumed later via a persistent checklist sidebar.
+
+#### Demo Data
+
+To seed the database with complete example data for all onboarding steps:
+
+```bash
+# Option 1: Run rake task directly
+bin/rails db:seed:onboarding_demo
+
+# Option 2: During initial setup
+SEED_ONBOARDING_EXAMPLES=true bin/setup
+```
+
+Demo data includes realistic Japanese business entities (salmon supplier, wholesale market buyer, etc.) suitable for testing the full application workflow.
+
 ### Running Tests
 
 ```bash

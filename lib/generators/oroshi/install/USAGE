@@ -1,0 +1,39 @@
+Description:
+    Installs the Oroshi engine into your Rails application.
+
+    This generator will:
+    - Create Oroshi initializer (config/initializers/oroshi.rb)
+    - Create User model (if not exists)
+    - Configure Devise routes
+    - Mount the Oroshi engine in routes
+    - Copy migrations from engine
+    - Copy Solid Queue/Cache/Cable schemas
+    - Provide post-install instructions
+
+Example:
+    rails generate oroshi:install
+
+    This will create:
+        config/initializers/oroshi.rb
+        app/models/user.rb (if not exists)
+        db/queue_schema.rb
+        db/cache_schema.rb
+        db/cable_schema.rb
+
+    And update:
+        config/routes.rb (mount engine + devise routes)
+
+Options:
+    --skip-migrations    Skip copying migrations
+    --skip-devise        Skip Devise setup
+    --skip-user-model    Skip User model generation
+
+After running this generator:
+    1. Configure database.yml for multi-database setup
+    2. Run: bin/rails db:create db:migrate
+    3. Load Solid schemas:
+       bin/rails db:schema:load:queue
+       bin/rails db:schema:load:cache
+       bin/rails db:schema:load:cable
+    4. Seed demo data (optional): bin/rails db:seed
+    5. Start server: bin/rails server

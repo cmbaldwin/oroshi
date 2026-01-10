@@ -728,3 +728,20 @@ Learnings:
 - After successful update in modal mode, redirect to oroshi_root_path to close modal and show notice
 - Modal uses same gradient styling as fullscreen onboarding layout
 - onboarding_modal_content turbo frame loads step-specific content
+
+[2026-01-10 11:00:00] Story: US-039 - Style onboarding checklist to match site theme
+Implemented: Moved all inline styles to onboarding.scss and added themed styling
+Files:
+  - app/assets/stylesheets/onboarding.scss (added 170+ lines of modal and sidebar styles)
+  - app/views/oroshi/onboarding/_onboarding_modal.html.erb (removed inline <style> tag)
+Tests: PASSING (rubocop clean, assets:precompile successful)
+Learnings:
+- All onboarding styles consolidated in onboarding.scss (imported via application.scss)
+- Modal styles: .onboarding-modal-*, .btn-onboarding-modal-* classes
+- Checklist sidebar has additional themed styling in onboarding.scss
+- Base sidebar positioning in _oroshi_utilities.scss (position: fixed, z-index, etc.)
+- Responsive: sidebar hidden on mobile (<768px), narrower on tablet (<992px)
+- Modal footer stacks vertically on mobile for better touch targets
+- Colors consistent with site theme: #667eea purple, #764ba2 gradient, Bootstrap grays
+- Hover states use subtle background color changes and underline on links
+- Icons use Bootstrap success green (#198754) for completed, muted gray (#adb5bd) for incomplete

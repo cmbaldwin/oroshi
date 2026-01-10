@@ -681,8 +681,8 @@
         "Verify in browser using web-browser skill"
       ],
       "priority": 39,
-      "passes": false,
-      "notes": "Related to US-024 (site color palette). Depends on color palette being defined first. Extract inline styles per CSS conventions."
+      "passes": true,
+      "notes": "Completed. Moved all inline styles from _onboarding_modal.html.erb to onboarding.scss. Added themed checklist sidebar styles with gradient buttons, hover states, responsive mobile handling (hidden on small screens)."
     }
   ]
 }

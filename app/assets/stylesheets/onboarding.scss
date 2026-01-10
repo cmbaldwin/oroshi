@@ -90,6 +90,140 @@
   }
 }
 
+// Onboarding Modal Styles (for checklist overlay)
+.onboarding-modal-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 80vh;
+  border: none;
+  border-radius: 1rem;
+}
+
+.onboarding-modal-header {
+  background: transparent;
+  border-bottom: none;
+  padding: 1.5rem 2rem;
+
+  .btn-close {
+    filter: invert(1);
+  }
+}
+
+.onboarding-modal-brand {
+  font-family: "Playfair Display", serif;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+
+.onboarding-modal-body {
+  padding: 0 2rem 2rem;
+}
+
+.onboarding-modal-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.onboarding-modal-footer {
+  background: transparent;
+  border-top: none;
+  padding: 1rem 2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-onboarding-modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+}
+
+.btn-onboarding-modal-save {
+  background: #ffffff;
+  color: #667eea;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+  }
+}
+
+// Checklist Sidebar Styles
+.onboarding-checklist-sidebar {
+  // Base styles are in _oroshi_utilities.scss
+  // Additional theme-consistent styling
+  background-color: #f8f9fa !important;
+  border-left: 1px solid #dee2e6 !important;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.05);
+
+  h6 {
+    color: #495057;
+    font-weight: 600;
+  }
+
+  .list-unstyled {
+    li {
+      transition: background-color 0.15s ease-in-out;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      margin-left: -0.5rem;
+      margin-right: -0.5rem;
+      border-radius: 0.25rem;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+    }
+  }
+
+  .bi-check-circle-fill {
+    color: #198754 !important; // Bootstrap success green
+  }
+
+  .bi-circle {
+    color: #adb5bd !important; // Muted gray
+  }
+
+  a {
+    color: #667eea;
+
+    &:hover {
+      color: #5568d3;
+      text-decoration: underline !important;
+    }
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+
+    &:hover {
+      background: linear-gradient(135deg, #5568d3 0%, #65408b 100%);
+    }
+  }
+}
+
+// Responsive styles
 @media (max-width: 768px) {
   .onboarding-card {
     padding: 2rem 1.5rem;
@@ -97,5 +231,32 @@
 
   .onboarding-brand {
     font-size: 1.5rem;
+  }
+
+  .onboarding-checklist-sidebar {
+    // Hide sidebar on mobile by default
+    display: none;
+  }
+
+  .onboarding-modal-card {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+
+  .onboarding-modal-footer {
+    flex-direction: column-reverse;
+    gap: 1rem;
+
+    .btn-onboarding-modal-close,
+    .btn-onboarding-modal-save {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .onboarding-checklist-sidebar {
+    width: 250px;
   }
 }

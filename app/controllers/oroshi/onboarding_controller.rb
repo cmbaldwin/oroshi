@@ -25,34 +25,20 @@ class Oroshi::OnboardingController < ApplicationController
   end
 
   def show
-    @modal_mode = params[:modal].present?
-    if @modal_mode
-      render :modal_show, layout: false
-    end
   end
 
   def update
-    @modal_mode = params[:modal].present?
-
     # Save step-specific data
     save_result = save_step_data
 
     # Handle deletion - stay on same step
     if save_result == :deleted
-      if @modal_mode
-        redirect_to oroshi_onboarding_path(@step, modal: true), notice: "削除しました"
-      else
-        redirect_to oroshi_onboarding_path(@step), notice: "削除しました"
-      end
+      redirect_to oroshi_onboarding_path(@step), notice: "削除しました"
       return
     end
 
     unless save_result
-      if @modal_mode
-        render :modal_show, layout: false, status: :unprocessable_entity
-      else
-        render :show, status: :unprocessable_entity
-      end
+      render :show, status: :unprocessable_entity
       return
     end
 
@@ -60,10 +46,7 @@ class Oroshi::OnboardingController < ApplicationController
     @progress.mark_step_complete!(@step)
     @progress.update!(current_step: next_step)
 
-    if @modal_mode
-      # In modal mode, close modal and return to dashboard with checklist updated
-      redirect_to oroshi_root_path, notice: t("oroshi.onboarding.steps.#{@step}.title") + " " + t("common.messages.saved")
-    elsif next_step
+    if next_step
       redirect_to oroshi_onboarding_path(next_step), notice: "Step completed!"
     else
       # All steps complete

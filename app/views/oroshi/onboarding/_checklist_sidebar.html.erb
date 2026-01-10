@@ -28,13 +28,9 @@
             <% else %>
               <i class="bi bi-circle text-secondary me-2"></i>
               <%= link_to t("oroshi.onboarding.steps.#{step}.title"),
-                          oroshi_onboarding_path(step, modal: true),
+                          oroshi_onboarding_path(step),
                           class: 'text-decoration-none',
-                          data: {
-                            turbo_frame: 'onboarding_modal_content',
-                            bs_toggle: 'modal',
-                            bs_target: '#onboardingModal'
-                          } %>
+                          data: { turbo_frame: '_top' } %>
             <% end %>
           </li>
         <% end %>
@@ -43,7 +39,9 @@
   <% end %>
 
   <div class="mt-3 pt-3 border-top">
-    <%= link_to oroshi_onboarding_index_path, class: 'btn btn-primary btn-sm w-100' do %>
+    <%= link_to oroshi_onboarding_index_path, 
+                class: 'btn btn-primary btn-sm w-100',
+                data: { turbo_frame: '_top' } do %>
       <i class="bi bi-arrow-right-circle me-1"></i>
       <%= t('common.messages.continue_setup') %>
     <% end %>

@@ -85,7 +85,11 @@
   border: none;
 
   &:hover {
-    background: linear-gradient(135deg, darken($primary, 10%) 0%, darken($secondary, 10%) 100%);
+    background: linear-gradient(
+      135deg,
+      darken($primary, 10%) 0%,
+      darken($secondary, 10%) 100%
+    );
     color: white;
   }
 }
@@ -218,7 +222,11 @@
     border: none;
 
     &:hover {
-      background: linear-gradient(135deg, darken($primary, 10%) 0%, darken($secondary, 10%) 100%);
+      background: linear-gradient(
+        135deg,
+        darken($primary, 10%) 0%,
+        darken($secondary, 10%) 100%
+      );
     }
   }
 }

@@ -216,15 +216,29 @@ This scans views for `t()` calls and reports:
 - Missing keys (in code but not in locale files)
 - Orphaned keys (in locale files but not in code)
 
+**Options:**
+- `LOCALE=ja` - Filter to specific locale
+- `NAMESPACE=common` - Filter to specific namespace
+- `OUTPUT=/tmp/report.txt` - Write report to file
+
 ### Generation Task
 
 Auto-generate missing translations using OpenRouter API:
 
 ```bash
 bin/rails locale:generate
-bin/rails locale:generate --locale=en  # Generate specific locale
-bin/rails locale:generate --dry-run    # Preview changes
+bin/rails locale:generate LOCALE=en  # Generate specific locale
+bin/rails locale:generate DRY_RUN=true  # Preview changes
 ```
+
+**Requirements:**
+- OpenRouter API key (set in Rails credentials or `OPENROUTER_API_KEY` environment variable)
+- Source locale translations (defaults to `ja`)
+
+**Options:**
+- `LOCALE=en` - Target locale to generate (defaults to `en`)
+- `SOURCE_LOCALE=ja` - Source locale to translate from (defaults to `ja`)
+- `DRY_RUN=true` - Preview changes without writing files
 
 ### Sync Task
 
@@ -232,6 +246,84 @@ Detect and generate in one command:
 
 ```bash
 bin/rails locale:sync
+```
+
+This runs both `locale:detect` and `locale:generate` sequentially.
+
+## Deployment Integration
+
+### Kamal Pre-Build Hook
+
+The locale sync process is integrated into the Kamal deployment workflow via `.kamal/hooks/pre-build`.
+
+**Enable locale sync during deployment:**
+
+```bash
+# Set environment variable before deploying
+export LOCALE_SYNC_ENABLED=true
+kamal deploy
+```
+
+**How it works:**
+
+1. Before building the Docker image, the pre-build hook checks if `LOCALE_SYNC_ENABLED=true`
+2. If enabled, it runs `bin/rails locale:detect` to find missing translations
+3. If OpenRouter API key is available, it generates missing translations for all configured locales
+4. Translation generation failures are logged as warnings but do not fail the build
+5. The deployment continues with updated locale files
+
+**Environment variables:**
+
+- `LOCALE_SYNC_ENABLED=true` - Enable locale sync during deployment
+- `OPENROUTER_API_KEY` - OpenRouter API key for translation generation
+- Alternatively, configure API key in Rails credentials: `openrouter.api_key`
+
+**Best practices:**
+
+- Locale sync is **opt-in** to avoid unexpected API costs
+- Translation failures do not fail the build (graceful degradation)
+- OpenRouter credentials should be configured in Rails credentials for production
+- Run `bin/rails locale:sync` manually before deployment to preview changes
+- Review generated translations before committing
+
+### Manual Workflow
+
+For development and testing:
+
+```bash
+# 1. Find missing translations
+bin/rails locale:detect
+
+# 2. Preview what would be generated
+bin/rails locale:generate DRY_RUN=true
+
+# 3. Generate translations
+bin/rails locale:generate
+
+# 4. Review changes
+git diff config/locales/
+
+# 5. Commit
+git add config/locales/
+git commit -m "feat: add missing translations"
+```
+
+### CI/CD Integration
+
+For continuous integration pipelines:
+
+```bash
+# Fail build if critical translations are missing
+if ! bin/rails locale:detect OUTPUT=/tmp/report.txt; then
+  echo "Missing translations detected"
+  cat /tmp/report.txt
+  exit 1
+fi
+
+# Generate translations in CI (optional)
+if [ "$CI" = "true" ] && [ -n "$OPENROUTER_API_KEY" ]; then
+  bin/rails locale:sync
+fi
 ```
 
 ## Resources

@@ -665,3 +665,46 @@ Learnings:
 - Instance variables in rake tasks don't persist between method calls - use instance vars for stateful tracking
 - Three rake tasks created: locale:detect (existing), locale:generate (new), locale:sync (new)
 - locale:sync uses Rake::Task["locale:detect"].invoke to chain tasks sequentially
+
+[2026-01-10 10:00:00] Story: US-035 - Integrate locale sync into Kamal deployment
+Implemented: Verified pre-existing implementation in pre-build hook and README
+Files:
+  - .kamal/hooks/pre-build (lines 7-36: locale sync with LOCALE_SYNC_ENABLED)
+  - config/locales/README.md (lines 206-327: comprehensive locale sync docs)
+  - lib/tasks/locale_sync.rake (locale:detect, locale:generate, locale:sync tasks)
+Tests: PASSING (rubocop clean, locale:detect works)
+Learnings:
+- Locale sync was already implemented in previous iterations
+- Pre-build hook runs locale:detect first, then locale:generate for each configured locale
+- Uses graceful fallback - warnings on failure, doesn't block deployment
+- OpenRouter credentials can be set via ENV or Rails credentials
+- LOCALE_SYNC_ENABLED must be explicitly "true" to enable (opt-in)
+
+[2026-01-10 10:10:00] Story: US-036 - Internationalize onboarding checklist sidebar and buttons
+Implemented: Verified pre-existing implementation - all i18n is complete
+Files:
+  - app/views/oroshi/onboarding/_checklist_sidebar.html.erb (uses t() throughout)
+  - app/views/layouts/onboarding.html.erb (buttons use t() helpers)
+  - config/locales/ja/common.yml (skip_for_now, skip_onboarding, etc.)
+  - config/locales/ja/oroshi/onboarding.yml (buttons.back, buttons.next, phases.*, etc.)
+Tests: PASSING (rubocop clean, rails runner verified 8 key translations)
+Learnings:
+- All onboarding internationalization was completed in US-030 iteration
+- Checklist sidebar uses common.messages.* for general messages
+- Onboarding layout buttons use oroshi.onboarding.buttons.*
+- turbo_confirm uses common.confirmations.skip_onboarding
+- Phase labels use oroshi.onboarding.phases.{phase_name}
+- Step titles use oroshi.onboarding.steps.{step_name}.title
+
+[2026-01-10 10:25:00] Story: US-037 - Fix onboarding skip showing incorrect completion status
+Implemented: Added data_exists_for_step? method and modified step_completed? to check actual data when skipped
+Files:
+  - app/models/oroshi/onboarding_progress.rb
+Tests: PASSING (rubocop clean, rails runner verified behavior)
+Learnings:
+- step_completed? now has dual behavior: checks completed_steps array when not skipped, checks data_exists_for_step? when skipped
+- data_exists_for_step? uses case statement mapping step names to model existence checks
+- company_info step checks Setting.find_by(name: "oroshi_company_settings").settings&.dig("name").present?
+- All other steps use Model.any? for existence check
+- mark_step_complete! was updated to check completed_steps.include? directly (not step_completed?) to avoid recursion
+- This pattern allows accurate checklist display for users who skipped onboarding

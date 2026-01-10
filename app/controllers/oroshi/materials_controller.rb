@@ -3,7 +3,7 @@
 class Oroshi::MaterialsController < ApplicationController
   before_action :set_material, only: %i[edit update]
   before_action :set_materials, only: %i[images]
-  before_action :set_material_category, only: %i[index]
+  before_action :set_material_category_or_all_materials, only: %i[index]
 
   # GET /oroshi/materials
   def index; end
@@ -52,9 +52,13 @@ class Oroshi::MaterialsController < ApplicationController
     @materials = Oroshi::Material.includes([ :image_attachment ]).find(params[:material_ids]) if params[:material_ids]
   end
 
-  def set_material_category
-    @material_category = Oroshi::MaterialCategory.find(params[:material_category_id])
-    @materials = @material_category&.materials&.order(:name)
+  def set_material_category_or_all_materials
+    if params[:material_category_id]
+      @material_category = Oroshi::MaterialCategory.find(params[:material_category_id])
+      @materials = @material_category&.materials&.order(:name)
+    else
+      @materials = Oroshi::Material.order(:name)
+    end
     @show_inactive = params[:show_inactive] == "true"
     @materials = @materials.active unless @show_inactive
   end

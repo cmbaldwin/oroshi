@@ -605,8 +605,8 @@
         "Typecheck passes"
       ],
       "priority": 35,
-      "passes": false,
-      "notes": "Make opt-in for deployment to avoid unexpected API costs. Ensure OpenRouter credentials available in build environment."
+      "passes": true,
+      "notes": "Completed. Pre-build hook has locale sync at lines 7-36 with LOCALE_SYNC_ENABLED check. README.md has comprehensive documentation (lines 206-327). Rake tasks available: locale:detect, locale:generate, locale:sync."
     },
     {
       "id": "US-036",
@@ -624,8 +624,8 @@
         "Verify in browser using web-browser skill"
       ],
       "priority": 36,
-      "passes": false,
-      "notes": "Related to US-030. Japanese is primary language. Follow claude.md i18n guidelines."
+      "passes": true,
+      "notes": "Completed. All onboarding UI text uses t() helpers with Japanese translations. Keys in common.yml and oroshi/onboarding.yml. All 8 key translations verified in Rails console."
     },
     {
       "id": "US-037",
@@ -642,8 +642,8 @@
         "Typecheck passes"
       ],
       "priority": 37,
-      "passes": false,
-      "notes": "Bug: skip function marks steps as completed incorrectly. Need to verify actual data exists for each step."
+      "passes": true,
+      "notes": "Completed. Added data_exists_for_step?(step) method that checks actual DB records for each step. step_completed? now checks data_exists_for_step? when skipped, otherwise checks completed_steps array."
     },
     {
       "id": "US-038",

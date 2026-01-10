@@ -5,7 +5,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
 }
 
 .onboarding-header {
@@ -80,19 +80,19 @@
 }
 
 .btn-onboarding-next {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
   color: white;
   border: none;
 
   &:hover {
-    background: linear-gradient(135deg, #5568d3 0%, #65408b 100%);
+    background: linear-gradient(135deg, darken($primary, 10%) 0%, darken($secondary, 10%) 100%);
     color: white;
   }
 }
 
 // Onboarding Modal Styles (for checklist overlay)
 .onboarding-modal-content {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
   min-height: 80vh;
   border: none;
   border-radius: 1rem;
@@ -155,7 +155,7 @@
 
 .btn-onboarding-modal-save {
   background: #ffffff;
-  color: #667eea;
+  color: $primary;
   padding: 0.5rem 2rem;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -163,7 +163,7 @@
   transition: all 0.2s;
 
   &:hover {
-    background: #f8f9fa;
+    background: $light;
     transform: translateY(-1px);
   }
 }
@@ -205,20 +205,20 @@
   }
 
   a {
-    color: #667eea;
+    color: $primary;
 
     &:hover {
-      color: #5568d3;
+      color: darken($primary, 15%);
       text-decoration: underline !important;
     }
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, $primary 0%, $secondary 100%);
     border: none;
 
     &:hover {
-      background: linear-gradient(135deg, #5568d3 0%, #65408b 100%);
+      background: linear-gradient(135deg, darken($primary, 10%) 0%, darken($secondary, 10%) 100%);
     }
   }
 }

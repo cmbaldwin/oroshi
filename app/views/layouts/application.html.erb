@@ -45,6 +45,7 @@
 
         <% if user_signed_in? %>
           <%= render partial: 'oroshi/onboarding/checklist_sidebar' %>
+          <%= render partial: 'oroshi/onboarding/onboarding_modal' %>
         <% end %>
 
         <% if user_signed_in? && !current_user.approved? %>

@@ -661,8 +661,8 @@
         "Verify in browser using web-browser skill"
       ],
       "priority": 38,
-      "passes": false,
-      "notes": "Current behavior opens pages in main frame without onboarding styling. Should feel like the original wizard experience."
+      "passes": true,
+      "notes": "Completed. Added onboarding_modal partial, modal_show.html.erb view, updated controller for modal mode. Checklist links use turbo_frame + bs_toggle for seamless modal experience. Close button dismisses modal, save redirects to dashboard."
     },
     {
       "id": "US-039",

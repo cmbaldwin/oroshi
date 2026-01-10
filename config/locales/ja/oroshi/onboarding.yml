@@ -82,6 +82,8 @@ ja:
         next: "次へ"
         complete: "完了"
         delete: "削除"
+        close: "閉じる"
+        save_and_close: "保存して閉じる"
       select_prompt: "選択してください"
       placeholders:
         company_name: "株式会社〇〇"

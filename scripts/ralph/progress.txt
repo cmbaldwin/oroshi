@@ -708,3 +708,23 @@ Learnings:
 - All other steps use Model.any? for existence check
 - mark_step_complete! was updated to check completed_steps.include? directly (not step_completed?) to avoid recursion
 - This pattern allows accurate checklist display for users who skipped onboarding
+
+[2026-01-10 10:45:00] Story: US-038 - Make checklist links open onboarding overlay
+Implemented: Created modal overlay for onboarding steps from checklist sidebar
+Files:
+  - app/views/oroshi/onboarding/_onboarding_modal.html.erb (new modal container)
+  - app/views/oroshi/onboarding/modal_show.html.erb (new modal content view)
+  - app/controllers/oroshi/onboarding_controller.rb (added modal mode handling)
+  - app/views/oroshi/onboarding/_checklist_sidebar.html.erb (updated links for modal)
+  - app/views/layouts/application.html.erb (added onboarding_modal partial)
+  - config/locales/ja/oroshi/onboarding.yml (added close, save_and_close translations)
+Tests: PASSING (rubocop clean, rails runner verified)
+Learnings:
+- Pattern: Use turbo_frame_tag with data-bs-toggle="modal" to load content into Bootstrap modal
+- Controller checks params[:modal].present? to determine render behavior
+- Modal mode uses render :modal_show, layout: false to skip layout
+- Form in modal needs data: { turbo: false } to avoid turbo conflicts
+- Close button uses data-bs-dismiss="modal", save button submits form
+- After successful update in modal mode, redirect to oroshi_root_path to close modal and show notice
+- Modal uses same gradient styling as fullscreen onboarding layout
+- onboarding_modal_content turbo frame loads step-specific content

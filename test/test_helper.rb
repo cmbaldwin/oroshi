@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 ENV["RAILS_ENV"] ||= "test"
-require_relative "../config/environment"
+
+# Load the dummy application for engine testing
+require_relative "dummy/config/environment"
+ActiveRecord::Migrator.migrations_paths = [File.expand_path("../db/migrate", __dir__)]
 require "rails/test_help"
 
 class ActiveSupport::TestCase
@@ -47,4 +50,9 @@ end
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Warden::Test::Helpers
+
+  # Make the Oroshi engine routes available in tests
+  def oroshi
+    Oroshi::Engine.routes.url_helpers
+  end
 end

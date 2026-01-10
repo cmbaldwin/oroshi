@@ -120,10 +120,27 @@ class Oroshi::OnboardingController < ApplicationController
   end
 
   def save_company_info
-    return false if company_settings_params[:name].blank?
+    @validation_errors = []
+
+    if company_settings_params[:name].blank?
+      @validation_errors << "会社名は必須です"
+    end
+
+    if company_settings_params[:postal_code].blank?
+      @validation_errors << "郵便番号は必須です"
+    end
+
+    if company_settings_params[:address].blank?
+      @validation_errors << "住所は必須です"
+    end
+
+    return false if @validation_errors.any?
 
     Setting.find_or_initialize_by(name: "oroshi_company_settings")
            .update(settings: company_settings_params.to_h)
+  rescue ActionController::ParameterMissing => e
+    @validation_errors << "必須項目が入力されていません"
+    false
   end
 
   def company_settings_params

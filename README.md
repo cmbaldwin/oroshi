@@ -120,6 +120,7 @@ This project uses:
 **IMPORTANT**: All styling must use Bootstrap 5 utility classes or application stylesheets. Inline styles (`style="..."`) are **strictly prohibited**.
 
 Button examples:
+
 ```erb
 <!-- Primary action -->
 <%= button_tag "Submit", class: "btn btn-primary" %>

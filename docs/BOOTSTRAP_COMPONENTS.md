@@ -14,13 +14,13 @@ This document defines standardized Bootstrap 5 components for consistent UI desi
 Defined in `app/assets/stylesheets/funabiki.scss`:
 
 ```scss
-$primary: #4ecdc4;    // Greenish-cyan (brand color)
-$secondary: #6ba3d4;  // Lynx-screen-blue
-$success: #72dda5;    // Synthetic-spearmint
-$warning: #ef8354;    // Ochre
-$danger: #cc4b4b;     // Terra
-$light: #f8f9fa;      // Bootstrap light
-$dark: #343a40;       // Bootstrap dark
+$primary: #4ecdc4; // Greenish-cyan (brand color)
+$secondary: #6ba3d4; // Lynx-screen-blue
+$success: #72dda5; // Synthetic-spearmint
+$warning: #ef8354; // Ochre
+$danger: #cc4b4b; // Terra
+$light: #f8f9fa; // Bootstrap light
+$dark: #343a40; // Bootstrap dark
 ```
 
 ## Button Components
@@ -77,20 +77,20 @@ Bootstrap 5 provides size modifiers:
 
 ```erb
 <!-- Skip button (less prominent) -->
-<%= link_to "Skip for now", 
-    oroshi_onboarding_skip_path, 
+<%= link_to "Skip for now",
+    oroshi_onboarding_skip_path,
     method: :post,
     class: "btn btn-outline-secondary" %>
 
 <!-- Back button -->
-<%= link_to "Back", 
-    oroshi_onboarding_path(prev_step), 
+<%= link_to "Back",
+    oroshi_onboarding_path(prev_step),
     class: "btn btn-secondary" %>
 
 <!-- Next/Continue button (primary action) -->
-<%= button_tag "Continue", 
-    type: "submit", 
-    form: "onboarding-form", 
+<%= button_tag "Continue",
+    type: "submit",
+    form: "onboarding-form",
     class: "btn btn-primary" %>
 ```
 
@@ -119,8 +119,8 @@ Bootstrap 5 provides size modifiers:
 Always use `btn-danger` for delete/remove actions:
 
 ```erb
-<%= button_tag "Delete", 
-    data: { confirm: "Are you sure?" }, 
+<%= button_tag "Delete",
+    data: { confirm: "Are you sure?" },
     class: "btn btn-danger" %>
 ```
 
@@ -168,13 +168,13 @@ Use Bootstrap spacing utilities instead of custom CSS:
 
 ### Replacing Custom Button Classes
 
-| Old Class | New Class | Notes |
-|-----------|-----------|-------|
-| `btn-onboarding-next` | `btn btn-primary` | Remove gradient background |
-| `btn-onboarding-back` | `btn btn-secondary` | Simpler solid color |
-| `btn-onboarding-skip` | `btn btn-outline-secondary` | Less prominent outline style |
-| `btn-onboarding-modal-save` | `btn btn-primary` | Standard primary action |
-| `btn-onboarding-modal-close` | `btn btn-secondary` | Standard secondary action |
+| Old Class                    | New Class                   | Notes                        |
+| ---------------------------- | --------------------------- | ---------------------------- |
+| `btn-onboarding-next`        | `btn btn-primary`           | Remove gradient background   |
+| `btn-onboarding-back`        | `btn btn-secondary`         | Simpler solid color          |
+| `btn-onboarding-skip`        | `btn btn-outline-secondary` | Less prominent outline style |
+| `btn-onboarding-modal-save`  | `btn btn-primary`           | Standard primary action      |
+| `btn-onboarding-modal-close` | `btn btn-secondary`         | Standard secondary action    |
 
 ### Custom Classes to Remove
 
@@ -195,7 +195,7 @@ These custom button classes should be removed from `onboarding.scss`:
 5. **Loading States**: Use disabled state and spinners for async actions
 
 ```erb
-<%= button_tag type: "submit", class: "btn btn-primary", 
+<%= button_tag type: "submit", class: "btn btn-primary",
     data: { disable_with: "Saving..." } do %>
   Save
 <% end %>

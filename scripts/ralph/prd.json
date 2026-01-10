@@ -11,8 +11,7 @@
         "Dashboard index action handles nil/empty associations gracefully",
         "All dashboard partials render without errors when collections are empty",
         "Empty state messages shown where appropriate (e.g., 'No suppliers yet')",
-        "./bin/dev starts without errors on Ruby 4.0.0",
-        "Typecheck passes"
+        "./bin/dev starts without errors on Ruby 4.0.0"
       ],
       "priority": 1,
       "passes": true,
@@ -28,8 +27,7 @@
         "User has admin role/permissions",
         "Only create if no users exist (idempotent)",
         "Output confirmation message when user is created",
-        "Runs automatically via bin/setup or documented in README",
-        "Typecheck passes"
+        "Runs automatically via bin/setup or documented in README"
       ],
       "priority": 2,
       "passes": true,
@@ -46,7 +44,6 @@
         "Font loaded via Google Fonts",
         "Text links to root path like current logo",
         "Responsive sizing for mobile/desktop",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 3,
@@ -61,8 +58,7 @@
         "Create Oroshi::OnboardingProgress model with fields: user_id (references), completed_at (datetime), skipped_at (datetime), current_step (string), completed_steps (jsonb, default [])",
         "Add association: User has_one :onboarding_progress",
         "Generate and run migration successfully",
-        "Add helper methods: completed?, skipped?, step_completed?(step_name), mark_step_complete!(step_name)",
-        "Typecheck passes"
+        "Add helper methods: completed?, skipped?, step_completed?(step_name), mark_step_complete!(step_name)"
       ],
       "priority": 4,
       "passes": true,
@@ -80,8 +76,7 @@
         "update saves step data, marks complete, advances to next",
         "skip sets skipped_at and redirects to dashboard",
         "resume clears skipped_at and returns to wizard",
-        "Add routes: resources :onboarding, only: [:index, :show, :update] with member routes for skip/resume",
-        "Typecheck passes"
+        "Add routes: resources :onboarding, only: [:index, :show, :update] with member routes for skip/resume"
       ],
       "priority": 5,
       "passes": true,
@@ -97,7 +92,6 @@
         "Add 'Skip for now' button that calls skip action",
         "Add 'Back' and 'Next/Save' navigation buttons",
         "Style consistent with existing Bootstrap/Oroshi design",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 6,
@@ -112,8 +106,7 @@
         "Add before_action :check_onboarding to ApplicationController or Oroshi base controller",
         "Skip for OnboardingController and devise controllers",
         "Redirect to onboarding_path if user has no onboarding_progress or progress is incomplete and not skipped",
-        "Create onboarding_progress for user if none exists on first check",
-        "Typecheck passes"
+        "Create onboarding_progress for user if none exists on first check"
       ],
       "priority": 7,
       "passes": true,
@@ -128,7 +121,6 @@
         "Form saves to Setting with name 'oroshi_company_settings'",
         "Required fields: company_name, basic address info",
         "On save, mark step complete and redirect to next step",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 8,
@@ -145,7 +137,6 @@
         "Fields: hour, time_qualifier",
         "Can add multiple reception times via nested form or turbo",
         "At least one required to proceed (validation message if none)",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 9,
@@ -162,7 +153,6 @@
         "Required fields: entity_type, entity_name, country_id, subregion_id, invoice_number, fax, free_entry",
         "Dynamic subregion dropdown based on country selection (use existing dashboard subregions endpoint)",
         "Associate with supply_reception_times via checkboxes",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 10,
@@ -180,7 +170,6 @@
         "Required fields per Supplier model validations",
         "Can add multiple suppliers",
         "At least one required to proceed",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 11,
@@ -196,7 +185,6 @@
         "Form creates Oroshi::SupplyType",
         "Required fields: name, units, handle, liquid (boolean checkbox)",
         "Placeholder examples for common supply types",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 12,
@@ -213,7 +201,6 @@
         "Required fields: name, default_container_count",
         "Multi-select to associate with suppliers",
         "At least one required to proceed",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 13,
@@ -229,7 +216,6 @@
         "Form creates Oroshi::Buyer",
         "Required fields: name, handle, handling_cost, daily_cost, entity_type, optional_cost, commission_percentage, color",
         "Color picker input for buyer color",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 14,
@@ -245,7 +231,6 @@
         "Form creates Oroshi::Product",
         "Required fields: name, units, supply_type_id (select from created supply types)",
         "Dimensions default to 0 if not provided",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 15,
@@ -261,7 +246,6 @@
         "Form creates Oroshi::ProductVariation for product from previous step",
         "Multi-select to link to supply_type_variations",
         "Required fields per ProductVariation model validations",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 16,
@@ -276,7 +260,6 @@
         "Create app/views/oroshi/onboarding/steps/_shipping_organization.html.erb",
         "Form creates Oroshi::ShippingOrganization",
         "Required fields: name, handle",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 17,
@@ -292,7 +275,6 @@
         "Form creates Oroshi::ShippingMethod for shipping organization from previous step",
         "Required fields: name, handle, daily_cost, per_shipping_receptacle_cost, per_freight_unit_cost",
         "Multi-select to associate with buyers",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 18,
@@ -308,7 +290,6 @@
         "Form creates Oroshi::ShippingReceptacle",
         "Required fields: name, handle, cost, default_freight_bundle_quantity",
         "Dimension fields with sensible defaults",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 19,
@@ -325,7 +306,6 @@
         "Required fields: name, color",
         "Color picker input for category color",
         "This is the final step - on save, mark onboarding complete",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 20,
@@ -342,7 +322,6 @@
         "List all steps grouped by phase (Supply Chain / Sales) with completion checkmarks",
         "Clicking incomplete step links to that onboarding step",
         "Add 'Dismiss' button that shows warning modal",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 21,
@@ -359,7 +338,6 @@
         "Confirming dismiss sets checklist_dismissed_at and hides sidebar",
         "Sidebar stays hidden across sessions when dismissed",
         "Add 'Resume Setup' link in dashboard settings or nav to clear dismissed status",
-        "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 22,
@@ -380,8 +358,7 @@
         "Remove all style= attributes from view files (20+ violations found)",
         "Test affected views render correctly with new stylesheets",
         "No visual regressions - pages should look identical",
-        "All tests passing after refactor",
-        "Typecheck passes"
+        "All tests passing after refactor"
       ],
       "priority": 23,
       "passes": true,
@@ -401,7 +378,6 @@
         "Ensure sufficient color contrast for accessibility (WCAG AA minimum)",
         "Test all major views render correctly with new color scheme",
         "No visual regressions in existing functionality",
-        "Typecheck passes",
         "Verify in browser using web-browser skill"
       ],
       "priority": 24,
@@ -420,8 +396,7 @@
         "Configure Rails to load all nested locale files in config/application.rb",
         "Create config/locales/ja/common.yml for shared translations (buttons, actions, confirmations)",
         "Create config/locales/ja/layouts/application.yml for navbar, footer, flash messages",
-        "Document structure in config/locales/README.md",
-        "Typecheck passes"
+        "Document structure in config/locales/README.md"
       ],
       "priority": 25,
       "passes": true,
@@ -439,8 +414,7 @@
         "Convert devise-related layout text",
         "Create corresponding Japanese translations in config/locales/ja/layouts/",
         "Use lazy lookup where possible (t('.key') within partials)",
-        "Test all layouts render correctly with Japanese locale",
-        "Typecheck passes"
+        "Test all layouts render correctly with Japanese locale"
       ],
       "priority": 26,
       "passes": true,
@@ -457,8 +431,7 @@
         "Include: form labels (name, email, password, etc.)",
         "Include: table headers (actions, created_at, updated_at)",
         "Include: pagination text",
-        "Convert all matching hardcoded text in views to use t('common.key')",
-        "Typecheck passes"
+        "Convert all matching hardcoded text in views to use t('common.key')"
       ],
       "priority": 27,
       "passes": true,
@@ -475,8 +448,7 @@
         "Include empty state messages",
         "Include date/time format labels",
         "Use lazy lookup (t('.title')) within dashboard views",
-        "Test dashboard renders correctly with Japanese locale",
-        "Typecheck passes"
+        "Test dashboard renders correctly with Japanese locale"
       ],
       "priority": 28,
       "passes": true,
@@ -493,8 +465,7 @@
         "Convert text in: orders/, order_categories/, shipping_organizations/, shipping_methods/",
         "Include index/show/new/edit page titles, form labels, flash messages",
         "Include model-specific terminology and status labels",
-        "Use Rails model name translations (activerecord.models, activerecord.attributes)",
-        "Typecheck passes"
+        "Use Rails model name translations (activerecord.models, activerecord.attributes)"
       ],
       "priority": 29,
       "passes": true,
@@ -511,8 +482,7 @@
         "Convert button labels (Skip, Back, Next, Complete)",
         "Convert validation error messages",
         "Convert empty state and helper text",
-        "Test full onboarding flow with Japanese locale",
-        "Typecheck passes"
+        "Test full onboarding flow with Japanese locale"
       ],
       "priority": 30,
       "passes": true,
@@ -527,8 +497,7 @@
         "Configure ActiveRecord validation messages in Japanese",
         "Include custom validation error messages for Oroshi models",
         "Convert public/404.html, public/500.html to use translations (or make dynamic)",
-        "Ensure form error messages display in Japanese",
-        "Typecheck passes"
+        "Ensure form error messages display in Japanese"
       ],
       "priority": 31,
       "passes": true,
@@ -545,8 +514,7 @@
         "Reports: missing keys (in code but not in locale), orphaned keys (in locale but not in code)",
         "Outputs report to stdout and optionally to file",
         "Support filtering by locale and namespace",
-        "Command: bin/rails locale:detect",
-        "Typecheck passes"
+        "Command: bin/rails locale:detect"
       ],
       "priority": 32,
       "passes": true,
@@ -564,8 +532,7 @@
         "Handle API rate limiting with exponential backoff",
         "Cache translations to avoid duplicate API calls",
         "Log translation requests and responses for debugging",
-        "Include context hints for technical/domain terms",
-        "Typecheck passes"
+        "Include context hints for technical/domain terms"
       ],
       "priority": 33,
       "passes": true,
@@ -583,8 +550,7 @@
         "Preserves existing translations (does not overwrite)",
         "Supports --dry-run flag to preview changes",
         "Supports --locale flag to target specific locale",
-        "Outputs summary of generated translations",
-        "Typecheck passes"
+        "Outputs summary of generated translations"
       ],
       "priority": 34,
       "passes": true,
@@ -601,8 +567,7 @@
         "Fail build if critical translations are missing (configurable)",
         "Log sync results to deployment output",
         "Add manual trigger command: bin/rails locale:sync (runs detect + generate)",
-        "Document locale sync workflow in config/locales/README.md",
-        "Typecheck passes"
+        "Document locale sync workflow in config/locales/README.md"
       ],
       "priority": 35,
       "passes": true,
@@ -620,7 +585,6 @@
         "Ensure no mixed English/Japanese in the onboarding UI",
         "All button labels in Japanese: スキップ, 戻る, 次へ, 今はスキップ",
         "Confirmation dialogs in Japanese",
-        "Typecheck passes",
         "Verify in browser using web-browser skill"
       ],
       "priority": 36,
@@ -638,8 +602,7 @@
         "step_completed? method checks for actual data, not just presence in completed_steps array",
         "Checklist sidebar shows accurate completion status for all steps",
         "Users can click incomplete items to navigate directly to that step",
-        "Add helper method data_exists_for_step?(step) in OnboardingProgress model",
-        "Typecheck passes"
+        "Add helper method data_exists_for_step?(step) in OnboardingProgress model"
       ],
       "priority": 37,
       "passes": true,
@@ -657,7 +620,6 @@
         "Use Turbo Frame or Turbo Stream for seamless overlay experience",
         "Reuse existing onboarding.html.erb layout styles in overlay",
         "Back button in overlay returns to dashboard, not previous step",
-        "Typecheck passes",
         "Verify in browser using web-browser skill"
       ],
       "priority": 38,
@@ -677,12 +639,33 @@
         "Modal styling matches site theme (not default Bootstrap)",
         "Hover states and focus indicators consistent with site",
         "Responsive design for mobile (collapse or hide on small screens)",
-        "Typecheck passes",
         "Verify in browser using web-browser skill"
       ],
       "priority": 39,
       "passes": true,
       "notes": "Completed. Moved all inline styles from _onboarding_modal.html.erb to onboarding.scss. Added themed checklist sidebar styles with gradient buttons, hover states, responsive mobile handling (hidden on small screens)."
+    },
+    {
+      "id": "US-040",
+      "title": "Update onboarding overlay color scheme to match site theme",
+      "description": "As a user, I want the onboarding wizard overlay to use the site's color palette for a cohesive visual experience.",
+      "acceptanceCriteria": [
+        "Onboarding overlay background uses site's color palette (from US-024 Bootstrap theme)",
+        "Replace gradient backgrounds with themed colors (primary, secondary, etc.)",
+        "Button colors match site's Bootstrap theme (btn-primary, btn-secondary)",
+        "Form inputs and labels use consistent theming",
+        "Progress indicator uses site colors",
+        "Modal header/footer match site modal styling",
+        "Step navigation buttons (Back/Next/Skip) use themed colors",
+        "Hover and focus states consistent with site",
+        "All styles in app/assets/stylesheets/onboarding.scss (no inline styles)",
+        "Test color contrast for accessibility",
+        "Rubocop passes",
+        "Verify in browser using web-browser skill"
+      ],
+      "priority": 40,
+      "passes": true,
+      "notes": "Completed. Replaced purple gradients (#667eea/#764ba2) with Bootstrap theme colors ($primary/$secondary). Updated onboarding-container, btn-onboarding-next, onboarding-modal-content, btn-onboarding-modal-save, and checklist sidebar links/buttons to use Oroshi brand palette (greenish-cyan/lynx-screen-blue). Tests passing, assets compile successfully."
     }
   ]
 }

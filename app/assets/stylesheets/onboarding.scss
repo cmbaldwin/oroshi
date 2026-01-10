@@ -56,45 +56,7 @@
   align-items: center;
 }
 
-.btn-onboarding-skip {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
-  }
-}
-
-.btn-onboarding-back {
-  background: transparent;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
-
-  &:hover {
-    background: #f8f9fa;
-    border-color: #6c757d;
-  }
-}
-
-.btn-onboarding-next {
-  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
-  color: white;
-  border: none;
-
-  &:hover {
-    background: linear-gradient(
-      135deg,
-      darken($primary, 10%) 0%,
-      darken($secondary, 10%) 100%
-    );
-    color: white;
-  }
-}
-
-// Onboarding Modal Styles (for checklist overlay)
+// Onboarding Modal Styles (for checklist overlay - DEPRECATED, modal removed)
 .onboarding-modal-content {
   background: linear-gradient(135deg, $primary 0%, $secondary 100%);
   min-height: 80vh;
@@ -140,36 +102,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.btn-onboarding-modal-close {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-  }
-}
-
-.btn-onboarding-modal-save {
-  background: #ffffff;
-  color: $primary;
-  padding: 0.5rem 2rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  border: none;
-  transition: all 0.2s;
-
-  &:hover {
-    background: $light;
-    transform: translateY(-1px);
-  }
 }
 
 // Checklist Sidebar Styles
@@ -251,15 +183,10 @@
     max-width: 100%;
   }
 
+  // Deprecated: Modal removed, these classes no longer used
   .onboarding-modal-footer {
     flex-direction: column-reverse;
     gap: 1rem;
-
-    .btn-onboarding-modal-close,
-    .btn-onboarding-modal-save {
-      width: 100%;
-      text-align: center;
-    }
   }
 }
 

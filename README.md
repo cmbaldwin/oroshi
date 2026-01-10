@@ -111,6 +111,28 @@ This project uses:
 - **Capybara**: E2E system tests
 - **Rubocop**: Code style enforcement
 
+### Frontend Styling
+
+- **Bootstrap 5**: Primary UI framework
+- **Custom Theme**: Oroshi brand colors defined in `app/assets/stylesheets/funabiki.scss`
+- **Component Standards**: See [docs/BOOTSTRAP_COMPONENTS.md](docs/BOOTSTRAP_COMPONENTS.md)
+
+**IMPORTANT**: All styling must use Bootstrap 5 utility classes or application stylesheets. Inline styles (`style="..."`) are **strictly prohibited**.
+
+Button examples:
+```erb
+<!-- Primary action -->
+<%= button_tag "Submit", class: "btn btn-primary" %>
+
+<!-- Secondary action -->
+<%= link_to "Back", previous_path, class: "btn btn-secondary" %>
+
+<!-- Less prominent action -->
+<%= link_to "Skip", skip_path, class: "btn btn-outline-secondary" %>
+```
+
+See [docs/BOOTSTRAP_COMPONENTS.md](docs/BOOTSTRAP_COMPONENTS.md) for complete component standards and migration guide.
+
 ## Deployment
 
 Deployed via Kamal 2 to Hetzner dedicated server.

@@ -44,16 +44,16 @@
     <div class="onboarding-footer">
         <%= button_to t('common.buttons.skip_for_now'), skip_oroshi_onboarding_path(@step || 'welcome'),
             method: :post,
-            class: "btn btn-onboarding-skip",
+            class: "btn btn-outline-secondary",
             form: { data: { turbo_confirm: t('common.confirmations.skip_onboarding') } } %>
 
         <div class="d-flex gap-2">
             <% if @step && Oroshi::OnboardingController::ALL_STEPS.index(@step)&.positive? %>
                 <% prev_step = Oroshi::OnboardingController::ALL_STEPS[Oroshi::OnboardingController::ALL_STEPS.index(@step) - 1] %>
-                <%= link_to t('oroshi.onboarding.buttons.back'), oroshi_onboarding_path(prev_step), class: "btn btn-onboarding-back" %>
+                <%= link_to t('oroshi.onboarding.buttons.back'), oroshi_onboarding_path(prev_step), class: "btn btn-secondary" %>
             <% end %>
 
-            <%= button_tag t('oroshi.onboarding.buttons.next'), type: "submit", form: "onboarding-form", class: "btn btn-onboarding-next" %>
+            <%= button_tag t('oroshi.onboarding.buttons.next'), type: "submit", form: "onboarding-form", class: "btn btn-primary" %>
         </div>
     </div>
 </body>

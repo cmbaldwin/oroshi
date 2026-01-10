@@ -11,28 +11,26 @@
         <% end %>
         <% if user_signed_in? %>
         <ul class="navbar-nav h5 ms-3 me-auto mt-2 mt-lg-0">
+            <li><%= link_to t('layouts.application.navbar.supply_settings'), oroshi_root_path, class: "nav-link light_link" %></li>
             <li><%= link_to t('layouts.application.navbar.supplies'), oroshi_supplies_path, class: "nav-link light_link" %></li>
             <li class="nav-item"><%= link_to t('layouts.application.navbar.orders'), oroshi_orders_path, class: "nav-link light_link" %></li>
             <li class="nav-item"><%= link_to t('layouts.application.navbar.order_search'), oroshi_search_orders_path, class: "nav-link light_link" %></li>
             <% if current_user.vip? || current_user.admin? %>
             <li><%= link_to t('layouts.application.navbar.payments'), oroshi_payment_receipts_path, class: "nav-link light_link" %></li>
-            <li><%= link_to t('layouts.application.navbar.supply_settings'), oroshi_root_path, class: "nav-link light_link" %></li>
-            <li><%= link_to t('layouts.application.navbar.product_settings'), oroshi_products_path, class: "nav-link light_link" %></li>
-            <li><%= link_to t('layouts.application.navbar.material_settings'), oroshi_materials_path, class: "nav-link light_link" %></li>
             <% end %>
         </ul>
         <ul class="navbar-nav">
             <% if user_signed_in? %>
             <span class="navbar-text">
-                                <div class="btn-group" role="group" aria-label="Basic">
-                                    <% if current_user.onboarding_progress&.checklist_dismissed? %>
-                                    <%= link_to icon("play-circle", class: 'text-success'),
+                <div class="btn-group" role="group" aria-label="Basic">
+                    <% if current_user.onboarding_progress&.checklist_dismissed? %>
+                    <%= link_to icon("play-circle", class: 'text-success'),
                                           resume_oroshi_onboarding_path(current_user.onboarding_progress.current_step || 'company_info'),
                                           method: :post,
                                           class: 'navbar-link btn btn-info tippy',
                                           data: { tippy_content: t('layouts.application.navbar.setup_resume') } %>
-                                    <% end %>
-                                    <%= button_to destroy_user_session_path,
+                    <% end %>
+                    <%= button_to destroy_user_session_path,
                             id: "sign_out",
                             class: "bg-info border-0 p-0 m-0",
                             method: :delete,

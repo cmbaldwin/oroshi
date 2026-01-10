@@ -49,7 +49,7 @@ class Oroshi::TemplatesRouteTest < ActionDispatch::IntegrationTest
     template = create(:oroshi_order_template, order: order)
 
     # Filter by non-existent buyer
-    get oroshi_orders_templates_path(date: "2026-01-10"), params: { buyer_ids: [99999] }
+    get oroshi_orders_templates_path(date: "2026-01-10"), params: { buyer_ids: [ 99999 ] }
 
     assert_response :success
     # Should show no orders warning when filter results are empty

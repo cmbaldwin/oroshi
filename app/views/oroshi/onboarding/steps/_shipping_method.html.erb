@@ -1,0 +1,173 @@
+<% shipping_organization = Oroshi::ShippingOrganization.first %>
+<% shipping_organizations = Oroshi::ShippingOrganization.all %>
+<% shipping_methods = Oroshi::ShippingMethod.all %>
+<% buyers = Oroshi::Buyer.all %>
+
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<% if shipping_organization.present? %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-truck me-2"></i>
+    <strong><%= shipping_organization.name %></strong> の配送方法を追加します
+  </div>
+<% end %>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% if shipping_methods.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_shipping_methods') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>組織</th>
+              <th>名前</th>
+              <th>ハンドル</th>
+              <th>日次コスト</th>
+              <th>容器単価</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% shipping_methods.each do |sm| %>
+              <tr>
+                <td><%= sm.shipping_organization&.name %></td>
+                <td><%= sm.name %></td>
+                <td><code><%= sm.handle %></code></td>
+                <td><%= number_to_currency(sm.daily_cost, unit: '¥', precision: 0) %></td>
+                <td><%= number_to_currency(sm.per_shipping_receptacle_cost, unit: '¥', precision: 0) %></td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_shipping_method_id: sm.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_shipping_method') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_shipping_method') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :shipping_method do |sm| %>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= sm.label :shipping_organization_id, '発送組織 *', class: 'form-label' %>
+          <%= sm.select :shipping_organization_id,
+                       shipping_organizations.map { |org| [org.name, org.id] },
+                       { selected: shipping_organization&.id },
+                       { class: 'form-select', required: shipping_methods.empty? } %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= sm.label :name, '名前 *', class: 'form-label' %>
+          <%= sm.text_field :name,
+                           placeholder: '例: 宅配便、クール便',
+                           required: shipping_methods.empty?,
+                           class: 'form-control' %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= sm.label :handle, 'ハンドル *', class: 'form-label' %>
+          <%= sm.text_field :handle,
+                           placeholder: '例: takuhai、cool',
+                           required: shipping_methods.empty?,
+                           class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= sm.label :daily_cost, '日次コスト *', class: 'form-label' %>
+          <div class="input-group">
+            <span class="input-group-text">¥</span>
+            <%= sm.number_field :daily_cost,
+                               min: 0,
+                               step: 1,
+                               placeholder: '0',
+                               required: shipping_methods.empty?,
+                               class: 'form-control' %>
+          </div>
+          <div class="form-text">1日あたりの固定コスト</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= sm.label :per_shipping_receptacle_cost, '容器単価 *', class: 'form-label' %>
+          <div class="input-group">
+            <span class="input-group-text">¥</span>
+            <%= sm.number_field :per_shipping_receptacle_cost,
+                               min: 0,
+                               step: 1,
+                               placeholder: '0',
+                               required: shipping_methods.empty?,
+                               class: 'form-control' %>
+          </div>
+          <div class="form-text">発送容器1個あたりのコスト</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= sm.label :per_freight_unit_cost, '貨物単価 *', class: 'form-label' %>
+          <div class="input-group">
+            <span class="input-group-text">¥</span>
+            <%= sm.number_field :per_freight_unit_cost,
+                               min: 0,
+                               step: 1,
+                               placeholder: '0',
+                               required: shipping_methods.empty?,
+                               class: 'form-control' %>
+          </div>
+          <div class="form-text">貨物1単位あたりのコスト</div>
+        </div>
+      </div>
+
+      <% if buyers.any? %>
+        <div class="mb-3">
+          <%= sm.label :buyer_ids, '利用可能な販売先', class: 'form-label' %>
+          <div class="row">
+            <% buyers.each do |buyer| %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= sm.check_box :buyer_ids,
+                                  { multiple: true, class: 'form-check-input' },
+                                  buyer.id,
+                                  nil %>
+                  <label class="form-check-label">
+                    <span class="color-circle" style="background-color: <%= buyer.color %>;"></span>
+                    <%= buyer.name %>
+                  </label>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <div class="form-text">この配送方法を利用できる販売先を選択してください。</div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% if shipping_methods.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

@@ -1,0 +1,150 @@
+<% supplier_organization = Oroshi::SupplierOrganization.first %>
+<% suppliers = Oroshi::Supplier.all %>
+
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<% if supplier_organization.present? %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-building me-2"></i>
+    <strong><%= supplier_organization.entity_name %></strong> に仕入先を追加します
+  </div>
+<% end %>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% if suppliers.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_suppliers') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>番号</th>
+              <th>会社名</th>
+              <th>代表者</th>
+              <th>組織</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% suppliers.each do |supplier| %>
+              <tr>
+                <td><%= supplier.circled_number || supplier.supplier_number %></td>
+                <td><%= supplier.company_name %></td>
+                <td><%= supplier.representatives %></td>
+                <td><%= supplier.supplier_organization&.entity_name %></td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_supplier_id: supplier.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_supplier') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_supplier') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :supplier do |s| %>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= s.label :supplier_organization_id, '仕入先組織 *', class: 'form-label' %>
+          <%= s.select :supplier_organization_id,
+                       Oroshi::SupplierOrganization.all.map { |org| [org.entity_name, org.id] },
+                       { selected: supplier_organization&.id },
+                       { class: 'form-select', required: suppliers.empty? } %>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= s.label :supplier_number, '仕入先番号 *', class: 'form-label' %>
+          <%= s.number_field :supplier_number,
+                             min: 1,
+                             max: 19,
+                             placeholder: '例: 1',
+                             required: suppliers.empty?,
+                             class: 'form-control' %>
+          <div class="form-text">1〜19の番号。丸付き数字として表示されます。</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= s.label :company_name, '会社名 *', class: 'form-label' %>
+          <%= s.text_field :company_name,
+                           placeholder: '例: 山田農園',
+                           required: suppliers.empty?,
+                           class: 'form-control' %>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= s.label :representatives, '代表者名 *', class: 'form-label' %>
+          <%= s.text_field :representatives,
+                           placeholder: '例: 山田太郎',
+                           required: suppliers.empty?,
+                           class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= s.label :invoice_number, '請求書番号 *', class: 'form-label' %>
+          <%= s.text_field :invoice_number,
+                           placeholder: '例: T1234567890123',
+                           required: suppliers.empty?,
+                           class: 'form-control' %>
+          <div class="form-text">インボイス登録番号（適格請求書発行事業者登録番号）</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">品種紐付け</label>
+          <% supply_type_variations = Oroshi::SupplyTypeVariation.all %>
+          <% if supply_type_variations.any? %>
+            <div class="border rounded p-2 scroll-container-150px">
+              <% supply_type_variations.each do |stv| %>
+                <div class="form-check">
+                  <%= s.check_box :supply_type_variation_ids,
+                                  { multiple: true, class: 'form-check-input' },
+                                  stv.id,
+                                  nil %>
+                  <label class="form-check-label">
+                    <%= stv.supply_type&.name %> - <%= stv.name %>
+                  </label>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="form-text text-muted">
+              <%= t('oroshi.onboarding.steps.supply_type_variation.configured_later') %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if suppliers.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

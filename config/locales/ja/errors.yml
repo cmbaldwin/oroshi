@@ -1,0 +1,18 @@
+ja:
+  errors:
+    # HTTP error pages
+    pages:
+      not_found:
+        title: "お探しのページが見つかりません (404)"
+        heading: "お探しのページが見つかりません"
+        description: "URLが間違っているか、ページが移動した可能性があります。"
+        owner_message: "アプリケーション所有者の方は、ログで詳細を確認してください。"
+      internal_server_error:
+        title: "申し訳ございません。問題が発生しました (500)"
+        heading: "申し訳ございません。問題が発生しました"
+        owner_message: "アプリケーション所有者の方は、ログで詳細を確認してください。"
+      unprocessable_entity:
+        title: "リクエストを処理できません (422)"
+        heading: "送信された内容を処理できませんでした"
+        description: "入力内容を確認してもう一度お試しください。"
+        owner_message: "アプリケーション所有者の方は、ログで詳細を確認してください。"

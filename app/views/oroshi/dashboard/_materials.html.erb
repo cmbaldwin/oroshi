@@ -8,9 +8,9 @@
     <div class="w-100">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
-                <%= dashboard_frame_tab_link('出荷容器', oroshi_shipping_receptacles_path, 'shipping_receptacles', active: true) %>
-                <%= dashboard_frame_tab_link('商品包装', oroshi_packagings_path, 'packagings') %>
-                <%= dashboard_frame_tab_link('製造材料', oroshi_material_categories_path, 'material_categories') %>
+                <%= dashboard_frame_tab_link(t('oroshi.dashboard.materials.shipping_receptacles'), oroshi_shipping_receptacles_path, 'shipping_receptacles', active: true) %>
+                <%= dashboard_frame_tab_link(t('oroshi.dashboard.materials.packagings'), oroshi_packagings_path, 'packagings') %>
+                <%= dashboard_frame_tab_link(t('oroshi.dashboard.materials.material_categories'), oroshi_material_categories_path, 'material_categories') %>
             </ul>
         </div>
         <div class="card-body">

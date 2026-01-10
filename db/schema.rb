@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_08_042858) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_10_143000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -167,6 +167,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_042858) do
   end
 
   create_table "oroshi_onboarding_progresses", force: :cascade do |t|
+    t.datetime "checklist_dismissed_at"
     t.datetime "completed_at"
     t.jsonb "completed_steps", default: []
     t.datetime "created_at", null: false
@@ -541,6 +542,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_042858) do
     t.integer "default_container_count"
     t.string "handle"
     t.string "name"
+    t.integer "position", default: 1, null: false
     t.bigint "supply_type_id", null: false
     t.datetime "updated_at", null: false
     t.index ["supply_type_id"], name: "index_oroshi_supply_type_variations_on_supply_type_id"

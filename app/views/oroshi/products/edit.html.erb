@@ -3,7 +3,7 @@
     <div class="card-body">
       <div class="d-flex justify-content-start align-items-center align-middle">
         <h5 class="m-0">
-          <%= @product.name %>の商品を編集する
+          <%= t('oroshi.products.edit.title', name: @product.name) %>
         </h5>
       </div>
       <%= form_with model: @product,
@@ -16,7 +16,7 @@
     </div>
   <% else %>
     <div class="alert alert-warning" role="alert">
-      商品が登録されていません。まずは商品を登録してください。
+      <%= t('oroshi.products.edit.no_products_warning') %>
     </div>
   <% end %>
 <% end %>

@@ -3,14 +3,14 @@
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
                 <small class="text-muted">
-                    &copy; <%= Time.current.year %> MOAB Co., Ltd. All rights reserved.
+                    <%= t('layouts.application.footer.copyright', year: Time.current.year) %>
                 </small>
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <ul class="list-inline mb-0">
-                    <li class="list-inline-item"><%= link_to 'プライバシーポリシー', privacy_policy_path, class: 'text-decoration-none text-muted' %></li>
+                    <li class="list-inline-item"><%= link_to t('layouts.application.footer.privacy_policy'), privacy_policy_path, class: 'text-decoration-none text-muted' %></li>
                     <li class="list-inline-item">|</li>
-                    <li class="list-inline-item"><%= link_to '利用規約', terms_of_service_path, class: 'text-decoration-none text-muted' %></li>
+                    <li class="list-inline-item"><%= link_to t('layouts.application.footer.terms_of_service'), terms_of_service_path, class: 'text-decoration-none text-muted' %></li>
                 </ul>
             </div>
         </div>

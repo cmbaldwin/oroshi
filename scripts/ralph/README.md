@@ -24,7 +24,7 @@ Ralph is now integrated into VS Code Copilot via custom instructions:
 
 2. **Use Ralph**:
 
-   - Open VS Code Copilot Chat
+   - ./scripts/ralph/ralph.sh [max_iterations] OR Open VS Code Copilot Chat
    - Say "Start working on the PRD" or "Go"
    - Ralph will automatically:
      - Read `prd.json` for incomplete stories

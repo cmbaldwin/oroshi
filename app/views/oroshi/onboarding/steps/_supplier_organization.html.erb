@@ -1,0 +1,165 @@
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% supplier_organizations = Oroshi::SupplierOrganization.all %>
+<% supply_reception_times = Oroshi::SupplyReceptionTime.all %>
+
+<% if supplier_organizations.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_organizations') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>組織名</th>
+              <th>形態</th>
+              <th>地域</th>
+              <th>入荷時間帯</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% supplier_organizations.each do |org| %>
+              <tr>
+                <td><%= org.entity_name %></td>
+                <td><%= I18n.t("enums.oroshi_supplier_organization.entity_type.#{org.entity_type}") %></td>
+                <td><%= org.subregion&.name %></td>
+                <td><%= org.supply_reception_times.map(&:time_qualifier).join(', ') %></td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_supplier_organization_id: org.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_organization') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card" data-controller="oroshi--dashboard">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_organization') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :supplier_organization do |org| %>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= org.label :entity_name, '組織名 *', class: 'form-label' %>
+          <%= org.text_field :entity_name,
+                             placeholder: '例: ○○組合、△△株式会社',
+                             required: supplier_organizations.empty?,
+                             class: 'form-control' %>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= org.label :entity_type, '形態 *', class: 'form-label' %>
+          <%= org.select :entity_type,
+                         Oroshi::SupplierOrganization.entity_types.keys.map { |type|
+                           [I18n.t("enums.oroshi_supplier_organization.entity_type.#{type}"), type]
+                         },
+                         { prompt: t('oroshi.onboarding.select_prompt') },
+                         { class: 'form-select', required: supplier_organizations.empty? } %>
+        </div>
+      </div>
+
+      <div class="row country-subregion-select">
+        <div class="col-md-4 mb-3">
+          <%= org.label :country_id, '国 *', class: 'form-label' %>
+          <%= org.select :country_id,
+                         Carmen::Country.all.map { |c| [c.name, c.numeric_code] },
+                         { selected: '392' },
+                         { class: 'form-select',
+                           required: supplier_organizations.empty?,
+                           data: { action: 'change->oroshi--dashboard#updateSubregions' } } %>
+        </div>
+
+        <div class="col-md-4 mb-3 subregion-select">
+          <%= org.label :subregion_id, '都道府県 *', class: 'form-label' %>
+          <%= org.select :subregion_id,
+                         Carmen::Country.coded('JP').subregions.map { |s| [s.name, s.code] },
+                         { prompt: t('oroshi.onboarding.select_prompt') },
+                         { class: 'form-select', required: supplier_organizations.empty? } %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= org.label :micro_region, '市区町村', class: 'form-label' %>
+          <%= org.text_field :micro_region,
+                             placeholder: '例: 浜松市',
+                             class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= org.label :invoice_number, '請求書番号 *', class: 'form-label' %>
+          <%= org.text_field :invoice_number,
+                             placeholder: '例: T1234567890123',
+                             required: supplier_organizations.empty?,
+                             class: 'form-control' %>
+          <div class="form-text">インボイス登録番号（適格請求書発行事業者登録番号）</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= org.label :fax, 'FAX *', class: 'form-label' %>
+          <%= org.text_field :fax,
+                             placeholder: '例: 053-XXX-XXXX',
+                             required: supplier_organizations.empty?,
+                             class: 'form-control' %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= org.label :free_entry, '自由入場', class: 'form-label' %>
+          <div class="form-check form-switch mt-2">
+            <%= org.check_box :free_entry, class: 'form-check-input' %>
+            <label class="form-check-label text-muted">市場への自由入場を許可</label>
+          </div>
+        </div>
+      </div>
+
+      <% if supply_reception_times.any? %>
+        <div class="mb-3">
+          <%= org.label :supply_reception_time_ids, '入荷時間帯', class: 'form-label' %>
+          <div class="row">
+            <% supply_reception_times.each do |srt| %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= org.check_box :supply_reception_time_ids,
+                                    { multiple: true, class: 'form-check-input' },
+                                    srt.id,
+                                    nil %>
+                  <label class="form-check-label">
+                    <%= srt.time_qualifier %> (<%= srt.hour %>時)
+                  </label>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <div class="form-text">この仕入先組織が利用する入荷時間帯を選択してください。</div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% if supplier_organizations.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

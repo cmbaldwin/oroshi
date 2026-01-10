@@ -1,0 +1,80 @@
+<%# Sidebar checklist for users who skipped onboarding %>
+<% progress = current_user.onboarding_progress %>
+<% return unless progress&.skipped? && !progress.completed? && !progress.checklist_dismissed? %>
+
+<div class="onboarding-checklist-sidebar bg-light border-start p-3" id="onboarding-checklist-sidebar">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="mb-0">
+      <i class="bi bi-list-check me-2"></i>
+      <%= t('common.messages.setup_checklist') %>
+    </h6>
+    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#dismissChecklistModal">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <% Oroshi::OnboardingController::STEPS.each do |phase, steps| %>
+    <div class="mb-3">
+      <small class="text-muted text-uppercase fw-bold">
+        <%= t("oroshi.onboarding.phases.#{phase}") %>
+      </small>
+      <ul class="list-unstyled mt-1 mb-0">
+        <% steps.each do |step| %>
+          <% completed = progress.step_completed?(step) %>
+          <li class="py-1">
+            <% if completed %>
+              <i class="bi bi-check-circle-fill text-success me-2"></i>
+              <span class="text-muted"><%= t("oroshi.onboarding.steps.#{step}.title") %></span>
+            <% else %>
+              <i class="bi bi-circle text-secondary me-2"></i>
+              <%= link_to t("oroshi.onboarding.steps.#{step}.title"),
+                          oroshi_onboarding_path(step),
+                          class: 'text-decoration-none',
+                          data: { turbo_frame: '_top' } %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mt-3 pt-3 border-top">
+    <%= link_to oroshi_onboarding_index_path, 
+                class: 'btn btn-primary btn-sm w-100',
+                data: { turbo_frame: '_top' } do %>
+      <i class="bi bi-arrow-right-circle me-1"></i>
+      <%= t('common.messages.continue_setup') %>
+    <% end %>
+  </div>
+</div>
+
+<%# Dismiss confirmation modal %>
+<div class="modal fade" id="dismissChecklistModal" tabindex="-1" aria-labelledby="dismissChecklistModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dismissChecklistModalLabel">
+          <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+          <%= t('common.messages.dismiss_checklist_title') %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><%= t('common.messages.dismiss_checklist_warning') %></p>
+        <ul class="text-muted">
+          <li><%= t('common.messages.dismiss_checklist_limitation_1') %></li>
+          <li><%= t('common.messages.dismiss_checklist_limitation_2') %></li>
+          <li><%= t('common.messages.dismiss_checklist_limitation_3') %></li>
+        </ul>
+        <p class="mb-0"><%= t('common.messages.dismiss_checklist_info') %></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('common.buttons.cancel') %></button>
+        <%= button_to t('common.buttons.dismiss'), dismiss_checklist_oroshi_onboarding_index_path,
+                      method: :post,
+                      class: 'btn btn-warning',
+                      data: { turbo: false } %>
+      </div>
+    </div>
+  </div>
+</div>

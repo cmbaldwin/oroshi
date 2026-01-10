@@ -1,0 +1,132 @@
+<% supply_type = Oroshi::SupplyType.first %>
+<% supply_type_variations = Oroshi::SupplyTypeVariation.all %>
+<% suppliers = Oroshi::Supplier.all %>
+
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<% if supply_type.present? %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-box me-2"></i>
+    <strong><%= supply_type.name %></strong> の品種を追加します
+  </div>
+<% end %>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% if supply_type_variations.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_variations') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>材料タイプ</th>
+              <th>品種名</th>
+              <th>既定容器数</th>
+              <th>仕入先</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% supply_type_variations.each do |stv| %>
+              <tr>
+                <td><%= stv.supply_type&.name %></td>
+                <td><%= stv.name %></td>
+                <td><%= stv.default_container_count %></td>
+                <td><%= stv.suppliers.pluck(:company_name).join(', ').presence || '—' %></td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_supply_type_variation_id: stv.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_variation') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_variation') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :supply_type_variation do |stv| %>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= stv.label :supply_type_id, '材料タイプ *', class: 'form-label' %>
+          <%= stv.select :supply_type_id,
+                         Oroshi::SupplyType.all.map { |st| [st.name, st.id] },
+                         { selected: supply_type&.id },
+                         { class: 'form-select', required: supply_type_variations.empty? } %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= stv.label :name, '品種名 *', class: 'form-label' %>
+          <%= stv.text_field :name,
+                            placeholder: '例: 早生、青島',
+                            required: supply_type_variations.empty?,
+                            class: 'form-control' %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= stv.label :default_container_count, '既定容器数 *', class: 'form-label' %>
+          <%= stv.number_field :default_container_count,
+                              min: 1,
+                              placeholder: '例: 1',
+                              required: supply_type_variations.empty?,
+                              class: 'form-control' %>
+          <div class="form-text">1回の入荷に含まれる標準的な容器数</div>
+        </div>
+      </div>
+
+      <% if suppliers.any? %>
+        <div class="mb-3">
+          <%= stv.label :supplier_ids, '仕入先との紐付け', class: 'form-label' %>
+          <div class="row">
+            <% suppliers.each do |supplier| %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= stv.check_box :supplier_ids,
+                                   { multiple: true, class: 'form-check-input' },
+                                   supplier.id,
+                                   nil %>
+                  <label class="form-check-label">
+                    <%= supplier.circled_number || supplier.supplier_number %>
+                    <%= supplier.company_name %>
+                  </label>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <div class="form-text">この品種を取り扱う仕入先を選択してください。</div>
+        </div>
+      <% else %>
+        <div class="form-text text-muted mb-3">
+          <%= t('oroshi.onboarding.steps.supplier.configured_previously') %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% if supply_type_variations.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

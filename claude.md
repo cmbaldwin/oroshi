@@ -552,6 +552,74 @@ Before deploying to production:
 - [ ] Document your specific deployment configuration
 - [ ] Test backup restoration procedure
 
+## Internationalization (i18n) Guidelines
+
+### Language Priority
+
+Oroshi is a **Japanese-first application**. All user-facing text must:
+
+1. **Use Japanese as the primary language** - All UI text, buttons, labels, messages should be in Japanese
+2. **Use `t()` helper with locale files** - Never hardcode strings in views or controllers
+3. **Avoid mixed languages** - Do not mix English and Japanese in the same context
+
+### Required Practices
+
+```ruby
+# ✅ CORRECT - Use t() with locale key
+<%= t('onboarding.buttons.skip') %>
+<%= t('.title') %>  # Lazy lookup in views
+
+# ❌ WRONG - Hardcoded English
+"Skip for now"
+"Back"
+"Next"
+
+# ❌ WRONG - Mixed languages
+"セットアップを Skip"
+```
+
+### Locale File Structure
+
+```
+config/locales/
+├── ja.yml                    # Main Japanese translations
+├── en.yml                    # English translations (secondary)
+├── oroshi.ja.yml            # Oroshi-specific Japanese
+├── oroshi.hints.ja.yml      # Form hints in Japanese
+└── models.ja.yml            # ActiveRecord model translations
+```
+
+### Translation Keys Convention
+
+```yaml
+ja:
+  common:
+    buttons:
+      save: "保存"
+      cancel: "キャンセル"
+      back: "戻る"
+      next: "次へ"
+      skip: "スキップ"
+      delete: "削除"
+      edit: "編集"
+    confirmations:
+      are_you_sure: "よろしいですか？"
+      delete_confirm: "本当に削除しますか？"
+  onboarding:
+    buttons:
+      skip_for_now: "今はスキップ"
+      resume_later: "後で再開"
+    messages:
+      skip_confirm: "オンボーディングをスキップしますか？後でダッシュボードから再開できます。"
+```
+
+### When Adding New UI Text
+
+1. Add the Japanese translation to the appropriate locale file first
+2. Use the `t()` helper in the view/controller
+3. Never commit hardcoded strings in user-facing code
+4. Run locale detection: `bin/rails locale:detect` (when available)
+
 ## Ralph - Autonomous Development Workflow
 
 ### Overview

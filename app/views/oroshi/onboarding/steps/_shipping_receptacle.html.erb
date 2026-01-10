@@ -1,0 +1,196 @@
+<% shipping_receptacles = Oroshi::ShippingReceptacle.all %>
+
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% if shipping_receptacles.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_receptacles') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>名前</th>
+              <th>ハンドル</th>
+              <th>コスト</th>
+              <th>括り数</th>
+              <th>内寸</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% shipping_receptacles.each do |sr| %>
+              <tr>
+                <td><%= sr.name %></td>
+                <td><code><%= sr.handle %></code></td>
+                <td><%= number_to_currency(sr.cost, unit: '¥', precision: 0) %></td>
+                <td><%= sr.default_freight_bundle_quantity %></td>
+                <td><%= sr.interior_height %>×<%= sr.interior_width %>×<%= sr.interior_depth %> mm</td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_shipping_receptacle_id: sr.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_receptacle') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_receptacle') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :shipping_receptacle do |sr| %>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= sr.label :name, '名前 *', class: 'form-label' %>
+          <%= sr.text_field :name,
+                           placeholder: '例: Sサイズ箱、みかん専用箱',
+                           required: shipping_receptacles.empty?,
+                           class: 'form-control' %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= sr.label :handle, 'ハンドル *', class: 'form-label' %>
+          <%= sr.text_field :handle,
+                           placeholder: '例: box_s、mikan_box',
+                           required: shipping_receptacles.empty?,
+                           class: 'form-control' %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= sr.label :cost, 'コスト *', class: 'form-label' %>
+          <div class="input-group">
+            <span class="input-group-text">¥</span>
+            <%= sr.number_field :cost,
+                               min: 0,
+                               step: 1,
+                               placeholder: '0',
+                               required: shipping_receptacles.empty?,
+                               class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= sr.label :default_freight_bundle_quantity, '括り数 *', class: 'form-label' %>
+          <%= sr.number_field :default_freight_bundle_quantity,
+                             min: 1,
+                             placeholder: '例: 10',
+                             value: 10,
+                             required: shipping_receptacles.empty?,
+                             class: 'form-control' %>
+          <div class="form-text">1括り（パレットなど）に含まれる標準的な容器数</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <label class="form-label">内寸 *</label>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <%= sr.number_field :interior_height,
+                               min: 0,
+                               placeholder: '高さ',
+                               value: 0,
+                               required: shipping_receptacles.empty?,
+                               class: 'form-control' %>
+            <span class="input-group-text">mm</span>
+          </div>
+          <div class="form-text text-center">高さ</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <%= sr.number_field :interior_width,
+                               min: 0,
+                               placeholder: '幅',
+                               value: 0,
+                               required: shipping_receptacles.empty?,
+                               class: 'form-control' %>
+            <span class="input-group-text">mm</span>
+          </div>
+          <div class="form-text text-center">幅</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <%= sr.number_field :interior_depth,
+                               min: 0,
+                               placeholder: '奥行',
+                               value: 0,
+                               required: shipping_receptacles.empty?,
+                               class: 'form-control' %>
+            <span class="input-group-text">mm</span>
+          </div>
+          <div class="form-text text-center">奥行</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <label class="form-label">外寸（オプション）</label>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <%= sr.number_field :exterior_height,
+                               min: 0,
+                               placeholder: '高さ',
+                               value: 0,
+                               class: 'form-control' %>
+            <span class="input-group-text">mm</span>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <%= sr.number_field :exterior_width,
+                               min: 0,
+                               placeholder: '幅',
+                               value: 0,
+                               class: 'form-control' %>
+            <span class="input-group-text">mm</span>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <%= sr.number_field :exterior_depth,
+                               min: 0,
+                               placeholder: '奥行',
+                               value: 0,
+                               class: 'form-control' %>
+            <span class="input-group-text">mm</span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if shipping_receptacles.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

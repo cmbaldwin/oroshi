@@ -23,7 +23,7 @@ class Oroshi::Buyer < ApplicationRecord
             :optional_cost, :commission_percentage, presence: true
   validates :name, :handle, :representative_phone, :fax,
             :associated_system_id, uniqueness: true, allow_blank: true
-  validates :color, format: { with: /\A#(?:[0-9a-fA-F]{3}){1,2}\z/, message: "\u6709\u52B9\u306A16\u9032\u6570\u30AB\u30E9\u30FC\u3067\u306A\u3051\u308C\u3070\u306A\u3089\u306A\u3044" }
+  validates :color, format: { with: /\A#(?:[0-9a-fA-F]{3}){1,2}\z/, message: :invalid_hex }
 
   # Scopes
   scope :order_by_associated_system_id, -> { order(:associated_system_id) }

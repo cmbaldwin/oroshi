@@ -9,7 +9,7 @@ class Oroshi::ProductInventory < ApplicationRecord
   # Validations
   validates :quantity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates_uniqueness_of :manufacture_date, scope: %i[product_variation_id expiration_date],
-                                             message: "\u3053\u306E\u5728\u5EAB\u306F\u3082\u3046\u3059\u3067\u306B\u5B58\u5728\u3057\u3066\u307E\u3059"
+                                             message: ->(object, data) { I18n.t("activerecord.errors.models.oroshi/product_inventory.uniqueness_error") }
   validates :manufacture_date, :expiration_date, presence: true
   validate :expiration_date_after_manufacture_date
   validate :immutable_fields, on: :update
@@ -58,12 +58,12 @@ class Oroshi::ProductInventory < ApplicationRecord
 
     return unless expiration_date <= manufacture_date
 
-    errors.add(:expiration_date, "\u88FD\u9020\u65E5\u4EE5\u964D\u3067\u3042\u308B\u3053\u3068")
+    errors.add(:expiration_date, :must_be_after_manufacture)
   end
 
   def immutable_fields
     return unless manufacture_date_changed? || expiration_date_changed? || product_variation_id_changed?
 
-    errors.add(:base, "\u88FD\u9020\u65E5\u3001\u6D88\u8CBB\u671F\u9650\u3001\u88FD\u54C1\u30D0\u30EA\u30A8\u30FC\u30B7\u30E7\u30F3\u306F\u4F5C\u6210\u5F8C\u306B\u5909\u66F4\u3059\u308B\u3053\u3068\u306F\u3067\u304D\u307E\u305B\u3093\u3002")
+    errors.add(:base, :immutable_fields)
   end
 end

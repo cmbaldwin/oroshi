@@ -80,6 +80,7 @@ group :test do
   gem "minitest", "< 6.0"           # Testing framework
   gem "parallel_tests"              # Parallel test execution
   gem "selenium-webdriver"          # Browser automation for system tests
+  gem "webmock"                     # HTTP request stubbing
 end
 
 # Authentication and authorization

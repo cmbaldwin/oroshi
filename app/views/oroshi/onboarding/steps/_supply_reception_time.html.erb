@@ -1,0 +1,89 @@
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% supply_reception_times = Oroshi::SupplyReceptionTime.all %>
+
+<% if supply_reception_times.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_times') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th><%= t('oroshi.onboarding.labels.time_qualifier') %></th>
+              <th><%= t('oroshi.onboarding.labels.hour') %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% supply_reception_times.each do |srt| %>
+              <tr>
+                <td><%= srt.time_qualifier %></td>
+                <td><%= srt.hour %><%= t('oroshi.onboarding.labels.hour_unit') %></td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_supply_reception_time_id: srt.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_time') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_time') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :supply_reception_time do |srt| %>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= srt.label :time_qualifier, "#{t('oroshi.onboarding.labels.time_qualifier')} *", class: 'form-label' %>
+          <%= srt.text_field :time_qualifier,
+                             placeholder: '例: 朝一、午前中、午後',
+                             required: supply_reception_times.empty?,
+                             class: 'form-control' %>
+          <div class="form-text"><%= t('oroshi.onboarding.labels.time_qualifier_help') %></div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= srt.label :hour, "#{t('oroshi.onboarding.labels.hour')} *", class: 'form-label' %>
+          <div class="input-group">
+            <%= srt.number_field :hour,
+                                 min: 0,
+                                 max: 23,
+                                 placeholder: '8',
+                                 required: supply_reception_times.empty?,
+                                 class: 'form-control' %>
+            <span class="input-group-text"><%= t('oroshi.onboarding.labels.hour_unit') %></span>
+          </div>
+          <div class="form-text"><%= t('oroshi.onboarding.labels.hour_help') %></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if supply_reception_times.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

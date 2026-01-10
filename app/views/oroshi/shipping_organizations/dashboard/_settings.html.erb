@@ -4,8 +4,8 @@
     <div class="w-100">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
-                <%= dashboard_frame_tab_link('出荷組織', edit_oroshi_shipping_organization_path(@shipping_organization), 'shipping_organization', active: true) %>
-                <%= dashboard_frame_tab_link('出荷方法', oroshi_shipping_organization_shipping_methods_path(@shipping_organization), 'shipping_methods') %>
+                <%= dashboard_frame_tab_link(t('oroshi.shipping_organizations.dashboard.settings.shipping_organization_tab'), edit_oroshi_shipping_organization_path(@shipping_organization), 'shipping_organization', active: true) %>
+                <%= dashboard_frame_tab_link(t('oroshi.shipping_organizations.dashboard.settings.shipping_methods_tab'), oroshi_shipping_organization_shipping_methods_path(@shipping_organization), 'shipping_methods') %>
             </ul>
         </div>
         <div class="card-body">

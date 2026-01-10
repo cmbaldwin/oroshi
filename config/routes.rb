@@ -21,6 +21,9 @@ Rails.application.routes.draw do
         post :skip
         post :resume
       end
+      collection do
+        post :dismiss_checklist
+      end
     end
 
     namespace :dashboard do
@@ -105,7 +108,7 @@ Rails.application.routes.draw do
       resources :materials, only: %i[index]
     end
 
-    resources :materials, except: %i[index destroy show] do
+    resources :materials, except: %i[destroy show] do
       get "image", on: :member
       get "images", on: :collection
     end

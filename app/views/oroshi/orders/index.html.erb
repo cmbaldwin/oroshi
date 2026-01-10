@@ -1,5 +1,5 @@
 <%= turbo_frame_tag 'app' do %>
-<% title "Funabiki Online - 注文表" %>
+<% title "Funabiki Online - #{t('oroshi.orders.index.page_title')}" %>
 <div data-controller="oroshi--orders--order-dashboard">
 
     <%= render partial: 'oroshi/orders/modal/order_modal' %>

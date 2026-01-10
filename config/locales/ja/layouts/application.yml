@@ -1,0 +1,34 @@
+ja:
+  layouts:
+    application:
+      title: "Funabiki Online"
+      description: "Funabiki Online Mangement System"
+      meta:
+        title: "船曳商店"
+      navbar:
+        toggle: "トグルナビ"
+        brand: "OROSHI"
+        supplies: "原料供給"
+        orders: "注文記載"
+        order_search: "注文明細"
+        payments: "入金"
+        supply_settings: "原料設定"
+        product_settings: "商品設定"
+        material_settings: "材料設定"
+        setup_resume: "セットアップを再開"
+        logout: "ログアウト"
+        profile: "プロフィール"
+        email: "メール"
+        username: "ユーザー名"
+        signup: "サインアップ"
+        login: "ログイン"
+      footer:
+        copyright: "© %{year} MOAB Co., Ltd. All rights reserved."
+        privacy_policy: "プライバシーポリシー"
+        terms_of_service: "利用規約"
+      flash:
+        notice: "通知"
+        alert: "警告"
+        error: "エラー"
+      approval:
+        pending: "このアカウントを許可されるまではしばらくお待ちください。"

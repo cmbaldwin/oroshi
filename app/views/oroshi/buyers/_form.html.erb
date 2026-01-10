@@ -53,7 +53,7 @@
         <%= form.text_field :associated_system_id, class: 'form-control form-control-sm' %>
     </div>
 
-    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle" style="min-width: 3rem;">
+    <div class="d-flex flex-fill flex-column place-items-center justify-content-around align-middle min-w-3">
         <%= label_with_validation_warning(form, :color, @buyer) %>
         <%= form.color_field :color, class: 'form-control form-control-sm' %>
     </div>
@@ -66,7 +66,7 @@
                 <% object = shipping_method.object %>
                 <div class="form-check form-check-inline mb-0" data-controller="tippy" data-tippy-content="<center>
                   <%= object.shipping_organization.name %> - <%= object.name %>:<br>
-                  <%= object.daily_cost %>日 + <%= object.per_shipping_receptacle_cost %>容器 + <%= object.per_freight_unit_cost %>貨物
+                  <%= t('oroshi.product_variations.cost.per_box', count: object.daily_cost) %> + <%= object.per_shipping_receptacle_cost %> + <%= object.per_freight_unit_cost %>
                 </center>
                 ">
                     <%= shipping_method.check_box class: "form-check-input" %>
@@ -95,7 +95,7 @@
     <div class="form-check form-check-inline d-flex align-items-center">
         <%= b.check_box(class: "form-check-input") %>
         <%= b.label(class: "form-check-label ms-1") %>
-        <span class="order-category-color ms-1" style="background-color: <%= b.object.color %>; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span>
+        <span class="order-category-color ms-1" style="background-color: <%= b.object.color %>;"></span>
     </div>
     <% end %>
 </div>

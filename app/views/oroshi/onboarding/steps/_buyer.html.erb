@@ -1,0 +1,153 @@
+<% buyers = Oroshi::Buyer.all %>
+
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% if buyers.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_buyers') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th></th>
+              <th>名前</th>
+              <th>ハンドル</th>
+              <th>形態</th>
+              <th>手数料</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% buyers.each do |buyer| %>
+              <tr>
+                <td><span class="color-circle" style="background-color: <%= buyer.color %>;"></span></td>
+                <td><%= buyer.name %></td>
+                <td><code><%= buyer.handle %></code></td>
+                <td><%= I18n.t("enums.oroshi_buyer.entity_type.#{buyer.entity_type}", default: buyer.entity_type) %></td>
+                <td><%= number_to_percentage(buyer.commission_percentage, precision: 1) %></td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_buyer_id: buyer.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_buyer') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_buyer') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :buyer do |b| %>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= b.label :name, '名前 *', class: 'form-label' %>
+          <%= b.text_field :name,
+                          placeholder: '例: 東京青果市場',
+                          required: buyers.empty?,
+                          class: 'form-control' %>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= b.label :handle, 'ハンドル *', class: 'form-label' %>
+          <%= b.text_field :handle,
+                          placeholder: '例: tokyo_market',
+                          required: buyers.empty?,
+                          class: 'form-control' %>
+          <div class="form-text">システム識別子（英数字、アンダースコアのみ）</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <%= b.label :entity_type, '形態 *', class: 'form-label' %>
+          <%= b.select :entity_type,
+                       Oroshi::Buyer.entity_types.keys.map { |type|
+                         [I18n.t("enums.oroshi_buyer.entity_type.#{type}", default: type.titleize), type]
+                       },
+                       { prompt: t('oroshi.onboarding.select_prompt') },
+                       { class: 'form-select', required: buyers.empty? } %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <%= b.label :handling_cost, '取扱手数料 *', class: 'form-label' %>
+          <%= b.number_field :handling_cost,
+                            min: 0,
+                            step: 0.01,
+                            placeholder: '0',
+                            required: buyers.empty?,
+                            class: 'form-control' %>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <%= b.label :daily_cost, '日次コスト *', class: 'form-label' %>
+          <%= b.number_field :daily_cost,
+                            min: 0,
+                            step: 0.01,
+                            placeholder: '0',
+                            required: buyers.empty?,
+                            class: 'form-control' %>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <%= b.label :optional_cost, 'オプションコスト *', class: 'form-label' %>
+          <%= b.number_field :optional_cost,
+                            min: 0,
+                            step: 0.01,
+                            placeholder: '0',
+                            required: buyers.empty?,
+                            class: 'form-control' %>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <%= b.label :commission_percentage, '手数料率 (%) *', class: 'form-label' %>
+          <%= b.number_field :commission_percentage,
+                            min: 0,
+                            max: 100,
+                            step: 0.1,
+                            placeholder: '例: 8.5',
+                            required: buyers.empty?,
+                            class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= b.label :color, '識別カラー *', class: 'form-label' %>
+          <%= b.color_field :color,
+                           value: '#3498db',
+                           required: buyers.empty?,
+                           class: 'form-control form-control-color w-100' %>
+          <div class="form-text">ダッシュボードでの表示に使用</div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if buyers.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

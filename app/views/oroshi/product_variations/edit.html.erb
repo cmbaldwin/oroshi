@@ -8,7 +8,7 @@
                       style: 'height: 150px;' %>
       <% end %>
 
-      <%= link_to 'この商品変種を複製する',
+      <%= link_to t('common.buttons.duplicate'),
         new_oroshi_product_product_variation_path(@product, product_variation_id: @product_variation),
         class: 'btn btn-sm btn-success',
         data: {

@@ -1,0 +1,83 @@
+<% shipping_organizations = Oroshi::ShippingOrganization.all %>
+
+<h2 class="mb-4"><%= t('.title') %></h2>
+
+<p class="text-muted mb-4">
+  <%= t('.description') %>
+</p>
+
+<% if shipping_organizations.any? %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= t('oroshi.onboarding.messages.configured_shipping_orgs') %></h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>名前</th>
+              <th>ハンドル</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% shipping_organizations.each do |org| %>
+              <tr>
+                <td><%= org.name %></td>
+                <td><code><%= org.handle %></code></td>
+                <td class="text-end">
+                  <%= button_to t('oroshi.onboarding.buttons.delete'),
+                                oroshi_onboarding_path(@step, delete_shipping_organization_id: org.id),
+                                method: :patch,
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { turbo_confirm: t('oroshi.onboarding.confirmations.delete_shipping_org') } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.no_records_warning') %>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0"><%= t('oroshi.onboarding.messages.add_new_shipping_org') %></h5>
+  </div>
+  <div class="card-body">
+    <%= f.fields_for :shipping_organization do |so| %>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= so.label :name, '名前 *', class: 'form-label' %>
+          <%= so.text_field :name,
+                           placeholder: '例: ヤマト運輸、佐川急便',
+                           required: shipping_organizations.empty?,
+                           class: 'form-control' %>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= so.label :handle, 'ハンドル *', class: 'form-label' %>
+          <%= so.text_field :handle,
+                           placeholder: '例: yamato、sagawa',
+                           required: shipping_organizations.empty?,
+                           class: 'form-control' %>
+          <div class="form-text">システム識別子（英数字、アンダースコアのみ）</div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if shipping_organizations.empty? %>
+  <div class="alert alert-warning mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <%= t('.validation_error') %>
+  </div>
+<% end %>

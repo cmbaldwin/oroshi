@@ -15,21 +15,21 @@
   
   <div class="d-flex align-items-center gap-2">
     <span class="fw-semibold">
-      <%= current_phase.to_s.titleize if current_phase %>
+      <%= t("oroshi.onboarding.phases.#{current_phase}") if current_phase %>
     </span>
     <span class="opacity-75">
-      Step <%= current_index + 1 %> of <%= all_steps.length %>
+      <%= t('oroshi.onboarding.progress.step', current: current_index + 1, total: all_steps.length) %>
     </span>
   </div>
   
   <%# Progress bar %>
   <div class="mt-2">
-    <div class="progress" style="height: 4px; background: rgba(255,255,255,0.3);">
-      <div class="progress-bar" 
-           role="progressbar" 
-           style="width: <%= ((current_index + 1).to_f / all_steps.length * 100).round %>%; background: white;"
-           aria-valuenow="<%= current_index + 1 %>" 
-           aria-valuemin="0" 
+    <div class="progress progress-onboarding">
+      <div class="progress-bar"
+           role="progressbar"
+           style="width: <%= ((current_index + 1).to_f / all_steps.length * 100).round %>%;"
+           aria-valuenow="<%= current_index + 1 %>"
+           aria-valuemin="0"
            aria-valuemax="<%= all_steps.length %>">
       </div>
     </div>

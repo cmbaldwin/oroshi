@@ -1,0 +1,5 @@
+ja:
+  oroshi:
+    order_categories:
+      index:
+        no_categories_warning: "注文カテゴリーが登録されていません。まずは注文カテゴリーを登録してください。"

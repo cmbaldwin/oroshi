@@ -1,0 +1,197 @@
+// Onboarding Layout Styles
+// Extracted from app/views/layouts/onboarding.html.erb
+
+.onboarding-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+}
+
+.onboarding-header {
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.onboarding-brand {
+  font-family: "Playfair Display", serif;
+  font-weight: 900;
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.onboarding-progress {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-size: 0.875rem;
+}
+
+.onboarding-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.onboarding-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 700px;
+  padding: 3rem;
+}
+
+.onboarding-footer {
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Onboarding Modal Styles (for checklist overlay - DEPRECATED, modal removed)
+.onboarding-modal-content {
+  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+  min-height: 80vh;
+  border: none;
+  border-radius: 1rem;
+}
+
+.onboarding-modal-header {
+  background: transparent;
+  border-bottom: none;
+  padding: 1.5rem 2rem;
+
+  .btn-close {
+    filter: invert(1);
+  }
+}
+
+.onboarding-modal-brand {
+  font-family: "Playfair Display", serif;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+
+.onboarding-modal-body {
+  padding: 0 2rem 2rem;
+}
+
+.onboarding-modal-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.onboarding-modal-footer {
+  background: transparent;
+  border-top: none;
+  padding: 1rem 2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Checklist Sidebar Styles
+.onboarding-checklist-sidebar {
+  // Base styles are in _oroshi_utilities.scss
+  // Additional theme-consistent styling
+  background-color: #f8f9fa !important;
+  border-left: 1px solid #dee2e6 !important;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.05);
+
+  h6 {
+    color: #495057;
+    font-weight: 600;
+  }
+
+  .list-unstyled {
+    li {
+      transition: background-color 0.15s ease-in-out;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      margin-left: -0.5rem;
+      margin-right: -0.5rem;
+      border-radius: 0.25rem;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+    }
+  }
+
+  .bi-check-circle-fill {
+    color: #198754 !important; // Bootstrap success green
+  }
+
+  .bi-circle {
+    color: #adb5bd !important; // Muted gray
+  }
+
+  a {
+    color: $primary;
+
+    &:hover {
+      color: darken($primary, 15%);
+      text-decoration: underline !important;
+    }
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+    border: none;
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        darken($primary, 10%) 0%,
+        darken($secondary, 10%) 100%
+      );
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .onboarding-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .onboarding-brand {
+    font-size: 1.5rem;
+  }
+
+  .onboarding-checklist-sidebar {
+    // Hide sidebar on mobile by default
+    display: none;
+  }
+
+  .onboarding-modal-card {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+
+  // Deprecated: Modal removed, these classes no longer used
+  .onboarding-modal-footer {
+    flex-direction: column-reverse;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .onboarding-checklist-sidebar {
+    width: 250px;
+  }
+}

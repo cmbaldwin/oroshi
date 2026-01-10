@@ -25,7 +25,7 @@
       <span class="input-group-text">在庫数量</span>
       <%= form.number_field :quantity, class: 'form-control text-end' %>
       <span class="input-group-text"><%= @product_inventory.product_variation.product.units %></span>
-      <%= form.submit '更新', class: 'btn btn-sm btn-secondary border' %>
+      <%= form.submit t('common.buttons.update'), class: 'btn btn-sm btn-secondary border' %>
     </div>
 
   <% end %>

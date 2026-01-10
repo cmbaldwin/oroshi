@@ -4,6 +4,37 @@ set -e
 echo "🧪 Running pre-deploy checks..."
 echo "==============================="
 
+# Run locale sync (optional, requires LOCALE_SYNC_ENABLED=true)
+if [ "${LOCALE_SYNC_ENABLED:-false}" = "true" ]; then
+  echo "🌐 Running locale sync..."
+
+  # Detect missing translations
+  echo "🔍 Detecting missing translations..."
+  if ! OUTPUT=/tmp/locale_report.txt bin/rails locale:detect; then
+    echo "⚠️  Warning: locale:detect failed, continuing anyway..." >&2
+  fi
+
+  # Generate missing translations if OpenRouter credentials available
+  if [ -n "${OPENROUTER_API_KEY:-}" ] || [ -n "$(bundle exec rails runner "puts CredentialProvider.get('openrouter', 'api_key') rescue ''" 2>/dev/null)" ]; then
+    echo "🤖 Generating missing translations with OpenRouter..."
+
+    # Generate translations for all configured locales
+    for locale in en; do
+      echo "  📝 Generating $locale translations..."
+      if ! bin/rails locale:generate LOCALE=$locale; then
+        echo "⚠️  Warning: Failed to generate $locale translations, continuing..." >&2
+      fi
+    done
+
+    echo "✅ Locale sync completed"
+  else
+    echo "⚠️  OpenRouter API key not found - skipping translation generation" >&2
+    echo "ℹ️  Set OPENROUTER_API_KEY or configure in Rails credentials" >&2
+  fi
+else
+  echo "⏭️  Skipping locale sync (LOCALE_SYNC_ENABLED not set to true)"
+fi
+
 # Run Gitleaks secret scanner
 echo "🔐 Running Gitleaks secret scanner..."
 if ! command -v gitleaks &> /dev/null; then

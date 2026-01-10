@@ -4,8 +4,8 @@
     <div class="w-100">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
-                <%= dashboard_frame_tab_link('商品', edit_oroshi_product_path(@product), 'product', active: true) %>
-                <%= dashboard_frame_tab_link('商品変種', oroshi_product_product_variations_path(@product), 'product_variations') %>
+                <%= dashboard_frame_tab_link(t('oroshi.products.dashboard.settings.product_tab'), edit_oroshi_product_path(@product), 'product', active: true) %>
+                <%= dashboard_frame_tab_link(t('oroshi.products.dashboard.settings.product_variations_tab'), oroshi_product_product_variations_path(@product), 'product_variations') %>
             </ul>
         </div>
         <div class="card-body">
@@ -20,7 +20,7 @@
 <div class="row">
     <div class="card-body mt-1">
         <div class="alert alert-warning" role="alert">
-            商品が登録されていません。まずは商品を登録してください。
+            <%= t('oroshi.products.dashboard.settings.no_products_warning') %>
         </div>
     </div>
 </div>

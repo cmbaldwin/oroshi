@@ -1,0 +1,20 @@
+ja:
+  oroshi:
+    products:
+      index:
+        title: "商品・商品変種"
+        no_products_warning: "商品が登録されていません。まずは商品を登録してください。"
+      edit:
+        title: "%{name}の商品を編集する"
+        no_products_warning: "商品が登録されていません。まずは商品を登録してください。"
+      form:
+        position_tooltip: "表示順序は注文処理ページで自動的に設定されます"
+        select_all_tooltip: "すべて選択解除で選択"
+        loading: "読み込み中..."
+      dashboard:
+        settings:
+          product_tab: "商品"
+          product_variations_tab: "商品変種"
+          no_products_warning: "商品が登録されていません。まずは商品を登録してください。"
+      modal:
+        edit_title: "%{name}の商品を編集する"

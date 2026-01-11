@@ -61,3 +61,6 @@ gcs-credentials.json
 *-credentials.json
 tmp/local_secret.txt
 /config/gcloud/credentials.json
+
+# Generated sandbox application
+/sandbox

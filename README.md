@@ -134,34 +134,46 @@ development:
     migrations_paths: db/cable_migrate
 ```
 
-See `sandbox/config/database.yml` for a complete example.
-
 ## Sandbox Application
 
-A fully-functional demo application is included in the `sandbox/` directory:
+A fully-functional demo application can be generated for testing and development:
 
 ```bash
+# Generate sandbox application
+bin/sandbox
+
+# Start the sandbox
 cd sandbox
-bundle install
-bin/rails db:setup
-bin/rails server
+bin/dev
 ```
+
+**Important:** Always use `bin/dev` (not `bin/rails server`) to ensure CSS compilation runs alongside the web server.
 
 The sandbox demonstrates complete Oroshi integration with:
 
 - **3 demo users** (admin, VIP, regular) - all password: `password123`
 - **Complete master data** (suppliers, products, buyers, shipping methods)
-- **Minimal configuration** (only 20 lines in application.rb)
+- **Multi-database setup** (primary, queue, cache, cable)
+- **Tailwind CSS** with live reloading
+- **Minimal configuration** (generated automatically)
 
-See [sandbox/README.md](sandbox/README.md) for details.
-
-## Demo Users (Sandbox)
-
-The sandbox creates three demo accounts:
+### Demo Accounts
 
 - **Admin**: `admin@oroshi.local` / `password123` - Full system access
 - **VIP**: `vip@oroshi.local` / `password123` - Dashboard and orders
 - **Regular**: `user@oroshi.local` / `password123` - Limited access
+
+### Sandbox Commands
+
+```bash
+bin/sandbox              # Create sandbox (default)
+bin/sandbox reset        # Destroy and recreate
+bin/sandbox destroy      # Remove sandbox
+bin/sandbox help         # Show all commands
+
+# Use different database
+DB=mysql bin/sandbox     # Create with MySQL instead of PostgreSQL
+```
 
 ## Onboarding
 

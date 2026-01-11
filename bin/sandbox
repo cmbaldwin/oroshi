@@ -1,0 +1,283 @@
+#!/usr/bin/env bash
+set -e
+
+# Handle command-line arguments
+COMMAND="${1:-create}"
+
+# Show help
+show_help() {
+  cat <<EOF
+Oroshi Sandbox Management
+
+Usage:
+  bin/sandbox [command]
+
+Commands:
+  create    Create a new sandbox application (default)
+  destroy   Remove the sandbox application
+  reset     Destroy and recreate the sandbox application
+  help      Show this help message
+
+Environment Variables:
+  DB        Database adapter (postgresql, mysql) - default: postgresql
+
+Examples:
+  bin/sandbox              # Create sandbox
+  bin/sandbox reset        # Recreate sandbox
+  bin/sandbox destroy      # Remove sandbox
+  DB=mysql bin/sandbox     # Create with MySQL
+
+EOF
+}
+
+# Destroy sandbox
+destroy_sandbox() {
+  if [ -d "./sandbox" ]; then
+    echo "🧹 Removing sandbox..."
+    rm -rf ./sandbox
+    echo "✅ Sandbox removed"
+  else
+    echo "ℹ️  No sandbox found"
+  fi
+}
+
+# Handle commands
+case "$COMMAND" in
+  help|-h|--help)
+    show_help
+    exit 0
+    ;;
+  destroy)
+    destroy_sandbox
+    exit 0
+    ;;
+  reset)
+    destroy_sandbox
+    # Continue to create
+    ;;
+  create)
+    # Continue to create
+    ;;
+  *)
+    echo "❌ Unknown command: $COMMAND"
+    echo "Run 'bin/sandbox help' for usage"
+    exit 1
+    ;;
+esac
+
+echo "🏗️  Creating Oroshi sandbox application..."
+
+# Detect database from environment
+case "$DB" in
+  postgres|postgresql)
+    RAILSDB="postgresql"
+    ;;
+  mysql)
+    RAILSDB="mysql"
+    ;;
+  *)
+    RAILSDB="postgresql"
+    ;;
+esac
+
+# Clean slate
+if [ -d "./sandbox" ]; then
+  echo "🧹 Removing existing sandbox..."
+  rm -rf ./sandbox
+fi
+
+# Generate fresh Rails app
+echo "📦 Generating new Rails application..."
+rails new sandbox \
+  --database="$RAILSDB" \
+  --skip-git \
+  --skip-keeps \
+  --skip-rc \
+  --skip-test \
+  --css=tailwind \
+  --javascript=importmap
+
+cd sandbox
+
+# Add Oroshi and development gems to Gemfile
+echo "📝 Adding Oroshi to Gemfile..."
+cat <<RUBY >> Gemfile
+
+# Oroshi engine (local development)
+gem "oroshi", path: ".."
+
+# Development tools
+group :development, :test do
+  gem "debug", platforms: :mri
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+end
+
+group :development do
+  gem "better_errors"
+  gem "binding_of_caller"
+end
+RUBY
+
+# Bundle install
+echo "📦 Installing gems..."
+bundle install
+
+# Configure Oroshi
+echo "⚙️  Configuring Oroshi..."
+cat > config/initializers/oroshi.rb <<RUBY
+Oroshi.configure do |config|
+  config.time_zone = "Asia/Tokyo"
+  config.locale = :ja
+  config.domain = ENV.fetch("OROSHI_DOMAIN", "localhost")
+end
+
+Rails.application.config.time_zone = Oroshi.configuration.time_zone
+Rails.application.config.active_record.default_timezone = :utc
+Rails.application.config.i18n.default_locale = Oroshi.configuration.locale
+Rails.application.config.i18n.available_locales = [:ja, :en]
+RUBY
+
+# Mount Oroshi engine
+echo "🔌 Mounting Oroshi engine..."
+cat > config/routes.rb <<RUBY
+Rails.application.routes.draw do
+  # Mount the Oroshi engine
+  mount Oroshi::Engine, at: "/"
+
+  # Health check endpoint
+  get "up" => "rails/health#show", as: :rails_health_check
+end
+RUBY
+
+# Copy database configuration for multi-database setup
+echo "🗄️  Configuring multi-database setup..."
+cat > config/database.yml <<YAML
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
+  username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD", "") %>
+
+development:
+  primary:
+    <<: *default
+    database: oroshi_sandbox_development
+  queue:
+    <<: *default
+    database: oroshi_sandbox_development_queue
+    migrations_paths: db/queue_migrate
+  cache:
+    <<: *default
+    database: oroshi_sandbox_development_cache
+    migrations_paths: db/cache_migrate
+  cable:
+    <<: *default
+    database: oroshi_sandbox_development_cable
+    migrations_paths: db/cable_migrate
+
+test:
+  primary:
+    <<: *default
+    database: oroshi_sandbox_test
+  queue:
+    <<: *default
+    database: oroshi_sandbox_test_queue
+    migrations_paths: db/queue_migrate
+  cache:
+    <<: *default
+    database: oroshi_sandbox_test_cache
+    migrations_paths: db/cache_migrate
+  cable:
+    <<: *default
+    database: oroshi_sandbox_test_cable
+    migrations_paths: db/cable_migrate
+
+production:
+  primary:
+    <<: *default
+    database: oroshi_sandbox_production
+  queue:
+    <<: *default
+    database: oroshi_sandbox_production_queue
+    migrations_paths: db/queue_migrate
+  cache:
+    <<: *default
+    database: oroshi_sandbox_production_cache
+    migrations_paths: db/cache_migrate
+  cable:
+    <<: *default
+    database: oroshi_sandbox_production_cable
+    migrations_paths: db/cable_migrate
+YAML
+
+# Create Procfile.dev for development
+echo "📋 Creating Procfile.dev..."
+cat > Procfile.dev <<PROCFILE
+web: bin/rails server -p 3000
+css: bin/rails tailwindcss:watch
+PROCFILE
+
+# Copy migrations from engine
+echo "📋 Copying migrations..."
+bin/rails oroshi:install:migrations
+
+# Copy Solid schemas
+echo "📋 Setting up Solid Queue, Cache, and Cable..."
+mkdir -p db/queue_migrate db/cache_migrate db/cable_migrate
+
+# Setup databases
+echo "🗄️  Creating and migrating databases..."
+bin/rails db:create db:migrate
+bin/rails db:schema:load:queue
+bin/rails db:schema:load:cache
+bin/rails db:schema:load:cable
+
+# Create User model (required by Oroshi)
+echo "👤 Creating User model..."
+cat > app/models/user.rb <<RUBY
+class User < ApplicationRecord
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
+  validates_format_of :username, with: /\A[a-zA-Z0-9_.]*\z/
+
+  enum :role, { user: 0, vip: 1, admin: 2, supplier: 3, employee: 4 }
+
+  has_one :onboarding_progress, class_name: "Oroshi::OnboardingProgress", dependent: :destroy
+
+  devise :database_authenticatable, :registerable, :confirmable,
+         :recoverable, :rememberable, :trackable, :validatable,
+         authentication_keys: [:login]
+
+  attr_accessor :login
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if (login = conditions.delete(:login))
+      where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value", { value: login.downcase }]).first
+    elsif conditions.has_key?(:username) || conditions.has_key?(:email)
+      where(conditions.to_h).first
+    end
+  end
+end
+RUBY
+
+# Seed demo data
+echo "🌱 Seeding demo data..."
+bin/rails db:seed
+
+echo ""
+echo "✅ Sandbox application created successfully!"
+echo ""
+echo "To start the sandbox:"
+echo "  cd sandbox"
+echo "  bin/dev"
+echo ""
+echo "Then visit: http://localhost:3000"
+echo ""
+echo "Demo accounts:"
+echo "  Admin: admin@oroshi.local / password123"
+echo "  VIP:   vip@oroshi.local / password123"
+echo "  User:  user@oroshi.local / password123"
+echo ""

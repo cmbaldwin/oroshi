@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 ENV["RAILS_ENV"] ||= "test"
+
+# For now, use the main application (we'll switch to dummy app later)
 require_relative "../config/environment"
 require "rails/test_help"
 
@@ -47,4 +49,9 @@ end
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Warden::Test::Helpers
+
+  # Make the Oroshi engine routes available in tests
+  def oroshi
+    Oroshi::Engine.routes.url_helpers
+  end
 end

@@ -1,3 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("app", "models", "oroshi")
+# Load Oroshi module - check if in engine test mode or regular app mode
+oroshi_module_path = Rails.root.join("app", "models", "oroshi")
+require oroshi_module_path if oroshi_module_path.exist?

@@ -26,7 +26,6 @@ A comprehensive wholesale order management system packaged as a Rails engine gem
 - **Frontend**: Hotwire (Turbo + Stimulus) + Bootstrap 5
 - **Assets**: Propshaft + Importmap (no Node.js required)
 - **PDF Generation**: Prawn with Japanese fonts (MPLUS1p, Sawarabi, TakaoPMincho)
-- **Deployment**: Kamal 2 + Docker
 
 ## Quick Start (3 Commands)
 
@@ -218,40 +217,16 @@ bundle exec brakeman
 
 ## Deployment
 
-Oroshi includes a deployment generator for automated Kamal setup:
+Deployment configuration should be set up in your parent application. Oroshi is a Rails engine gem and does not include deployment tooling.
 
-```bash
-# Generate deployment configuration
-rails generate oroshi:deployment \
-  --domain=oroshi.example.com \
-  --host=192.168.1.100
+For production deployment, configure your parent app with your preferred deployment strategy (Kamal, Capistrano, Heroku, etc.).
 
-# Configure secrets
-cp .kamal/secrets-example .kamal/secrets
-# Edit .kamal/secrets with your credentials
-
-# Deploy to production
-export KAMAL_HOST=192.168.1.100
-export KAMAL_DOMAIN=oroshi.example.com
-kamal setup   # First time only
-kamal deploy  # All subsequent deployments
-```
-
-### What the Deployment Generator Creates
-
-1. **Kamal configuration** (`config/deploy.yml`)
-   - Web and worker containers
-   - PostgreSQL with 4 databases
-   - Automated backups with GCS sync
-   - SSL via Cloudflare origin certificates
-
-2. **Dockerfile** - Multi-stage production build
-3. **Docker entrypoint** - Automatic database initialization
-4. **Pre-build hook** - Quality gates (RuboCop, Brakeman, tests)
-5. **Secrets template** - All required environment variables
-6. **Database setup SQL** - Multi-database initialization
-
-See [CLAUDE.md](CLAUDE.md) for comprehensive production deployment guide.
+**Key requirements for production:**
+- PostgreSQL 16 with 4-database setup (primary, queue, cache, cable)
+- Background job processing (Solid Queue)
+- Asset compilation (Tailwind CSS)
+- Email delivery (configure Action Mailer)
+- File storage (configure Active Storage)
 
 ## Architecture
 
@@ -308,32 +283,20 @@ Button examples:
 
 ### Main Documentation
 - [README.md](README.md) - This file
-- [CLAUDE.md](CLAUDE.md) - Production deployment guide
-- [GEM_CONVERSION_COMPLETE.md](GEM_CONVERSION_COMPLETE.md) - Complete conversion summary
-
-### Phase Documentation
-- [PHASE0_SUMMARY.md](PHASE0_SUMMARY.md) - Foundation & gem structure
-- [PHASE1_SUMMARY.md](PHASE1_SUMMARY.md) - Core models
-- [PHASE2_SUMMARY.md](PHASE2_SUMMARY.md) - Controllers & routes
-- [PHASE3_SUMMARY.md](PHASE3_SUMMARY.md) - Views, assets & helpers
-- [PHASE4_SUMMARY.md](PHASE4_SUMMARY.md) - Background jobs
-- [PHASE5_SUMMARY.md](PHASE5_SUMMARY.md) - PDF generation
-- [PHASE6_SUMMARY.md](PHASE6_SUMMARY.md) - Authentication
-- [PHASE7_SUMMARY.md](PHASE7_SUMMARY.md) - Sandbox application
-- [PHASE8_SUMMARY.md](PHASE8_SUMMARY.md) - Simple deployment
-
-### Sandbox Documentation
-- [sandbox/README.md](sandbox/README.md) - Integration example (400+ lines)
+- [docs/archives/](docs/archives/) - Archived documentation and research
 
 ### Technical Guides
 - [docs/TURBO.md](docs/TURBO.md) - Hotwire Turbo patterns
 - [docs/STIMULUS.md](docs/STIMULUS.md) - Stimulus controller patterns
 - [docs/ACTION_CABLE.md](docs/ACTION_CABLE.md) - WebSocket implementation
 - [docs/BOOTSTRAP_COMPONENTS.md](docs/BOOTSTRAP_COMPONENTS.md) - Bootstrap component standards
+- [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) - End-to-end sandbox testing
 
 ## Generators
 
 ### Install Generator
+
+Sets up Oroshi in your Rails application.
 
 ```bash
 rails generate oroshi:install [options]
@@ -344,18 +307,7 @@ Options:
   --skip-user-model    Skip User model generation
 ```
 
-### Deployment Generator
-
-```bash
-rails generate oroshi:deployment [options]
-
-Options:
-  --domain=DOMAIN        Application domain (e.g., oroshi.example.com)
-  --host=HOST            SSH host/IP for deployment
-  --registry=REGISTRY    Docker registry (default: docker.io)
-  --skip-dockerfile      Skip Dockerfile generation
-  --skip-secrets         Skip secrets template
-```
+See [Installation Details](#installation-details) section for what the generator creates.
 
 ## Browser Requirements
 

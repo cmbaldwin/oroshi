@@ -267,23 +267,6 @@ sandbox-e2e:
 - ✅ PostgreSQL 16 service container
 - ✅ Chromium browser for headless testing
 
-### Kamal Pre-Build Hook
-
-The test can also run before deployments via `.kamal/hooks/pre-build`:
-
-```bash
-# Enable sandbox E2E test in pre-build
-export RUN_SANDBOX_E2E=true
-kamal deploy
-```
-
-By default, the test is skipped in pre-build to keep deployments fast. Enable it for critical releases:
-
-```bash
-# In .kamal/secrets or environment
-RUN_SANDBOX_E2E=true
-```
-
 ## Troubleshooting
 
 ### Server fails to start

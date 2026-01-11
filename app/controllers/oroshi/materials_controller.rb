@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::MaterialsController < ApplicationController
+class Oroshi::MaterialsController < Oroshi::ApplicationController
   before_action :set_material, only: %i[edit update]
   before_action :set_materials, only: %i[images]
   before_action :set_material_category_or_all_materials, only: %i[index]

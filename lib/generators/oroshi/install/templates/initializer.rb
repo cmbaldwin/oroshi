@@ -19,4 +19,4 @@ Rails.application.config.active_record.default_timezone = :utc
 
 # Ensure Rails uses the configured locale
 Rails.application.config.i18n.default_locale = Oroshi.configuration.locale
-Rails.application.config.i18n.available_locales = [:ja, :en]
+Rails.application.config.i18n.available_locales = [ :ja, :en ]

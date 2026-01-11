@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::OrderCategoriesController < ApplicationController
+class Oroshi::OrderCategoriesController < Oroshi::ApplicationController
   before_action :set_order_category, only: %i[edit update destroy]
 
   # GET /oroshi/order_categories

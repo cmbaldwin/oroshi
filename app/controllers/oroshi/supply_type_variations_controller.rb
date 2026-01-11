@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::SupplyTypeVariationsController < ApplicationController
+class Oroshi::SupplyTypeVariationsController < Oroshi::ApplicationController
   before_action :set_supply_type_variation, except: %i[index new create]
   before_action :set_supply_type, only: %i[index new edit]
   before_action :set_supply_types, only: %i[new create edit update]

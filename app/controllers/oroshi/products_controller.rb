@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::ProductsController < ApplicationController
+class Oroshi::ProductsController < Oroshi::ApplicationController
   before_action :set_products, only: %i[index load]
   before_action :set_product, only: %i[load show edit update material_cost]
 

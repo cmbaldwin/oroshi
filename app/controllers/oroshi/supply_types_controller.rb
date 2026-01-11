@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::SupplyTypesController < ApplicationController
+class Oroshi::SupplyTypesController < Oroshi::ApplicationController
   before_action :set_supply_types, only: %i[index load]
   before_action :set_supply_type, except: %i[new create]
 

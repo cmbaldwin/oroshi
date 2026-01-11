@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::SupplyReceptionTimesController < ApplicationController
+class Oroshi::SupplyReceptionTimesController < Oroshi::ApplicationController
   before_action :set_supply_reception_time
   before_action :set_supplier_organization, only: %i[index create new]
 

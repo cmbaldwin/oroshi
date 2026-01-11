@@ -6,7 +6,7 @@ Oroshi::Engine.routes.draw do
   root to: "dashboard#index"
 
   # Onboarding wizard
-  resources :onboarding, only: [:index, :show, :update] do
+  resources :onboarding, only: [ :index, :show, :update ] do
     member do
       post :skip
       post :resume

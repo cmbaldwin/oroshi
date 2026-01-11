@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::DashboardController < ApplicationController
+class Oroshi::DashboardController < Oroshi::ApplicationController
   before_action :check_vip
   before_action :set_supplier_organization, only: %i[index home suppliers_organizations]
   before_action :set_supply_type, only: %i[supply_types]

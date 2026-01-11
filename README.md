@@ -78,16 +78,20 @@ bin/rails server
 Running `rails generate oroshi:install` will:
 
 1. **Create Oroshi initializer** (`config/initializers/oroshi.rb`)
+
    - Configures timezone, locale, and domain
 
 2. **Create User model** (`app/models/user.rb`)
+
    - Devise-based authentication
    - Role-based access (user, vip, admin, supplier, employee)
 
 3. **Mount Oroshi engine** in routes
+
    - Makes all Oroshi routes available at "/"
 
 4. **Copy migrations** from the engine
+
    - All Oroshi models and associations
 
 5. **Copy Solid schemas** (queue, cache, cable)
@@ -156,6 +160,21 @@ The sandbox demonstrates complete Oroshi integration with:
 - **Tailwind CSS** with live reloading
 - **Minimal configuration** (generated automatically)
 
+### How Sandbox Creation Works
+
+The sandbox script uses a carefully orchestrated process to avoid initialization errors:
+
+1. **Generates Rails app** in temporary directory (to avoid "Rails within Rails" errors)
+2. **Installs Oroshi gem** and dependencies
+3. **Creates conditional initializers** (wrapped in `if defined?` checks)
+4. **Copies migrations** directly from engine
+5. **Creates minimal User model** (for migration compatibility)
+6. **Uses schema:load** instead of db:migrate (avoids migration code execution issues)
+7. **Replaces with full User model** after database setup
+8. **Seeds demo data** with realistic examples
+
+This approach ensures reliable sandbox creation even when gems have complex initialization requirements.
+
 ### Demo Accounts
 
 - **Admin**: `admin@oroshi.local` / `password123` - Full system access
@@ -203,6 +222,8 @@ bin/rails test:system
 rake sandbox:test
 ```
 
+**Note:** The E2E test takes 2-3 minutes as it creates a complete sandbox, starts a server, runs browser-based user journey tests, and cleans up.
+
 See [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) for complete E2E testing documentation.
 
 ### Code Quality
@@ -222,6 +243,7 @@ Deployment configuration should be set up in your parent application. Oroshi is 
 For production deployment, configure your parent app with your preferred deployment strategy (Kamal, Capistrano, Heroku, etc.).
 
 **Key requirements for production:**
+
 - PostgreSQL 16 with 4-database setup (primary, queue, cache, cable)
 - Background job processing (Solid Queue)
 - Asset compilation (Tailwind CSS)
@@ -282,10 +304,12 @@ Button examples:
 ## Documentation
 
 ### Main Documentation
+
 - [README.md](README.md) - This file
 - [docs/archives/](docs/archives/) - Archived documentation and research
 
 ### Technical Guides
+
 - [docs/TURBO.md](docs/TURBO.md) - Hotwire Turbo patterns
 - [docs/STIMULUS.md](docs/STIMULUS.md) - Stimulus controller patterns
 - [docs/ACTION_CABLE.md](docs/ACTION_CABLE.md) - WebSocket implementation

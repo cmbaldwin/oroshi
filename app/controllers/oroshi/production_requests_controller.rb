@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::ProductionRequestsController < ApplicationController
+class Oroshi::ProductionRequestsController < Oroshi::ApplicationController
   before_action :set_conversion_vars, only: %i[convert]
   before_action :set_product_inventory_product_variation, only: %i[new create]
   before_action :set_production_request, only: %i[show edit update destroy]

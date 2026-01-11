@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::ShippingReceptaclesController < ApplicationController
+class Oroshi::ShippingReceptaclesController < Oroshi::ApplicationController
   before_action :set_shipping_receptacle, only: %i[image edit update]
 
   # GET /oroshi/shipping_receptacles

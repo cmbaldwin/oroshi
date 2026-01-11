@@ -66,6 +66,26 @@ DB=mysql bin/sandbox     # Create with MySQL instead of PostgreSQL
 
 The sandbox is generated on-demand (not committed) following the Solidus pattern. See [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) for details.
 
+#### How Sandbox Creation Works
+
+The sandbox script (`bin/sandbox`) orchestrates a complex process to create a working Rails app with Oroshi mounted. Key implementation details:
+
+1. **Temporary Directory Creation**: Creates Rails app in `/tmp/oroshi_sandbox_*` first, then moves to `sandbox/` to avoid Rails-within-Rails error
+2. **Conditional Gem Initializers**: All gem-specific initializers (Carmen, Devise, SimpleForm, Resend, Bullet) wrapped in `if defined?(GemName)` checks to prevent errors during database creation
+3. **Schema Loading vs Migration**: Uses `db:schema:load` instead of `db:migrate` to avoid executing migration code that references Oroshi:: models before they're initialized
+4. **Two-Stage User Model**: Creates minimal `User < ApplicationRecord` first, then replaces with full Devise-enabled version after database setup to avoid initialization timing issues
+5. **Explicit Error Handling**: Script uses `set -e -u -o pipefail` for proper error propagation in bash
+6. **Direct File Operations**: Copies schema files and migrations directly instead of using Rails tasks to avoid initialization conflicts
+7. **Port Isolation**: Server runs on port 3001 (not 3000) to avoid conflicts with development server
+8. **E2E Test Integration**: `rake sandbox:test` creates sandbox, runs browser-based journeys, verifies functionality, then destroys sandbox (takes 2-3 minutes)
+
+**Critical Gotchas:**
+
+- Never run `rails new` from within a Rails directory (will fail)
+- Don't assume gems are fully loaded during `db:create` or `db:migrate`
+- Migration execution can trigger model code before initializers run
+- Exit code 0 doesn't guarantee success if intermediate commands fail silently
+
 ### Testing
 
 ```bash
@@ -393,11 +413,15 @@ config.active_record.default_timezone = :utc
 
 1. **Solid Queue Configuration**: Ensure `config/recurring.yml` exists and is properly configured
 2. **Multiple Databases**: Migrations go to main DB by default; use specific connection for queue/cache/cable
-3. **Engine.rb**: Must explicitly require solid-* gems at the top before configuration
+3. **Engine.rb**: Must explicitly require solid-\* gems at the top before configuration
 4. **importmap**: Use `bin/importmap pin` to add JS dependencies, not npm install
 5. **User Model**: NOT namespaced under Oroshi (application-level model)
 6. **Bootsnap**: Optional dependency, must handle gracefully in generated apps
 7. **Japanese Fonts**: 14MB font files must be included in gem, use `Oroshi::Fonts` helper
+8. **Sandbox Creation**: Never run `rails new` from within a Rails directory (use temp dir first)
+9. **Gem Initialization Order**: Wrap gem configs in `if defined?(GemName)` to avoid db:create/migrate errors
+10. **Migration Execution**: Use `db:schema:load` for demo apps to avoid loading models during migration
+11. **Exit Code ≠ Success**: In bash scripts, intermediate command failures may not propagate without `set -e -u -o pipefail`
 
 ## Troubleshooting
 
@@ -446,14 +470,53 @@ bin/rails dbconsole -d queue
 
 ### Sandbox Creation Fails
 
-**Symptoms:** `bin/sandbox` exits with error
+**Error:** `Can't initialize a new Rails application within the directory of another`
 
-**Solutions:**
+**Cause:** Running `rails new sandbox` from within a Rails engine or parent Rails app.
+
+**Solution:** This is now handled automatically by the sandbox script. It creates the Rails app in a temp directory first (`/tmp/oroshi_sandbox_*`), then moves it to `sandbox/` in the project root.
+
+---
+
+**Error:** `uninitialized constant Carmen` (or Devise, SimpleForm, Resend, Bullet)
+
+**Cause:** Gem initializers trying to configure gems during `db:create` or `db:migrate` before gems are fully loaded.
+
+**Solution:** All gem-specific initializers are now wrapped in conditional checks:
+
+```ruby
+# config/initializers/carmen.rb
+if defined?(Carmen)
+  # configuration here
+end
+```
+
+---
+
+**Error:** `undefined method 'devise' for class User`
+
+**Cause:** Migrations calling `User.all.update_all` before Devise is loaded on the User model.
+
+**Solution:** The sandbox script creates a minimal User model first, then replaces it with the full Devise-enabled version after database setup.
+
+---
+
+**Error:** `Migrations are pending. To resolve this issue, run: bin/rails db:migrate RAILS_ENV=development`
+
+**Cause:** Using `db:migrate` which tries to execute migration code that references Oroshi:: models before engine initialization completes.
+
+**Solution:** The sandbox script uses `db:schema:load` instead, which loads the schema structure without executing migration code.
+
+---
+
+**Debugging Sandbox Issues:**
 
 1. Check Rails is installed: `rails -v`
 2. Verify PostgreSQL/MySQL is running
 3. Check disk space available
 4. Run manually with debug: `bash -x bin/sandbox`
+5. Check for initialization order issues in `log/development.log`
+6. Verify all conditional initializers have `if defined?(GemName)` wrappers
 
 ## Ralph - Autonomous Development Workflow
 

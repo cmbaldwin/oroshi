@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::ProductInventoriesController < ApplicationController
+class Oroshi::ProductInventoriesController < Oroshi::ApplicationController
   before_action :set_product_inventory, only: %i[show edit update destroy]
 
   def new

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::ProductionZonesController < ApplicationController
+class Oroshi::ProductionZonesController < Oroshi::ApplicationController
   before_action :set_production_zone
 
   # GET /oroshi/production_zones

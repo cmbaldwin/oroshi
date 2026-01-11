@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::InvoicesController < ApplicationController
+class Oroshi::InvoicesController < Oroshi::ApplicationController
   before_action :set_invoice, only: %i[show edit update destroy send_mail_now mail_notification_preview]
   before_action :set_invoice_with_params, only: %i[create]
   before_action :setup_show_invoice, only: %i[show edit create update]

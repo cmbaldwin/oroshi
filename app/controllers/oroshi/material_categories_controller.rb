@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::MaterialCategoriesController < ApplicationController
+class Oroshi::MaterialCategoriesController < Oroshi::ApplicationController
   before_action :set_material_category, only: %i[edit update]
 
   # GET /oroshi/material_categorys

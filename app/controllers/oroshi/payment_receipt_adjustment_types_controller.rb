@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::PaymentReceiptAdjustmentTypesController < ApplicationController
+class Oroshi::PaymentReceiptAdjustmentTypesController < Oroshi::ApplicationController
   before_action :set_payment_receipt_adjustment_type, only: %i[edit update destroy]
 
   # GET /oroshi/payment_receipt_adjustment_types

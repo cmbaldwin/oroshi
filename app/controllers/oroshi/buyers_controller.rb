@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::BuyersController < ApplicationController
+class Oroshi::BuyersController < Oroshi::ApplicationController
   before_action :set_buyer, except: %i[index]
   before_action :set_buyers, only: %i[index]
   before_action :set_vars, except: %i[index]

@@ -5,8 +5,8 @@ require_relative "lib/oroshi/version"
 Gem::Specification.new do |spec|
   spec.name        = "oroshi"
   spec.version     = Oroshi::VERSION
-  spec.authors     = ["Cody Baldwin"]
-  spec.email       = ["cody@example.com"]
+  spec.authors     = [ "Cody Baldwin" ]
+  spec.email       = [ "cody@example.com" ]
   spec.homepage    = "https://github.com/cmbaldwin/oroshi"
   spec.summary     = "Wholesale order management system for Rails"
   spec.description = "Oroshi is an opinionated Rails engine for managing wholesale orders, inventory, suppliers, and invoicing with Japanese localization."

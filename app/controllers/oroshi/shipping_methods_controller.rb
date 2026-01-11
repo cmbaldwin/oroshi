@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::ShippingMethodsController < ApplicationController
+class Oroshi::ShippingMethodsController < Oroshi::ApplicationController
   before_action :set_shipping_method
   before_action :set_shipping_organization, only: %i[index new]
   before_action :set_shipping_organizations, only: %i[new update create]

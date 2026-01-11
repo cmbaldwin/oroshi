@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::PaymentReceiptsController < ApplicationController
+class Oroshi::PaymentReceiptsController < Oroshi::ApplicationController
   include Oroshi::PaymentReceiptsDashboard::Ransack
 
   before_action :filter_payment_receipt_adjustments, only: %i[create update]

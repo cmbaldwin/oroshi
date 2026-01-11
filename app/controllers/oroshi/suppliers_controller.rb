@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::SuppliersController < ApplicationController
+class Oroshi::SuppliersController < Oroshi::ApplicationController
   before_action :set_supplier
   before_action :set_supplier_organization, only: %i[index new]
   before_action :set_supplier_organizations, only: %i[new update create]

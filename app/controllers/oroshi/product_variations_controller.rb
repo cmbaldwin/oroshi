@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::ProductVariationsController < ApplicationController
+class Oroshi::ProductVariationsController < Oroshi::ApplicationController
   before_action :set_product, only: %i[index image new edit load]
   before_action :set_product_variations, only: %i[index load]
   before_action :set_product_variation, except: %i[create new]

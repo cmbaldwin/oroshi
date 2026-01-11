@@ -184,5 +184,7 @@ Rails.application.routes.draw do
   end
 
   # USERS (Authentication)
-  devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }
+  if defined?(Devise)
+    devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }
+  end
 end

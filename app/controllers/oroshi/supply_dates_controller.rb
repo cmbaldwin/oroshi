@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::SupplyDatesController < ApplicationController
+class Oroshi::SupplyDatesController < Oroshi::ApplicationController
   include SupplyPriceAssignment
 
   before_action :set_supply_dates

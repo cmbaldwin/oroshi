@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::SuppliesController < ApplicationController
+class Oroshi::SuppliesController < Oroshi::ApplicationController
   before_action :set_supply
   before_action :set_supply_dates, only: %i[index]
 

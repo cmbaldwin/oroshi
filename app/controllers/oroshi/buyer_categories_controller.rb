@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::BuyerCategoriesController < ApplicationController
+class Oroshi::BuyerCategoriesController < Oroshi::ApplicationController
   before_action :set_buyer_category, only: %i[edit update destroy]
 
   # GET /oroshi/buyer_categories

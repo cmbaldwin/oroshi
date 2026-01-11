@@ -1,4 +1,4 @@
-class Oroshi::OnboardingController < ApplicationController
+class Oroshi::OnboardingController < Oroshi::ApplicationController
   layout "onboarding"
 
   before_action :authenticate_user!

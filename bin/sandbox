@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -e
+set -e  # Exit on any error
+set -u  # Exit on undefined variables
+set -o pipefail  # Catch errors in pipes
 
 # Handle command-line arguments
 COMMAND="${1:-create}"
@@ -67,7 +69,9 @@ esac
 
 echo "🏗️  Creating Oroshi sandbox application..."
 
-# Detect database from environment
+# Detect database from environment (default to postgresql if not set)
+DB="${DB:-postgresql}"
+
 case "$DB" in
   postgres|postgresql)
     RAILSDB="postgresql"
@@ -86,8 +90,14 @@ if [ -d "./sandbox" ]; then
   rm -rf ./sandbox
 fi
 
-# Generate fresh Rails app
+# Get the absolute path to the oroshi root directory
+OROSHI_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
+# Generate fresh Rails app in a temporary location
 echo "📦 Generating new Rails application..."
+TEMP_DIR=$(mktemp -d)
+cd "$TEMP_DIR"
+
 rails new sandbox \
   --database="$RAILSDB" \
   --skip-git \
@@ -97,56 +107,71 @@ rails new sandbox \
   --css=tailwind \
   --javascript=importmap
 
-cd sandbox
+# Move the generated app to the oroshi directory
+mv sandbox "$OROSHI_ROOT/"
+cd "$OROSHI_ROOT/sandbox"
+
+# Clean up temp directory
+rm -rf "$TEMP_DIR"
 
 # Add Oroshi and development gems to Gemfile
 echo "📝 Adding Oroshi to Gemfile..."
 cat <<RUBY >> Gemfile
 
-# Oroshi engine (local development)
-gem "oroshi", path: ".."
+# Oroshi engine (local development) - must be loaded in all environments
+gem "oroshi", path: "..", require: "oroshi"
+
+# Required dependencies
+gem "listen", "~> 3.3"
 
 # Development tools
 group :development, :test do
-  gem "debug", platforms: :mri
   gem "rspec-rails"
   gem "factory_bot_rails"
 end
 
 group :development do
   gem "better_errors"
-  gem "binding_of_caller"
+  # binding_of_caller not compatible with Ruby 4.0
+  # gem "binding_of_caller"
 end
 RUBY
 
 # Bundle install
 echo "📦 Installing gems..."
-bundle install
+bundle install --quiet
 
-# Configure Oroshi
+# Configure Oroshi (do this AFTER bundle install so Oroshi is loaded)
 echo "⚙️  Configuring Oroshi..."
 cat > config/initializers/oroshi.rb <<RUBY
-Oroshi.configure do |config|
-  config.time_zone = "Asia/Tokyo"
-  config.locale = :ja
-  config.domain = ENV.fetch("OROSHI_DOMAIN", "localhost")
-end
+if defined?(Oroshi)
+  Oroshi.configure do |config|
+    config.time_zone = "Asia/Tokyo"
+    config.locale = :ja
+    config.domain = ENV.fetch("OROSHI_DOMAIN", "localhost")
+  end
 
-Rails.application.config.time_zone = Oroshi.configuration.time_zone
-Rails.application.config.active_record.default_timezone = :utc
-Rails.application.config.i18n.default_locale = Oroshi.configuration.locale
-Rails.application.config.i18n.available_locales = [:ja, :en]
+  Rails.application.config.time_zone = Oroshi.configuration.time_zone
+  Rails.application.config.active_record.default_timezone = :utc
+  Rails.application.config.i18n.default_locale = Oroshi.configuration.locale
+  Rails.application.config.i18n.available_locales = [:ja, :en]
+end
 RUBY
 
 # Mount Oroshi engine
 echo "🔌 Mounting Oroshi engine..."
 cat > config/routes.rb <<RUBY
 Rails.application.routes.draw do
-  # Mount the Oroshi engine
-  mount Oroshi::Engine, at: "/"
-
-  # Health check endpoint
+  # Health check endpoint (must be BEFORE engine mount for E2E tests)
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Mount the Oroshi engine
+  begin
+    mount Oroshi::Engine, at: "/"
+  rescue NameError => e
+    Rails.logger.error "Failed to mount Oroshi engine: #{e.message}"
+    Rails.logger.error "This usually means the oroshi gem is not loaded. Check your Gemfile."
+  end
 end
 RUBY
 
@@ -222,21 +247,40 @@ PROCFILE
 
 # Copy migrations from engine
 echo "📋 Copying migrations..."
-bin/rails oroshi:install:migrations
+mkdir -p db/migrate
+cp -r ../db/migrate/* db/migrate/
 
 # Copy Solid schemas
 echo "📋 Setting up Solid Queue, Cache, and Cable..."
 mkdir -p db/queue_migrate db/cache_migrate db/cable_migrate
 
+# Create minimal User model for migrations (migrations reference User model)
+echo "👤 Creating minimal User model for migrations..."
+cat > app/models/user.rb <<RUBY
+class User < ApplicationRecord
+  # Minimal model for migrations - Devise configuration added after migrations
+end
+RUBY
+
 # Setup databases
 echo "🗄️  Creating and migrating databases..."
-bin/rails db:create db:migrate
+# Try to drop and recreate (for clean slate), fall back to create if databases don't exist
+if bin/rails db:drop 2>/dev/null; then
+  bin/rails db:create
+  # Use schema:load instead of migrate to avoid migration code execution issues
+  cp ../db/schema.rb db/schema.rb
+  bin/rails db:schema:load
+else
+  bin/rails db:create
+  cp ../db/schema.rb db/schema.rb
+  bin/rails db:schema:load
+fi
 bin/rails db:schema:load:queue
 bin/rails db:schema:load:cache
 bin/rails db:schema:load:cable
 
-# Create User model (required by Oroshi)
-echo "👤 Creating User model..."
+# Now create full User model with Devise configuration
+echo "👤 Creating full User model..."
 cat > app/models/user.rb <<RUBY
 class User < ApplicationRecord
   validates :username, presence: true, uniqueness: { case_sensitive: false }
@@ -260,6 +304,17 @@ class User < ApplicationRecord
       where(conditions.to_h).first
     end
   end
+end
+RUBY
+
+# Create ApplicationController with Devise authentication
+echo "🎮 Creating ApplicationController with authentication..."
+cat > app/controllers/application_controller.rb <<RUBY
+class ApplicationController < ActionController::Base
+  before_action :authenticate_user!
+
+  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  allow_browser versions: :modern
 end
 RUBY
 

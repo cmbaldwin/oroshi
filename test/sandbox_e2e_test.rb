@@ -50,7 +50,7 @@ class SandboxE2ETest < Minitest::Test
     Capybara.use_default_driver
   end
 
-  test "complete sandbox lifecycle: create, test, destroy" do
+  def test_complete_sandbox_lifecycle
     # Step 1: Ensure clean slate
     destroy_sandbox
 
@@ -73,7 +73,14 @@ class SandboxE2ETest < Minitest::Test
     assert File.exist?("bin/sandbox"), "bin/sandbox script not found"
 
     result = run_command("bin/sandbox create")
-    assert result[:success], "Failed to create sandbox: #{result[:stderr]}"
+
+    # Check if command succeeded (exit status 0)
+    unless result[:success]
+      puts "STDOUT: #{result[:stdout]}"
+      puts "STDERR: #{result[:stderr]}"
+    end
+
+    assert result[:success], "Failed to create sandbox (exit code: #{result[:status].exitstatus})"
     assert Dir.exist?(SANDBOX_DIR), "Sandbox directory was not created"
 
     puts "✅ Sandbox created successfully"
@@ -95,12 +102,18 @@ class SandboxE2ETest < Minitest::Test
   def with_sandbox_server
     puts "\n🚀 Starting sandbox server on port #{SANDBOX_PORT}..."
 
-    # Start server in background
+    # Ensure port is free
+    ensure_port_free
+
+    # Create a log file for debugging
+    log_file = File.join(SANDBOX_DIR, "log/test_server.log")
+
+    # Start server in background in development mode
     server_pid = spawn(
-      { "PORT" => SANDBOX_PORT.to_s },
-      "cd #{SANDBOX_DIR} && bin/rails server -p #{SANDBOX_PORT}",
-      out: "/dev/null",
-      err: "/dev/null"
+      { "PORT" => SANDBOX_PORT.to_s, "RAILS_ENV" => "development" },
+      "cd #{SANDBOX_DIR} && bin/rails server -p #{SANDBOX_PORT} -e development",
+      out: log_file,
+      err: log_file
     )
 
     # Wait for server to be ready
@@ -133,12 +146,22 @@ class SandboxE2ETest < Minitest::Test
       end
 
       attempts += 1
-      raise "Server failed to start after #{max_attempts} seconds" if attempts > max_attempts
+      if attempts > max_attempts
+        log_file = File.join(SANDBOX_DIR, "log/test_server.log")
+        log_content = File.exist?(log_file) ? File.read(log_file) : "No log file found"
+        raise "Server failed to start after #{max_attempts} seconds.\n\nServer log:\n#{log_content}"
+      end
 
       sleep 1
     end
 
     puts "✅ Server is ready (#{attempts}s)"
+  end
+
+  def ensure_port_free
+    # Try to kill any process using the test port
+    system("lsof -ti:#{SANDBOX_PORT} | xargs kill -9 2>/dev/null")
+    sleep 0.5  # Give OS time to free the port
   end
 
   def run_user_journey

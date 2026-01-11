@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Oroshi::PackagingsController < ApplicationController
+class Oroshi::PackagingsController < Oroshi::ApplicationController
   before_action :set_packaging, only: %i[image edit update]
   before_action :set_packagings, only: %i[images]
 

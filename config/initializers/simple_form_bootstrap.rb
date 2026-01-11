@@ -13,7 +13,8 @@
 # Dir[Rails.root.join('lib/components/**/*.rb')].each { |f| require f }
 
 # Use this setup block to configure all options available in SimpleForm.
-SimpleForm.setup do |config|
+if defined?(SimpleForm)
+  SimpleForm.setup do |config|
   # Default class for buttons
   config.button_class = "btn"
 
@@ -443,15 +444,16 @@ SimpleForm.setup do |config|
     time: :vertical_multi_select
   }
 
-  # enable custom form wrappers
-  # config.wrapper_mappings = {
-  #   boolean:       :custom_boolean,
-  #   check_boxes:   :custom_collection,
-  #   date:          :custom_multi_select,
-  #   datetime:      :custom_multi_select,
-  #   file:          :custom_file,
-  #   radio_buttons: :custom_collection,
-  #   range:         :custom_range,
-  #   time:          :custom_multi_select
-  # }
+    # enable custom form wrappers
+    # config.wrapper_mappings = {
+    #   boolean:       :custom_boolean,
+    #   check_boxes:   :custom_collection,
+    #   date:          :custom_multi_select,
+    #   datetime:      :custom_multi_select,
+    #   file:          :custom_file,
+    #   radio_buttons: :custom_collection,
+    #   range:         :custom_range,
+    #   time:          :custom_multi_select
+    # }
+  end
 end

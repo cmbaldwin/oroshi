@@ -188,13 +188,6 @@ The wizard can be skipped and resumed later via a persistent checklist sidebar.
 
 ## Development
 
-### Running the Sandbox
-
-```bash
-cd sandbox
-bin/rails server
-```
-
 ### Running Tests
 
 ```bash
@@ -206,7 +199,12 @@ bin/rails test test/models/oroshi/order_test.rb
 
 # Run system tests
 bin/rails test:system
+
+# Run sandbox end-to-end test (creates real sandbox, tests it, destroys it)
+rake sandbox:test
 ```
+
+See [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) for complete E2E testing documentation.
 
 ### Code Quality
 

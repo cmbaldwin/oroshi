@@ -203,51 +203,85 @@ The test waits up to 30 seconds for the server to start, checking the `/up` heal
 
 ## Continuous Integration
 
-To run this test in CI:
+### GitHub Actions
+
+The sandbox E2E test is integrated into the CI workflow at `.github/workflows/ci.yml`:
 
 ```yaml
-# .github/workflows/sandbox_e2e.yml
-name: Sandbox E2E Test
+sandbox-e2e:
+  runs-on: ubuntu-latest
+  # Only run on main/master branch to save CI time
+  if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
-on: [push, pull_request]
+  services:
+    postgres:
+      image: postgres:16
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+      ports:
+        - 5432:5432
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3.6'
+        bundler-cache: true
 
-    steps:
-      - uses: actions/checkout@v4
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libpq-dev \
+          libvips-dev \
+          chromium-browser \
+          chromium-chromedriver
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 4.0.0
-          bundler-cache: true
+    - name: Run sandbox end-to-end test
+      run: rake sandbox:test
+      timeout-minutes: 5
 
-      - name: Install Chrome
-        run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+    - name: Upload test artifacts on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: sandbox-e2e-failure-logs
+        path: |
+          sandbox/log/
+          tmp/
+```
 
-      - name: Run sandbox E2E test
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          DB_HOST: localhost
-        run: rake sandbox:test
+**Key Features:**
+- ✅ Only runs on `main`/`master` branch (saves CI time)
+- ✅ 5-minute timeout prevents hanging tests
+- ✅ Uploads logs on failure for debugging
+- ✅ PostgreSQL 16 service container
+- ✅ Chromium browser for headless testing
+
+### Kamal Pre-Build Hook
+
+The test can also run before deployments via `.kamal/hooks/pre-build`:
+
+```bash
+# Enable sandbox E2E test in pre-build
+export RUN_SANDBOX_E2E=true
+kamal deploy
+```
+
+By default, the test is skipped in pre-build to keep deployments fast. Enable it for critical releases:
+
+```bash
+# In .kamal/secrets or environment
+RUN_SANDBOX_E2E=true
 ```
 
 ## Troubleshooting

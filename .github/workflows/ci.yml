@@ -125,3 +125,67 @@ jobs:
       - name: Run Rubocop
         run: |
           bundle exec rubocop --parallel
+
+  sandbox-e2e:
+    runs-on: ubuntu-latest
+    # Only run on main/master branch to save CI time
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      DB_HOST: localhost
+      DB_PORT: 5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.6'
+          bundler-cache: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libpq-dev \
+            libvips-dev \
+            chromium-browser \
+            chromium-chromedriver
+
+      - name: Setup Chrome for E2E tests
+        run: |
+          echo "CHROME_BIN=/usr/bin/chromium-browser" >> $GITHUB_ENV
+          echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
+
+      - name: Run sandbox end-to-end test
+        run: rake sandbox:test
+        timeout-minutes: 5
+
+      - name: Upload test artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sandbox-e2e-failure-logs
+          path: |
+            sandbox/log/
+            tmp/
+          retention-days: 7

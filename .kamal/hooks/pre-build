@@ -94,6 +94,20 @@ else
   echo "⏭️  Skipping tests (SKIP_TESTS=true, set to false to enable)"
 fi
 
+# Run sandbox E2E test (optional, slow)
+echo "🏗️  Checking sandbox E2E test..."
+if [ "${RUN_SANDBOX_E2E:-false}" = "true" ]; then
+  echo "🧪 Running sandbox end-to-end test (this may take 2-3 minutes)..."
+  if ! rake sandbox:test; then
+    echo "❌ Sandbox E2E test failed - sandbox may be broken" >&2
+    exit 1
+  fi
+  echo "✅ Sandbox E2E test passed"
+else
+  echo "⏭️  Skipping sandbox E2E test (set RUN_SANDBOX_E2E=true to enable)"
+  echo "ℹ️  Run manually with: rake sandbox:test"
+fi
+
 # Check if there are any changes to commit
 echo "📝 Checking for uncommitted changes..."
 if [[ -n $(git status --porcelain) ]]; then

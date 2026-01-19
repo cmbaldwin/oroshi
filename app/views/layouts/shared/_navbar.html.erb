@@ -1,12 +1,12 @@
 <nav id="top_nav" class="navbar navbar-light bg-light navbar-expand-lg px-3" data-turbo-permanent>
-    <%= link_to root_path, class: 'navbar-brand p-0 d-block d-lg-none', data: { turbo: false } do %>
+    <%= link_to main_app.root_path, class: 'navbar-brand p-0 d-block d-lg-none', data: { turbo: false } do %>
     <span class="oroshi-brand">OROSHI</span>
     <% end %>
     <button class="navbar-toggler m-1 float-end bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_t" aria-controls="navbar_t" aria-expanded="false" aria-label="<%= t('layouts.application.navbar.toggle') %>">
         <%= icon('menu-down', class: 'text-primary') %>
     </button>
     <div class="collapse navbar-collapse" id="navbar_t">
-        <%= link_to root_path, class: 'navbar-brand m-0 p-0 d-none d-lg-block' do %>
+        <%= link_to main_app.root_path, class: 'navbar-brand m-0 p-0 d-none d-lg-block' do %>
         <span class="oroshi-brand">OROSHI</span>
         <% end %>
         <% if user_signed_in? %>
@@ -30,7 +30,7 @@
                                           class: 'navbar-link btn btn-info tippy',
                                           data: { tippy_content: t('layouts.application.navbar.setup_resume') } %>
                     <% end %>
-                    <%= button_to destroy_user_session_path,
+                    <%= button_to main_app.destroy_user_session_path,
                             id: "sign_out",
                             class: "bg-info border-0 p-0 m-0",
                             method: :delete,
@@ -39,7 +39,7 @@
                     <%= icon("arrow-up-right-circle-fill", class: 'text-warning') %>
                     <% end %>
                     <%= link_to icon("file-person", class: 'text-primary'),
-                          edit_user_registration_path,
+                          main_app.edit_user_registration_path,
                           class: 'navbar-link btn btn-info tippy',
                           data: {
                             tippy_content: "
@@ -51,15 +51,15 @@
             </span>
             <% else %>
             <span class="ms-auto navbar-text">
-                <%= link_to t('layouts.application.navbar.signup'), new_user_registration_path, class: 'navbar-link'  %> |
-                <%= link_to t('layouts.application.navbar.login'), new_user_session_path, method: :post, class: 'navbar-link'  %>
+                <%= link_to t('layouts.application.navbar.signup'), main_app.new_user_registration_path, class: 'navbar-link'  %> |
+                <%= link_to t('layouts.application.navbar.login'), main_app.new_user_session_path, method: :post, class: 'navbar-link'  %>
             </span>
             <% end %>
         </ul>
         <% else %>
         <span class="ms-auto navbar-text">
-            <%= link_to t('layouts.application.navbar.signup'), new_user_registration_path, class: 'navbar-link'  %> |
-            <%= link_to t('layouts.application.navbar.login'), new_user_session_path, method: :post, class: 'navbar-link'  %>
+            <%= link_to t('layouts.application.navbar.signup'), main_app.new_user_registration_path, class: 'navbar-link'  %> |
+            <%= link_to t('layouts.application.navbar.login'), main_app.new_user_session_path, method: :post, class: 'navbar-link'  %>
             <% end %>
     </div>
 </nav>

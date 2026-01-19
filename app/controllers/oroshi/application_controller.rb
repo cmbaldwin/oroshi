@@ -2,12 +2,15 @@
 
 class Oroshi::ApplicationController < ApplicationController
   helper OroshiHelper
+  helper Oroshi::UrlHelper
 
   def address_attributes
     %i[id default active name company country_id subregion_id postal_code city address1 address2]
   end
 
   def check_vip
+    return unless respond_to?(:current_user)
+    return unless current_user
     return if current_user.admin? || current_user.vip?
 
     authentication_notice

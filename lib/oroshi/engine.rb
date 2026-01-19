@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-# CRITICAL: Load Solid gems BEFORE Rails.application.configure
+# CRITICAL: Load dependencies BEFORE Rails.application.configure
 # These must be required first to ensure Railties register properly
 require "solid_queue"
 require "solid_cache"
 require "solid_cable"
+
+# Authentication
+require "devise"
 
 module Oroshi
   class Engine < ::Rails::Engine

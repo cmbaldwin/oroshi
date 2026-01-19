@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, master, develop, "claude/**" ]
+    branches: [main, master, develop, "claude/**"]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
 
 jobs:
   test:
@@ -12,13 +12,13 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:16
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: oroshi_test
         ports:
-          - 5432:5432
+          - 5432:54321
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -37,7 +37,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: "4.0.0"
           bundler-cache: true
 
       - name: Install system dependencies
@@ -92,12 +92,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full git history for TruffleHog
+          fetch-depth: 0 # Full git history for TruffleHog
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: "4.0.0"
           bundler-cache: true
 
       - name: Run TruffleHog secret scanner
@@ -119,7 +119,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: "4.0.0"
           bundler-cache: true
 
       - name: Run Rubocop
@@ -159,7 +159,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: "4.0.0"
           bundler-cache: true
 
       - name: Install system dependencies

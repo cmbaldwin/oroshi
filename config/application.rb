@@ -36,6 +36,9 @@ module Oroshi
   config.autoload_paths << Rails.root.join("lib", "printables")
   config.eager_load_paths << Rails.root.join("lib", "printables")
 
+  # Ignore generators directory from Zeitwerk autoloading (uses Rails::Generators namespace)
+  Rails.autoloaders.main.ignore(Rails.root.join("lib", "generators"))
+
     # NOTE: Solid Cache and Solid Cable database connections are configured
     # in config/environments/production.rb to ensure gems are loaded first
   end

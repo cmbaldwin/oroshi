@@ -1,7 +1,8 @@
 class Oroshi::OnboardingController < Oroshi::ApplicationController
   layout "onboarding"
 
-  before_action :authenticate_user!
+  skip_before_action :maybe_authenticate_user
+  before_action :authenticate_user_for_onboarding
   before_action :find_or_create_progress
   before_action :set_step, only: [ :show, :update ]
 
@@ -71,6 +72,18 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
   end
 
   private
+
+  def authenticate_user_for_onboarding
+    return unless defined?(Devise)
+    return if respond_to?(:current_user) && current_user.present?
+
+    # Devise is available but user is not authenticated
+    if respond_to?(:authenticate_user!, true)
+      authenticate_user!
+    else
+      redirect_to root_path, alert: "Please sign in to continue."
+    end
+  end
 
   def find_or_create_progress
     @progress = current_user.onboarding_progress || current_user.create_onboarding_progress!

@@ -311,6 +311,29 @@ Oroshi.configure do |config|
   config.locale = :ja
   config.domain = ENV.fetch("DOMAIN", "localhost")
 end
+
+### 6. Engine Isolation & Routing (CRITICAL)
+
+Since Oroshi is an isolated engine, route helpers behave differently depending on context.
+
+**1. Accessing Host Routes (Devise, etc.) from Engine Views:**
+You MUST use `main_app` prefix:
+```erb
+<%= link_to "Login", main_app.new_user_session_path %>
+```
+
+**2. Accessing Engine Routes from Host Views:**
+Host apps must include engine helpers manually if `mount` isn't enough for direct access in controllers:
+```ruby
+# ApplicationController
+helper Oroshi::Engine.routes.url_helpers
+```
+
+**3. Callbacks:**
+Use `raise: false` when skipping callbacks that might not verify in all contexts (e.g. Sandbox vs Monolith):
+```ruby
+skip_before_action :authenticate_user!, raise: false
+```
 ```
 
 ## Internationalization (i18n)

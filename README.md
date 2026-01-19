@@ -157,7 +157,8 @@ The sandbox demonstrates complete Oroshi integration with:
 - **3 demo users** (admin, VIP, regular) - all password: `password123`
 - **Complete master data** (suppliers, products, buyers, shipping methods)
 - **Multi-database setup** (primary, queue, cache, cable)
-- **Tailwind CSS** with live reloading
+- **Bootstrap 5 CDN** (no build step required)
+- **Propshaft** asset serving (no complex pipeline)
 - **Minimal configuration** (generated automatically)
 
 ### How Sandbox Creation Works

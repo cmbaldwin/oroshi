@@ -29,9 +29,9 @@ pin "muuri", to: "https://cdn.jsdelivr.net/npm/muuri@0.9.5/dist/muuri.min.js"
 # Tippy.js
 pin "tippy.js", to: "https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"
 
-# Chartkick
-pin "chartkick", to: "chartkick.js"
-pin "Chart.bundle", to: "Chart.bundle.js"
+# Chartkick - use CDN (not currently used in app)
+# pin "chartkick", to: "https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.esm.js"
+# pin "Chart.bundle", to: "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"
 
 # FullCalendar
 pin "fullcalendar" # @6.1.10 vendored (copy and paste with `export default FullCalendar;` at end, also copied and pasted Bootstrap5 module to end)

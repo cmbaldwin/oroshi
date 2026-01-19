@@ -3,6 +3,17 @@ set -e  # Exit on any error
 set -u  # Exit on undefined variables
 set -o pipefail  # Catch errors in pipes
 
+# Unbundled function - run commands outside the parent's bundler environment
+# This is critical for engine development to avoid gem loading conflicts
+# Adapted from Solidus: https://github.com/solidusio/solidus/blob/main/bin/sandbox
+unbundled() {
+  ruby -rbundler -e'
+    Gem::Version.new(Bundler::VERSION) < Gem::Version.new("2.1") ?
+      abort("The sandbox requires at least Bundler 2.1") :
+      Bundler.with_unbundled_env { system(*ARGV) }' -- \
+        env BUNDLE_SUPPRESS_INSTALL_USING_MESSAGES=true "$@"
+}
+
 # Handle command-line arguments
 COMMAND="${1:-create}"
 
@@ -104,7 +115,7 @@ rails new sandbox \
   --skip-keeps \
   --skip-rc \
   --skip-test \
-  --css=tailwind \
+  --skip-asset-pipeline \
   --javascript=importmap
 
 # Move the generated app to the oroshi directory
@@ -117,6 +128,9 @@ rm -rf "$TEMP_DIR"
 # Add Oroshi and development gems to Gemfile
 echo "📝 Adding Oroshi to Gemfile..."
 cat <<RUBY >> Gemfile
+
+# Asset pipeline (required since we used --skip-asset-pipeline)
+gem "propshaft"
 
 # Oroshi engine (local development) - must be loaded in all environments
 gem "oroshi", path: "..", require: "oroshi"
@@ -137,9 +151,9 @@ group :development do
 end
 RUBY
 
-# Bundle install
+# Bundle install (unbundled to avoid inheriting parent's gem environment)
 echo "📦 Installing gems..."
-bundle install --quiet
+unbundled bundle install --quiet
 
 # Configure Oroshi (do this AFTER bundle install so Oroshi is loaded)
 echo "⚙️  Configuring Oroshi..."
@@ -158,22 +172,54 @@ if defined?(Oroshi)
 end
 RUBY
 
-# Mount Oroshi engine
-echo "🔌 Mounting Oroshi engine..."
-cat > config/routes.rb <<RUBY
-Rails.application.routes.draw do
-  # Health check endpoint (must be BEFORE engine mount for E2E tests)
-  get "up" => "rails/health#show", as: :rails_health_check
-
-  # Mount the Oroshi engine
-  begin
-    mount Oroshi::Engine, at: "/"
-  rescue NameError => e
-    Rails.logger.error "Failed to mount Oroshi engine: #{e.message}"
-    Rails.logger.error "This usually means the oroshi gem is not loaded. Check your Gemfile."
+# Create Devise initializer
+echo "🔐 Configuring Devise..."
+cat > config/initializers/devise.rb <<'RUBY'
+if defined?(Devise)
+  Devise.setup do |config|
+    config.secret_key = Rails.application.credentials.secret_key_base || ENV.fetch('DEVISE_KEY', 'sandbox_dev_key')
+    config.mailer_sender = ENV.fetch('MAIL_SENDER', 'noreply@localhost')
+    config.mailer = 'Devise::Mailer'
+    config.parent_mailer = 'ActionMailer::Base'
+    require 'devise/orm/active_record'
+    config.authentication_keys = [:login]
+    config.case_insensitive_keys = [:email]
+    config.strip_whitespace_keys = [:email]
+    config.skip_session_storage = [:http_auth]
+    config.stretches = Rails.env.test? ? 1 : 11
+    config.send_email_changed_notification = false
+    config.send_password_change_notification = false
+    config.confirm_within = 3.days
+    config.reconfirmable = false
+    config.confirmation_keys = [:email]
+    config.expire_all_remember_me_on_sign_out = true
+    config.password_length = 6..128
+    config.email_regexp = /\A[^@\s]+@[^@\s]+\z/
+    config.scoped_views = true
+    config.sign_out_via = :delete
   end
 end
 RUBY
+
+# Setup routes - mount Oroshi engine
+echo "🔌 Setting up routes..."
+cat > config/routes.rb <<'RUBY'
+Rails.application.routes.draw do
+  # Health check for Kamal
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  # Devise routes (User model is app-level, not engine-level)
+  devise_for :users if respond_to?(:devise_for)
+
+  # Mount Oroshi engine at /oroshi
+  mount Oroshi::Engine, at: "/oroshi"
+
+  # Root redirects to Oroshi dashboard
+  root to: redirect("/oroshi")
+end
+RUBY
+
+
 
 # Copy database configuration for multi-database setup
 echo "🗄️  Configuring multi-database setup..."
@@ -239,11 +285,28 @@ production:
 YAML
 
 # Create Procfile.dev for development
+# Note: CSS is loaded from CDN, no compilation needed
 echo "📋 Creating Procfile.dev..."
 cat > Procfile.dev <<PROCFILE
 web: bin/rails server -p 3000
-css: bin/rails tailwindcss:watch
 PROCFILE
+
+# Copy vendored JavaScript files from engine
+echo "📋 Copying vendored JavaScript files..."
+mkdir -p vendor/javascript
+cp -r ../vendor/javascript/* vendor/javascript/ 2>/dev/null || true
+
+# Copy oroshi.css from engine to sandbox assets
+echo "🎨 Copying CSS assets..."
+mkdir -p app/assets/builds
+cp ../app/assets/builds/oroshi.css app/assets/builds/ 2>/dev/null || true
+
+# Create layout with Bootstrap CDN (modern Rails 8 approach)
+# We copy the gem's layout which already has the CDN links and navbar render
+echo "📄 Copying application layout from gem..."
+cp ../app/views/layouts/application.html.erb app/views/layouts/application.html.erb
+
+# Note: CSS is loaded from CDN (Bootstrap) + oroshi.css
 
 # Copy migrations from engine
 echo "📋 Copying migrations..."
@@ -262,22 +325,22 @@ class User < ApplicationRecord
 end
 RUBY
 
-# Setup databases
+# Setup databases (use unbundled to ensure clean gem environment)
 echo "🗄️  Creating and migrating databases..."
 # Try to drop and recreate (for clean slate), fall back to create if databases don't exist
-if bin/rails db:drop 2>/dev/null; then
-  bin/rails db:create
+if unbundled bin/rails db:drop 2>/dev/null; then
+  unbundled bin/rails db:create
   # Use schema:load instead of migrate to avoid migration code execution issues
   cp ../db/schema.rb db/schema.rb
-  bin/rails db:schema:load
+  unbundled bin/rails db:schema:load
 else
-  bin/rails db:create
+  unbundled bin/rails db:create
   cp ../db/schema.rb db/schema.rb
-  bin/rails db:schema:load
+  unbundled bin/rails db:schema:load
 fi
-bin/rails db:schema:load:queue
-bin/rails db:schema:load:cache
-bin/rails db:schema:load:cable
+unbundled bin/rails db:schema:load:queue
+unbundled bin/rails db:schema:load:cache
+unbundled bin/rails db:schema:load:cable
 
 # Now create full User model with Devise configuration
 echo "👤 Creating full User model..."
@@ -312,15 +375,49 @@ echo "🎮 Creating ApplicationController with authentication..."
 cat > app/controllers/application_controller.rb <<RUBY
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
+  helper Oroshi::Engine.routes.url_helpers
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 end
 RUBY
 
+# Remove default ApplicationHelper - Oroshi's controllers include their own helpers
+echo "🎨 Removing default ApplicationHelper..."
+rm -f app/helpers/application_helper.rb
+
 # Seed demo data
 echo "🌱 Seeding demo data..."
-bin/rails db:seed
+unbundled bin/rails runner "
+User.insert({
+  email: 'admin@oroshi.local',
+  username: 'admin',
+  encrypted_password: Devise::Encryptor.digest(User, 'password123'),
+  role: User.roles[:admin],
+  confirmed_at: Time.current,
+  created_at: Time.current,
+  updated_at: Time.current
+})
+User.insert({
+  email: 'vip@oroshi.local',
+  username: 'vip',
+  encrypted_password: Devise::Encryptor.digest(User, 'password123'),
+  role: User.roles[:vip],
+  confirmed_at: Time.current,
+  created_at: Time.current,
+  updated_at: Time.current
+})
+User.insert({
+  email: 'user@oroshi.local',
+  username: 'user',
+  encrypted_password: Devise::Encryptor.digest(User, 'password123'),
+  role: User.roles[:user],
+  confirmed_at: Time.current,
+  created_at: Time.current,
+  updated_at: Time.current
+})
+puts '✓ Created demo users'
+"
 
 echo ""
 echo "✅ Sandbox application created successfully!"

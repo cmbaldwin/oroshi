@@ -17,7 +17,12 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"] = "https://github.com/cmbaldwin/oroshi/blob/master/CHANGELOG.md"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+    Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"].reject do |f|
+      # Exclude standalone app routes - engine uses proper config/routes.rb
+      f == "config/routes_standalone_app.rb" ||
+      f == "config/routes.rb.engine" ||
+      f == "config/routes_oroshi_engine.rb"
+    end
   end
 
   spec.required_ruby_version = ">= 3.4.0"

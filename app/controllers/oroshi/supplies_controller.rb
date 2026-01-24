@@ -3,6 +3,7 @@
 require "csv"
 require "net/http"
 require "openssl"
+require "holiday_jp"
 
 class Oroshi::SuppliesController < Oroshi::ApplicationController
   before_action :set_supply

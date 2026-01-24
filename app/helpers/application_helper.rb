@@ -103,4 +103,14 @@ module ApplicationHelper
     end
     "<i class='#{classes}' style='#{style}'></i>".html_safe
   end
+
+  # Information tooltip helper
+  def information_tippy(translation_key_suffix)
+    content_tag :div, class: "tippy", data: {
+      controller: "tippy",
+      tippy_content: t("oroshi.dashboard.information_tippys.#{translation_key_suffix}")
+    } do
+      icon("info-circle")
+    end
+  end
 end

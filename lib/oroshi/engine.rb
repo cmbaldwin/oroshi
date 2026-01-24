@@ -9,6 +9,9 @@ require "solid_cable"
 # Authentication
 require "devise"
 
+# Search
+require "ransack"
+
 module Oroshi
   class Engine < ::Rails::Engine
     isolate_namespace Oroshi

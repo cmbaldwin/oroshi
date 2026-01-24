@@ -1,5 +1,9 @@
 # Oroshi - Wholesale Order Management Rails Engine
 
+> **⚠️ Development Status**: This project is under heavy active development. The sandbox currently works but has lots of bugs that are being worked through slowly.
+> 
+> **Most Stable Version**: For the most stable version, use the branch before gemification at commit `13265f7ca5e642163e1c072dc9b88283983ad693` ("Merge branch 'ralph/user-onboarding'")
+
 A comprehensive wholesale order management system packaged as a Rails engine gem. Built with Ruby on Rails 8.1.1 for Japanese food distribution businesses.
 
 ## Features

@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "csv"
+require "net/http"
+require "openssl"
+
 class Oroshi::SuppliesController < Oroshi::ApplicationController
   before_action :set_supply
   before_action :set_supply_dates, only: %i[index]
@@ -59,5 +63,88 @@ class Oroshi::SuppliesController < Oroshi::ApplicationController
     params.require(:oroshi_supply)
           .permit(:supply_date_id, :supply_type_variation_id, :supply_reception_time_id,
                   :supplier_id, :quantity, :price, :entry_index)
+  end
+
+  # Calendar helper methods for Japanese holidays and market holidays
+  def japanese_holiday_background_events(range)
+    Rails.cache.fetch("japanese_holiday_background_events_#{range.first}_#{range.last}", expires_in: 24.hours) do
+      japanese_holidays = HolidayJp.between(range.first - 7.days, range.last + 7.days)
+      ichiba_holidays = get_ichiba_holidays(range)
+      
+      events = japanese_holidays.each_with_object([]) do |holiday, memo|
+        memo << { 
+          title: holiday.name, 
+          className: "bg-secondary bg-opacity-20",
+          start: holiday.date, 
+          end: holiday.date, 
+          display: "background" 
+        }
+      end
+      
+      events.concat(range.each_with_object([]) do |date, memo|
+        if ichiba_holidays.include?(date)
+          memo << { 
+            className: "bg-secondary bg-opacity-30", 
+            start: date, 
+            end: date,
+            display: "background" 
+          }
+        end
+      end)
+    end
+  end
+
+  def get_ichiba_holidays(range)
+    first_year = extract_japanese_year(range.first.to_date.jisx0301)
+    last_year  = extract_japanese_year(range.last.to_date.jisx0301)
+    
+    [first_year, last_year].uniq.each_with_object([]) do |year, memo|
+      next unless year # Skip if year extraction failed
+      
+      url = "https://www.shijou.metro.tokyo.lg.jp/documents/d/shijou/#{year}suisancsv"
+      csv_content = fetch_csv_content(url)
+      
+      begin
+        CSV.parse(csv_content, headers: true, encoding: "Shift_JIS").each do |row|
+          memo << Date.parse(row["Start Date"]) if row["Start Date"]
+        end
+      rescue CSV::MalformedCSVError => e
+        logger.error "CSV parsing failed for #{url}: #{e.message}"
+      rescue StandardError => e
+        logger.error "Error processing CSV from #{url}: #{e.message}"
+      end
+    end
+  end
+
+  def fetch_csv_content(url)
+    uri = URI.parse(url)
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true if uri.scheme == "https"
+    http.read_timeout = 10
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    http.cert_store = OpenSSL::X509::Store.new
+    http.cert_store.set_default_paths
+
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response = http.request(request)
+
+    if response.is_a?(Net::HTTPSuccess)
+      response.body
+    else
+      logger.error "Failed to fetch CSV content from #{url}: #{response.code} #{response.message}"
+      ""
+    end
+  rescue OpenSSL::SSL::SSLError => e
+    logger.error "SSL error fetching CSV content from #{url}: #{e.message}"
+    ""
+  rescue StandardError => e
+    logger.error "Error fetching CSV content from #{url}: #{e.message}"
+    ""
+  end
+
+  def extract_japanese_year(date_str)
+    match = date_str.match(/^[A-Z]+(\d+)\./)
+    match[1] if match
   end
 end

@@ -1,7 +1,7 @@
 # Oroshi - Wholesale Order Management Rails Engine
 
 > **⚠️ Development Status**: This project is under heavy active development. The sandbox currently works but has lots of bugs that are being worked through slowly.
-> 
+>
 > **Most Stable Version**: For the most stable version, use the branch before gemification at commit `13265f7ca5e642163e1c072dc9b88283983ad693` ("Merge branch 'ralph/user-onboarding'")
 
 A comprehensive wholesale order management system packaged as a Rails engine gem. Built with Ruby on Rails 8.1.1 for Japanese food distribution businesses.
@@ -82,20 +82,16 @@ bin/rails server
 Running `rails generate oroshi:install` will:
 
 1. **Create Oroshi initializer** (`config/initializers/oroshi.rb`)
-
    - Configures timezone, locale, and domain
 
 2. **Create User model** (`app/models/user.rb`)
-
    - Devise-based authentication
    - Role-based access (user, vip, admin, supplier, employee)
 
 3. **Mount Oroshi engine** in routes
-
    - Makes all Oroshi routes available at "/"
 
 4. **Copy migrations** from the engine
-
    - All Oroshi models and associations
 
 5. **Copy Solid schemas** (queue, cache, cable)

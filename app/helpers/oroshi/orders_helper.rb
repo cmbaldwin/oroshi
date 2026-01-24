@@ -109,7 +109,7 @@ module Oroshi::OrdersHelper
     if item.is_a?(Oroshi::Order)
       # Render order
       turbo_stream_from(item) +
-        turbo_frame_tag(dom_id(item), class: "w-100", src: edit_oroshi_order_path(item), loading: "lazy") do
+        turbo_frame_tag(dom_id(item), class: "w-100", src: edit_order_path(item), loading: "lazy") do
           render(partial: "oroshi/shared/spinner")
         end
     else
@@ -143,7 +143,7 @@ module Oroshi::OrdersHelper
   end
 
   def product_title_modal_link(product)
-    link_to oroshi_product_path(product),
+    link_to product_path(product),
             class: "product-title-modal-link fw-bold input-group-text p-1 text-nowrap gap-1 cursor-pointer",
             data: {
               turbo_prefetch: "false",
@@ -156,7 +156,7 @@ module Oroshi::OrdersHelper
   end
 
   def product_variation_title_modal_link(product_variation)
-    link_to oroshi_product_variation_path(product_variation),
+    link_to product_variation_path(product_variation),
             class: "product-variation-title-modal-link input-group-text p-1 text-nowrap gap-1 cursor-pointer",
             data: {
               turbo_prefetch: "false",
@@ -189,7 +189,7 @@ module Oroshi::OrdersHelper
   end
 
   def order_title_modal_link(order = @order)
-    link_to oroshi_order_show_path(order),
+    link_to order_show_path(order),
             **order_title_class_style,
             data: {
               turbo_prefetch: false,
@@ -202,7 +202,7 @@ module Oroshi::OrdersHelper
   end
 
   def revenue_order_title_modal_link(order)
-    link_to oroshi_order_show_path(order),
+    link_to order_show_path(order),
             class: 'order-title-modal-link input-group-text p-1 text-nowrap
               flex-grow-1 d-flex gap-1 cursor-pointer overflow-hidden',
             data: {

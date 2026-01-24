@@ -26,7 +26,7 @@ module Oroshi
   end
 
   def set_date
-    return redirect_to oroshi_orders_path(date: Time.zone.today.to_s) if params[:date].blank?
+    return redirect_to orders_path(date: Time.zone.today.to_s) if params[:date].blank?
 
     @date = Date.parse(params[:date])
   end

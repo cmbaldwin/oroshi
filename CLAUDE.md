@@ -36,6 +36,28 @@ bin/rails db:schema:load:cable
 ./bin/dev
 ```
 
+### Claude Code on the Web
+
+For cloud-based development with automatic environment setup, use [Claude Code on the web](https://claude.ai/code):
+
+**Quick Start:**
+1. Visit [claude.ai/code](https://claude.ai/code)
+2. Connect your GitHub account
+3. Select the `cmbaldwin/oroshi` repository
+4. Create or select the "Oroshi Development" environment
+5. Submit your task - Ruby 4.0.0, dependencies, and databases are automatically configured
+
+**Key Features:**
+- ✅ Automatic Ruby 4.0.0 installation via rbenv
+- ✅ Auto-configured PostgreSQL with 4 databases
+- ✅ Dependency installation (bundle install)
+- ✅ Schema loading and migrations
+- ✅ Isolated VM per session
+- ✅ Run tasks in parallel
+- ✅ Move sessions between web and terminal
+
+See [docs/CLAUDE_WEB_SETUP.md](docs/CLAUDE_WEB_SETUP.md) for complete setup instructions.
+
 ### Sandbox Application
 
 The recommended way to develop and test Oroshi is using the generated sandbox:
@@ -752,6 +774,7 @@ For production deployment, configure your parent app with your preferred deploym
 ## Resources
 
 - **README**: [README.md](README.md) - Installation and usage
+- **Claude Web Setup**: [docs/CLAUDE_WEB_SETUP.md](docs/CLAUDE_WEB_SETUP.md) - Cloud environment configuration
 - **Sandbox Testing**: [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md)
 - **Sandbox Research**: [docs/archives/SANDBOX_RESEARCH.md](docs/archives/SANDBOX_RESEARCH.md)
 - **Ralph Instructions**: [.github/copilot-instructions.md](.github/copilot-instructions.md)

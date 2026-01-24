@@ -70,24 +70,24 @@ class Oroshi::SuppliesController < Oroshi::ApplicationController
     Rails.cache.fetch("japanese_holiday_background_events_#{range.first}_#{range.last}", expires_in: 24.hours) do
       japanese_holidays = HolidayJp.between(range.first - 7.days, range.last + 7.days)
       ichiba_holidays = get_ichiba_holidays(range)
-      
+
       events = japanese_holidays.each_with_object([]) do |holiday, memo|
-        memo << { 
-          title: holiday.name, 
+        memo << {
+          title: holiday.name,
           className: "bg-secondary bg-opacity-20",
-          start: holiday.date, 
-          end: holiday.date, 
-          display: "background" 
+          start: holiday.date,
+          end: holiday.date,
+          display: "background"
         }
       end
-      
+
       events.concat(range.each_with_object([]) do |date, memo|
         if ichiba_holidays.include?(date)
-          memo << { 
-            className: "bg-secondary bg-opacity-30", 
-            start: date, 
+          memo << {
+            className: "bg-secondary bg-opacity-30",
+            start: date,
             end: date,
-            display: "background" 
+            display: "background"
           }
         end
       end)
@@ -97,13 +97,13 @@ class Oroshi::SuppliesController < Oroshi::ApplicationController
   def get_ichiba_holidays(range)
     first_year = extract_japanese_year(range.first.to_date.jisx0301)
     last_year  = extract_japanese_year(range.last.to_date.jisx0301)
-    
-    [first_year, last_year].uniq.each_with_object([]) do |year, memo|
+
+    [ first_year, last_year ].uniq.each_with_object([]) do |year, memo|
       next unless year # Skip if year extraction failed
-      
+
       url = "https://www.shijou.metro.tokyo.lg.jp/documents/d/shijou/#{year}suisancsv"
       csv_content = fetch_csv_content(url)
-      
+
       begin
         CSV.parse(csv_content, headers: true, encoding: "Shift_JIS").each do |row|
           memo << Date.parse(row["Start Date"]) if row["Start Date"]

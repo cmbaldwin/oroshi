@@ -168,6 +168,56 @@ bundle exec rspec                        # Will fail - RSpec not installed
 
 *Entries for i18n patterns, Japanese-first UI, and locale files.*
 
+### Japanese-First i18n Approach
+
+**Problem:** Oroshi is a Japanese-first application. All user-facing text MUST be translatable via i18n. Hardcoded English (or any language) strings in views violate the project's localization requirements.
+
+**Solution:** Always use `t()` helper for all UI text. Never hardcode strings like "Save", "Cancel", "Back", or "Skip for now". Use lazy lookup in views (`t('.key')`) and full paths in controllers/jobs.
+
+**Code Example:**
+```erb
+<%# CORRECT - Always use t() helper %>
+<h2><%= t('.title') %></h2>
+<p><%= t('.description') %></p>
+<%= link_to t('common.buttons.back'), :back %>
+<%= submit_tag t('common.buttons.save') %>
+
+<%# WRONG - Never hardcode strings %>
+<h2>Settings</h2>
+<p>Configure your preferences below.</p>
+<%= link_to "Back", :back %>
+<%= submit_tag "Save" %>
+```
+
+**Namespace Convention:**
+```yaml
+# config/locales/ja.yml
+ja:
+  oroshi:
+    namespace:
+      view_name:
+        title: "タイトル"
+        description: "説明文"
+    common:
+      buttons:
+        save: "保存"
+        cancel: "キャンセル"
+        back: "戻る"
+        next: "次へ"
+        skip: "スキップ"
+```
+
+**Lazy Lookup:**
+```erb
+<%# In app/views/oroshi/onboarding/steps/_supplier_organization.html.erb %>
+<%= t('.title') %>
+<%# Translates to: oroshi.onboarding.steps.supplier_organization.title %>
+```
+
+**Gotcha:** When adding new UI text, always add the Japanese translation first. The i18n key should exist before using it. Use `I18n.t('key', default: 'fallback')` only for development/debugging, never in production code.
+
+**Related:** CLAUDE.md Internationalization section, `config/locales/` directory
+
 ---
 
 ## Authentication & Authorization

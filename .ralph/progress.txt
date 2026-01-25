@@ -143,3 +143,26 @@ Learnings for future iterations:
 - Lines 197, 287, 323 correctly reference Test::Unit framework
 - No 'bundle exec rspec' or RSpec-specific commands found
 - Acceptance criteria referred to outdated line numbers from previous version
+
+[2026-01-25 03:35:00] Story: US-014 - Create orders dashboard test file skeleton
+Implemented: Created test/system/oroshi/orders_dashboard_test.rb with JavaScriptTest module, admin authentication in setup, @date instance variable, and placeholder create_dashboard_data method.
+Files: test/system/oroshi/orders_dashboard_test.rb
+Tests: PASSING (0 tests, syntax valid, rubocop clean)
+Learnings for future iterations:
+- Test file inherits from ApplicationSystemTestCase
+- Includes JavaScriptTest module for Selenium/headless Chrome support
+- Setup creates admin user, signs in, sets @date to Time.zone.today
+- Placeholder create_dashboard_data method ready for US-015 implementation
+- File runs without errors (0 tests initially expected)
+
+[2026-01-25 03:51:00] Story: US-015 - Implement create_dashboard_data helper method
+Implemented: Created comprehensive create_dashboard_data method that creates all necessary test data for orders dashboard testing including supply types, products, buyers, shipping details, orders, templates, and suppliers.
+Files: test/system/oroshi/orders_dashboard_test.rb
+Tests: PASSING (0 tests, syntax valid, rubocop clean)
+Learnings for future iterations:
+- Factory associations can be created inline with create() or linked after with <<
+- Use @date variable for time-dependent test data (shipping_date, manufacture_date)
+- Instance variables in helper methods (@order, @buyer, etc.) available in all tests
+- FactoryBot automatically handles nested associations (product_variation needs product)
+- Supply requires supplier_organization with supply_reception_times association
+- Factories use sensible defaults - only override what's specific to the test

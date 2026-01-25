@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 # Oroshi Engine Routes
-# When used as a gem, these routes are automatically loaded by Rails engines
-# For standalone development, see config/routes_standalone_app.rb
+#
+# These routes are automatically loaded by Rails engines when Oroshi is mounted
+# in a parent application. Parent apps mount the engine with:
+#
+#   mount Oroshi::Engine, at: "/oroshi"
+#
+# Route helpers within the engine use the `oroshi.` prefix in parent apps
+# and work without prefix inside the engine views/controllers.
 Oroshi::Engine.routes.draw do
 root to: "dashboard#index"
 

@@ -8,8 +8,47 @@ This directory contains files for **Ralph**, an autonomous AI development agent 
 
 - **prd.json** - Task tracking with user stories, priorities, and completion status
 - **progress.txt** - Append-only learning journal documenting completed work and patterns discovered
+- **REALIZATIONS.md** - Quick reference for project-specific patterns, gotchas, and constraints
 - **prompt.md** - Instructions for Ralph agent (legacy amp workflow)
 - **ralph.sh** - Bash script for automated loop execution (legacy workflow)
+
+### Documentation
+
+#### REALIZATIONS.md
+
+A structured knowledge base of project-specific patterns and gotchas organized by category:
+
+- **Rails & ActiveRecord** - Model callbacks, associations, strong params
+- **Turbo & Stimulus** - Frame patterns, modal integration, lazy loading
+- **Testing** - Test::Unit patterns, system tests, JavaScriptTest module
+- **Database & Migrations** - Multi-database setup, schema loading, conditional initializers
+- **Asset Pipeline** - Propshaft+importmap, Japanese fonts, PDF generation
+- **Internationalization** - Japanese-first i18n, locale patterns
+- **Authentication & Authorization** - Engine routing, main_app prefix, Devise patterns
+- **Background Jobs** - Solid Queue setup, recurring tasks, gem loading order
+
+**When to consult REALIZATIONS.md:**
+- Beginning of each iteration (refresh on patterns)
+- When encountering errors (check for known gotchas)
+- Before committing (verify patterns followed)
+- When writing tests (reference test setup patterns)
+
+**When to update REALIZATIONS.md:**
+- After discovering a new gotcha or non-obvious pattern
+- After completing a user story that revealed valuable knowledge
+- When a pattern solidifies through repeated use
+- When fixing a bug that could have been prevented
+
+**Entry format:**
+```markdown
+### [Category] - [Short Title]
+
+**Problem:** What was going wrong or could go wrong
+**Solution:** How to fix or avoid it
+**Code Example:** [code snippet]
+**Gotcha:** Any non-obvious edge cases
+**Related:** Links to relevant files or documentation
+```
 
 ### Usage
 

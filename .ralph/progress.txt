@@ -110,3 +110,15 @@ Learnings for future iterations:
 - sign_in helper from Devise::Test::IntegrationHelpers
 - Default locale I18n.locale = :ja for Japanese-first testing
 - Reference: test/application_system_test_case.rb, test/system/oroshi/dashboard_test.rb
+
+[2026-01-25 03:32:00] Story: US-011 - Extract 5 more realizations from progress.txt
+Implemented: Added 5 comprehensive realizations from CLAUDE.md and codebase patterns: Propshaft+importmap asset pipeline, Japanese font configuration for PDFs, engine route helpers with main_app prefix, Solid gems explicit loading order, and 4-database multi-database configuration.
+Files: .ralph/REALIZATIONS.md (Asset Pipeline, Authentication & Authorization, Background Jobs, Database & Migrations sections)
+Tests: PASSING (rubocop clean)
+Learnings for future iterations:
+- Propshaft+importmap: Use bin/importmap pin (not npm install), JS from CDN
+- PDF fonts: Call Oroshi::Fonts.configure_prawn_fonts(pdf) before generating text
+- Engine routes: Use main_app.new_user_session_path for Devise/parent routes from engine
+- Solid gems: Require at top of engine.rb before configuration (shards registration)
+- 4 databases: main, queue, cache, cable - separate schema files, all need loading
+- These patterns prevent common mistakes when working with Rails engines and Oroshi

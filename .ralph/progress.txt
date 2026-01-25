@@ -29,3 +29,19 @@ Learnings for future iterations:
 - Generated routes.rb demonstrates proper engine mounting pattern for parent apps
 - Sandbox uses bin/dev which reads Procfile.dev for port configuration
 - All port references must be consistent: bin/sandbox, sandbox.rake, CLAUDE.md, prompt.md
+
+[2026-01-26 08:35:00] Story: US-003 Update test environment configuration
+Implemented: Verified test environment already correctly configured for engine routes
+Files:
+- test/test_helper.rb (verified - uses Oroshi::Engine.routes.url_helpers)
+- test/application_system_test_case.rb (verified - uses oroshi helper method)
+- test/dummy/config/routes.rb (verified - properly mounts engine at /oroshi)
+Tests: PASSING (controller: 26, integration: 11, system: 4 - all pass)
+Learnings for future iterations:
+- Test environment was already correct - previous work established the pattern
+- test_helper.rb provides oroshi helper method returning Oroshi::Engine.routes.url_helpers
+- Integration tests use oroshi_* helper methods (e.g., oroshi_root_path, oroshi_orders_path)
+- System tests use same pattern via ApplicationSystemTestCase
+- No routes_standalone_app.rb references in test directory (confirmed with grep)
+- Sass deprecation warnings are from external gems (Bootstrap), not asset loading errors
+- Rails deprecation warnings for resource hash arguments are cosmetic

@@ -63,6 +63,46 @@ User.insert({
 
 *Entries for Turbo Frames, Turbo Streams, Stimulus controllers, and Hotwire patterns.*
 
+### Turbo Frame Lazy Loading Pattern
+
+**Problem:** Loading all content on initial page load can be slow. Turbo Frames support deferred loading, but if implemented incorrectly, you'll see a "Content missing" error when the frame's ID doesn't match between the requesting frame and the response.
+
+**Solution:** Use `src:` combined with `loading: 'lazy'` to defer content loading until the frame scrolls into view. The response MUST contain a `turbo_frame_tag` with the exact same ID.
+
+**Code Example:**
+```erb
+<%# In the parent view - request deferred content %>
+<%= turbo_frame_tag dom_id(invoice), src: invoice_path(invoice), loading: 'lazy' do %>
+  <div class="placeholder">Loading...</div>
+<% end %>
+
+<%# In the partial/show response - frame ID must match %>
+<%= turbo_frame_tag dom_id(@invoice) do %>
+  <div class="invoice-details">
+    <%= @invoice.number %>
+  </div>
+<% end %>
+```
+
+**Common Patterns:**
+```erb
+<%# List items with lazy loading %>
+<% @orders.each do |order| %>
+  <%= turbo_frame_tag dom_id(order), src: edit_oroshi_order_path(order), loading: 'lazy' do %>
+    <div class="spinner-border"></div>
+  <% end %>
+<% end %>
+
+<%# Modal content lazy loading %>
+<%= turbo_frame_tag 'oroshi_modal_content', src: new_oroshi_buyer_path do %>
+  <div>Loading form...</div>
+<% end %>
+```
+
+**Gotcha:** The "Content missing" error means the response HTML doesn't contain a `turbo_frame_tag` with a matching ID. Debug by: 1) checking the response contains the frame, 2) verifying IDs match exactly (case-sensitive), 3) ensuring the controller renders the correct view/partial.
+
+**Related:** `app/views/oroshi/invoices/index.html.erb`, `app/views/oroshi/orders/_order.html.erb`
+
 ---
 
 ## Testing

@@ -64,3 +64,8 @@ tmp/local_secret.txt
 
 # Generated sandbox application
 /sandbox
+
+# Ralph temporary/generated files
+/.ralph/node_modules
+/.ralph/dist
+/.ralph/.last-branch

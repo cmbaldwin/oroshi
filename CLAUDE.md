@@ -545,14 +545,14 @@ end
 
 ### Overview
 
-Ralph is an autonomous AI development agent that incrementally implements features from Product Requirements Documents (PRDs) stored in `scripts/ralph/prd.json`.
+Ralph is an autonomous AI development agent that incrementally implements features from Product Requirements Documents (PRDs) stored in `.ralph/prd.json`.
 
 ### Quick Start
 
 1. **Review Current Tasks:**
 
    ```bash
-   cat scripts/ralph/prd.json | jq '.userStories[] | select(.passes == false) | {id, title, priority}'
+   cat .ralph/prd.json | jq '.userStories[] | select(.passes == false) | {id, title, priority}'
    ```
 
 2. **Start Working:**
@@ -570,10 +570,10 @@ Ralph is an autonomous AI development agent that incrementally implements featur
 
    ```bash
    # View completed stories
-   cat scripts/ralph/prd.json | jq '.userStories[] | select(.passes == true) | .title'
+   cat .ralph/prd.json | jq '.userStories[] | select(.passes == true) | .title'
 
    # View recent learnings
-   tail -n 50 scripts/ralph/progress.txt
+   tail -n 50 .ralph/progress.txt
    ```
 
 ### Ralph's Custom Instructions
@@ -582,8 +582,8 @@ Ralph operates according to custom instructions defined in:
 
 - `.github/copilot-instructions.md` - Main Ralph instructions (workspace-wide)
 - `CLAUDE.md` (this file) - Oroshi-specific patterns and conventions
-- `scripts/ralph/prd.json` - Task tracking with user stories
-- `scripts/ralph/progress.txt` - Append-only learning journal
+- `.ralph/prd.json` - Task tracking with user stories
+- `.ralph/progress.txt` - Append-only learning journal
 
 ### Key Ralph Behaviors
 
@@ -631,7 +631,7 @@ Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 
 ```bash
 # View completion status
-cat scripts/ralph/progress.txt
+cat .ralph/progress.txt
 
 # View remaining tasks
 cat scripts/ralph/prd.json | jq '.userStories[] | select(.passes == false)'
@@ -667,9 +667,9 @@ Each PRD (`prd.json`) contains:
 
 - `.github/copilot-instructions.md` - Ralph's core instructions
 - `CLAUDE.md` (this file) - Oroshi patterns and conventions
-- `scripts/ralph/prd.json` - Current task tracking
-- `scripts/ralph/progress.txt` - Learning journal
-- `scripts/ralph/prompt.md` - Legacy prompt (for reference)
+- `.ralph/prd.json` - Current task tracking
+- `.ralph/progress.txt` - Learning journal
+- `.ralph/prompt.md` - Legacy prompt (for reference)
 
 ## Project File Structure
 
@@ -720,7 +720,7 @@ test/                       # Test suite (Test::Unit)
   sandbox_e2e_test.rb       # E2E sandbox test
 
 sandbox/                    # Generated demo app (not committed)
-scripts/ralph/              # Ralph agent files
+.ralph/                     # Ralph agent files
   prd.json                  # Task tracking
   progress.txt              # Learning journal
   prompt.md                 # Agent instructions
@@ -730,7 +730,7 @@ scripts/ralph/              # Ralph agent files
 
 - Check this file for patterns
 - Search codebase for similar implementations
-- Review `scripts/ralph/progress.txt` for past learnings
+- Review `.ralph/progress.txt` for past learnings
 - Check Rails 8 guides for modern patterns
 - Review [README.md](README.md) for installation and usage
 - Check [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) for sandbox details
@@ -755,7 +755,7 @@ For production deployment, configure your parent app with your preferred deploym
 - **Sandbox Testing**: [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md)
 - **Sandbox Research**: [docs/archives/SANDBOX_RESEARCH.md](docs/archives/SANDBOX_RESEARCH.md)
 - **Ralph Instructions**: [.github/copilot-instructions.md](.github/copilot-instructions.md)
-- **PRD Tasks**: [scripts/ralph/prd.json](scripts/ralph/prd.json)
+- **PRD Tasks**: [.ralph/prd.json](.ralph/prd.json)
 
 ---
 

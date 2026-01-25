@@ -105,6 +105,83 @@ User.insert({
 
 ---
 
+### Bootstrap Modal + Turbo Frame Integration
+
+**Problem:** Integrating Bootstrap 5 modals with Turbo Frames requires coordinating three things: 1) link that opens modal, 2) turbo frame that loads content, 3) controller response that renders into frame. Miss any piece and you get blank modals or "Content missing" errors.
+
+**Solution:** Use `data-turbo-frame` on the link to target the frame inside the modal, and ensure the controller response renders a matching turbo_frame_tag. Use a Stimulus controller to trigger Bootstrap's modal show/hide.
+
+**Code Example:**
+```erb
+<%# Step 1: Modal container with turbo frame %>
+<div class="modal fade" id="oroshiModal" tabindex="-1">
+  <div class="modal-dialog">
+    <%= turbo_frame_tag 'oroshi_modal_content', class: 'modal-content' do %>
+      <div class="modal-body">
+        <p>Loading...</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Step 2: Link that opens modal and loads content %>
+<%= link_to t('oroshi.dashboard.add_record'),
+            new_oroshi_buyer_path,
+            class: 'btn btn-sm btn-success',
+            data: {
+              turbo_frame: 'oroshi_modal_content',        # Load response into this frame
+              action: 'oroshi--dashboard#showModal:passive' # Trigger Bootstrap modal.show()
+            } %>
+
+<%# Step 3: Controller response with matching frame %>
+<%# app/views/oroshi/buyers/new.html.erb %>
+<%= turbo_frame_tag 'oroshi_modal_content', class: 'modal-content' do %>
+  <div class="modal-header">
+    <h5 class="modal-title"><%= t('.title') %></h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  </div>
+  <div class="modal-body">
+    <%= render 'form', buyer: @buyer %>
+  </div>
+<% end %>
+```
+
+**Stimulus Controller Pattern:**
+```javascript
+// app/javascript/controllers/oroshi/dashboard_controller.js
+showModal() {
+  const modal = this.modalTarget  // data-oroshi--dashboard-target="modal"
+  const bsModal = new bootstrap.Modal(modal)
+  bsModal.show()
+}
+```
+
+**Form Handling in Modals:**
+```erb
+<%# Option 1: Disable Turbo for standard form submission %>
+<%= form_with model: @buyer, data: { turbo: false } do |f| %>
+  ...
+<% end %>
+
+<%# Option 2: Handle Turbo submission with redirect or turbo_stream %>
+<%# In controller %>
+def create
+  if @buyer.save
+    redirect_to oroshi_buyers_path, notice: 'Success'  # Closes modal
+    # OR
+    respond_to do |format|
+      format.turbo_stream  # Use turbo_stream to update page and close modal
+    end
+  end
+end
+```
+
+**Gotcha:** Don't forget to include the Stimulus action (`data: { action: '...' }`) to trigger the modal show. Just setting `data-turbo-frame` loads the content but doesn't open the modal. Also, ensure frame IDs match exactly between link target and response frame.
+
+**Related:** `app/views/oroshi/dashboard/_oroshi_modal.html.erb`, `app/views/oroshi/buyers/index.html.erb` lines 47-53, `app/views/oroshi/buyers/new.html.erb`
+
+---
+
 ## Testing
 
 *Entries for Test::Unit patterns, system tests, factories, and test setup.*

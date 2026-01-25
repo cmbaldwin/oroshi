@@ -203,8 +203,8 @@
         "Tests pass"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "README.md already uses Test::Unit throughout. No RSpec references found. Lines 197, 287, 323 correctly reference Test::Unit."
     },
     {
       "id": "US-014",

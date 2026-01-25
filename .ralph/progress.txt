@@ -122,3 +122,14 @@ Learnings for future iterations:
 - Solid gems: Require at top of engine.rb before configuration (shards registration)
 - 4 databases: main, queue, cache, cable - separate schema files, all need loading
 - These patterns prevent common mistakes when working with Rails engines and Oroshi
+
+[2026-01-25 03:33:00] Story: US-012 - Update README.md to document REALIZATIONS.md
+Implemented: Added comprehensive REALIZATIONS.md documentation to .ralph/README.md including category list, when-to-consult guide, when-to-update guide, and entry format template.
+Files: .ralph/README.md
+Tests: PASSING (rubocop clean)
+Learnings for future iterations:
+- REALIZATIONS.md now documented in Core Files section
+- Consult at: iteration start, when encountering errors, before committing, when writing tests
+- Update after: discovering gotcha, US completion, pattern solidifies, fixing preventable bug
+- Entry format: Problem/Solution/Code Example/Gotcha/Related
+- 8 categories documented: Rails & AR, Turbo & Stimulus, Testing, DB & Migrations, Assets, i18n, Auth, Jobs

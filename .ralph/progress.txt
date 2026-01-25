@@ -87,3 +87,14 @@ Learnings for future iterations:
 - Form handling: data: { turbo: false } for standard submission, or turbo_stream for dynamic updates
 - Frame IDs must match exactly between link target and response
 - Reference: app/views/oroshi/buyers/index.html.erb lines 47-53
+
+[2026-01-25 03:30:00] Story: US-009 - Extract HABTM params permit realization
+Implemented: Added HABTM strong params array syntax realization documenting the association_ids: [] pattern for has_and_belongs_to_many and has_many associations.
+Files: .ralph/REALIZATIONS.md (Rails & ActiveRecord section)
+Tests: PASSING (rubocop clean)
+Learnings for future iterations:
+- HABTM associations require array syntax: association_ids: []
+- Without brackets, Rails silently accepts only last value from array
+- Common in Oroshi: material_ids, supply_type_variation_ids, production_zone_ids, etc.
+- Debug by checking params in console: [1,2,3] becomes "3" string if brackets missing
+- Reference: app/controllers/oroshi/products_controller.rb line 103

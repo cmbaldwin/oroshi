@@ -282,6 +282,92 @@ bundle exec rspec                        # Will fail - RSpec not installed
 
 ---
 
+### System Test Setup with JavaScript Support
+
+**Problem:** System tests in Rails can run with or without JavaScript support. Tests without JavaScript (rack_test) are faster but can't test Stimulus controllers, Turbo Frames, or modals. Tests with JavaScript (Selenium) are slower but required for interactive features. Knowing when to use which driver prevents slow test suites.
+
+**Solution:** Use the `JavaScriptTest` module for tests that require browser JavaScript support. For non-interactive tests, inherit from `ApplicationSystemTestCase` directly which uses the faster rack_test driver.
+
+**Code Example:**
+```ruby
+# test/application_system_test_case.rb
+class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  include Devise::Test::IntegrationHelpers
+  
+  # Default: fast rack_test driver (no JS)
+  driven_by :rack_test
+  
+  Capybara.default_max_wait_time = 3
+end
+
+# Helper module for JS tests
+module JavaScriptTest
+  def self.included(base)
+    base.class_eval do
+      driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400] do |options|
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
+      end
+    end
+  end
+end
+
+# Test WITH JavaScript (Turbo Frames, modals, Stimulus)
+class OroshiDashboardTest < ApplicationSystemTestCase
+  include JavaScriptTest  # Enables Selenium/headless Chrome
+  
+  setup do
+    @admin = create(:user, :admin)
+    sign_in @admin  # Devise helper
+    I18n.locale = :ja  # Default locale for tests
+  end
+  
+  test "loads dashboard with turbo frames" do
+    visit oroshi_root_path
+    assert_selector "turbo-frame#dashboard_content", wait: 10
+  end
+end
+
+# Test WITHOUT JavaScript (faster for simple page loads)
+class OroshiNavigationTest < ApplicationSystemTestCase
+  # No JavaScriptTest module - uses rack_test
+  
+  setup do
+    @user = create(:user)
+    sign_in @user
+  end
+  
+  test "visits about page" do
+    visit about_path
+    assert_text "About Oroshi"
+  end
+end
+```
+
+**When to Include JavaScriptTest:**
+```ruby
+# INCLUDE JavaScriptTest for:
+# - Turbo Frame interactions
+# - Modal opening/closing
+# - Stimulus controller behaviors
+# - JavaScript-triggered events
+# - AJAX requests
+# - Real-time updates
+
+# DON'T INCLUDE for:
+# - Simple page visits
+# - Form submissions (without Turbo)
+# - Link clicking (standard navigation)
+# - Static content verification
+```
+
+**Gotcha:** Including `JavaScriptTest` makes tests ~10x slower because Selenium starts a real browser. Only use it when necessary. The `sign_in` helper comes from `Devise::Test::IntegrationHelpers` included in `ApplicationSystemTestCase`. Default locale is `:ja` for Japanese-first testing.
+
+**Related:** `test/application_system_test_case.rb`, `test/system/oroshi/dashboard_test.rb` lines 1-11
+
+---
+
 ## Database & Migrations
 
 *Entries for multi-database setup, schema loading, and migration patterns.*

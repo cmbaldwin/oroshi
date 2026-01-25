@@ -1,372 +1,197 @@
 {
   "project": "Oroshi",
-  "branchName": "ralph/realizations-and-tests",
-  "description": "Ralph Knowledge Base & Orders Dashboard Testing - Add REALIZATIONS.md for project gotchas and comprehensive system tests for orders dashboard turbo frames",
+  "branchName": "ralph/installation-testing",
+  "description": "Installation Testing & Route Refactoring - Remove dual route files to fix asset loading and add automated testing for gem installation in fresh Rails apps",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Create REALIZATIONS.md structure with table of contents",
-      "description": "As Ralph, I need a structured knowledge base file to document project-specific patterns and gotchas.",
+      "title": "Remove dual route files",
+      "description": "As a Rails engine maintainer, I want to use a single route file pattern so that asset loading works correctly and follows industry standards.",
       "acceptanceCriteria": [
-        "Create .ralph/REALIZATIONS.md with markdown structure",
-        "Add table of contents with category anchors: Rails & ActiveRecord, Turbo & Stimulus, Testing, Database & Migrations, Asset Pipeline, Internationalization, Authentication & Authorization, Background Jobs",
-        "Add header explaining purpose: 'Quick reference for patterns, gotchas, and constraints discovered during development'",
-        "Add entry format template in comment for future additions",
-        "Tests pass"
+        "Delete config/routes_standalone_app.rb",
+        "Move all routes to config/routes.rb in engine namespace",
+        "Move Devise routes from standalone to engine routes",
+        "No references to routes_standalone_app.rb in codebase",
+        "All tests pass",
+        "Typecheck passes"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "Created REALIZATIONS.md with all 8 category anchors and entry format template."
+      "notes": "COMPLETE - Deleted routes_standalone_app.rb and routes_oroshi_engine.rb. Updated routes.rb comments and simplified gemspec. Engine routes verified loading correctly (261 routes). Tests confirmed working."
     },
     {
       "id": "US-002",
-      "title": "Extract User.insert vs User.create! realization",
-      "description": "As Ralph, I need to document the Devise callback gotcha to avoid email sending issues.",
+      "title": "Update sandbox generation script",
+      "description": "As a developer working on Oroshi, I want the sandbox to generate its own routes file so that sandbox is a true separate Rails application.",
       "acceptanceCriteria": [
-        "Add entry under Rails & ActiveRecord section",
-        "Document problem: Devise sends confirmation emails even with confirmed_at set",
-        "Document solution: Use User.insert to skip all ActiveRecord callbacks",
-        "Include code example with encrypted_password and role enum",
-        "Reference progress.txt lines 25-32 and related user story US-022",
-        "Tests pass"
+        "Update bin/sandbox script",
+        "Script generates sandbox/config/routes.rb with engine mount",
+        "Routes file not copied from gem",
+        "Sandbox generation creates complete working app",
+        "bin/sandbox script documented with comments",
+        "Sandbox works when created",
+        "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "Added realization under Rails & ActiveRecord section with code example from bin/sandbox."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-003",
-      "title": "Extract Test::Unit not RSpec realization",
-      "description": "As Ralph, I need to document the testing framework to avoid using wrong syntax.",
+      "title": "Update test environment configuration",
+      "description": "As a developer running tests, I want tests to use engine routes directly so that tests don't have route/asset loading conflicts.",
       "acceptanceCriteria": [
-        "Add entry under Testing section",
-        "Document that project uses Test::Unit, NOT RSpec",
-        "Include correct commands: bin/rails test vs bundle exec rspec",
-        "Note syntax differences: test/assert vs describe/it/expect",
-        "Reference progress.txt line 17",
-        "Tests pass"
+        "Review test/test_helper.rb for standalone route loading",
+        "Remove any loading of routes_standalone_app.rb",
+        "System tests use engine routes via oroshi.* helpers",
+        "All existing tests pass after changes",
+        "No asset loading errors in test output",
+        "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "Added realization under Testing section with syntax and command examples."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
-      "title": "Extract Turbo Frame lazy loading realization",
-      "description": "As Ralph, I need to document turbo frame patterns to prevent 'Content missing' errors.",
+      "title": "Verify oroshi-moab installation works",
+      "description": "As a user installing Oroshi in a Rails app, I want installation to work correctly so that I can use Oroshi in my application.",
       "acceptanceCriteria": [
-        "Add entry under Turbo & Stimulus section",
-        "Document pattern: Use src: + loading: 'lazy' for deferred content",
-        "Include code example with turbo_frame_tag",
-        "Document gotcha: Frame must render content with matching ID",
-        "Explain 'Content missing' error occurs when IDs don't match",
-        "Tests pass"
+        "Clone/update oroshi-moab project",
+        "Run bundle install successfully",
+        "Run rails generate oroshi:install successfully",
+        "Run rails db:migrate successfully",
+        "Start server and visit /oroshi - dashboard loads",
+        "Assets load correctly (CSS and JavaScript)",
+        "No console errors",
+        "Document any additional setup steps discovered"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "Added comprehensive Turbo Frame lazy loading entry with code examples and debugging tips."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
-      "title": "Extract Japanese-first i18n realization",
-      "description": "As Ralph, I need to document the i18n approach to ensure all UI text is translatable.",
+      "title": "Update documentation for route pattern",
+      "description": "As a contributor or user, I want documentation to explain the route configuration so that I understand the architecture and don't reintroduce dual routes.",
       "acceptanceCriteria": [
-        "Add entry under Internationalization section",
-        "Document critical rule: All UI text uses t() helpers, NEVER hardcoded strings",
-        "Include pattern for lazy lookup in views: t('.title')",
-        "Document namespace convention: oroshi.namespace.view.key",
-        "Reference CLAUDE.md internationalization section",
-        "Tests pass"
+        "README.md updated with architecture section explaining engine routes",
+        "CLAUDE.md updated with route pattern explanation",
+        ".ralph/prompt.md updated with route gotcha",
+        "REALIZATIONS.md entry added about single route file pattern",
+        "Comment in config/routes.rb explaining engine namespace",
+        "Typecheck passes"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "Added i18n realization with lazy lookup pattern and namespace convention examples."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-006",
-      "title": "Extract schema loading vs migration realization",
-      "description": "As Ralph, I need to document database setup patterns to avoid initialization errors.",
+      "title": "Create install generator",
+      "description": "As a user installing Oroshi, I want a generator that sets up everything automatically so that I don't have to manually configure the gem.",
       "acceptanceCriteria": [
-        "Add entry under Database & Migrations section",
-        "Document context: Sandbox creation and demo apps",
-        "Document problem: Migrations execute model code before engine initialized",
-        "Document solution: Use db:schema:load instead of db:migrate for fresh setups",
-        "Document gotcha: Only for new databases, not production deployments",
-        "Tests pass"
+        "Generator at lib/generators/oroshi/install/install_generator.rb created",
+        "Generator copies migrations",
+        "Generator creates initializer at config/initializers/oroshi.rb",
+        "Generator adds mount Oroshi::Engine to config/routes.rb",
+        "Generator runs db:migrate",
+        "Generator loads Solid schemas (queue, cache, cable)",
+        "Generator shows helpful next steps message",
+        "Generator has comprehensive comments",
+        "Typecheck passes"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "Realization already documented comprehensively in REALIZATIONS.md lines 159-197."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-007",
-      "title": "Extract conditional gem initializers realization",
-      "description": "As Ralph, I need to document gem initialization patterns to prevent db:create errors.",
+      "title": "Create generator tests",
+      "description": "As a maintainer, I want automated tests for the install generator so that I know the generator works correctly.",
       "acceptanceCriteria": [
-        "Add entry under Database & Migrations section",
-        "Document problem: Gems not loaded during db:create or db:migrate",
-        "Document solution: Wrap all gem configs in if defined?(GemName)",
-        "Include code example for Carmen initializer",
-        "Reference sandbox creation patterns",
-        "Tests pass"
+        "Test file at test/lib/generators/oroshi/install_generator_test.rb created",
+        "Test verifies initializer created",
+        "Test verifies routes updated",
+        "Test verifies migrations copied",
+        "Tests use Rails::Generators::TestCase",
+        "Tests follow Test::Unit patterns (not RSpec)",
+        "All generator tests pass",
+        "Typecheck passes"
       ],
       "priority": 7,
-      "passes": true,
-      "notes": "Added comprehensive realization with Carmen and Devise examples, when-this-matters section."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-008",
-      "title": "Extract modal + turbo frame integration realization",
-      "description": "As Ralph, I need to document modal patterns for Bootstrap + Turbo integration.",
+      "title": "Add README installation instructions",
+      "description": "As a user, I want clear installation instructions so that I can install Oroshi correctly.",
       "acceptanceCriteria": [
-        "Add entry under Turbo & Stimulus section",
-        "Document pattern: Use data-turbo-frame on links to load into modals",
-        "Include code example with data-bs-toggle and data-bs-target",
-        "Document form handling: data: { turbo: false } or handle Turbo submission",
-        "Reference existing modal implementations",
-        "Tests pass"
+        "README.md has complete Installation section",
+        "Step-by-step instructions provided",
+        "Solid schema setup documented",
+        "Multi-database configuration explained",
+        "Troubleshooting section added",
+        "Common errors documented with solutions",
+        "Instructions tested in fresh Rails app",
+        "Typecheck passes"
       ],
       "priority": 8,
-      "passes": true,
-      "notes": "Added comprehensive modal integration pattern with 3-step workflow, Stimulus controller, and form handling examples."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-009",
-      "title": "Extract HABTM params permit realization",
-      "description": "As Ralph, I need to document strong params patterns for has_and_belongs_to_many associations.",
+      "title": "Create CI installation test",
+      "description": "As a maintainer, I want automated CI tests for installation so that installation issues are caught before release.",
       "acceptanceCriteria": [
-        "Add entry under Rails & ActiveRecord section",
-        "Document pattern: Always use array_ids: [] syntax in strong params",
-        "Include code example: params.permit(:name, supply_reception_time_ids: [])",
-        "Document gotcha: Forgetting [] allows only single value, not array",
-        "Tests pass"
+        "GitHub Actions workflow created at .github/workflows/installation.yml",
+        "Workflow tests Rails 7.1 and 8.0",
+        "Workflow tests Ruby 3.2 and 3.3",
+        "Workflow creates fresh Rails app",
+        "Workflow installs Oroshi",
+        "Workflow verifies installation succeeded",
+        "Workflow runs on push to main/develop",
+        "Workflow runs on pull requests",
+        "Typecheck passes"
       ],
       "priority": 9,
-      "passes": true,
-      "notes": "Added comprehensive HABTM strong params realization with correct/wrong examples, common patterns in Oroshi, and silent error debugging tip."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-010",
-      "title": "Extract system test setup realization",
-      "description": "As Ralph, I need to document system test patterns for browser testing.",
+      "title": "Create installation verification command",
+      "description": "As a user, I want a command to verify installation so that I know everything is set up correctly.",
       "acceptanceCriteria": [
-        "Add entry under Testing section",
-        "Document pattern: Include JavaScriptTest module for Selenium tests",
-        "Include code example showing ApplicationSystemTestCase inheritance",
-        "Document authentication pattern: sign_in helper from Devise",
-        "Document Japanese locale default in tests",
-        "Tests pass"
+        "Rake task oroshi:verify_installation created",
+        "Task checks routes mounted correctly",
+        "Task checks initializer exists",
+        "Task checks databases configured",
+        "Task checks migrations run",
+        "Task provides helpful output",
+        "Task exits with success/failure code",
+        "Typecheck passes"
       ],
       "priority": 10,
-      "passes": true,
-      "notes": "Added comprehensive system test setup realization with JavaScriptTest module, when-to-use guide, and performance gotcha."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-011",
-      "title": "Extract 5 more realizations from progress.txt",
-      "description": "As Ralph, I need to extract additional valuable patterns from the learning journal.",
+      "title": "Test oroshi-moab installation end-to-end",
+      "description": "As a QA tester, I want documented proof that oroshi-moab installation works so that we know the refactoring succeeded.",
       "acceptanceCriteria": [
-        "Review progress.txt lines 100-750 for additional patterns",
-        "Add at least 5 more realization entries across different categories",
-        "Each entry must have Problem/Solution/Code/Gotcha/Related format",
-        "Prioritize realizations that prevent common mistakes",
-        "Tests pass"
+        "Document created at docs/testing/oroshi-moab-installation-test.md",
+        "Document has step-by-step test procedure",
+        "All steps executed successfully",
+        "Screenshots/evidence captured",
+        "Any issues found documented",
+        "Workarounds (if needed) documented",
+        "Test repeatable by others"
       ],
       "priority": 11,
-      "passes": true,
-      "notes": "Added 5 realizations: Propshaft+importmap asset pipeline, Japanese PDF fonts, engine route helpers with main_app, Solid gems loading order, 4-database configuration."
-    },
-    {
-      "id": "US-012",
-      "title": "Update README.md to document REALIZATIONS.md",
-      "description": "As Ralph, I need to update the README to explain how to use REALIZATIONS.md.",
-      "acceptanceCriteria": [
-        "Add REALIZATIONS.md to Core Files section in .ralph/README.md",
-        "Document when to consult it: beginning of iteration, when encountering errors, before committing",
-        "Document when to update it: after discovering gotcha, after US completion, when pattern solidifies",
-        "Include example entry format in documentation",
-        "Tests pass"
-      ],
-      "priority": 12,
-      "passes": true,
-      "notes": "Added comprehensive REALIZATIONS.md documentation to README.md with category list, when-to-consult guide, when-to-update guide, and entry format template."
-    },
-    {
-      "id": "US-013",
-      "title": "Fix Test::Unit vs RSpec inconsistencies in README.md",
-      "description": "As Ralph, I need to correct outdated RSpec references in the README.",
-      "acceptanceCriteria": [
-        "Replace 'bundle exec rspec' with 'bin/rails test' on line 34",
-        "Replace 'bundle exec rspec --exclude-pattern' with appropriate Test::Unit command on line 150",
-        "Replace 'bundle exec rspec' with 'bin/rails test' on line 192",
-        "Verify all test commands reference Test::Unit, not RSpec",
-        "Tests pass"
-      ],
-      "priority": 13,
-      "passes": true,
-      "notes": "README.md already uses Test::Unit throughout. No RSpec references found. Lines 197, 287, 323 correctly reference Test::Unit."
-    },
-    {
-      "id": "US-014",
-      "title": "Create orders dashboard test file skeleton",
-      "description": "As a developer, I need a system test file structure for orders dashboard testing.",
-      "acceptanceCriteria": [
-        "Create test/system/oroshi/orders_dashboard_test.rb",
-        "Include JavaScriptTest module for Selenium/headless Chrome",
-        "Add setup block with admin user authentication",
-        "Add @date instance variable set to Time.zone.today",
-        "Add placeholder for create_dashboard_data helper method",
-        "Tests pass"
-      ],
-      "priority": 14,
-      "passes": true,
-      "notes": "Created test file skeleton with JavaScriptTest, admin authentication, @date variable, and create_dashboard_data placeholder method."
-    },
-    {
-      "id": "US-015",
-      "title": "Implement create_dashboard_data helper method",
-      "description": "As a developer, I need comprehensive test data to verify all dashboard views.",
-      "acceptanceCriteria": [
-        "Create private create_dashboard_data method in orders_dashboard_test.rb",
-        "Create supply_type, supply_type_variation, product, product_variation using factories",
-        "Create buyer, shipping_organization, shipping_method, shipping_receptacle using factories",
-        "Create production_zone and product_inventory with manufacture_date: @date",
-        "Create order with shipping_date: @date linking all required associations",
-        "Create order_template with same associations as order",
-        "Create supplier_organization, supplier, supply_date, and supply record",
-        "Verify all instance variables are available in tests",
-        "Tests pass"
-      ],
-      "priority": 15,
-      "passes": true,
-      "notes": "Implemented create_dashboard_data with all required associations and test data."
-    },
-    {
-      "id": "US-016",
-      "title": "Write main dashboard view tests (7 tests)",
-      "description": "As a developer, I need to verify all 7 main dashboard views load without turbo frame errors.",
-      "acceptanceCriteria": [
-        "Write test 'loads orders view without errors' navigating to orders tab",
-        "Write test 'loads templates view without errors' navigating to templates tab",
-        "Write test 'loads supply usage view without errors' navigating to supply_usage tab",
-        "Write test 'loads production view without errors' navigating to production tab",
-        "Write test 'loads shipping view without errors' navigating to shipping tab",
-        "Write test 'loads sales view without errors' navigating to sales tab",
-        "Write test 'loads revenue view without errors' navigating to revenue tab",
-        "Each test asserts turbo-frame#orders_dashboard selector with wait: 10",
-        "Each test asserts no 'Content missing' text",
-        "Tests pass"
-      ],
-      "priority": 16,
-      "passes": false,
-      "notes": "Tests implemented and run but fail on turbo frame loading. Authentication with login_as works but frames don't load in Selenium. Needs investigation of system test auth with engine routes."
-    },
-    {
-      "id": "US-017",
-      "title": "Write lazy frame loading tests (3 tests)",
-      "description": "As a developer, I need to verify lazy-loaded turbo frames load correctly on interaction.",
-      "acceptanceCriteria": [
-        "Write test 'lazy loads supply volumes frame' visiting supply_usage view",
-        "Assert turbo-frame#supply_volumes selector with wait: 15",
-        "Assert @supply_type_variation.name text visible with wait: 10",
-        "Write test 'lazy loads product inventories frame' visiting supply_usage view",
-        "Assert turbo-frame#product_inventories with wait: 15",
-        "Write test 'lazy loads buyer sales frame' clicking buyer in sales view",
-        "Assert buyer_sales frame loads without 'Content missing'",
-        "Tests pass"
-      ],
-      "priority": 17,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-018",
-      "title": "Write production variant tests (3 tests)",
-      "description": "As a developer, I need to verify production view sub-routes load correctly.",
-      "acceptanceCriteria": [
-        "Write test 'loads production view with manufacture date sort'",
-        "Visit oroshi_orders_order_production_view_path with production_view: :manufacture_date_production",
-        "Assert response success and no 'Content missing'",
-        "Write test 'loads production view with shipping date sort'",
-        "Visit with production_view: :shipping_date_production",
-        "Write test 'loads production view with production request'",
-        "Visit with production_view: :production_request",
-        "Tests pass"
-      ],
-      "priority": 18,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-019",
-      "title": "Write modal interaction tests (2 tests)",
-      "description": "As a developer, I need to verify modals open and load turbo frames correctly.",
-      "acceptanceCriteria": [
-        "Write test 'opens order modal and loads form'",
-        "Click new order button using I18n.t('common.buttons.new')",
-        "Assert #ordersModal.show selector with wait: 10",
-        "Within modal, assert turbo-frame#orders_modal_content with wait: 10",
-        "Assert form selector and buyer select field present",
-        "Write test 'creates new order from template via modal'",
-        "Navigate to templates view, click create button on template",
-        "Fill in item_quantity, receptacle_quantity, freight_quantity",
-        "Submit and verify success message appears",
-        "Tests pass"
-      ],
-      "priority": 19,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-020",
-      "title": "Write PDF generation tests (3 tests)",
-      "description": "As a developer, I need to verify PDF document generation works for shipping views.",
-      "acceptanceCriteria": [
-        "Write test 'generates shipping chart PDF'",
-        "Visit oroshi_orders_order_shipping_chart_path(date: @date)",
-        "Assert response Content-Type equals 'application/pdf'",
-        "Write test 'generates shipping list PDF'",
-        "Visit oroshi_orders_order_shipping_list_path(date: @date)",
-        "Assert PDF content type",
-        "Write test 'generates shipping slips PDF'",
-        "Visit oroshi_orders_order_shipping_slips_path(date: @date)",
-        "Assert PDF content type",
-        "Tests pass"
-      ],
-      "priority": 20,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-021",
-      "title": "Adjust wait times and fix flaky tests",
-      "description": "As a developer, I need stable tests that pass consistently in headless Chrome.",
-      "acceptanceCriteria": [
-        "Run bin/rails test test/system/oroshi/orders_dashboard_test.rb 5 times",
-        "Identify any flaky failures (timeouts, missing elements)",
-        "Increase wait times for lazy frames if needed (up to wait: 15)",
-        "Add explicit waits for modal animations if needed",
-        "Verify all 18+ tests pass consistently",
-        "Document any skipped tests with explanation",
-        "Tests pass"
-      ],
-      "priority": 21,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-022",
-      "title": "Run full system test suite to verify no regressions",
-      "description": "As a developer, I need to ensure new tests don't break existing system tests.",
-      "acceptanceCriteria": [
-        "Run bin/rails test test/system/",
-        "Verify all existing system tests still pass",
-        "Verify new orders_dashboard_test.rb passes",
-        "Check for shared factory issues or test pollution",
-        "Fix any regressions introduced by new test data setup",
-        "Tests pass"
-      ],
-      "priority": 22,
       "passes": false,
       "notes": ""
     }

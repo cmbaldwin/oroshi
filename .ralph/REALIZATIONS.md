@@ -69,6 +69,47 @@ User.insert({
 
 *Entries for Test::Unit patterns, system tests, factories, and test setup.*
 
+### Test::Unit Framework (NOT RSpec)
+
+**Problem:** Oroshi uses Test::Unit (Minitest) as its testing framework, but developers familiar with RSpec may accidentally use RSpec syntax (`describe`, `it`, `expect`) or commands (`bundle exec rspec`).
+
+**Solution:** Always use Test::Unit syntax and Rails test commands. Tests go in `test/` directory, not `spec/`.
+
+**Code Example:**
+```ruby
+# CORRECT - Test::Unit syntax
+class ProductTest < ActiveSupport::TestCase
+  test "should validate presence of name" do
+    product = Oroshi::Product.new
+    assert_not product.valid?
+    assert_includes product.errors[:name], "can't be blank"
+  end
+end
+
+# WRONG - RSpec syntax (DO NOT USE)
+describe Product do
+  it "validates presence of name" do
+    expect(Product.new).to be_invalid
+  end
+end
+```
+
+**Commands:**
+```bash
+# CORRECT
+bin/rails test                           # Run all tests
+bin/rails test test/models/              # Run model tests
+bin/rails test test/models/product_test.rb  # Run specific file
+bin/rails test test/models/product_test.rb:15  # Run specific line
+
+# WRONG
+bundle exec rspec                        # Will fail - RSpec not installed
+```
+
+**Gotcha:** Factory Bot is still used (`FactoryBot.create`), but assertions use `assert_*` methods, not `expect().to`. System tests use Capybara matchers with `assert_selector`, `assert_text`, etc.
+
+**Related:** `test/` directory structure, CLAUDE.md Testing section
+
 ---
 
 ## Database & Migrations

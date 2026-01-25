@@ -30,7 +30,7 @@ check_credits() {
       test_output=$(echo "Respond with only the word: OK" | timeout 30 claude --dangerously-skip-permissions 2>&1) || exit_code=$?
       ;;
     copilot)
-      test_output=$(timeout 30 copilot -p "Respond with only the word: OK" --allow-all-tools -s 2>&1) || exit_code=$?
+      test_output=$(timeout 30 copilot -p "Respond with only the word: OK" --allow-all -s 2>&1) || exit_code=$?
       ;;
     *)
       return 1
@@ -97,7 +97,7 @@ run_agent() {
       }
       ;;
     copilot)
-      timeout 1800 copilot -p "$(cat "$prompt_file")" --allow-all-tools 2>&1 || {
+      timeout 1800 copilot -p "$(cat "$prompt_file")" --allow-all --silent 2>&1 || {
         echo "ERROR: copilot command timed out or failed"
         return 1
       }

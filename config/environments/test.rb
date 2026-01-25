@@ -61,6 +61,12 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Use inline job adapter for tests to avoid background job issues
+  config.active_job.queue_adapter = :inline
+
+  # Suppress ActionCable broadcasts in tests
+  config.action_cable.disable_request_forgery_protection = true
+
   # Raise exceptions for disallowed deprecations.
   config.active_support.disallowed_deprecation = :raise
 

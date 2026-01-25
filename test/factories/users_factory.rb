@@ -10,6 +10,11 @@ FactoryBot.define do
     approved { true }
     confirmed_at { Time.current }
 
+    # Skip Devise callbacks that require Warden mappings in system tests
+    after(:build) do |user|
+      user.skip_confirmation_notification!
+    end
+
     trait :admin do
       role { :admin }
       admin { true }

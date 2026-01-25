@@ -33,12 +33,15 @@ FactoryBot.define do
       # NOTE: production_requests are NOT created automatically as they require product_inventory
       # Create them explicitly in tests that need them
 
-      # Attach an image from a URL
-      product_variation.image.attach(
-        io: URI.open("https://placehold.co/600x400"),
-        filename: "placeholder.png",
-        content_type: "image/png"
-      )
+      # Skip image attachment in test environment (requires network call)
+      unless Rails.env.test?
+        # Attach an image from a URL
+        product_variation.image.attach(
+          io: URI.open("https://placehold.co/600x400"),
+          filename: "placeholder.png",
+          content_type: "image/png"
+        )
+      end
     end
   end
 end

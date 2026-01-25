@@ -7,8 +7,61 @@ class OroshiOrdersDashboardTest < ApplicationSystemTestCase
 
   setup do
     @admin = create(:user, :admin)
-    sign_in @admin
+    login_as(@admin, scope: :user)
     @date = Time.zone.today
+  end
+
+  test "loads orders view without errors" do
+    create_dashboard_data
+    visit oroshi_orders_orders_path(date: @date)
+    save_screenshot
+    # Check if the page loaded at all
+    assert_selector "body"
+    # Look for the turbo frame with longer wait
+    assert_selector "turbo-frame#orders_dashboard", wait: 30
+    assert_no_text "Content missing"
+  end
+
+  test "loads templates view without errors" do
+    create_dashboard_data
+    visit oroshi_orders_templates_path(date: @date)
+    assert_selector "turbo-frame#orders_dashboard", wait: 10
+    assert_no_text "Content missing"
+  end
+
+  test "loads supply usage view without errors" do
+    create_dashboard_data
+    visit oroshi_orders_supply_usage_path(date: @date)
+    assert_selector "turbo-frame#orders_dashboard", wait: 10
+    assert_no_text "Content missing"
+  end
+
+  test "loads production view without errors" do
+    create_dashboard_data
+    visit oroshi_orders_production_path(date: @date)
+    assert_selector "turbo-frame#orders_dashboard", wait: 10
+    assert_no_text "Content missing"
+  end
+
+  test "loads shipping view without errors" do
+    create_dashboard_data
+    visit oroshi_orders_shipping_path(date: @date)
+    assert_selector "turbo-frame#orders_dashboard", wait: 10
+    assert_no_text "Content missing"
+  end
+
+  test "loads sales view without errors" do
+    create_dashboard_data
+    visit oroshi_orders_sales_path(date: @date)
+    assert_selector "turbo-frame#orders_dashboard", wait: 10
+    assert_no_text "Content missing"
+  end
+
+  test "loads revenue view without errors" do
+    create_dashboard_data
+    visit oroshi_orders_revenue_path(date: @date)
+    assert_selector "turbo-frame#orders_dashboard", wait: 10
+    assert_no_text "Content missing"
   end
 
   private

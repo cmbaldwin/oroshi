@@ -6,6 +6,27 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 
+# Suppress Turbo broadcasts in tests (they fail with routing errors)
+module Turbo
+  module Broadcastable
+    def broadcast_replace_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_append_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_prepend_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_remove_to(*args, **kwargs)
+      # No-op in tests
+    end
+  end
+end
+
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)

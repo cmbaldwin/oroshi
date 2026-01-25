@@ -14,13 +14,16 @@ FactoryBot.define do
     exterior_depth { rand(1.0..100.0).round(2) }
     active { true }
 
+    # Skip image attachment in test environment (requires network call)
     after(:create) do |shipping_receptacle|
-      # Attach an image from a URL
-      shipping_receptacle.image.attach(
-        io: URI.open("https://placehold.co/600x400"),
-        filename: "placeholder.png",
-        content_type: "image/png"
-      )
+      unless Rails.env.test?
+        # Attach an image from a URL
+        shipping_receptacle.image.attach(
+          io: URI.open("https://placehold.co/600x400"),
+          filename: "placeholder.png",
+          content_type: "image/png"
+        )
+      end
     end
 
     trait :with_production_requests do

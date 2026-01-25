@@ -76,3 +76,14 @@ Learnings for future iterations:
 - Applies to Carmen, Devise, SimpleForm, Resend, Bullet, any gem
 - Example: if defined?(Carmen) { Carmen.i18n_backend.locale = :ja }
 - Reference: bin/sandbox lines 280-350 for all wrapped initializers
+
+[2026-01-25 03:29:00] Story: US-008 - Extract modal + turbo frame integration realization
+Implemented: Added comprehensive Bootstrap modal + Turbo Frame integration pattern with 3-step workflow (modal container, link with data-turbo-frame, controller response), Stimulus controller pattern, and form handling options.
+Files: .ralph/REALIZATIONS.md (Turbo & Stimulus section)
+Tests: PASSING (rubocop clean)
+Learnings for future iterations:
+- Three pieces required: modal with turbo_frame_tag, link with data-turbo-frame, response with matching frame
+- Use Stimulus action to trigger Bootstrap modal.show() (content loads but modal won't open without it)
+- Form handling: data: { turbo: false } for standard submission, or turbo_stream for dynamic updates
+- Frame IDs must match exactly between link target and response
+- Reference: app/views/oroshi/buyers/index.html.erb lines 47-53

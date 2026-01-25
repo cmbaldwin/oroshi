@@ -59,6 +59,59 @@ User.insert({
 
 ---
 
+### HABTM Strong Params Array Syntax
+
+**Problem:** When permitting `has_and_belongs_to_many` association IDs in strong parameters, forgetting the array bracket syntax (`association_ids: []`) causes Rails to only accept a single ID value, not an array. This breaks forms with multi-select checkboxes or select tags, silently discarding all but the last selected value.
+
+**Solution:** Always use the array syntax `association_ids: []` when permitting HABTM or `has_many` association IDs in strong parameters.
+
+**Code Example:**
+```ruby
+# CORRECT - Array syntax for HABTM associations
+def product_params
+  params.require(:oroshi_product)
+        .permit(:name, :units, :supply_type_id, :tax_rate,
+                material_ids: [])  # Array of IDs for has_and_belongs_to_many :materials
+end
+
+def supplier_params
+  params.require(:oroshi_supplier)
+        .permit(:entity_name, :invoice_name, :active,
+                supply_type_variation_ids: [],  # HABTM array
+                supply_date_ids: [])            # HABTM array
+end
+
+# WRONG - Without brackets (only accepts single value)
+def product_params
+  params.require(:oroshi_product)
+        .permit(:name, material_ids)  # ERROR: Will only accept one material_id
+end
+```
+
+**Common HABTM Patterns in Oroshi:**
+```ruby
+# Supplier ↔ SupplyTypeVariation
+supply_type_variation_ids: []
+
+# SupplierOrganization ↔ SupplyReceptionTime
+supply_reception_time_ids: []
+
+# Product ↔ Material
+material_ids: []
+
+# ProductVariation ↔ ProductionZone
+production_zone_ids: []
+
+# Buyer ↔ ShippingMethod
+shipping_method_ids: []  # (if exists)
+```
+
+**Gotcha:** The error is silent - Rails doesn't raise an exception when you forget the brackets. It just accepts the last value from the array and discards the rest. Debug by checking `params` in console: if you send `[1, 2, 3]` but receive `"3"` as a string, you forgot the `[]` syntax.
+
+**Related:** `app/controllers/oroshi/products_controller.rb` line 103, `app/controllers/oroshi/suppliers_controller.rb` line 70, `app/controllers/oroshi/onboarding_controller.rb` lines 208, 236, 281
+
+---
+
 ## Turbo & Stimulus
 
 *Entries for Turbo Frames, Turbo Streams, Stimulus controllers, and Hotwire patterns.*

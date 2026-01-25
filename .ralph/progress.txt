@@ -133,3 +133,13 @@ Learnings for future iterations:
 - Update after: discovering gotcha, US completion, pattern solidifies, fixing preventable bug
 - Entry format: Problem/Solution/Code Example/Gotcha/Related
 - 8 categories documented: Rails & AR, Turbo & Stimulus, Testing, DB & Migrations, Assets, i18n, Auth, Jobs
+
+[2026-01-25 03:34:00] Story: US-013 - Fix Test::Unit vs RSpec inconsistencies in README.md
+Implemented: Verified .ralph/README.md already uses Test::Unit throughout with no RSpec references. All test commands correctly use 'bin/rails test'.
+Files: .ralph/README.md (no changes needed)
+Tests: PASSING (rubocop clean)
+Learnings for future iterations:
+- README.md already updated to use Test::Unit exclusively
+- Lines 197, 287, 323 correctly reference Test::Unit framework
+- No 'bundle exec rspec' or RSpec-specific commands found
+- Acceptance criteria referred to outdated line numbers from previous version

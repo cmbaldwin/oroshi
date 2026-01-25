@@ -166,3 +166,17 @@ Learnings for future iterations:
 - FactoryBot automatically handles nested associations (product_variation needs product)
 - Supply requires supplier_organization with supply_reception_times association
 - Factories use sensible defaults - only override what's specific to the test
+
+[2026-01-25 13:08:00] Story: US-016 - Write main dashboard view tests (7 tests)
+Implemented: Created 7 system tests for dashboard views (orders, templates, supply_usage, production, shipping, sales, revenue)
+Files: test/system/oroshi/orders_dashboard_test.rb, test/application_system_test_case.rb, test/test_helper.rb, test/factories/*, config/environments/test.rb
+Tests: FAILING (7 runs, 7 assertions, 7 failures - turbo frames not loading)
+Learnings for future iterations:
+- System tests with Devise: Use login_as(user, scope: :user) from Warden, NOT sign_in from Devise::Test::IntegrationHelpers (requires routes)
+- Factory image attachments: Wrap URI.open calls in unless Rails.env.test? to avoid network calls and Ruby 4.0 compatibility issues
+- Turbo broadcasts in tests: Suppress by monkey-patching Turbo::Broadcastable methods to no-op (avoid routing errors during rendering)
+- Engine routes in system tests: Must manually define oroshi_orders_*_path helpers that delegate to Oroshi::Engine.routes.url_helpers.orders_*_path
+- Test environment config: Set config.active_job.queue_adapter = :inline, enable Warden.test_mode!
+- User factory: Call skip_confirmation_notification! in after(:build) to avoid Devise confirmation emails
+- Turbo frame lazy loading: Tests fail because frames don't load - likely authentication not working correctly in Selenium/headless Chrome context
+- System test debugging: save_screenshot is helpful, Capybara creates tmp/capybara/failures_*.png automatically

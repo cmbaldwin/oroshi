@@ -259,7 +259,7 @@
       ],
       "priority": 16,
       "passes": false,
-      "notes": ""
+      "notes": "Tests implemented and run but fail on turbo frame loading. Authentication with login_as works but frames don't load in Selenium. Needs investigation of system test auth with engine routes."
     },
     {
       "id": "US-017",

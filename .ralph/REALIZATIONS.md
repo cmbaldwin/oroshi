@@ -33,6 +33,30 @@ Entry Format Template:
 
 *Entries for ActiveRecord patterns, model callbacks, associations, and query gotchas.*
 
+### User.insert vs User.create! for Devise Users
+
+**Problem:** When creating seeded or demo users with Devise, using `User.create!` triggers ActiveRecord callbacks including Devise's `send_confirmation_instructions` callback, which sends confirmation emails even when `confirmed_at` is already set.
+
+**Solution:** Use `User.insert` to skip all ActiveRecord callbacks, including Devise's email-sending callbacks. This requires manually setting all required fields including `encrypted_password`, `role`, timestamps, and `confirmed_at`.
+
+**Code Example:**
+```ruby
+# Skip Devise callbacks by using insert instead of create!
+User.insert({
+  email: 'admin@oroshi.local',
+  username: 'admin',
+  encrypted_password: Devise::Encryptor.digest(User, 'password123'),
+  role: User.roles[:admin],          # Use enum integer value
+  confirmed_at: Time.current,
+  created_at: Time.current,
+  updated_at: Time.current
+})
+```
+
+**Gotcha:** `User.insert` returns the number of inserted rows, not the User object. If you need the created user, query for it afterward. Also, enum fields must use their integer values (e.g., `User.roles[:admin]`).
+
+**Related:** `bin/sandbox` lines 391-419, `db/seeds.rb`
+
 ---
 
 ## Turbo & Stimulus

@@ -18,12 +18,10 @@ This directory contains files for **Ralph**, an autonomous AI development agent 
 Ralph is now integrated into VS Code Copilot via custom instructions:
 
 1. **Setup** (one-time):
-
    - Custom instructions are in `/.github/copilot-instructions.md` (automatically loaded)
    - Oroshi patterns are in `/AGENTS.md` (automatically loaded)
 
 2. **Use Ralph**:
-
    - ./scripts/ralph/ralph.sh [max_iterations] OR Open VS Code Copilot Chat
    - Say "Start working on the PRD" or "Go"
    - Ralph will automatically:
@@ -31,7 +29,8 @@ Ralph is now integrated into VS Code Copilot via custom instructions:
      - Read `progress.txt` for previous learnings
      - Select highest-priority incomplete story
      - Implement it completely
-     - Run quality checks (rubocop + rspec)
+     - Run quality checks (rubocop + Test::Unit tests)
+     - For UI changes: Test in sandbox application
      - Commit if passing
      - Update `prd.json` and `progress.txt`
 
@@ -47,6 +46,16 @@ Ralph is now integrated into VS Code Copilot via custom instructions:
    # Recent learnings
    tail -n 50 progress.txt
    ```
+
+## Available Skills
+
+Ralph has access to specialized skills that activate automatically:
+
+- **prd** - Generate Product Requirements Documents with structured user stories
+- **ralph** - Convert markdown PRDs to `prd.json` format for autonomous execution
+- **web-browser** - Remote control Chrome/Chromium to verify UI changes in sandbox
+
+Skills are defined in `.claude/skills/` and activate based on trigger phrases.
 
 ## Legacy Amp Workflow (Optional)
 
@@ -146,19 +155,31 @@ Learnings:
 # Linting
 bundle exec rubocop --autocorrect
 
-# Tests (excluding system tests)
-bundle exec rspec --exclude-pattern="spec/system/**/*_spec.rb"
+# Tests (using Test::Unit)
+bin/rails test
+
+# Sandbox testing (for UI changes)
+bin/sandbox              # Create sandbox
+cd sandbox && bin/dev    # Start on port 3001
+rake sandbox:test        # E2E test (2-3 min)
 ```
 
-### 5. Documentation
+### 5. Sandbox Testing (for UI changes)
+
+- Creates sandbox: `bin/sandbox`
+- Tests in browser at http://localhost:3001
+- Verifies acceptance criteria
+- Destroys sandbox when done
+
+### 6. Documentation
 
 - Commits changes with proper format
 - Updates story to `passes: true` in prd.json
 - Appends learnings to progress.txt
 
-### 6. Complete
+### 7. Complete
 
-When all stories have `passes: true`, Ralph reports completion
+When all stories have `passes: true`, Ralph outputs `<promise>COMPLETE</promise>`
 
 ## Creating a New PRD
 
@@ -169,7 +190,6 @@ When all stories have `passes: true`, Ralph reports completion
    ```
 
 2. **Edit fields:**
-
    - Update `branchName` to `ralph/feature-name`
    - Update `description`
    - Define `userStories` with priorities
@@ -189,7 +209,8 @@ When all stories have `passes: true`, Ralph reports completion
 All Ralph commits must pass:
 
 - ✅ Linting: `bundle exec rubocop --autocorrect`
-- ✅ Tests: `bundle exec rspec --exclude-pattern="spec/system/**/*_spec.rb"`
+- ✅ Tests: `bin/rails test` (Test::Unit)
+- ✅ Sandbox verification (for UI changes): `bin/sandbox` testing
 - ✅ No failures or errors
 
 ## Git Commit Format
@@ -202,11 +223,42 @@ Co-Authored-By: Ralph (Autonomous Agent) <ralph@example.com>
 
 **Types:** `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 
+## Important Requirements
+
+### Internationalization (i18n)
+
+Oroshi is **Japanese-first**. All UI work must:
+
+- ✅ Use `t()` helper with Japanese locale keys
+- ✅ Never hardcode strings in views/controllers
+- ✅ Add translations to `config/locales/*.ja.yml`
+- ❌ Never mix English and Japanese
+- ❌ Never hardcode English strings like "Skip", "Back", "Next"
+
+### Engine Isolation
+
+Oroshi is a Rails engine with namespace isolation:
+
+- Use `main_app.` prefix for host routes: `main_app.new_user_session_path`
+- All models/controllers in `Oroshi::` namespace (except `User`)
+- Use `raise: false` for callbacks: `skip_before_action :authenticate_user!, raise: false`
+
+### Testing Framework
+
+Oroshi uses **Test::Unit**, NOT RSpec:
+
+- Write tests in `test/` directory
+- Use FactoryBot for fixtures
+- Run tests with `bin/rails test`
+- Use sandbox for UI/integration testing
+
 ## Tips
 
 - **One story per session** - Ralph focuses on complete implementation
 - **Search before coding** - Ralph looks for existing patterns first
 - **Quality first** - Never commit broken code
+- **Japanese-first UI** - Always use locale files, never hardcode
+- **Test in sandbox** - Verify UI changes in generated demo app
 - **Document learnings** - Help future Ralph iterations
 
 ## Archiving
@@ -227,5 +279,7 @@ Archives go to: `scripts/ralph/archive/YYYY-MM-DD-feature-name/`
 
 ---
 
-**Last Updated:** January 8, 2026
+**Last Updated:** January 25, 2026
 **Oroshi Version:** Rails 8.1.1, Ruby 4.0.0
+**Testing Framework:** Test::Unit (NOT RSpec)
+**Sandbox Port:** 3001

@@ -15,8 +15,8 @@
         "Tests pass"
       ],
       "priority": 1,
-      "passes": true,
-      "notes": "Created REALIZATIONS.md with all 8 category anchors and entry format template."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-002",
@@ -31,8 +31,8 @@
         "Tests pass"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "Added realization under Rails & ActiveRecord section with code example from bin/sandbox."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-003",
@@ -47,8 +47,8 @@
         "Tests pass"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "Added realization under Testing section with syntax and command examples."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
@@ -63,8 +63,8 @@
         "Tests pass"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "Added comprehensive Turbo Frame lazy loading entry with code examples and debugging tips."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
@@ -79,8 +79,8 @@
         "Tests pass"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "Added i18n realization with lazy lookup pattern and namespace convention examples."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-006",
@@ -95,8 +95,8 @@
         "Tests pass"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "Realization already documented comprehensively in REALIZATIONS.md lines 159-197."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-007",
@@ -111,8 +111,8 @@
         "Tests pass"
       ],
       "priority": 7,
-      "passes": true,
-      "notes": "Added comprehensive realization with Carmen and Devise examples, when-this-matters section."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-008",

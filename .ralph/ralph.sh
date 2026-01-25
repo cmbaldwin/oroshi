@@ -38,7 +38,7 @@ check_credits() {
   esac
 
   # Check for rate limit indicators and credit issues
-  if echo "$test_output" | grep -qiE "rate.?limit|quota|too many|capacity|overloaded|try again|exceeded|insufficient|credit"; then
+  if echo "$test_output" | grep -qiE "rate.?limit|quota|too many|capacity|overloaded|try again|exceeded|insufficient|credit|hit your limit"; then
     return 1
   fi
 
@@ -74,76 +74,35 @@ select_provider() {
   return 1
 }
 
-# Run the AI agent with the given prompt file and show live preview
+# Run the AI agent with the given prompt file
 run_agent() {
   local provider=$1
   local prompt_file=$2
-  local temp_file=$(mktemp)
-  local lines_to_show=4
-  local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
-
-  # Start the agent process
+  
+  echo "Running $provider with prompt from $prompt_file..."
+  echo "(This may take several minutes...)"
+  
+  # Run the agent process directly with timeout (30 minutes max)
   case "$provider" in
     amp)
-      cat "$prompt_file" | amp --dangerously-allow-all > "$temp_file" 2>&1 &
+      timeout 1800 bash -c "cat '$prompt_file' | amp --dangerously-allow-all" 2>&1 || {
+        echo "ERROR: amp command timed out or failed"
+        return 1
+      }
       ;;
     claude)
-      cat "$prompt_file" | claude --dangerously-skip-permissions > "$temp_file" 2>&1 &
+      timeout 1800 bash -c "cat '$prompt_file' | claude --dangerously-skip-permissions" 2>&1 || {
+        echo "ERROR: claude command timed out or failed"
+        return 1
+      }
       ;;
     copilot)
-      copilot -p "$(cat "$prompt_file")" --allow-all-tools > "$temp_file" 2>&1 &
+      timeout 1800 copilot -p "$(cat "$prompt_file")" --allow-all-tools 2>&1 || {
+        echo "ERROR: copilot command timed out or failed"
+        return 1
+      }
       ;;
   esac
-  
-  local agent_pid=$!
-  local i=0
-  
-  # Live preview while agent is running
-  while kill -0 $agent_pid 2>/dev/null; do
-    local char="${spinstr:$i:1}"
-    
-    # Move cursor up to redraw status area
-    if [ $i -gt 0 ]; then
-      printf "\033[%dA" $((lines_to_show + 1))
-    fi
-    
-    # Show spinner header
-    printf "\r\033[K  %s Working with %s...\n" "$char" "$provider"
-    
-    # Show last N lines from output
-    if [ -f "$temp_file" ]; then
-      tail -n $lines_to_show "$temp_file" 2>/dev/null | while IFS= read -r line; do
-        # Truncate long lines to terminal width
-        printf "\r\033[K  │ %.120s\n" "$line"
-      done
-      
-      # Pad with empty lines if fewer than N lines exist
-      local actual_lines=$(wc -l < "$temp_file" 2>/dev/null || echo 0)
-      for ((j=actual_lines; j<lines_to_show; j++)); do
-        printf "\r\033[K\n"
-      done
-    else
-      for ((j=0; j<lines_to_show; j++)); do
-        printf "\r\033[K\n"
-      done
-    fi
-    
-    i=$(( (i+1) %10 ))
-    sleep 0.2
-  done
-  
-  wait $agent_pid
-  
-  # Clear the status area
-  printf "\033[%dA" $((lines_to_show + 1))
-  for ((j=0; j<=lines_to_show; j++)); do
-    printf "\r\033[K\n"
-  done
-  printf "\033[%dA" $((lines_to_show + 1))
-  
-  # Return the output
-  cat "$temp_file"
-  rm -f "$temp_file"
 }
 
 # Archive previous run if branch changed
@@ -210,20 +169,12 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   OUTPUT=$(run_agent "$PROVIDER" "$SCRIPT_DIR/prompt.md") || true
   
   # Check if the run failed due to credits/rate limit
-  if echo "$OUTPUT" | grep -qiE "rate.?limit|quota|too many|capacity|overloaded|try again|exceeded|insufficient|credit"; then
+  if echo "$OUTPUT" | grep -qiE "rate.?limit|quota|too many|capacity|overloaded|try again|exceeded|insufficient|credit|hit your limit"; then
     echo "$OUTPUT"
     echo ""
-    echo "Provider failed. Retrying with different provider..."
-    
-    # Try next provider
-    PROVIDER=$(select_provider) || {
-      echo "No providers available. Waiting 5 minutes before retry..."
-      sleep 300
-      continue
-    }
-    echo "Selected provider: $PROVIDER"
-    echo ""
-    OUTPUT=$(run_agent "$PROVIDER" "$SCRIPT_DIR/prompt.md") || true
+    echo "Provider failed due to rate limit. Waiting 5 minutes before retry..."
+    sleep 300
+    continue
   fi
   
   # Show the output

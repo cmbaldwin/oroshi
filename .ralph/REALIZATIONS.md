@@ -156,6 +156,94 @@ bundle exec rspec                        # Will fail - RSpec not installed
 
 *Entries for multi-database setup, schema loading, and migration patterns.*
 
+### Schema Loading vs Migration for Fresh Databases
+
+**Problem:** When setting up fresh databases (sandbox creation, CI/CD, demo apps), running `db:migrate` can fail because migration files may execute model code that references `Oroshi::` namespaced models before the engine is fully initialized.
+
+**Solution:** Use `db:schema:load` instead of `db:migrate` for fresh database setups. Schema loading creates tables directly from `schema.rb` without executing migration code.
+
+**Code Example:**
+```bash
+# CORRECT - For fresh databases (sandbox, CI, demo apps)
+bin/rails db:create
+bin/rails db:schema:load            # Main database
+bin/rails db:schema:load:queue      # Solid Queue database
+bin/rails db:schema:load:cache      # Solid Cache database
+bin/rails db:schema:load:cable      # Solid Cable database
+
+# WRONG - For fresh databases (may fail during engine initialization)
+bin/rails db:create
+bin/rails db:migrate
+```
+
+**When to Use Each:**
+```bash
+# db:schema:load - Use for:
+# - Sandbox creation
+# - CI/CD pipelines
+# - New development environments
+# - Demo app setup
+# - Any fresh database without existing data
+
+# db:migrate - Use for:
+# - Production deployments (existing data)
+# - Adding new migrations to existing database
+# - Development when you have existing data
+```
+
+**Gotcha:** `db:schema:load` destroys existing data! Only use on fresh databases. For production deployments with existing data, always use `db:migrate`. The sandbox script and CI workflow both use `db:schema:load` because they start from empty databases.
+
+**Related:** `bin/sandbox` lines 333-343, `.github/workflows/ci.yml`, CLAUDE.md Sandbox section
+
+---
+
+### Conditional Gem Initializers for Database Tasks
+
+**Problem:** When running `db:create` or `db:migrate`, Rails loads initializers before gems are fully loaded. This causes `uninitialized constant` errors if initializers reference gem classes (Carmen, Devise, SimpleForm, Resend, Bullet, etc.).
+
+**Solution:** Wrap all gem-specific configuration in conditional checks using `if defined?(GemName)`. This ensures the initializer only executes when the gem is fully loaded.
+
+**Code Example:**
+```ruby
+# config/initializers/carmen.rb
+# CORRECT - Conditional initialization
+if defined?(Carmen)
+  Carmen.i18n_backend.locale = :ja
+  Carmen::Country.all.each do |country|
+    country.instance_variable_set(:@name, country.translations[:ja])
+  end
+end
+
+# config/initializers/devise.rb
+if defined?(Devise)
+  Devise.setup do |config|
+    config.secret_key = Rails.application.credentials.secret_key_base
+    config.mailer_sender = 'noreply@example.com'
+    # ... rest of config
+  end
+end
+
+# WRONG - Direct initialization (will fail during db:create)
+Carmen.i18n_backend.locale = :ja  # Error: uninitialized constant Carmen
+```
+
+**When This Matters:**
+```bash
+# These commands load initializers before gems are ready:
+bin/rails db:create          # Gems not loaded yet
+bin/rails db:migrate         # May fail during migration execution
+bin/rails db:schema:load     # Loads initializers first
+
+# Safe - gems fully loaded:
+bin/rails console           # All gems loaded
+bin/rails server            # Full initialization
+bin/rails test              # Test environment gems loaded
+```
+
+**Gotcha:** Don't assume any gem is available during database tasks. Even standard gems like Devise, FactoryBot, or Bullet can fail. Always use `if defined?(GemName)` for gem-specific initializers.
+
+**Related:** `bin/sandbox` lines 280-350 (all gem initializers wrapped), CLAUDE.md Sandbox section
+
 ---
 
 ## Asset Pipeline

@@ -98,3 +98,15 @@ Learnings for future iterations:
 - Common in Oroshi: material_ids, supply_type_variation_ids, production_zone_ids, etc.
 - Debug by checking params in console: [1,2,3] becomes "3" string if brackets missing
 - Reference: app/controllers/oroshi/products_controller.rb line 103
+
+[2026-01-25 03:31:00] Story: US-010 - Extract system test setup realization
+Implemented: Added system test setup realization documenting JavaScriptTest module for Selenium/headless Chrome support, authentication with Devise sign_in helper, and when to use JS vs rack_test.
+Files: .ralph/REALIZATIONS.md (Testing section)
+Tests: PASSING (rubocop clean)
+Learnings for future iterations:
+- Include JavaScriptTest module only for Turbo/Stimulus/modal tests
+- JavaScriptTest makes tests ~10x slower (Selenium starts real browser)
+- Use rack_test (default) for simple page visits and static content
+- sign_in helper from Devise::Test::IntegrationHelpers
+- Default locale I18n.locale = :ja for Japanese-first testing
+- Reference: test/application_system_test_case.rb, test/system/oroshi/dashboard_test.rb

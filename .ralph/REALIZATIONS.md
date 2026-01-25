@@ -462,9 +462,174 @@ bin/rails test              # Test environment gems loaded
 
 ---
 
+### Multi-Database Configuration (4 Databases)
+
+**Problem:** Oroshi requires 4 separate PostgreSQL databases for different concerns (main data, background jobs, caching, real-time). Developers unfamiliar with Rails multi-database setup may try to use a single database, causing Solid Queue/Cache/Cable to fail.
+
+**Solution:** Configure 4 databases in `config/database.yml` with separate roles. Use dedicated schema files for each database. Load all schemas during setup.
+
+**Code Example:**
+```yaml
+# config/database.yml
+production:
+  primary:
+    <<: *default
+    database: oroshi_production
+  queue:
+    <<: *default
+    database: oroshi_production_queue
+    migrations_paths: db/queue_migrate
+  cache:
+    <<: *default
+    database: oroshi_production_cache
+    migrations_paths: db/cache_migrate
+  cable:
+    <<: *default
+    database: oroshi_production_cable
+    migrations_paths: db/cable_migrate
+```
+
+**Schema Files:**
+```
+db/
+├── schema.rb              # Main database schema
+├── queue_schema.rb        # Solid Queue tables
+├── cache_schema.rb        # Solid Cache tables
+└── cable_schema.rb        # Solid Cable tables
+```
+
+**Setup Commands:**
+```bash
+# Create all 4 databases
+bin/rails db:create
+
+# Load all schemas (fresh setup)
+bin/rails db:schema:load         # Main DB
+bin/rails db:schema:load:queue   # Solid Queue DB
+bin/rails db:schema:load:cache   # Solid Cache DB
+bin/rails db:schema:load:cable   # Solid Cable DB
+
+# OR migrate (production with existing data)
+bin/rails db:migrate
+# (Solid gems handle their own migrations automatically)
+```
+
+**Database Names by Environment:**
+```
+Development:
+- oroshi_development
+- oroshi_development_queue
+- oroshi_development_cache
+- oroshi_development_cable
+
+Production:
+- oroshi_production
+- oroshi_production_queue
+- oroshi_production_cache
+- oroshi_production_cable
+```
+
+**Gotcha:** Each database requires separate schema loading. Forgetting to load queue/cache/cable schemas causes "table does not exist" errors when Solid gems try to query. The main app only needs the `primary` database configured; the engine handles queue/cache/cable setup.
+
+**Related:** `db/schema.rb`, `db/queue_schema.rb`, `db/cache_schema.rb`, `db/cable_schema.rb`, CLAUDE.md Multi-Database Setup section
+
+---
+
 ## Asset Pipeline
 
 *Entries for Propshaft, importmap, Tailwind, and font handling.*
+
+### Propshaft + Importmap Asset Pipeline
+
+**Problem:** Oroshi uses Propshaft + importmap instead of the traditional Webpacker/Webpack pipeline. Developers familiar with npm-based asset bundling may try to install packages with `npm install` or expect `node_modules` to be bundled, which won't work.
+
+**Solution:** Use `bin/importmap pin` to add JavaScript dependencies. Importmap serves packages directly from CDN (or vendor directory) without bundling. Propshaft handles static assets like CSS, images, and fonts.
+
+**Code Example:**
+```bash
+# CORRECT - Add JS dependency with importmap
+bin/importmap pin package-name
+bin/importmap pin stimulus-autocomplete
+
+# Generates entry in config/importmap.rb:
+pin "stimulus-autocomplete", to: "https://ga.jspm.io/npm:stimulus-autocomplete@3.1.0/src/autocomplete.js"
+
+# WRONG - Don't use npm install
+npm install stimulus-autocomplete  # Won't be bundled in production
+```
+
+**Asset Locations:**
+```
+app/assets/
+├── stylesheets/        # Tailwind CSS files (processed by Tailwind)
+├── images/             # Static images (served by Propshaft)
+├── fonts/              # Font files (14MB Japanese fonts)
+└── javascripts/        # Not used - JS goes in app/javascript/
+
+app/javascript/
+├── application.js      # Entry point for importmap
+└── controllers/        # Stimulus controllers
+```
+
+**Gotcha:** JavaScript packages are loaded from CDN in production, not bundled locally. This means you need an internet connection during asset precompilation if using remote pins. For offline/vendor pins, use `bin/importmap pin package-name --download`.
+
+**Related:** CLAUDE.md Asset Pipeline section, `config/importmap.rb`
+
+---
+
+### Japanese Font Configuration for PDF Generation
+
+**Problem:** Generating PDFs with Japanese text using Prawn requires embedding Japanese fonts. Without proper font configuration, Japanese characters render as boxes or fail to display.
+
+**Solution:** Use the `Oroshi::Fonts` helper module to configure Prawn with pre-packaged Noto Sans Japanese fonts. Always call `Oroshi::Fonts.configure_prawn_fonts(pdf)` in printable initializers.
+
+**Code Example:**
+```ruby
+# lib/printables/my_printable.rb
+class MyPrintable < Printable
+  def initialize(data)
+    super()  # Creates @pdf instance
+    
+    # Configure Japanese fonts BEFORE generating content
+    Oroshi::Fonts.configure_prawn_fonts(@pdf)
+    
+    # Now you can use Japanese text
+    @pdf.font("NotoSans") do
+      @pdf.text "こんにちは世界", size: 20
+    end
+  end
+end
+
+# lib/oroshi/fonts.rb helper (provided by engine)
+module Oroshi
+  module Fonts
+    def self.font_path(font_name)
+      Oroshi::Engine.root.join("app/assets/fonts/#{font_name}").to_s
+    end
+
+    def self.configure_prawn_fonts(pdf)
+      pdf.font_families.update(
+        "NotoSans" => {
+          normal: font_path("NotoSansJP-Regular.ttf"),
+          bold: font_path("NotoSansJP-Bold.ttf")
+        }
+      )
+    end
+  end
+end
+```
+
+**Available Fonts:**
+```
+app/assets/fonts/
+├── NotoSansJP-Regular.ttf    # ~7MB
+├── NotoSansJP-Bold.ttf       # ~7MB
+└── (14MB total)
+```
+
+**Gotcha:** Font files are large (14MB total) and must be included in the gem. Always set font BEFORE generating text. If you forget to configure fonts, you'll get an error: "The current font does not contain a required glyph".
+
+**Related:** `lib/oroshi/fonts.rb`, `lib/printables/` directory, CLAUDE.md PDF Generation section
 
 ---
 
@@ -528,11 +693,104 @@ ja:
 
 *Entries for Devise configuration, user model patterns, and access control.*
 
+### Engine Route Helpers with main_app Prefix
+
+**Problem:** Oroshi is an isolated engine (`isolate_namespace Oroshi`). When accessing parent application routes (like Devise routes for login/logout) from engine views, using route helpers directly (e.g., `new_user_session_path`) fails with "undefined method" errors.
+
+**Solution:** Prefix all parent application route helpers with `main_app.` when called from engine views. Engine routes work normally without prefix.
+
+**Code Example:**
+```erb
+<%# In engine views (app/views/oroshi/**/*.erb) %>
+
+<%# CORRECT - Access Devise/parent app routes %>
+<%= link_to "Login", main_app.new_user_session_path %>
+<%= link_to "Logout", main_app.destroy_user_session_path, method: :delete %>
+<%= link_to "Profile", main_app.edit_user_registration_path %>
+
+<%# CORRECT - Access engine routes (no prefix needed) %>
+<%= link_to "Dashboard", oroshi_root_path %>
+<%= link_to "Orders", oroshi_orders_path %>
+
+<%# WRONG - Devise routes without main_app prefix %>
+<%= link_to "Login", new_user_session_path %>  # undefined method error
+```
+
+**In Controllers:**
+```ruby
+# app/controllers/oroshi/base_controller.rb
+class Oroshi::BaseController < ApplicationController
+  # Skip callbacks that may not exist in all host apps
+  skip_before_action :authenticate_user!, raise: false
+  
+  def after_sign_in_path_for(resource)
+    main_app.root_path  # Redirect to parent app root
+    # OR
+    oroshi_root_path    # Redirect to engine root
+  end
+end
+```
+
+**Gotcha:** This ONLY applies when calling parent app routes from engine code. If the parent app calls engine routes, it uses normal routing. The `raise: false` option on `skip_before_action` prevents errors when the callback doesn't exist.
+
+**Related:** CLAUDE.md Engine Isolation & Routing section, `app/controllers/oroshi/base_controller.rb`
+
 ---
 
 ## Background Jobs
 
 *Entries for Solid Queue patterns, job configuration, and recurring tasks.*
+
+### Solid Gems Explicit Loading Order
+
+**Problem:** Oroshi uses Solid Queue, Solid Cache, and Solid Cable which register database shards during Railtie initialization. If these gems aren't explicitly required at the top of `lib/oroshi/engine.rb` BEFORE Rails configuration, database connection methods like `connected_to(role: :queue)` will fail with "No such shard: queue" errors.
+
+**Solution:** Explicitly require all Solid gems at the very top of `engine.rb` before any Rails configuration. This ensures Railties register database shards before the engine tries to use them.
+
+**Code Example:**
+```ruby
+# lib/oroshi/engine.rb
+# CRITICAL: Load Solid gems FIRST, before any configuration
+require 'solid_queue'
+require 'solid_cache'
+require 'solid_cable'
+
+module Oroshi
+  class Engine < ::Rails::Engine
+    isolate_namespace Oroshi
+    
+    # Now safe to use connected_to with :queue, :cache, :cable roles
+    config.after_initialize do
+      ActiveRecord::Base.connected_to(role: :queue) do
+        # Queue operations
+      end
+    end
+  end
+end
+
+# WRONG - Without explicit requires (relies on Bundler.require)
+module Oroshi
+  class Engine < ::Rails::Engine
+    isolate_namespace Oroshi
+    # Railties not loaded yet - shards not registered
+    # connected_to will fail
+  end
+end
+```
+
+**Why This Happens:**
+```ruby
+# Gems load in this order:
+# 1. Bundler.require (in application.rb) - may happen after engine loads
+# 2. Engine loads (lib/oroshi/engine.rb) - needs shards NOW
+# 3. Railtie initialization - registers shards IF gem loaded
+
+# Solution: Force gem load before engine configuration needs it
+```
+
+**Gotcha:** This is specific to the engine context. In a normal Rails app, `Bundler.require` in `config/application.rb` loads gems before configuration. But in an engine, you can't rely on load order - explicitly require dependencies.
+
+**Related:** `lib/oroshi/engine.rb` lines 1-5, CLAUDE.md Critical Patterns section
 
 ---
 

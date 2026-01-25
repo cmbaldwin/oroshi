@@ -33,8 +33,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "COMPLETE - Fixed port inconsistency (3000 -> 3001) in bin/sandbox script and lib/tasks/sandbox.rake. Verified sandbox creates correctly with generated routes.rb (not copied). Routes load with engine mounted at /oroshi. All tests pass."
     },
     {
       "id": "US-003",

@@ -33,7 +33,7 @@ namespace :sandbox do
     sh "bin/sandbox reset"
   end
 
-  desc "Start sandbox server (port 3000)"
+  desc "Start sandbox server (port 3001)"
   task :server do
     sandbox_dir = File.expand_path("../../sandbox", __dir__)
 
@@ -43,7 +43,7 @@ namespace :sandbox do
     end
 
     puts "Starting sandbox server..."
-    puts "Visit: http://localhost:3000"
+    puts "Visit: http://localhost:3001"
     puts ""
 
     Dir.chdir(sandbox_dir) do

@@ -102,6 +102,17 @@ module Oroshi
         say ""
       end
 
+      # Helper method for templates to get app name
+      def app_name
+        @app_name ||= begin
+          if defined?(Rails.application)
+            Rails.application.class.module_parent_name.underscore
+          else
+            "oroshi_app"
+          end
+        end
+      end
+
       # Step 2: Check that Devise gem is available
       # Warns if Devise is not found - installation can continue but
       # authentication will need to be configured manually
@@ -124,7 +135,7 @@ module Oroshi
       # Skipped if --skip-user-model or if app/models/user.rb already exists
       def create_user_model
         return if options[:skip_user_model]
-        return if File.exist?("app/models/user.rb")
+        return if File.exist?(File.join(destination_root, "app/models/user.rb"))
 
         say "Creating User model...", :green
         template "user_model.rb", "app/models/user.rb"
@@ -140,12 +151,13 @@ module Oroshi
           say "Setting up Devise...", :green
 
           # Check if devise routes already exist
-          unless File.read("config/routes.rb").include?("devise_for :users")
+          routes_path = File.join(destination_root, "config/routes.rb")
+          unless File.read(routes_path).include?("devise_for :users")
             route 'devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }'
           end
 
           # Create Devise configuration if it doesn't exist
-          unless File.exist?("config/initializers/devise.rb")
+          unless File.exist?(File.join(destination_root, "config/initializers/devise.rb"))
             say "Run 'rails generate devise:install' to configure Devise", :yellow
           end
         else
@@ -166,7 +178,8 @@ module Oroshi
         RUBY
 
         # Check if engine is already mounted
-        unless File.read("config/routes.rb").include?("Oroshi::Engine")
+        routes_path = File.join(destination_root, "config/routes.rb")
+        unless File.read(routes_path).include?("Oroshi::Engine")
           route route_content
         end
       end
@@ -174,7 +187,8 @@ module Oroshi
       # Step 7: Add required root route for main_app.root_path
       # Oroshi engine uses main_app.root_path, so parent app needs a root route
       def add_root_route
-        routes_content = File.read("config/routes.rb")
+        routes_path = File.join(destination_root, "config/routes.rb")
+        routes_content = File.read(routes_path)
         return if routes_content.include?("root ")
         return if routes_content.include?("root\"")
         return if routes_content.include?("root'")
@@ -220,7 +234,8 @@ module Oroshi
       def create_database_config
         say "Updating database configuration...", :green
 
-        if File.exist?("config/database.yml")
+        database_yml_path = File.join(destination_root, "config/database.yml")
+        if File.exist?(database_yml_path)
           say "NOTE: You need to manually configure multiple databases in config/database.yml", :yellow
           say "See sandbox/config/database.yml for an example", :yellow
         else

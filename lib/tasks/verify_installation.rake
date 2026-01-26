@@ -106,13 +106,14 @@ namespace :oroshi do
     begin
       # Connect to primary database
       ActiveRecord::Base.connection_pool.with_connection do |conn|
-        # Check for oroshi_users table as indicator migrations ran
-        if conn.table_exists?(:oroshi_users)
+        # Check for oroshi_ prefixed tables as indicator migrations ran
+        # Try oroshi_buyers as a core table that should always exist
+        if conn.table_exists?(:oroshi_buyers)
           puts "✓ PASS"
           checks << { name: "Primary migrations", status: :pass, details: nil }
         else
           puts "✗ FAIL"
-          puts "   → Oroshi tables not found (e.g., oroshi_users)"
+          puts "   → Oroshi tables not found (e.g., oroshi_buyers)"
           puts "   → Run: rails db:migrate"
           checks << { name: "Primary migrations", status: :fail, details: "Tables not created" }
           all_checks_passed = false
@@ -129,8 +130,15 @@ namespace :oroshi do
     # Check 6: Queue database
     print "6. Checking Solid Queue database... "
     begin
-      ActiveRecord::Base.connected_to(role: :writing, shard: :queue) do
-        if ActiveRecord::Base.connection.table_exists?(:solid_queue_jobs)
+      # Get the queue database configuration
+      queue_config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "queue")
+
+      if queue_config
+        # Establish a direct connection to check tables
+        ActiveRecord::Base.establish_connection(queue_config.configuration_hash)
+        queue_connection = ActiveRecord::Base.connection
+
+        if queue_connection.table_exists?(:solid_queue_jobs)
           puts "✓ PASS"
           checks << { name: "Queue database", status: :pass, details: nil }
         else
@@ -140,6 +148,14 @@ namespace :oroshi do
           checks << { name: "Queue database", status: :fail, details: "Queue tables not created" }
           all_checks_passed = false
         end
+
+        # Restore primary connection
+        ActiveRecord::Base.establish_connection(:primary)
+      else
+        puts "✗ FAIL"
+        puts "   → Queue database not configured in config/database.yml"
+        checks << { name: "Queue database", status: :fail, details: "Configuration missing" }
+        all_checks_passed = false
       end
     rescue StandardError => e
       puts "✗ ERROR"
@@ -147,13 +163,20 @@ namespace :oroshi do
       puts "   → Ensure queue database exists and schema loaded"
       checks << { name: "Queue database", status: :error, details: e.message }
       all_checks_passed = false
+      # Ensure we restore primary connection even on error
+      ActiveRecord::Base.establish_connection(:primary) rescue nil
     end
 
     # Check 7: Cache database
     print "7. Checking Solid Cache database... "
     begin
-      ActiveRecord::Base.connected_to(role: :writing, shard: :cache) do
-        if ActiveRecord::Base.connection.table_exists?(:solid_cache_entries)
+      cache_config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "cache")
+
+      if cache_config
+        ActiveRecord::Base.establish_connection(cache_config.configuration_hash)
+        cache_connection = ActiveRecord::Base.connection
+
+        if cache_connection.table_exists?(:solid_cache_entries)
           puts "✓ PASS"
           checks << { name: "Cache database", status: :pass, details: nil }
         else
@@ -163,6 +186,13 @@ namespace :oroshi do
           checks << { name: "Cache database", status: :fail, details: "Cache tables not created" }
           all_checks_passed = false
         end
+
+        ActiveRecord::Base.establish_connection(:primary)
+      else
+        puts "✗ FAIL"
+        puts "   → Cache database not configured in config/database.yml"
+        checks << { name: "Cache database", status: :fail, details: "Configuration missing" }
+        all_checks_passed = false
       end
     rescue StandardError => e
       puts "✗ ERROR"
@@ -170,13 +200,19 @@ namespace :oroshi do
       puts "   → Ensure cache database exists and schema loaded"
       checks << { name: "Cache database", status: :error, details: e.message }
       all_checks_passed = false
+      ActiveRecord::Base.establish_connection(:primary) rescue nil
     end
 
     # Check 8: Cable database
     print "8. Checking Solid Cable database... "
     begin
-      ActiveRecord::Base.connected_to(role: :writing, shard: :cable) do
-        if ActiveRecord::Base.connection.table_exists?(:solid_cable_messages)
+      cable_config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "cable")
+
+      if cable_config
+        ActiveRecord::Base.establish_connection(cable_config.configuration_hash)
+        cable_connection = ActiveRecord::Base.connection
+
+        if cable_connection.table_exists?(:solid_cable_messages)
           puts "✓ PASS"
           checks << { name: "Cable database", status: :pass, details: nil }
         else
@@ -186,6 +222,13 @@ namespace :oroshi do
           checks << { name: "Cable database", status: :fail, details: "Cable tables not created" }
           all_checks_passed = false
         end
+
+        ActiveRecord::Base.establish_connection(:primary)
+      else
+        puts "✗ FAIL"
+        puts "   → Cable database not configured in config/database.yml"
+        checks << { name: "Cable database", status: :fail, details: "Configuration missing" }
+        all_checks_passed = false
       end
     rescue StandardError => e
       puts "✗ ERROR"
@@ -193,6 +236,7 @@ namespace :oroshi do
       puts "   → Ensure cable database exists and schema loaded"
       checks << { name: "Cable database", status: :error, details: e.message }
       all_checks_passed = false
+      ActiveRecord::Base.establish_connection(:primary) rescue nil
     end
 
     # Check 9: User model

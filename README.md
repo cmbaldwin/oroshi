@@ -137,6 +137,206 @@ development:
     migrations_paths: db/cable_migrate
 ```
 
+## Troubleshooting
+
+### Common Installation Issues
+
+#### "No route matches" errors after installation
+
+**Problem:** Getting 404 errors or "No route matches" when visiting `/oroshi` or other routes.
+
+**Solutions:**
+1. **Verify engine is mounted** in `config/routes.rb`:
+   ```ruby
+   mount Oroshi::Engine, at: "/oroshi"  # Or at: "/"
+   ```
+
+2. **Check that root route exists** if using `main_app.root_path`:
+   ```ruby
+   root "oroshi/dashboard#index"  # or any other controller
+   ```
+
+3. **Restart Rails server** after running the installer
+
+#### Asset loading failures (CSS/JavaScript not loading)
+
+**Problem:** Styles or JavaScript not working after installation.
+
+**Solutions:**
+1. **Check asset pipeline configuration** in `config/application.rb`:
+   ```ruby
+   config.assets.paths << Oroshi::Engine.root.join("app/assets")
+   ```
+
+2. **Verify Propshaft is configured** (not Sprockets):
+   ```ruby
+   # Gemfile should have:
+   gem "propshaft"
+   ```
+
+3. **Restart server** after changing asset configuration
+
+4. **Check browser console** for specific asset loading errors
+
+#### Database connection errors
+
+**Problem:** "ActiveRecord::StatementInvalid" or "PG::ConnectionBad" errors.
+
+**Solutions:**
+1. **Verify all 4 databases are created**:
+   ```bash
+   bin/rails db:create
+   psql -l | grep my_app  # Should show 4 databases
+   ```
+
+2. **Check database.yml configuration** includes all 4 databases (primary, queue, cache, cable)
+
+3. **Verify PostgreSQL is running**:
+   ```bash
+   pg_isready
+   brew services list | grep postgresql  # macOS with Homebrew
+   ```
+
+4. **Load Solid schemas** if migrations succeeded but Solid gems fail:
+   ```bash
+   bin/rails db:schema:load:queue
+   bin/rails db:schema:load:cache
+   bin/rails db:schema:load:cable
+   ```
+
+#### "Table does not exist" errors for solid_* tables
+
+**Problem:** Errors like "PG::UndefinedTable: ERROR:  relation 'solid_queue_jobs' does not exist"
+
+**Solution:**
+```bash
+# Load the Solid schemas
+bin/rails db:schema:load:queue
+bin/rails db:schema:load:cache
+bin/rails db:schema:load:cable
+```
+
+**Why this happens:** Solid Queue/Cache/Cable use separate databases with their own schemas. These must be loaded separately from main migrations.
+
+#### Devise errors ("devise_for :users not found")
+
+**Problem:** "undefined method `devise_for'" or Devise routes not working.
+
+**Solutions:**
+1. **Install Devise** if not already present:
+   ```bash
+   bundle add devise
+   rails generate devise:install
+   ```
+
+2. **Run installer again** with Devise installed:
+   ```bash
+   rails generate oroshi:install
+   ```
+
+3. **Manually add Devise routes** if needed:
+   ```ruby
+   # config/routes.rb
+   devise_for :users
+   ```
+
+#### User model conflicts
+
+**Problem:** "User model already exists" or authentication errors.
+
+**Solutions:**
+1. **Skip user model generation** if you have an existing User model:
+   ```bash
+   rails generate oroshi:install --skip-user-model
+   ```
+
+2. **Ensure your User model has required Devise modules**:
+   ```ruby
+   class User < ApplicationRecord
+     devise :database_authenticatable, :registerable,
+            :recoverable, :rememberable, :validatable,
+            :confirmable, :trackable
+     
+     # Required enum for Oroshi
+     enum role: { user: 0, vip: 1, admin: 2, supplier: 3, employee: 4 }
+   end
+   ```
+
+#### "uninitialized constant Oroshi::" errors
+
+**Problem:** Getting constant loading errors for Oroshi models or controllers.
+
+**Solutions:**
+1. **Restart Rails server** to reload autoload paths
+
+2. **Check Zeitwerk is configured correctly**:
+   ```ruby
+   # config/application.rb
+   config.autoload_paths += Dir[Oroshi::Engine.root.join("app/*/")]
+   ```
+
+3. **Verify gem is properly installed**:
+   ```bash
+   bundle show oroshi
+   ```
+
+#### Background jobs not processing
+
+**Problem:** Emails not sending or jobs stuck in queue.
+
+**Solutions:**
+1. **Start Solid Queue worker**:
+   ```bash
+   bin/jobs  # Or bin/rails solid_queue:start
+   ```
+
+2. **Check queue database is accessible**:
+   ```bash
+   bin/rails dbconsole -d queue
+   ```
+
+3. **Verify recurring.yml is present** in config directory
+
+4. **Check logs** for job errors:
+   ```bash
+   tail -f log/development.log
+   ```
+
+#### WebSocket/Turbo Streams not working
+
+**Problem:** Real-time updates not appearing.
+
+**Solutions:**
+1. **Verify cable database is loaded**:
+   ```bash
+   bin/rails db:schema:load:cable
+   ```
+
+2. **Check Action Cable is configured**:
+   ```ruby
+   # config/cable.yml should have:
+   development:
+     adapter: solid_cable
+     connects_to:
+       database:
+         writing: cable
+   ```
+
+3. **Restart server** to reinitialize Action Cable
+
+### Getting Help
+
+If you encounter issues not covered here:
+
+1. **Check logs** first: `log/development.log` or `log/production.log`
+2. **Search existing issues**: https://github.com/cmbaldwin/oroshi/issues
+3. **Create new issue** with:
+   - Ruby version (`ruby -v`)
+   - Rails version (`rails -v`)
+   - Error message (full stack trace)
+   - Steps to reproduce
+   - Your database.yml configuration (sanitized)
+
 ## Sandbox Application
 
 A fully-functional demo application can be generated for testing and development:

@@ -1,0 +1,14 @@
+test:
+  adapter: test
+
+development:
+  adapter: solid_cable
+  connects_to:
+    database:
+      writing: cable
+
+production:
+  adapter: solid_cable
+  connects_to:
+    database:
+      writing: cable

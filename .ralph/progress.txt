@@ -45,3 +45,27 @@ Learnings for future iterations:
 - No routes_standalone_app.rb references in test directory (confirmed with grep)
 - Sass deprecation warnings are from external gems (Bootstrap), not asset loading errors
 - Rails deprecation warnings for resource hash arguments are cosmetic
+
+[2026-01-26 09:45:00] Story: US-004 Verify oroshi-moab installation works
+Implemented: Fixed critical engine isolation issues and verified installation works
+Files Modified:
+- config/routes.rb (removed Rails.application.routes.draw block - engine ONLY uses Engine.routes.draw)
+- app/helpers/oroshi/application_helper.rb (NEW - moved helpers from ApplicationHelper)
+- app/controllers/oroshi/application_controller.rb (added helper Oroshi::ApplicationHelper)
+- test/test_helper.rb (changed to use dummy app environment)
+- test/controllers/routes_test.rb (updated root route test expectation)
+- test/dummy/config/cable.yml (NEW - ActionCable test config)
+- test/dummy/config/storage.yml (NEW - ActiveStorage test config)
+- test/dummy/db/schema.rb (copied from main app)
+Parent App Changes (oroshi-moab):
+- config/routes.rb (added root route for main_app.root_path to work)
+Tests: PASSING (controller: 26, dashboard integration: 11 - 37 runs, 66 assertions)
+Learnings for future iterations:
+- Engine config/routes.rb must ONLY contain Oroshi::Engine.routes.draw - no Rails.application.routes.draw
+- Non-namespaced ApplicationHelper is shadowed by parent app - use Oroshi::ApplicationHelper
+- Parent apps MUST define a root route if engine views use main_app.root_path
+- test_helper.rb must use test/dummy/config/environment for proper engine testing
+- FactoryBot needs find_definitions called manually after changing definition_file_paths
+- Engine controllers need: helper Oroshi::ApplicationHelper to access title, icon, date helpers
+- Dummy app needs cable.yml with 'test: adapter: test' for ActionCable tests
+- Dummy app needs storage.yml for ActiveStorage tests

@@ -67,8 +67,8 @@
         "Document any additional setup steps discovered"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "COMPLETE - Fixed critical issues: (1) Removed Rails.application.routes.draw block from engine config/routes.rb to prevent route conflicts, (2) Created Oroshi::ApplicationHelper with title/icon/date helpers, (3) Updated test_helper.rb to use dummy app environment, (4) Added cable.yml and storage.yml to dummy app, (5) Parent apps must define root route for main_app.root_path. Dashboard loads with 200 OK, assets load correctly."
     },
     {
       "id": "US-005",

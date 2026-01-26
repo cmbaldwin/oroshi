@@ -1,23 +1,34 @@
 # frozen_string_literal: true
 
-# Oroshi Engine Routes
+# =============================================================================
+# OROSHI ENGINE ROUTES
+# =============================================================================
 #
-# These routes are automatically loaded by Rails engines when Oroshi is mounted
+# These routes are automatically loaded by Rails when Oroshi is mounted
 # in a parent application. Parent apps mount the engine with:
 #
 #   mount Oroshi::Engine, at: "/oroshi"
 #
 # Route helpers within the engine use the `oroshi.` prefix in parent apps
 # and work without prefix inside the engine views/controllers.
+#
+# IMPORTANT: Parent applications are responsible for:
+# 1. Setting up Devise: `devise_for :users` in their routes.rb
+# 2. Mounting the engine: `mount Oroshi::Engine, at: "/oroshi"`
+# 3. Providing a User model with Devise authentication
+#
+# For standalone development/testing, use test/dummy/config/routes.rb
+# which provides the necessary Devise routes and engine mounting.
+#
 Oroshi::Engine.routes.draw do
-root to: "dashboard#index"
+  root to: "dashboard#index"
 
-# Legal pages
-get "privacy_policy", to: "legal#privacy_policy", as: :privacy_policy
-get "terms_of_service", to: "legal#terms_of_service", as: :terms_of_service
+  # Legal pages
+  get "privacy_policy", to: "legal#privacy_policy", as: :privacy_policy
+  get "terms_of_service", to: "legal#terms_of_service", as: :terms_of_service
 
-# Onboarding wizard
-resources :onboarding, only: [ :index, :show, :update ] do
+  # Onboarding wizard
+  resources :onboarding, only: [ :index, :show, :update ] do
     member do
       post :skip
       post :resume

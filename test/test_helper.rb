@@ -2,8 +2,12 @@
 
 ENV["RAILS_ENV"] ||= "test"
 
-# For now, use the main application (we'll switch to dummy app later)
-require_relative "../config/environment"
+# Use the dummy application for testing the engine
+# The dummy app mimics how a real parent application would configure Oroshi:
+# - Provides User model with Devise authentication
+# - Mounts Oroshi::Engine at /oroshi
+# - Provides devise_for :users routes
+require_relative "dummy/config/environment"
 require "rails/test_help"
 
 # Suppress Turbo broadcasts in tests (they fail with routing errors)
@@ -49,8 +53,9 @@ class ActiveSupport::TestCase
 end
 
 # Configure FactoryBot to load from test/factories
-FactoryBot.definition_file_paths = [ Rails.root.join("test/factories") ]
-# find_definitions is called automatically in Rails test environment
+# Use Oroshi::Engine.root since Rails.root points to the dummy app
+FactoryBot.definition_file_paths = [ Oroshi::Engine.root.join("test/factories") ]
+FactoryBot.find_definitions  # Must call manually since we changed the path after Rails loaded
 
 # Configure Shoulda Matchers for Minitest (if gem is installed)
 begin
@@ -71,8 +76,80 @@ class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Warden::Test::Helpers
 
-  # Make the Oroshi engine routes available in tests
+  # ==========================================================================
+  # OROSHI ENGINE ROUTE HELPERS
+  # ==========================================================================
+  #
+  # These methods provide convenient access to engine routes in tests.
+  # Usage: oroshi.root_path, oroshi.dashboard_home_path, etc.
+  #
+  # Shortcut helpers are also provided: oroshi_root_path, oroshi_dashboard_home_path
+  # These map directly to the engine route helpers.
+  #
+
+  # Access engine routes via Oroshi::Engine.routes.url_helpers
   def oroshi
     Oroshi::Engine.routes.url_helpers
+  end
+
+  # Shortcut route helpers - delegate to engine routes
+  def oroshi_root_path(*args, **kwargs)
+    oroshi.root_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_home_path(*args, **kwargs)
+    oroshi.dashboard_home_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_suppliers_organizations_path(*args, **kwargs)
+    oroshi.dashboard_suppliers_organizations_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_supply_types_path(*args, **kwargs)
+    oroshi.dashboard_supply_types_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_shipping_path(*args, **kwargs)
+    oroshi.dashboard_shipping_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_buyers_path(*args, **kwargs)
+    oroshi.dashboard_buyers_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_materials_path(*args, **kwargs)
+    oroshi.dashboard_materials_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_products_path(*args, **kwargs)
+    oroshi.dashboard_products_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_stats_path(*args, **kwargs)
+    oroshi.dashboard_stats_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_company_path(*args, **kwargs)
+    oroshi.dashboard_company_path(*args, **kwargs)
+  end
+
+  def oroshi_dashboard_company_settings_path(*args, **kwargs)
+    oroshi.dashboard_company_settings_path(*args, **kwargs)
+  end
+
+  def oroshi_onboarding_index_path(*args, **kwargs)
+    oroshi.onboarding_index_path(*args, **kwargs)
+  end
+
+  def oroshi_onboarding_path(*args, **kwargs)
+    oroshi.onboarding_path(*args, **kwargs)
+  end
+
+  def oroshi_orders_path(*args, **kwargs)
+    oroshi.orders_path(*args, **kwargs)
+  end
+
+  def oroshi_supplies_path(*args, **kwargs)
+    oroshi.supplies_path(*args, **kwargs)
   end
 end

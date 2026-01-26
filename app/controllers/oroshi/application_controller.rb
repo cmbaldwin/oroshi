@@ -3,6 +3,7 @@
 class Oroshi::ApplicationController < ApplicationController
   helper OroshiHelper
   helper Oroshi::UrlHelper
+  helper Oroshi::ApplicationHelper
 
   def address_attributes
     %i[id default active name company country_id subregion_id postal_code city address1 address2]

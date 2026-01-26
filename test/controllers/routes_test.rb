@@ -10,9 +10,10 @@ class RoutesTest < ActionDispatch::IntegrationTest
     sign_in @user
   end
 
-  test "root route should load dashboard" do
+  test "root route should redirect to oroshi engine" do
     get root_path
-    assert_response :success
+    assert_response :redirect
+    assert_redirected_to "/oroshi"
   end
 
   test "oroshi root should load dashboard for user with completed onboarding" do
@@ -37,10 +38,10 @@ class RoutesTest < ActionDispatch::IntegrationTest
   test "legal routes should be accessible without authentication" do
     sign_out @user
 
-    get privacy_policy_path
+    get oroshi.privacy_policy_path
     assert_response :success
 
-    get terms_of_service_path
+    get oroshi.terms_of_service_path
     assert_response :success
   end
 end

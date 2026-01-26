@@ -155,3 +155,30 @@ Learnings for future iterations:
 - Group related errors together (all Solid gems, all Devise issues, etc.)
 - Link to logs and support resources
 - README already had good installation instructions - enhanced with troubleshooting
+
+[2026-01-26 10:10:00] Story: US-009 Create CI installation test
+Implemented: GitHub Actions workflow for automated installation testing
+Files Created:
+- .github/workflows/installation.yml (comprehensive installation test)
+Features Added:
+- Matrix strategy testing Ruby 3.4 and 4.0 with Rails 8.1
+- Creates fresh Rails application with PostgreSQL
+- Adds Oroshi gem and runs install generator
+- Verifies all generated files (initializer, User model, routes, Solid schemas)
+- Configures 4-database setup automatically
+- Runs migrations and loads Solid schemas
+- Verifies all 4 databases created (primary, queue, cache, cable)
+- Tests Rails application boot
+- Verifies Oroshi routes accessible
+- Uploads logs on failure for debugging
+- Runs on push to main/develop and on pull requests
+Tests: Workflow validated (YAML syntax check passed)
+Learnings for future iterations:
+- CI installation tests should create completely fresh Rails app (not use engine's test env)
+- Use matrix strategy for testing multiple Ruby/Rails versions efficiently
+- Separate verification steps make debugging easier when one fails
+- Use timeout on boot test to prevent hanging CI
+- Upload artifacts (logs) on failure for post-mortem debugging
+- Test both file creation AND functional verification (routes accessible, app boots)
+- PostgreSQL service needs health checks to ensure it's ready before database operations
+- YAML heredocs (<<EOF) work in GitHub Actions for multi-line file creation

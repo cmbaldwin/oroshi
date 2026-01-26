@@ -259,8 +259,45 @@ Oroshi uses Rails engine architecture with namespace isolation:
 
 - **Models**: All namespaced under `Oroshi::` (e.g., `Oroshi::Order`, `Oroshi::Buyer`)
 - **Tables**: Prefixed with `oroshi_` (e.g., `oroshi_orders`, `oroshi_buyers`)
-- **Routes**: Mounted at "/" in host application
+- **Routes**: Engine routes mounted in host application (see [Route Architecture](#route-architecture))
 - **User Model**: Lives at application level (NOT namespaced) for flexibility
+
+### Route Architecture
+
+Oroshi uses the **single route file pattern** standard for Rails engines:
+
+```
+config/routes.rb                    # Engine routes (Oroshi::Engine.routes.draw)
+test/dummy/config/routes.rb         # Test app routes (mounts engine)
+sandbox/config/routes.rb            # Generated sandbox routes (mounts engine)
+```
+
+**Key Principle**: The engine's `config/routes.rb` uses `Oroshi::Engine.routes.draw` (NOT `Rails.application.routes.draw`). This ensures proper engine isolation and allows parent applications to control where the engine is mounted.
+
+**Parent Application Setup:**
+
+```ruby
+# Parent app's config/routes.rb
+Rails.application.routes.draw do
+  devise_for :users                           # Devise routes at /users/*
+  mount Oroshi::Engine, at: "/oroshi"         # Engine routes at /oroshi/*
+  root "home#index"                           # Required for main_app.root_path
+end
+```
+
+**Route Helpers:**
+
+| Context | Engine Routes | Parent App Routes |
+|---------|---------------|-------------------|
+| Engine views/controllers | `oroshi_orders_path` | `main_app.root_path` |
+| Parent app views/controllers | `oroshi.orders_path` | `root_path` |
+
+**Critical Requirements:**
+1. Parent apps MUST provide Devise routes (`devise_for :users`)
+2. Parent apps MUST define a root route if engine uses `main_app.root_path`
+3. Engine routes use `Oroshi::Engine.routes.draw`, never `Rails.application.routes.draw`
+
+See [Engine Isolation & Routing](#engine-isolation--routing) in CLAUDE.md for detailed patterns.
 
 ### Multi-Database Architecture
 

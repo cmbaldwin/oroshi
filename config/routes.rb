@@ -4,6 +4,10 @@
 # OROSHI ENGINE ROUTES
 # =============================================================================
 #
+# CRITICAL: This file uses Oroshi::Engine.routes.draw, NOT Rails.application.routes.draw
+# Using Rails.application.routes.draw in an engine causes route conflicts and breaks
+# asset loading. This is the SINGLE ROUTE FILE PATTERN standard for Rails engines.
+#
 # These routes are automatically loaded by Rails when Oroshi is mounted
 # in a parent application. Parent apps mount the engine with:
 #
@@ -16,9 +20,12 @@
 # 1. Setting up Devise: `devise_for :users` in their routes.rb
 # 2. Mounting the engine: `mount Oroshi::Engine, at: "/oroshi"`
 # 3. Providing a User model with Devise authentication
+# 4. Defining a root route (required if engine uses main_app.root_path)
 #
 # For standalone development/testing, use test/dummy/config/routes.rb
 # which provides the necessary Devise routes and engine mounting.
+#
+# See CLAUDE.md "Engine Isolation & Routing" for detailed documentation.
 #
 Oroshi::Engine.routes.draw do
   root to: "dashboard#index"

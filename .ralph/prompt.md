@@ -225,6 +225,8 @@ skip_before_action :authenticate_user!, raise: false
 8. **Action Cable requires domain** configured via `ENV['KAMAL_DOMAIN']`
 9. **Sandbox for UI testing** - use `bin/sandbox` to create demo app on port 3001
 10. **importmap for JS** - Use `bin/importmap pin package-name`, NOT npm install
+11. **Single route file pattern** - Engine's `config/routes.rb` MUST only use `Oroshi::Engine.routes.draw`, NEVER `Rails.application.routes.draw`. Using the latter causes route conflicts and breaks asset loading.
+12. **Parent app requirements** - Parent apps MUST define a root route (for `main_app.root_path`) and provide Devise routes (`devise_for :users`)
 
 ### Quality Commands
 

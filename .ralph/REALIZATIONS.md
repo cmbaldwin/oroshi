@@ -25,6 +25,7 @@ Entry Format Template:
 - [Asset Pipeline](#asset-pipeline)
 - [Internationalization](#internationalization)
 - [Authentication & Authorization](#authentication--authorization)
+- [Rails Engine Patterns](#rails-engine-patterns)
 - [Background Jobs](#background-jobs)
 
 ---
@@ -737,6 +738,60 @@ end
 
 ---
 
+## Rails Engine Patterns
+
+*Entries for engine-specific patterns, route configuration, and isolation concerns.*
+
+### Single Route File Pattern (CRITICAL)
+
+**Problem:** Oroshi previously used dual route files (`config/routes_standalone_app.rb` and `config/routes_oroshi_engine.rb`) thinking this would allow flexibility between standalone and engine use. This caused asset loading failures, route conflicts, and broke installation in parent applications.
+
+**Solution:** Use a single route file pattern following Rails engine conventions. The engine's `config/routes.rb` MUST only contain `Oroshi::Engine.routes.draw`, never `Rails.application.routes.draw`. Parent applications are responsible for mounting the engine and providing their own routes.
+
+**Code Example:**
+```ruby
+# config/routes.rb - CORRECT
+# frozen_string_literal: true
+
+# Engine routes - parent apps mount with: mount Oroshi::Engine, at: "/oroshi"
+Oroshi::Engine.routes.draw do
+  root to: "dashboard#index"
+
+  resources :orders
+  resources :buyers
+  # ... all engine routes
+end
+
+# config/routes.rb - WRONG (causes route conflicts)
+Rails.application.routes.draw do  # <-- NEVER use this in engine
+  devise_for :users               # <-- Belongs in parent app
+  # ...
+end
+```
+
+**Parent App Routes:**
+```ruby
+# Parent app's config/routes.rb
+Rails.application.routes.draw do
+  devise_for :users                           # Parent provides Devise
+  mount Oroshi::Engine, at: "/oroshi"         # Mount engine
+  root "home#index"                           # Required for main_app.root_path
+end
+```
+
+**File Structure:**
+```
+config/routes.rb                    # Engine routes (Oroshi::Engine.routes.draw)
+test/dummy/config/routes.rb         # Test app routes (mounts engine)
+sandbox/config/routes.rb            # Generated sandbox routes (mounts engine)
+```
+
+**Gotcha:** The most common symptom of using `Rails.application.routes.draw` in an engine is asset loading failures and "No route matches" errors for Devise routes. This happens because the engine tries to define routes on the parent application before it's fully initialized, causing conflicts with the parent's own route definitions.
+
+**Related:** `config/routes.rb`, CLAUDE.md Engine Isolation & Routing section, README.md Route Architecture section
+
+---
+
 ## Background Jobs
 
 *Entries for Solid Queue patterns, job configuration, and recurring tasks.*
@@ -794,4 +849,4 @@ end
 
 ---
 
-*Last Updated: January 25, 2026*
+*Last Updated: January 26, 2026*

@@ -314,7 +314,47 @@ end
 
 ### 6. Engine Isolation & Routing (CRITICAL)
 
-Since Oroshi is an isolated engine, route helpers behave differently depending on context.
+Oroshi uses the **single route file pattern** standard for Rails engines. This is a critical architectural decision that ensures proper engine isolation and prevents route conflicts.
+
+**Route File Structure:**
+```
+config/routes.rb                    # Engine routes ONLY (Oroshi::Engine.routes.draw)
+test/dummy/config/routes.rb         # Test app routes (mounts engine + Devise)
+sandbox/config/routes.rb            # Generated sandbox routes (mounts engine)
+```
+
+**CRITICAL RULE:** The engine's `config/routes.rb` MUST only contain `Oroshi::Engine.routes.draw`, never `Rails.application.routes.draw`. Using `Rails.application.routes.draw` in an engine causes route conflicts and breaks asset loading.
+
+```ruby
+# config/routes.rb - CORRECT
+Oroshi::Engine.routes.draw do
+  root to: "dashboard#index"
+  # ... all engine routes
+end
+
+# config/routes.rb - WRONG (causes conflicts)
+Rails.application.routes.draw do  # <-- NEVER use this in engine
+  # ...
+end
+```
+
+**Parent Application Setup:**
+Parent apps mount the engine and provide required routes:
+```ruby
+# Parent app's config/routes.rb
+Rails.application.routes.draw do
+  devise_for :users                           # Required: Devise routes
+  mount Oroshi::Engine, at: "/oroshi"         # Mount engine at chosen path
+  root "home#index"                           # Required: for main_app.root_path
+end
+```
+
+**Route Helper Context:**
+
+| From | Engine Routes | Parent App Routes |
+|------|---------------|-------------------|
+| Engine views | `oroshi_orders_path` | `main_app.root_path` |
+| Parent views | `oroshi.orders_path` | `root_path` |
 
 **1. Accessing Host Routes (Devise, etc.) from Engine Views:**
 You MUST use `main_app` prefix:
@@ -334,6 +374,11 @@ Use `raise: false` when skipping callbacks that might not verify in all contexts
 ```ruby
 skip_before_action :authenticate_user!, raise: false
 ```
+
+**4. Parent App Requirements:**
+- MUST provide Devise routes (`devise_for :users`)
+- MUST define a root route if engine uses `main_app.root_path`
+- MUST NOT define routes that conflict with engine routes
 ```
 
 ## Internationalization (i18n)

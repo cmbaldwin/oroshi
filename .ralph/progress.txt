@@ -182,3 +182,54 @@ Learnings for future iterations:
 - Test both file creation AND functional verification (routes accessible, app boots)
 - PostgreSQL service needs health checks to ensure it's ready before database operations
 - YAML heredocs (<<EOF) work in GitHub Actions for multi-line file creation
+
+[2026-01-26 09:40:00] Story: US-010 Create installation verification command
+Implemented: Comprehensive installation verification rake task with 9 checks
+Files Modified:
+- lib/tasks/verify_installation.rake (NEW - 271 lines)
+- test/lib/verify_installation_rake_test.rb (NEW - 185 lines, 15 tests)
+- README.md (added verification section)
+Features Added:
+- oroshi:verify_installation rake task with 9 critical checks
+- Color-coded output with ✓ (pass), ✗ (fail), ⚠ (warning) indicators
+- Checks: engine mount, initializer, root route, 4 databases, migrations, Solid schemas, User model
+- Actionable error messages for each failed check with specific commands to fix
+- Summary report with counts of passed/failed/warnings/errors
+- Exit codes: 0 on success, 1 on failure
+- 15 comprehensive test cases covering all functionality
+Tests: PASSING (15 runs, 34 assertions, 0 failures, 0 errors)
+Learnings for future iterations:
+- Rake tasks that invoke Rails application need :environment prerequisite
+- Use capture_io to test rake task output in Test::Unit
+- SystemExit should be caught in tests when task uses exit() calls
+- Rails.application.routes.routes.any? to check if engine is mounted
+- ActiveRecord::Base.connected_to(role: :writing, shard: :name) to access specific databases
+- Color Unicode characters (✓ ✗ ⚠) work in terminal but complicate regex matching in tests
+- Task provides user value even when checks fail - diagnostic tool is successful if it identifies problems
+- Verification tasks should check configuration files exist AND runtime state is correct
+- Exit codes enable CI integration - can fail build if installation incomplete
+
+[2026-01-26 10:00:00] Story: US-011 Test oroshi-moab installation end-to-end
+Implemented: Comprehensive end-to-end installation test with documentation
+Files Modified:
+- docs/testing/oroshi-moab-installation-test.md (NEW - 284 lines, 10-step procedure)
+- lib/tasks/verify_installation.rake (FIXED - changed oroshi_users to oroshi_buyers check)
+Testing Performed:
+- Verified oroshi gem installation in parent app (oroshi-moab)
+- Tested 4-database setup (primary, queue, cache, cable)
+- Ran all migrations (69 files with .oroshi.rb extensions)
+- Loaded Solid schemas for queue, cache, and cable databases
+- Ran oroshi:verify_installation task (8/9 checks passed, 1 expected warning)
+- Verified 270 routes loaded (261 from engine + 9 from parent)
+- Tested server boot (starts without errors)
+- Confirmed Solid Queue worker functionality
+Test Result: PASS with HIGH confidence
+Learnings for future iterations:
+- Verification tasks must account for parent app differences (users vs oroshi_users table)
+- establish_connection() returns ConnectionPool, call .connection to get actual connection
+- Parent apps may customize User model, so warnings about associations are expected
+- Document test procedures with exact commands for repeatability
+- 10-step test procedure takes ~5 minutes to complete
+- Test documentation should include: prerequisites, steps, results, issues, workarounds
+- Verification task is invaluable for QA - instantly diagnoses installation state
+- Route refactoring successfully validated: single file pattern works in parent apps

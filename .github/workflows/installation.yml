@@ -1,0 +1,211 @@
+name: Installation Test
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  test-installation:
+    name: Test fresh Rails ${{ matrix.rails }} on Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['3.4', '4.0']
+        rails: ['8.1']
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    env:
+      RAILS_ENV: development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      DB_HOST: localhost
+      DB_PORT: 5432
+      OROSHI_DOMAIN: localhost
+    
+    steps:
+      - name: Checkout Oroshi code
+        uses: actions/checkout@v4
+        with:
+          path: oroshi
+      
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev libvips-dev
+      
+      - name: Install Rails ${{ matrix.rails }}
+        run: |
+          gem install rails -v "~> ${{ matrix.rails }}"
+      
+      - name: Create fresh Rails application
+        run: |
+          rails new test_app \
+            --database=postgresql \
+            --skip-test \
+            --skip-system-test \
+            --skip-jbuilder \
+            --skip-hotwire \
+            --api=false
+      
+      - name: Add Oroshi to Gemfile
+        working-directory: test_app
+        run: |
+          echo 'gem "oroshi", path: "../oroshi"' >> Gemfile
+          echo 'gem "devise"' >> Gemfile
+      
+      - name: Install dependencies
+        working-directory: test_app
+        run: bundle install
+      
+      - name: Run Oroshi install generator
+        working-directory: test_app
+        run: |
+          bundle exec rails generate oroshi:install --skip-migrations
+      
+      - name: Verify initializer created
+        working-directory: test_app
+        run: |
+          if [ ! -f config/initializers/oroshi.rb ]; then
+            echo "ERROR: Oroshi initializer not created"
+            exit 1
+          fi
+          echo "✓ Oroshi initializer created"
+      
+      - name: Verify User model created
+        working-directory: test_app
+        run: |
+          if [ ! -f app/models/user.rb ]; then
+            echo "ERROR: User model not created"
+            exit 1
+          fi
+          echo "✓ User model created"
+      
+      - name: Verify engine mounted in routes
+        working-directory: test_app
+        run: |
+          if ! grep -q "Oroshi::Engine" config/routes.rb; then
+            echo "ERROR: Oroshi engine not mounted in routes"
+            exit 1
+          fi
+          echo "✓ Engine mounted in routes"
+      
+      - name: Verify Solid schemas copied
+        working-directory: test_app
+        run: |
+          if [ ! -f db/queue_schema.rb ] || [ ! -f db/cache_schema.rb ] || [ ! -f db/cable_schema.rb ]; then
+            echo "ERROR: Solid schemas not copied"
+            exit 1
+          fi
+          echo "✓ Solid schemas copied"
+      
+      - name: Configure database
+        working-directory: test_app
+        run: |
+          # Replace database.yml with multi-database configuration
+          cat > config/database.yml <<EOF
+          default: &default
+            adapter: postgresql
+            encoding: unicode
+            pool: 5
+            username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
+            password: <%= ENV.fetch("POSTGRES_PASSWORD", "") %>
+            host: <%= ENV.fetch("DB_HOST", "localhost") %>
+            port: <%= ENV.fetch("DB_PORT", "5432") %>
+          
+          development:
+            primary:
+              <<: *default
+              database: test_app_development
+            queue:
+              <<: *default
+              database: test_app_development_queue
+              migrations_paths: db/queue_migrate
+            cache:
+              <<: *default
+              database: test_app_development_cache
+              migrations_paths: db/cache_migrate
+            cable:
+              <<: *default
+              database: test_app_development_cable
+              migrations_paths: db/cable_migrate
+          EOF
+      
+      - name: Setup databases
+        working-directory: test_app
+        run: |
+          bundle exec rails db:create
+          bundle exec rails oroshi:install:migrations
+          bundle exec rails db:migrate
+          bundle exec rails db:schema:load:queue
+          bundle exec rails db:schema:load:cache
+          bundle exec rails db:schema:load:cable
+      
+      - name: Verify databases created
+        run: |
+          psql -U postgres -h localhost -lqt | cut -d \| -f 1 | grep -qw "test_app_development" || (echo "ERROR: Primary database not created" && exit 1)
+          psql -U postgres -h localhost -lqt | cut -d \| -f 1 | grep -qw "test_app_development_queue" || (echo "ERROR: Queue database not created" && exit 1)
+          psql -U postgres -h localhost -lqt | cut -d \| -f 1 | grep -qw "test_app_development_cache" || (echo "ERROR: Cache database not created" && exit 1)
+          psql -U postgres -h localhost -lqt | cut -d \| -f 1 | grep -qw "test_app_development_cable" || (echo "ERROR: Cable database not created" && exit 1)
+          echo "✓ All 4 databases created"
+      
+      - name: Verify application boots
+        working-directory: test_app
+        run: |
+          timeout 30s bundle exec rails runner "puts 'Rails application loaded successfully'" || (echo "ERROR: Application failed to boot" && exit 1)
+          echo "✓ Application boots successfully"
+      
+      - name: Verify Oroshi routes accessible
+        working-directory: test_app
+        run: |
+          bundle exec rails runner "
+            require 'rails/application/route_inspector'
+            inspector = Rails::Application::RouteInspector.new(Rails.application.routes.routes)
+            oroshi_routes = inspector.collect_routes(Rails.application.routes.routes).select { |r| r[:path].include?('oroshi') }
+            if oroshi_routes.empty?
+              puts 'ERROR: No Oroshi routes found'
+              exit 1
+            end
+            puts '✓ Oroshi routes accessible'
+            puts \"Found #{oroshi_routes.length} Oroshi routes\"
+          "
+      
+      - name: Installation summary
+        if: success()
+        run: |
+          echo "=========================================="
+          echo "✅ Installation test PASSED"
+          echo "Ruby: ${{ matrix.ruby }}"
+          echo "Rails: ${{ matrix.rails }}"
+          echo "=========================================="
+      
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: installation-failure-logs-ruby-${{ matrix.ruby }}-rails-${{ matrix.rails }}
+          path: |
+            test_app/log/
+            test_app/tmp/
+          retention-days: 7

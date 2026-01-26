@@ -85,3 +85,22 @@ Learnings for future iterations:
 - The single route file pattern prevents dual route file mistakes that break asset loading
 - Key principle: engine uses Oroshi::Engine.routes.draw, parent uses Rails.application.routes.draw
 - Route helper context table is useful: from engine vs from parent app, with/without prefix
+
+[2026-01-26 10:30:00] Story: US-006 Create install generator
+Implemented: Enhanced install generator with comprehensive documentation and new features
+Files Modified:
+- lib/generators/oroshi/install/install_generator.rb (comprehensive overhaul)
+Features Added:
+- Comprehensive header comment (60+ lines) explaining usage, prerequisites, and steps
+- Method-level comments for all 11 generator steps
+- --run-migrations flag to optionally run db:migrate and Solid schema loads
+- add_root_route step to ensure parent app has root route for main_app.root_path
+- Improved mount_engine with comment about changing mount path
+- Conditional post-install instructions based on --run-migrations flag
+Tests: PASSING (rubocop clean, controller tests pass)
+Learnings for future iterations:
+- Rails generators should have comprehensive header comments explaining all options
+- Optional flags (--run-migrations) are better than forced execution for DB operations
+- Generator should handle edge cases like existing files and already-mounted engines
+- Step-by-step numbering in comments helps developers understand the flow
+- The generator is idempotent - safe to run multiple times

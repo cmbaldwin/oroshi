@@ -104,3 +104,28 @@ Learnings for future iterations:
 - Generator should handle edge cases like existing files and already-mounted engines
 - Step-by-step numbering in comments helps developers understand the flow
 - The generator is idempotent - safe to run multiple times
+
+[2026-01-26 09:30:00] Story: US-007 Create generator tests
+Implemented: Comprehensive test suite for install generator with bug fixes
+Files Modified:
+- test/lib/generators/oroshi/install/install_generator_test.rb (NEW - 10 test cases)
+- lib/generators/oroshi/install/install_generator.rb (fixed path resolution bugs)
+Features Added:
+- 10 test cases covering all generator functionality
+- Tests for initializer creation, user model generation, skip options
+- Tests for schema copying, database.yml creation
+- Stubbed rake and route methods for test environment
+Bug Fixes:
+- Fixed File.exist? calls to use File.join(destination_root, path)
+- Added app_name helper method for database.yml template ERB rendering
+- Fixed routes path checks to use destination_root
+Tests: PASSING (10 runs, 33 assertions, 0 failures, 0 errors)
+Learnings for future iterations:
+- Rails generator tests must use destination_root for all file paths
+- File.exist?("relative/path") checks CWD, not destination - ALWAYS use File.join(destination_root, path)
+- Thor/ERB templates can't access @instance_variables - use helper methods instead
+- rake() and route() methods don't work in Rails::Generators::TestCase - must stub them
+- Prepend modules to stub Thor methods without argument validation errors
+- Generator tests verify behavior (method calls) not side effects (actual file changes)
+- Test::Unit uses assert_file, assert_no_file, run_generator helpers
+- SimpleCov shows 100% coverage for generator when all public methods tested

@@ -69,3 +69,19 @@ Learnings for future iterations:
 - Engine controllers need: helper Oroshi::ApplicationHelper to access title, icon, date helpers
 - Dummy app needs cable.yml with 'test: adapter: test' for ActionCable tests
 - Dummy app needs storage.yml for ActiveStorage tests
+
+[2026-01-26 10:15:00] Story: US-005 Update documentation for route pattern
+Implemented: Comprehensive documentation of single route file pattern across all project docs
+Files Modified:
+- README.md (added Route Architecture section with examples and requirements)
+- CLAUDE.md (enhanced Engine Isolation & Routing with detailed pattern documentation)
+- .ralph/prompt.md (added gotchas #11 and #12 for route pattern and parent requirements)
+- .ralph/REALIZATIONS.md (added Rails Engine Patterns section with Single Route File Pattern entry)
+- config/routes.rb (enhanced header comment with CRITICAL warnings and references)
+Tests: PASSING (controller: 26 tests, rubocop clean)
+Learnings for future iterations:
+- Documentation for patterns should be in MULTIPLE places: README (users), CLAUDE.md (developers), REALIZATIONS.md (future AI agents)
+- config/routes.rb header comment is first place new developers look - make it comprehensive
+- The single route file pattern prevents dual route file mistakes that break asset loading
+- Key principle: engine uses Oroshi::Engine.routes.draw, parent uses Rails.application.routes.draw
+- Route helper context table is useful: from engine vs from parent app, with/without prefix

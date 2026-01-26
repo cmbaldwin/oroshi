@@ -71,9 +71,37 @@ bin/rails db:schema:load:cable
 # 4. (Optional) Seed demo data
 bin/rails db:seed
 
-# 5. Start server
+# 5. Verify installation (optional but recommended)
+bin/rails oroshi:verify_installation
+
+# 6. Start server
 bin/rails server
 ```
+
+## Verifying Installation
+
+After installation, you can verify everything is set up correctly:
+
+```bash
+bin/rails oroshi:verify_installation
+```
+
+This command checks:
+- ✓ Engine is mounted in routes
+- ✓ Initializer exists
+- ✓ Root route is defined
+- ✓ All 4 databases are configured
+- ✓ Migrations have been run
+- ✓ Solid Queue/Cache/Cable schemas are loaded
+- ✓ User model is configured
+
+If all checks pass, you'll see:
+
+```
+🎉 All checks passed! Oroshi is properly installed and configured.
+```
+
+If any checks fail, the command provides specific instructions on how to fix each issue.
 
 ## Installation Details
 

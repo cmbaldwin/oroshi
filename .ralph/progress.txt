@@ -129,3 +129,29 @@ Learnings for future iterations:
 - Generator tests verify behavior (method calls) not side effects (actual file changes)
 - Test::Unit uses assert_file, assert_no_file, run_generator helpers
 - SimpleCov shows 100% coverage for generator when all public methods tested
+
+[2026-01-26 09:50:00] Story: US-008 Add README installation instructions
+Implemented: Comprehensive troubleshooting section added to README
+Files Modified:
+- README.md (added 200+ lines of troubleshooting documentation)
+Features Added:
+- Troubleshooting section with 9 common installation issues
+- Each issue has: problem description, solutions with commands, explanations
+Issues Documented:
+1. "No route matches" errors - engine mount and root route verification
+2. Asset loading failures - Propshaft configuration and asset paths
+3. Database connection errors - 4-database setup verification
+4. "Table does not exist" for solid_* tables - schema loading commands
+5. Devise errors - installation and configuration steps
+6. User model conflicts - skip options and required enum/modules
+7. "uninitialized constant Oroshi::" - autoload and Zeitwerk config
+8. Background jobs not processing - Solid Queue worker startup
+9. WebSocket/Turbo Streams not working - Action Cable and cable database
+- Getting Help section with log checking and issue reporting guidelines
+Tests: N/A (documentation only)
+Learnings for future iterations:
+- Good troubleshooting docs need: problem description, multiple solutions, why it happens
+- Include exact commands users can run to diagnose and fix
+- Group related errors together (all Solid gems, all Devise issues, etc.)
+- Link to logs and support resources
+- README already had good installation instructions - enhanced with troubleshooting

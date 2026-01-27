@@ -1,12 +1,12 @@
 <nav id="top_nav" class="navbar navbar-light bg-silver navbar-expand-lg px-3" data-turbo-permanent>
-    <%= link_to main_app.root_path, class: 'navbar-brand p-0 d-block d-lg-none', data: { turbo: false } do %>
+    <%= link_to oroshi.root_path, class: 'navbar-brand p-0 d-block d-lg-none', data: { turbo: false } do %>
     <%= image_tag "oroshi.png", class: "oroshi-brand", alt: "OROSHI", height: 60 %>
     <% end %>
     <button class="navbar-toggler m-1 float-end bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_t" aria-controls="navbar_t" aria-expanded="false" aria-label="<%= t('layouts.application.navbar.toggle') %>">
         <%= icon('menu-down', class: 'text-primary') %>
     </button>
     <div class="collapse navbar-collapse" id="navbar_t">
-        <%= link_to main_app.root_path, class: 'navbar-brand m-0 p-0 d-none d-lg-block' do %>
+        <%= link_to oroshi.root_path, class: 'navbar-brand m-0 p-0 d-none d-lg-block' do %>
         <%= image_tag "oroshi.png", class: "oroshi-brand", alt: "OROSHI", height: 60 %>
         <% end %>
         <% if user_signed_in? %>

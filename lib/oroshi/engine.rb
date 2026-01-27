@@ -80,5 +80,14 @@ module Oroshi
         ]
       end
     end
+
+    # Share engine helpers with parent application
+    # This ensures helpers like `icon` are available when rendering
+    # engine views from parent app controllers (e.g., Devise)
+    initializer "oroshi.helpers" do
+      ActiveSupport.on_load(:action_controller_base) do
+        helper Oroshi::ApplicationHelper
+      end
+    end
   end
 end

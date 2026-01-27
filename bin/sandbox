@@ -129,6 +129,9 @@ rm -rf "$TEMP_DIR"
 echo "📝 Adding Oroshi to Gemfile..."
 cat <<RUBY >> Gemfile
 
+# Asset pipeline (required since we used --skip-asset-pipeline)
+gem "propshaft"
+
 # Oroshi engine (local development) - must be loaded in all environments
 gem "oroshi", path: "..", require: "oroshi"
 
@@ -152,9 +155,7 @@ RUBY
 echo "📦 Installing gems..."
 unbundled bundle install --quiet
 
-# Remove default application layout (use engine's layout instead)
-echo "🗑️  Removing default application layout..."
-rm -f app/views/layouts/application.html.erb
+# Remove default mailer layouts (we'll copy engine's main layout later)
 rm -f app/views/layouts/mailer.html.erb
 rm -f app/views/layouts/mailer.text.erb
 
@@ -295,6 +296,16 @@ PROCFILE
 echo "📋 Copying vendored JavaScript files..."
 mkdir -p vendor/javascript
 cp -r ../vendor/javascript/* vendor/javascript/ 2>/dev/null || true
+
+# Copy compiled CSS from engine
+echo "🎨 Copying CSS assets..."
+mkdir -p app/assets/builds
+cp ../app/assets/builds/oroshi.css app/assets/builds/ 2>/dev/null || true
+
+# Copy application layout (includes Bootstrap CDN and navbar)
+echo "📄 Copying application layout from engine..."
+mkdir -p app/views/layouts
+cp ../app/views/layouts/application.html.erb app/views/layouts/application.html.erb
 
 # Copy migrations from engine
 echo "📋 Copying migrations..."

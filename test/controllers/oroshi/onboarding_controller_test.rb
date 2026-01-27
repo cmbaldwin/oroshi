@@ -87,26 +87,26 @@ class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
 
   test "skip sets skipped_at" do
     progress = @user.create_onboarding_progress!(current_step: @first_step)
-    post skip_oroshi_onboarding_path(@first_step)
+    post oroshi.skip_onboarding_path(@first_step)
     assert_not_nil progress.reload.skipped_at
   end
 
   test "skip redirects to dashboard" do
     @user.create_onboarding_progress!(current_step: @first_step)
-    post skip_oroshi_onboarding_path(@first_step)
+    post oroshi.skip_onboarding_path(@first_step)
     assert_redirected_to oroshi_root_path
     assert_match(/skipped/i, flash[:notice])
   end
 
   test "resume clears skipped_at" do
     progress = @user.create_onboarding_progress!(current_step: @first_step, skipped_at: Time.current)
-    post resume_oroshi_onboarding_path(@first_step)
+    post oroshi.resume_onboarding_path(@first_step)
     assert_nil progress.reload.skipped_at
   end
 
   test "resume redirects to onboarding index" do
     @user.create_onboarding_progress!(current_step: @first_step, skipped_at: Time.current)
-    post resume_oroshi_onboarding_path(@first_step)
+    post oroshi.resume_onboarding_path(@first_step)
     assert_redirected_to oroshi_onboarding_index_path
     assert_match(/resuming/i, flash[:notice])
   end

@@ -12,13 +12,19 @@ export default class extends Controller {
     });
   }
 
-  loadTabContent(event) {
-    const link = event.target;
-    const dashboardFrame = this.element.querySelector('turbo-frame#dashboard_frame');
-    // append the link href to the turbo-frame src
-    dashboardFrame.src = link
-    // reload it
-    dashboardFrame.reload();
+  onTabClick(event) {
+    const clickedLink = event.currentTarget;
+    const nav = clickedLink.closest('.nav');
+
+    // Remove active from all siblings
+    nav.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+      link.setAttribute('aria-selected', 'false');
+    });
+
+    // Add active to clicked
+    clickedLink.classList.add('active');
+    clickedLink.setAttribute('aria-selected', 'true');
   }
 
   checkToggle(event) {

@@ -3,12 +3,17 @@
 # Provides oroshi_* route helper aliases for backward compatibility
 # Views were written when Oroshi was a standalone app with `namespace :oroshi` routes
 # Now that it's an engine with `Oroshi::Engine.routes.draw`, helpers don't have the prefix
+#
+# This helper handles two patterns:
+# 1. Methods starting with oroshi_: oroshi_root_path -> root_path
+# 2. Methods containing _oroshi_: load_oroshi_products_path -> load_products_path
+#
 module Oroshi
   module UrlHelper
     # Dynamically define oroshi_* methods that delegate to the engine's route helpers
     def method_missing(method_name, *args, **kwargs, &block)
-      if method_name.to_s.start_with?("oroshi_") && respond_to_engine_route?(method_name)
-        engine_method = method_name.to_s.sub("oroshi_", "")
+      engine_method = strip_oroshi_prefix(method_name)
+      if engine_method && oroshi.respond_to?(engine_method)
         oroshi.public_send(engine_method, *args, **kwargs, &block)
       else
         super
@@ -16,14 +21,25 @@ module Oroshi
     end
 
     def respond_to_missing?(method_name, include_private = false)
-      (method_name.to_s.start_with?("oroshi_") && respond_to_engine_route?(method_name)) || super
+      engine_method = strip_oroshi_prefix(method_name)
+      (engine_method && oroshi.respond_to?(engine_method)) || super
     end
 
     private
 
-    def respond_to_engine_route?(method_name)
-      engine_method = method_name.to_s.sub("oroshi_", "")
-      oroshi.respond_to?(engine_method)
+    # Returns the engine method name with oroshi_ removed, or nil if no match
+    # Handles both:
+    # - oroshi_root_path -> root_path
+    # - load_oroshi_products_path -> load_products_path
+    def strip_oroshi_prefix(method_name)
+      name = method_name.to_s
+      if name.start_with?("oroshi_")
+        name.sub("oroshi_", "")
+      elsif name.include?("_oroshi_")
+        name.sub("_oroshi_", "_")
+      else
+        nil
+      end
     end
 
     # Access to the engine's route helpers

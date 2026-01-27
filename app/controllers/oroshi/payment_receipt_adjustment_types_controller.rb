@@ -40,7 +40,7 @@ class Oroshi::PaymentReceiptAdjustmentTypesController < Oroshi::ApplicationContr
     @payment_receipt_adjustment_type.destroy
 
     respond_to do |format|
-      format.html { redirect_to oroshi_root_path }
+      format.html { redirect_to root_path }
       format.turbo_stream do
         render turbo_stream: turbo_stream
           .replace("payment_receipt_adjustment_types",

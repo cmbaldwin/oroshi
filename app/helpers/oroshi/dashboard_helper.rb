@@ -6,8 +6,8 @@ module Oroshi::DashboardHelper
     link_to text, path, class: "nav-link #{'active' if active}", role: "tab",
                         aria: { controls: "v-pills-dashboard-frame", selected: active.to_s },
                         data: {
-                          bs_toggle: "pill", bs_target: "#v-pills-dashboard-frame",
-                          action: "click->oroshi--dashboard#loadTabContent:passive"
+                          turbo_frame: "dashboard_frame",
+                          action: "click->oroshi--dashboard#onTabClick"
                         }
   end
 

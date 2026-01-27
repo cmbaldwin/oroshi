@@ -5,6 +5,7 @@ class Oroshi::Supplier < ApplicationRecord
   include Oroshi::Activatable
 
   # Associations
+  belongs_to :user, optional: true # For supplier dashboard access
   has_many :addresses, class_name: "Oroshi::Address", as: :addressable
   accepts_nested_attributes_for :addresses
   has_many :supplies, class_name: "Oroshi::Supply"
@@ -23,6 +24,18 @@ class Oroshi::Supplier < ApplicationRecord
   validates :representatives, presence: true
   validates :invoice_number, presence: true
   validates :supplier_organization_id, presence: true
+
+  # Authorization scope - returns suppliers accessible by the given user based on role
+  def self.accessible_by(user)
+    case
+    when user.admin?, user.vip?, user.employee?
+      all
+    when user.supplier?
+      where(user: user)
+    else
+      none
+    end
+  end
 
   def circled_number
     int = supplier_number.to_i

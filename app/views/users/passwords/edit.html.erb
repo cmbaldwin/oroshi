@@ -1,18 +1,29 @@
 <h2>Change your password</h2>
 
-<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= f.error_notification %>
+<%= form_with(model: resource, scope: resource_name, url: password_path(resource_name), method: :put) do |f| %>
+  <% if resource.errors.any? %>
+    <div class="alert alert-danger">
+      <%= resource.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
 
-  <%= f.input :reset_password_token, as: :hidden %>
-  <%= f.full_error :reset_password_token %>
+  <%= f.hidden_field :reset_password_token %>
 
-  <div class="form-inputs">
-    <%= f.input :password, label: "New password", required: true, autofocus: true, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length) %>
-    <%= f.input :password_confirmation, label: "Confirm your new password", required: true %>
+  <div class="mb-3">
+    <%= f.label :password, "New password", class: "form-label" %>
+    <%= f.password_field :password, class: "form-control", required: true, autofocus: true %>
+    <% if @minimum_password_length %>
+      <div class="form-text"><%= @minimum_password_length %> characters minimum</div>
+    <% end %>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Change my password" %>
+  <div class="mb-3">
+    <%= f.label :password_confirmation, "Confirm your new password", class: "form-label" %>
+    <%= f.password_field :password_confirmation, class: "form-control", required: true %>
+  </div>
+
+  <div class="d-grid gap-2">
+    <%= f.submit "Change my password", class: "btn btn-primary" %>
   </div>
 <% end %>
 

@@ -18,7 +18,7 @@
                                 <i class="fas fa-user"></i>
                             </div>
                         </div>
-                        <%= f.email_field :email, :class => 'form-control form-control-lg', :id=> 'colFormLabelLg', :html => 'placeholder="col-form-label-lg"', autofocus: true %>
+                        <%= f.email_field :email, class: 'form-control form-control-lg', id: 'colFormLabelLg', placeholder: 'メールアドレス', autofocus: true %>
                         <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -50,7 +50,7 @@
                                 <i class="fas fa-lock"></i>
                             </div>
                         </div>
-                        <%= f.password_field :password, :class => 'form-control form-control-lg', :id=> 'colFormLabelLg', :html => 'placeholder="col-form-label-lg"', autocomplete: "off" %>
+                        <%= f.password_field :password, class: 'form-control form-control-lg', id: 'colFormLabelLg', placeholder: '新しいパスワード', autocomplete: "off" %>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                                 <i class="fas fa-lock"></i>
                             </div>
                         </div>
-                        <%= f.password_field :password_confirmation, :class => 'form-control form-control-lg', :id=> 'colFormLabelLg', :html => 'placeholder="col-form-label-lg"', autocomplete: "off" %>
+                        <%= f.password_field :password_confirmation, class: 'form-control form-control-lg', id: 'colFormLabelLg', placeholder: 'パスワード確認', autocomplete: "off" %>
                     </div>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                                 <i class="fas fa-lock"></i>
                             </div>
                         </div>
-                        <%= f.password_field :current_password, :class => 'form-control form-control-lg', :id=> 'colFormLabelLg', :html => 'placeholder="col-form-label-lg"', autocomplete: "off" %>
+                        <%= f.password_field :current_password, class: 'form-control form-control-lg', id: 'colFormLabelLg', placeholder: '現在のパスワード', autocomplete: "off" %>
                     </div>
                 </div>
             </div>

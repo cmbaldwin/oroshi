@@ -6,6 +6,7 @@ class Oroshi::Buyer < ApplicationRecord
   include Oroshi::Ransackable # required for Order Search form
 
   # Associations
+  belongs_to :user, optional: true # For buyer dashboard access
   has_many :addresses, class_name: "Oroshi::Address", as: :addressable
   accepts_nested_attributes_for :addresses
   has_and_belongs_to_many :shipping_methods,

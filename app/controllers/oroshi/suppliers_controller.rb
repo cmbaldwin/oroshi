@@ -5,9 +5,15 @@ class Oroshi::SuppliersController < Oroshi::ApplicationController
   before_action :set_supplier_organization, only: %i[index new]
   before_action :set_supplier_organizations, only: %i[new update create]
 
+  # Authorization callbacks
+  before_action :authorize_supplier_index, only: %i[index]
+  before_action :authorize_supplier, only: %i[edit update]
+  before_action :authorize_supplier_create, only: %i[new create]
+
   # GET /oroshi/suppliers
   def index
-    @suppliers = @supplier_organization&.suppliers
+    @suppliers = policy_scope(Oroshi::Supplier)
+    @suppliers = @suppliers.where(supplier_organization: @supplier_organization) if @supplier_organization
     @show_inactive = params[:show_inactive] == "true"
     @suppliers = @suppliers.active unless @show_inactive
     @suppliers = @suppliers&.sort_by(&:supplier_number)
@@ -70,5 +76,18 @@ class Oroshi::SuppliersController < Oroshi::ApplicationController
                   supply_type_variation_ids: [],
                   addresses_attributes: %i[id default active name company country_id phone
                                            subregion_id postal_code city address1 address2])
+  end
+
+  # Pundit authorization methods
+  def authorize_supplier
+    authorize @supplier
+  end
+
+  def authorize_supplier_create
+    authorize Oroshi::Supplier, :create?
+  end
+
+  def authorize_supplier_index
+    authorize Oroshi::Supplier, :index?
   end
 end

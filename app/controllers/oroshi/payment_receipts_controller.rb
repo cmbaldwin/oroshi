@@ -70,7 +70,7 @@ class Oroshi::PaymentReceiptsController < Oroshi::ApplicationController
     @payment_receipt.destroy
 
     respond_to do |format|
-      format.html { redirect_to oroshi_root_path }
+      format.html { redirect_to root_path }
       format.turbo_stream do
         render turbo_stream: turbo_stream
           .replace("payment_receipts",

@@ -7,18 +7,39 @@ class OroshiOrdersDashboardTest < ApplicationSystemTestCase
 
   setup do
     @admin = create(:user, :admin)
+    # Skip onboarding for admin user
+    create(:onboarding_progress, :completed, user: @admin)
     login_as(@admin, scope: :user)
     @date = Time.zone.today
   end
 
   test "loads orders view without errors" do
     create_dashboard_data
-    visit oroshi_orders_orders_path(date: @date)
-    save_screenshot
-    # Check if the page loaded at all
-    assert_selector "body"
-    # Look for the turbo frame with longer wait
-    assert_selector "turbo-frame#orders_dashboard", wait: 30
+
+    # First visit the main orders index page which sets up the turbo frame
+    visit oroshi_orders_path(date: @date)
+
+    # Debug where we ended up
+    puts "\n" + "=" * 80
+    puts "Current URL after visit: #{page.current_url}"
+    puts "Page title: #{page.title}"
+
+    if page.title.include?("Exception")
+      File.write("tmp/test_error_index.html", page.html)
+      puts "Error page saved to tmp/test_error_index.html"
+      # Try to find the error
+      if page.has_selector?("h2")
+        puts "Error: #{page.all("h2").first.text}"
+      end
+    end
+    puts "=" * 80 + "\n"
+
+    # Wait for page to load
+    assert_selector "body", wait: 5
+
+    # Now the turbo frame should lazy-load from oroshi_orders_orders_path
+    # Wait for the lazy frame to load its content
+    assert_selector "turbo-frame#orders_dashboard", wait: 15
     assert_no_text "Content missing"
   end
 

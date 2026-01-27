@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Oroshi::DashboardController < Oroshi::ApplicationController
-  before_action :check_vip
   before_action :set_supplier_organization, only: %i[index home suppliers_organizations]
   before_action :set_supply_type, only: %i[supply_types]
   before_action :set_shipping_organization, only: %i[shipping]
@@ -77,10 +76,22 @@ class Oroshi::DashboardController < Oroshi::ApplicationController
   private
 
   def set_supplier_organization
-    @supplier_organization = if params[:id].present?
-                               Oroshi::SupplierOrganization.find(params[:id])
+    if current_user.respond_to?(:supplier?) && current_user.supplier?
+      # Suppliers are restricted to their own organization
+      @supplier_organization = current_user.supplier&.supplier_organization
+
+      # If they try to access another org, strictly redirect or just override
+      if params[:id].present? && @supplier_organization && params[:id].to_i != @supplier_organization.id
+        # In a partial render context, redirects can be tricky, but let's assume standard behavior
+        # or just ignore the param and use the scoped one.
+      end
     else
-                               Oroshi::SupplierOrganization.active.by_supplier_count.first
+      # Admin, VIP, Employee can view any organization
+      @supplier_organization = if params[:id].present?
+                                 Oroshi::SupplierOrganization.find(params[:id])
+      else
+                                 Oroshi::SupplierOrganization.active.by_supplier_count.first
+      end
     end
   end
 

@@ -4,19 +4,19 @@ require "test_helper"
 
 class LegalControllerTest < ActionDispatch::IntegrationTest
   test "should get privacy policy" do
-    get privacy_policy_path
+    get oroshi.privacy_policy_path
     assert_response :success
     assert_select "h1", text: "プライバシーポリシー"
   end
 
   test "should get terms of service" do
-    get terms_of_service_path
+    get oroshi.terms_of_service_path
     assert_response :success
     assert_select "h1", text: "利用規約"
   end
 
   test "privacy policy should be accessible without authentication" do
-    get privacy_policy_path
+    get oroshi.privacy_policy_path
     assert_response :success
     # Should show privacy policy content, not redirect to login
     assert_select "h1", text: "プライバシーポリシー"
@@ -24,7 +24,7 @@ class LegalControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "terms of service should be accessible without authentication" do
-    get terms_of_service_path
+    get oroshi.terms_of_service_path
     assert_response :success
     # Should show terms content, not redirect to login
     assert_select "h1", text: "利用規約"

@@ -7,7 +7,9 @@ class OroshiDashboardTest < ApplicationSystemTestCase
 
   setup do
     @admin = create(:user, :admin)
-    sign_in @admin
+    # Skip onboarding for admin user
+    create(:onboarding_progress, :completed, user: @admin)
+    login_as(@admin, scope: :user)
   end
 
   # context 'interaction with empty dashboard'

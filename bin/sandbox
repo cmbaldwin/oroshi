@@ -1,54 +1,10 @@
 #!/usr/bin/env bash
-#
-# Oroshi Sandbox Management Script
-# =================================
-#
-# This script creates, manages, and destroys a sandbox Rails application for
-# testing and developing the Oroshi engine gem. The sandbox is a complete,
-# standalone Rails application that mounts the Oroshi engine.
-#
-# ARCHITECTURE:
-# - Oroshi is a Rails engine gem (lib/oroshi/engine.rb)
-# - The sandbox is a fresh Rails application that includes Oroshi as a gem
-# - Routes are GENERATED (not copied) to demonstrate proper engine mounting
-# - Multi-database setup: primary, queue (Solid Queue), cache, cable
-#
-# WHY NOT RUN rails new INSIDE THE ENGINE?
-# - Running 'rails new' from within an existing Rails directory fails
-# - The script creates the app in /tmp first, then moves it to ./sandbox
-# - This follows the Solidus pattern: https://github.com/solidusio/solidus
-#
-# UNBUNDLED EXECUTION:
-# - Commands must run outside the parent's Bundler environment
-# - Otherwise, the sandbox would inherit the engine's gem constraints
-# - The unbundled() function handles this cleanly
-#
-# Usage:
-#   bin/sandbox           # Create sandbox (default)
-#   bin/sandbox reset     # Destroy and recreate
-#   bin/sandbox destroy   # Remove sandbox
-#   bin/sandbox help      # Show help
-#
-# Environment Variables:
-#   DB=postgresql|mysql   # Database adapter (default: postgresql)
-#
-# After creation, start the sandbox:
-#   cd sandbox && bin/dev
-#   Visit: http://localhost:3000
-#   Login: admin@oroshi.local / password123
-#
 set -e  # Exit on any error
 set -u  # Exit on undefined variables
 set -o pipefail  # Catch errors in pipes
 
-# =============================================================================
-# HELPER FUNCTIONS
-# =============================================================================
-
 # Unbundled function - run commands outside the parent's bundler environment
-# This is critical for engine development to avoid gem loading conflicts.
-# Without this, the sandbox would inherit oroshi's Gemfile.lock constraints,
-# causing version conflicts and initialization issues.
+# This is critical for engine development to avoid gem loading conflicts
 # Adapted from Solidus: https://github.com/solidusio/solidus/blob/main/bin/sandbox
 unbundled() {
   ruby -rbundler -e'
@@ -58,14 +14,13 @@ unbundled() {
         env BUNDLE_SUPPRESS_INSTALL_USING_MESSAGES=true "$@"
 }
 
-# Show help message with usage examples
+# Handle command-line arguments
+COMMAND="${1:-create}"
+
+# Show help
 show_help() {
   cat <<EOF
 Oroshi Sandbox Management
-=========================
-
-Creates a standalone Rails application for testing and developing the
-Oroshi engine gem. The sandbox is generated fresh each time, not copied.
 
 Usage:
   bin/sandbox [command]
@@ -80,27 +35,15 @@ Environment Variables:
   DB        Database adapter (postgresql, mysql) - default: postgresql
 
 Examples:
-  bin/sandbox              # Create sandbox with PostgreSQL
-  bin/sandbox reset        # Recreate sandbox from scratch
-  bin/sandbox destroy      # Remove sandbox completely
-  DB=mysql bin/sandbox     # Create sandbox with MySQL
-
-After Creation:
-  cd sandbox
-  bin/dev
-  # Visit: http://localhost:3001
-  # Login: admin@oroshi.local / password123
-
-Notes:
-  - Sandbox runs on port 3001 (not 3000) to avoid conflicts with dev server
-  - The sandbox is NOT committed to git (.gitignore)
-  - Routes are generated, not copied, to show proper engine mounting
-  - Multi-database setup for Solid Queue/Cache/Cable is configured automatically
+  bin/sandbox              # Create sandbox
+  bin/sandbox reset        # Recreate sandbox
+  bin/sandbox destroy      # Remove sandbox
+  DB=mysql bin/sandbox     # Create with MySQL
 
 EOF
 }
 
-# Remove the sandbox directory
+# Destroy sandbox
 destroy_sandbox() {
   if [ -d "./sandbox" ]; then
     echo "🧹 Removing sandbox..."
@@ -111,12 +54,7 @@ destroy_sandbox() {
   fi
 }
 
-# =============================================================================
-# COMMAND HANDLING
-# =============================================================================
-
-COMMAND="${1:-create}"
-
+# Handle commands
 case "$COMMAND" in
   help|-h|--help)
     show_help
@@ -140,14 +78,9 @@ case "$COMMAND" in
     ;;
 esac
 
-# =============================================================================
-# SANDBOX CREATION
-# =============================================================================
-
 echo "🏗️  Creating Oroshi sandbox application..."
 
 # Detect database from environment (default to postgresql if not set)
-# PostgreSQL is preferred for the multi-database Solid Queue/Cache/Cable setup
 DB="${DB:-postgresql}"
 
 case "$DB" in
@@ -162,35 +95,20 @@ case "$DB" in
     ;;
 esac
 
-# Clean slate - remove any existing sandbox
+# Clean slate
 if [ -d "./sandbox" ]; then
   echo "🧹 Removing existing sandbox..."
   rm -rf ./sandbox
 fi
 
 # Get the absolute path to the oroshi root directory
-# This is needed to reference the engine after cd-ing elsewhere
 OROSHI_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-# =============================================================================
-# RAILS APP GENERATION
-# =============================================================================
-#
-# Generate the Rails app in a TEMPORARY directory first, then move it.
-# This is required because 'rails new' fails when run from within an
-# existing Rails directory (it detects the parent Gemfile/Rakefile).
-#
+# Generate fresh Rails app in a temporary location
 echo "📦 Generating new Rails application..."
 TEMP_DIR=$(mktemp -d)
 cd "$TEMP_DIR"
 
-# Generate a minimal Rails app:
-# --skip-git: We don't want a nested .git directory
-# --skip-keeps: No .keep files needed for demo
-# --skip-rc: No need for Rails credentials in sandbox
-# --skip-test: We'll use RSpec if testing sandbox directly
-# --skip-asset-pipeline: We add Propshaft separately (more control)
-# --javascript=importmap: Modern Rails 8 approach (no Node.js/Webpack)
 rails new sandbox \
   --database="$RAILSDB" \
   --skip-git \
@@ -200,31 +118,21 @@ rails new sandbox \
   --skip-asset-pipeline \
   --javascript=importmap
 
-# Move the generated app back to the oroshi directory
+# Move the generated app to the oroshi directory
 mv sandbox "$OROSHI_ROOT/"
 cd "$OROSHI_ROOT/sandbox"
 
 # Clean up temp directory
 rm -rf "$TEMP_DIR"
 
-# =============================================================================
-# GEMFILE CONFIGURATION
-# =============================================================================
-#
-# Add Oroshi and required dependencies to the Gemfile.
-# The engine is referenced via 'path: ".."' for local development.
-#
+# Add Oroshi and development gems to Gemfile
 echo "📝 Adding Oroshi to Gemfile..."
 cat <<RUBY >> Gemfile
 
-# Asset pipeline (required since we used --skip-asset-pipeline)
-gem "propshaft"
-
 # Oroshi engine (local development) - must be loaded in all environments
-# The engine provides: Solid Queue, Solid Cache, Solid Cable, Devise, etc.
 gem "oroshi", path: "..", require: "oroshi"
 
-# Required for Rails asset watching in development
+# Required dependencies
 gem "listen", "~> 3.3"
 
 # Development tools
@@ -244,23 +152,15 @@ RUBY
 echo "📦 Installing gems..."
 unbundled bundle install --quiet
 
-# =============================================================================
-# INITIALIZERS
-# =============================================================================
-#
-# Create initializers for Oroshi and Devise.
-# These are wrapped in `if defined?(GemName)` checks to prevent errors
-# during db:create/db:migrate when gems may not be fully loaded yet.
-#
+# Remove default application layout (use engine's layout instead)
+echo "🗑️  Removing default application layout..."
+rm -f app/views/layouts/application.html.erb
+rm -f app/views/layouts/mailer.html.erb
+rm -f app/views/layouts/mailer.text.erb
 
-# Oroshi configuration
+# Configure Oroshi (do this AFTER bundle install so Oroshi is loaded)
 echo "⚙️  Configuring Oroshi..."
 cat > config/initializers/oroshi.rb <<RUBY
-# Oroshi Engine Configuration
-# ===========================
-# Configure the Oroshi wholesale order management engine.
-# See Oroshi::Configuration for available options.
-
 if defined?(Oroshi)
   Oroshi.configure do |config|
     config.time_zone = "Asia/Tokyo"
@@ -268,7 +168,6 @@ if defined?(Oroshi)
     config.domain = ENV.fetch("OROSHI_DOMAIN", "localhost")
   end
 
-  # Sync Rails configuration with Oroshi settings
   Rails.application.config.time_zone = Oroshi.configuration.time_zone
   Rails.application.config.active_record.default_timezone = :utc
   Rails.application.config.i18n.default_locale = Oroshi.configuration.locale
@@ -276,14 +175,9 @@ if defined?(Oroshi)
 end
 RUBY
 
-# Devise configuration (authentication)
+# Create Devise initializer
 echo "🔐 Configuring Devise..."
 cat > config/initializers/devise.rb <<'RUBY'
-# Devise Authentication Configuration
-# ====================================
-# Wrapped in `if defined?(Devise)` to prevent errors during db:create
-# when the Devise railtie may not be fully loaded yet.
-
 if defined?(Devise)
   Devise.setup do |config|
     config.secret_key = Rails.application.credentials.secret_key_base || ENV.fetch('DEVISE_KEY', 'sandbox_dev_key')
@@ -310,81 +204,27 @@ if defined?(Devise)
 end
 RUBY
 
-# =============================================================================
-# ROUTES CONFIGURATION
-# =============================================================================
-#
-# IMPORTANT: Routes are GENERATED here, not copied from the engine.
-# This demonstrates the proper way for parent applications to mount Oroshi.
-#
-# The engine provides:
-#   - All Oroshi routes under the mounted path
-#   - Dashboard, orders, products, buyers, etc.
-#
-# The parent app provides:
-#   - Devise routes (User model is at the application level)
-#   - Root route and any custom routes
-#   - Health check for Kamal/Docker deployments
-#
+# Setup routes - mount Oroshi engine
 echo "🔌 Setting up routes..."
 cat > config/routes.rb <<'RUBY'
-# Sandbox Application Routes
-# ==========================
-#
-# This file demonstrates how to mount the Oroshi engine in a parent Rails app.
-# These routes are GENERATED by the sandbox script, not copied from the engine.
-#
-# The pattern is:
-#   1. Define application-level routes (health check, Devise, etc.)
-#   2. Mount the Oroshi engine at a path (typically /oroshi)
-#   3. Optionally redirect root to the engine dashboard
-#
-
 Rails.application.routes.draw do
-  # Health check endpoint for Kamal/Docker deployments
+  # Health check for Kamal
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Devise routes for User authentication
-  # The User model lives at the application level (not inside the engine)
-  # This allows parent apps to customize the User model as needed
-  devise_for :users if respond_to?(:devise_for)
+  # Devise routes (User model is app-level, not engine-level)
+  devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" } if respond_to?(:devise_for)
 
-  # Mount Oroshi engine at /oroshi
-  # All engine routes are accessible under this path:
-  #   /oroshi           -> Dashboard
-  #   /oroshi/orders    -> Orders
-  #   /oroshi/products  -> Products
-  #   /oroshi/buyers    -> Buyers
-  #   etc.
-  mount Oroshi::Engine, at: "/oroshi"
+  # Mount Oroshi engine at root
+  mount Oroshi::Engine, at: "/"
 
   # Root redirects to Oroshi dashboard
-  # In a real app, you might have a landing page here instead
-  root to: redirect("/oroshi")
+  root to: redirect("/dashboard")
 end
 RUBY
 
-# =============================================================================
-# DATABASE CONFIGURATION
-# =============================================================================
-#
-# Oroshi uses a multi-database setup for Solid Queue, Cache, and Cable.
-# This is the recommended Rails 8 approach for background jobs and caching.
-#
+# Copy database configuration for multi-database setup
 echo "🗄️  Configuring multi-database setup..."
 cat > config/database.yml <<YAML
-# Multi-Database Configuration for Oroshi
-# ========================================
-#
-# Oroshi uses 4 PostgreSQL databases:
-#   - primary: Main application data (orders, products, buyers, etc.)
-#   - queue: Solid Queue job storage
-#   - cache: Solid Cache entries
-#   - cable: Solid Cable (Action Cable) messages
-#
-# This is the recommended Rails 8 approach for background processing.
-#
-
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -445,18 +285,10 @@ production:
     migrations_paths: db/cable_migrate
 YAML
 
-# =============================================================================
-# ASSET SETUP
-# =============================================================================
-#
-# Copy assets from the engine to the sandbox.
-# CSS is loaded from oroshi.css (built Tailwind) + Bootstrap CDN.
-#
-
-# Procfile for development server
+# Create Procfile.dev for development (no CSS build needed - engine uses CDN)
 echo "📋 Creating Procfile.dev..."
 cat > Procfile.dev <<PROCFILE
-web: bin/rails server -p 3001
+web: bin/rails server -p 3000
 PROCFILE
 
 # Copy vendored JavaScript files from engine
@@ -464,36 +296,16 @@ echo "📋 Copying vendored JavaScript files..."
 mkdir -p vendor/javascript
 cp -r ../vendor/javascript/* vendor/javascript/ 2>/dev/null || true
 
-# Copy compiled CSS from engine
-echo "🎨 Copying CSS assets..."
-mkdir -p app/assets/builds
-cp ../app/assets/builds/oroshi.css app/assets/builds/ 2>/dev/null || true
-
-# Copy application layout (includes Bootstrap CDN and navbar)
-echo "📄 Copying application layout from gem..."
-cp ../app/views/layouts/application.html.erb app/views/layouts/application.html.erb
-
 # Copy migrations from engine
 echo "📋 Copying migrations..."
 mkdir -p db/migrate
 cp -r ../db/migrate/* db/migrate/
 
-# Create directories for Solid schemas
+# Copy Solid schemas
 echo "📋 Setting up Solid Queue, Cache, and Cable..."
 mkdir -p db/queue_migrate db/cache_migrate db/cable_migrate
 
-# =============================================================================
-# USER MODEL (TWO-STAGE CREATION)
-# =============================================================================
-#
-# The User model is created in two stages:
-#   1. Minimal version for migrations (migrations may reference User)
-#   2. Full Devise version after database setup
-#
-# This avoids initialization order issues where Devise methods are called
-# before the Devise railtie is fully loaded.
-#
-
+# Create minimal User model for migrations (migrations reference User model)
 echo "👤 Creating minimal User model for migrations..."
 cat > app/models/user.rb <<RUBY
 class User < ApplicationRecord
@@ -501,19 +313,12 @@ class User < ApplicationRecord
 end
 RUBY
 
-# =============================================================================
-# DATABASE SETUP
-# =============================================================================
-#
-# Use db:schema:load instead of db:migrate to avoid executing migration code
-# that references Oroshi:: models before the engine is fully initialized.
-#
+# Setup databases (use unbundled to ensure clean gem environment)
 echo "🗄️  Creating and migrating databases..."
-
-# Drop existing databases for clean slate (ignore errors if they don't exist)
+# Try to drop and recreate (for clean slate), fall back to create if databases don't exist
 if unbundled bin/rails db:drop 2>/dev/null; then
   unbundled bin/rails db:create
-  # Copy and load schema directly (avoids migration code execution)
+  # Use schema:load instead of migrate to avoid migration code execution issues
   cp ../db/schema.rb db/schema.rb
   unbundled bin/rails db:schema:load
 else
@@ -521,44 +326,27 @@ else
   cp ../db/schema.rb db/schema.rb
   unbundled bin/rails db:schema:load
 fi
-
-# Load Solid schemas for queue, cache, and cable databases
 unbundled bin/rails db:schema:load:queue
 unbundled bin/rails db:schema:load:cache
 unbundled bin/rails db:schema:load:cable
 
-# =============================================================================
-# FULL USER MODEL
-# =============================================================================
-#
-# Now that databases exist, create the full User model with Devise.
-#
+# Now create full User model with Devise configuration
 echo "👤 Creating full User model..."
 cat > app/models/user.rb <<RUBY
-# User Model
-# ==========
-# Application-level user model with Devise authentication.
-# This model is NOT namespaced under Oroshi - it lives at the app level.
-# Parent applications can customize this model as needed.
-
 class User < ApplicationRecord
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates_format_of :username, with: /\A[a-zA-Z0-9_.]*\z/
 
-  # User roles: user, vip, admin, supplier, employee
   enum :role, { user: 0, vip: 1, admin: 2, supplier: 3, employee: 4 }
 
-  # Oroshi associations
   has_one :onboarding_progress, class_name: "Oroshi::OnboardingProgress", dependent: :destroy
 
-  # Devise modules
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable,
          authentication_keys: [:login]
 
   attr_accessor :login
 
-  # Allow login with either username or email
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if (login = conditions.delete(:login))
@@ -570,27 +358,13 @@ class User < ApplicationRecord
 end
 RUBY
 
-# =============================================================================
-# APPLICATION CONTROLLER
-# =============================================================================
-#
-# Set up the ApplicationController with Devise authentication.
-#
+# Create ApplicationController with Devise authentication
 echo "🎮 Creating ApplicationController with authentication..."
 cat > app/controllers/application_controller.rb <<RUBY
-# Application Controller
-# ======================
-# Base controller for the sandbox application.
-# All controllers inherit from this.
-
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
-  # Include Oroshi engine route helpers (oroshi.dashboard_path, etc.)
-  helper Oroshi::Engine.routes.url_helpers
-
-  # Only allow modern browsers supporting webp images, web push, badges,
-  # import maps, CSS nesting, and CSS :has.
+  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 end
 RUBY
@@ -599,18 +373,14 @@ RUBY
 echo "🎨 Removing default ApplicationHelper..."
 rm -f app/helpers/application_helper.rb
 
-# =============================================================================
-# SEED DATA
-# =============================================================================
-#
-# Create demo users for testing.
-#
+# Seed demo data
 echo "🌱 Seeding demo data..."
 unbundled bin/rails runner "
-# Create demo users with different roles
 User.insert({
   email: 'admin@oroshi.local',
   username: 'admin',
+  approved: true,
+  admin: true,
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:admin],
   confirmed_at: Time.current,
@@ -620,6 +390,8 @@ User.insert({
 User.insert({
   email: 'vip@oroshi.local',
   username: 'vip',
+  approved: true,
+  admin: false,
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:vip],
   confirmed_at: Time.current,
@@ -629,6 +401,8 @@ User.insert({
 User.insert({
   email: 'user@oroshi.local',
   username: 'user',
+  approved: true,
+  admin: false,
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:user],
   confirmed_at: Time.current,
@@ -638,10 +412,6 @@ User.insert({
 puts '✓ Created demo users'
 "
 
-# =============================================================================
-# SUCCESS MESSAGE
-# =============================================================================
-
 echo ""
 echo "✅ Sandbox application created successfully!"
 echo ""
@@ -649,7 +419,7 @@ echo "To start the sandbox:"
 echo "  cd sandbox"
 echo "  bin/dev"
 echo ""
-echo "Then visit: http://localhost:3001"
+echo "Then visit: http://localhost:3000"
 echo ""
 echo "Demo accounts:"
 echo "  Admin: admin@oroshi.local / password123"

@@ -9,6 +9,11 @@ class Oroshi::SuppliesController < Oroshi::ApplicationController
   before_action :set_supply
   before_action :set_supply_dates, only: %i[index]
 
+  # Authorization callbacks
+  before_action :authorize_supply_index, only: %i[index]
+  before_action :authorize_supply, only: %i[show update]
+  before_action :authorize_supply_create, only: %i[create]
+
   # GET /oroshi/supplies
   # GET /oroshi/supplies.json
   def index; end
@@ -147,5 +152,18 @@ class Oroshi::SuppliesController < Oroshi::ApplicationController
   def extract_japanese_year(date_str)
     match = date_str.match(/^[A-Z]+(\d+)\./)
     match[1] if match
+  end
+
+  # Pundit authorization methods
+  def authorize_supply
+    authorize @supply
+  end
+
+  def authorize_supply_create
+    authorize Oroshi::Supply, :create?
+  end
+
+  def authorize_supply_index
+    authorize Oroshi::Supply, :index?
   end
 end

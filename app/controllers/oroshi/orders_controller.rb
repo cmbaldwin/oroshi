@@ -11,12 +11,17 @@ class Oroshi::OrdersController < Oroshi::ApplicationController
   include Oroshi::OrdersDashboard::Sales
   include Oroshi::OrdersDashboard::Revenue
 
+  # Authorization callbacks
+  before_action :authorize_order, only: %i[show edit update destroy]
+  before_action :authorize_order_create, only: %i[new create new_order_from_template destroy_template]
+  before_action :authorize_order_index, only: %i[index search calendar calendar_orders]
+
   # GET /oroshi/orders/:date
   def index; end
 
   # GET /oroshi/orders/search
   def search
-    @q = Oroshi::Order.ransack(params[:q])
+    @q = policy_scope(Oroshi::Order).ransack(params[:q])
     @orders = @q.result(distinct: true).includes(:buyer, :product_variation, :product,
                                                  :shipping_method, :shipping_organization,
                                                  :shipping_receptacle).group_by(&:buyer)
@@ -169,5 +174,18 @@ class Oroshi::OrdersController < Oroshi::ApplicationController
     # templates cannot be bundled by default
     @order.bundled_with_order_id = nil
     @order.bundled_shipping_receptacle = false
+  end
+
+  # Pundit authorization methods
+  def authorize_order
+    authorize @order
+  end
+
+  def authorize_order_create
+    authorize Oroshi::Order, :create?
+  end
+
+  def authorize_order_index
+    authorize Oroshi::Order, :index?
   end
 end

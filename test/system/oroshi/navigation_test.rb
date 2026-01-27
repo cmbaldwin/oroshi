@@ -7,7 +7,9 @@ class Oroshi::NavigationTest < ApplicationSystemTestCase
 
   setup do
     @user = create(:user, :admin)
-    sign_in @user
+    # Skip onboarding for admin user
+    create(:onboarding_progress, :completed, user: @user)
+    login_as(@user, scope: :user)
   end
 
   test "navigates through all navbar and dashboard links without errors" do

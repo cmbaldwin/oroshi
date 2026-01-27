@@ -5,9 +5,9 @@ require "application_system_test_case"
 class OnboardingFlowTest < ApplicationSystemTestCase
   setup do
     @user = create(:user, confirmed_at: Time.current, approved: true, role: :admin)
-    # Ensure no onboarding progress exists
+    # Ensure no onboarding progress exists - we're testing the onboarding flow itself
     @user.onboarding_progress&.destroy
-    sign_in @user
+    login_as(@user, scope: :user)
   end
 
   test "complete onboarding flow end-to-end" do

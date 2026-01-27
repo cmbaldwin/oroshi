@@ -5,6 +5,8 @@ require "test_helper"
 class Oroshi::DashboardControllerTest < ActionDispatch::IntegrationTest
   setup do
     @admin = create(:user, :admin)
+    # Skip onboarding for admin user
+    create(:onboarding_progress, :completed, user: @admin)
     sign_in @admin
   end
 

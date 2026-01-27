@@ -4,16 +4,20 @@
 
       <h2>メール確認を再送信</h2>
 
-      <%= simple_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-        <%= f.error_notification %>
-        <%= f.full_error :confirmation_token %>
+      <%= form_with(model: resource, scope: resource_name, url: confirmation_path(resource_name), method: :post) do |f| %>
+        <% if resource.errors.any? %>
+          <div class="alert alert-danger">
+            <%= resource.errors.full_messages.to_sentence %>
+          </div>
+        <% end %>
 
-        <div class="form-inputs">
-          <%= f.input :email, required: true, autofocus: true %>
+        <div class="mb-3">
+          <%= f.label :email, class: "form-label" %>
+          <%= f.email_field :email, class: "form-control", required: true, autofocus: true %>
         </div>
 
-        <div class="form-actions">
-          <%= f.button :submit, "メール確認を再送信", :class => 'btn-secondary mb-3' %>
+        <div class="d-grid gap-2">
+          <%= f.submit "メール確認を再送信", class: "btn btn-secondary mb-3" %>
         </div>
       <% end %>
 

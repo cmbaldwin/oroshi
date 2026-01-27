@@ -9,6 +9,7 @@ ENV["RAILS_ENV"] ||= "test"
 # - Provides devise_for :users routes
 require_relative "dummy/config/environment"
 require "rails/test_help"
+require_relative "support/route_helpers"
 
 # Suppress Turbo broadcasts in tests (they fail with routing errors)
 module Turbo
@@ -76,80 +77,5 @@ class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Warden::Test::Helpers
 
-  # ==========================================================================
-  # OROSHI ENGINE ROUTE HELPERS
-  # ==========================================================================
-  #
-  # These methods provide convenient access to engine routes in tests.
-  # Usage: oroshi.root_path, oroshi.dashboard_home_path, etc.
-  #
-  # Shortcut helpers are also provided: oroshi_root_path, oroshi_dashboard_home_path
-  # These map directly to the engine route helpers.
-  #
-
-  # Access engine routes via Oroshi::Engine.routes.url_helpers
-  def oroshi
-    Oroshi::Engine.routes.url_helpers
-  end
-
-  # Shortcut route helpers - delegate to engine routes
-  def oroshi_root_path(*args, **kwargs)
-    oroshi.root_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_home_path(*args, **kwargs)
-    oroshi.dashboard_home_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_suppliers_organizations_path(*args, **kwargs)
-    oroshi.dashboard_suppliers_organizations_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_supply_types_path(*args, **kwargs)
-    oroshi.dashboard_supply_types_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_shipping_path(*args, **kwargs)
-    oroshi.dashboard_shipping_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_buyers_path(*args, **kwargs)
-    oroshi.dashboard_buyers_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_materials_path(*args, **kwargs)
-    oroshi.dashboard_materials_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_products_path(*args, **kwargs)
-    oroshi.dashboard_products_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_stats_path(*args, **kwargs)
-    oroshi.dashboard_stats_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_company_path(*args, **kwargs)
-    oroshi.dashboard_company_path(*args, **kwargs)
-  end
-
-  def oroshi_dashboard_company_settings_path(*args, **kwargs)
-    oroshi.dashboard_company_settings_path(*args, **kwargs)
-  end
-
-  def oroshi_onboarding_index_path(*args, **kwargs)
-    oroshi.onboarding_index_path(*args, **kwargs)
-  end
-
-  def oroshi_onboarding_path(*args, **kwargs)
-    oroshi.onboarding_path(*args, **kwargs)
-  end
-
-  def oroshi_orders_path(*args, **kwargs)
-    oroshi.orders_path(*args, **kwargs)
-  end
-
-  def oroshi_supplies_path(*args, **kwargs)
-    oroshi.supplies_path(*args, **kwargs)
-  end
+  include OroshiRouteHelpers
 end

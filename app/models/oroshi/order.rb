@@ -71,6 +71,16 @@ class Oroshi::Order < ApplicationRecord
   # scope :shipped, -> { where(status: statuses[:shipped]) }
   # scope :sold, -> { where.not(sale_price_per_item: 0) }
 
+  # Authorization scope - returns orders accessible by the given user based on role
+  def self.accessible_by(user)
+    case
+    when user.admin?, user.vip?, user.employee?
+      all
+    else
+      none
+    end
+  end
+
   # Broadcasts (Best guide on them: https://blog.corsego.com/turbo-hotwire-broadcasts)
   after_create_commit -> { broadcast_replace_to [ shipping_date, :oroshi_orders_list ] }
   after_update_commit lambda {

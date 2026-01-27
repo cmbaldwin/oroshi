@@ -4,18 +4,38 @@
       <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
         <h2>サインアップ</h2>
 
-        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-          <%= f.error_notification %>
+        <%= form_with(model: resource, scope: resource_name, url: registration_path(resource_name)) do |f| %>
+          <% if resource.errors.any? %>
+            <div class="alert alert-danger">
+              <%= resource.errors.full_messages.to_sentence %>
+            </div>
+          <% end %>
 
-          <div class="form-inputs">
-            <%= f.input :username, required: true %>
-            <%= f.input :email, required: true %>
-            <%= f.input :password, required: true, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length) %>
-            <%= f.input :password_confirmation, required: true %>
+          <div class="mb-3">
+            <%= f.label :username, class: "form-label" %>
+            <%= f.text_field :username, class: "form-control", required: true %>
           </div>
 
-          <div class="form-actions">
-            <%= f.button :submit, "サインアップ", :class => 'btn-secondary mb-3' %>
+          <div class="mb-3">
+            <%= f.label :email, class: "form-label" %>
+            <%= f.email_field :email, class: "form-control", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :password, class: "form-label" %>
+            <%= f.password_field :password, class: "form-control", required: true %>
+            <% if @minimum_password_length %>
+              <div class="form-text"><%= @minimum_password_length %> characters minimum</div>
+            <% end %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :password_confirmation, class: "form-label" %>
+            <%= f.password_field :password_confirmation, class: "form-control", required: true %>
+          </div>
+
+          <div class="d-grid gap-2">
+            <%= f.submit "サインアップ", class: "btn btn-secondary mb-3" %>
           </div>
         <% end %>
 

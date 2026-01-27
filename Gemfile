@@ -85,13 +85,13 @@ end
 
 # Authentication and authorization
 gem "devise", ">= 4.7.1" # User authentication solution
+gem "pundit", "~> 2.4"   # Object-oriented authorization
 
 # File handling
 gem "file_validators"                # File upload validation
 
 # Data organization
 gem "ancestry"     # Tree structure for hierarchical data
-gem "simple_form"  # Form builder
 
 # Email
 gem "resend" # Email delivery service

@@ -37,6 +37,19 @@ class Oroshi::Supply < ApplicationRecord
   scope :incomplete, -> { where("quantity > 0 AND price = 0") }
   scope :complete, -> { where("quantity > 0 AND price > 0") }
 
+  # Authorization scope - returns supplies accessible by the given user based on role
+  def self.accessible_by(user)
+    case
+    when user.admin?, user.vip?, user.employee?
+      all
+    when user.supplier?
+      supplier_record = Oroshi::Supplier.find_by(user: user)
+      supplier_record ? where(supplier: supplier_record) : none
+    else
+      none
+    end
+  end
+
   def incomplete?
     quantity.positive? && price.zero?
   end

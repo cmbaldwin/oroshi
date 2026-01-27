@@ -40,7 +40,7 @@ class Oroshi::OrderCategoriesController < Oroshi::ApplicationController
     @order_category.destroy
 
     respond_to do |format|
-      format.html { redirect_to oroshi_root_path }
+      format.html { redirect_to root_path }
       format.turbo_stream do
         render turbo_stream: turbo_stream
           .replace("order_categories",

@@ -6,8 +6,9 @@ require "solid_queue"
 require "solid_cache"
 require "solid_cable"
 
-# Authentication
+# Authentication & Authorization
 require "devise"
+require "pundit"
 
 # Search
 require "ransack"

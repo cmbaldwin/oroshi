@@ -11,12 +11,12 @@
         <% end %>
         <% if user_signed_in? %>
         <ul class="navbar-nav h5 ms-3 me-auto mt-2 mt-lg-0">
-            <li><%= link_to t('layouts.application.navbar.supply_settings'), main_app.oroshi_root_path, class: "nav-link light_link" %></li>
-            <li><%= link_to t('layouts.application.navbar.supplies'), main_app.oroshi_supplies_path, class: "nav-link light_link" %></li>
-            <li class="nav-item"><%= link_to t('layouts.application.navbar.orders'), main_app.oroshi_orders_path, class: "nav-link light_link" %></li>
-            <li class="nav-item"><%= link_to t('layouts.application.navbar.order_search'), main_app.oroshi_search_orders_path, class: "nav-link light_link" %></li>
+            <li><%= link_to t('layouts.application.navbar.supply_settings'), oroshi.root_path, class: "nav-link light_link" %></li>
+            <li><%= link_to t('layouts.application.navbar.supplies'), oroshi.supplies_path, class: "nav-link light_link" %></li>
+            <li class="nav-item"><%= link_to t('layouts.application.navbar.orders'), oroshi.orders_path, class: "nav-link light_link" %></li>
+            <li class="nav-item"><%= link_to t('layouts.application.navbar.order_search'), oroshi.search_orders_path, class: "nav-link light_link" %></li>
             <% if current_user.vip? || current_user.admin? %>
-            <li><%= link_to t('layouts.application.navbar.payments'), main_app.oroshi_payment_receipts_path, class: "nav-link light_link" %></li>
+            <li><%= link_to t('layouts.application.navbar.payments'), oroshi.payment_receipts_path, class: "nav-link light_link" %></li>
             <% end %>
         </ul>
         <ul class="navbar-nav">
@@ -25,7 +25,7 @@
                 <div class="btn-group" role="group" aria-label="Basic">
                     <% if current_user.onboarding_progress&.checklist_dismissed? %>
                     <%= link_to icon("play-circle", class: 'text-dark'),
-                                          resume_oroshi_onboarding_path(current_user.onboarding_progress.current_step || 'company_info'),
+                                          oroshi.resume_onboarding_path(current_user.onboarding_progress.current_step || 'company_info'),
                                           method: :post,
                                           class: 'navbar-link btn btn-warning tippy',
                                           data: { tippy_content: t('layouts.application.navbar.setup_resume') } %>

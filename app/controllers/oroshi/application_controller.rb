@@ -3,6 +3,10 @@
 class Oroshi::ApplicationController < ApplicationController
   include Pundit::Authorization
 
+  # Require authentication for all engine actions
+  # This ensures the engine works regardless of parent app configuration
+  before_action :authenticate_user!
+
   helper OroshiHelper
   helper Oroshi::UrlHelper
 

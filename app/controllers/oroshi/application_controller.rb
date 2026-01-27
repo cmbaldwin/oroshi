@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Oroshi::ApplicationController < ApplicationController
+  include Pundit::Authorization
+
   helper OroshiHelper
   helper Oroshi::UrlHelper
 

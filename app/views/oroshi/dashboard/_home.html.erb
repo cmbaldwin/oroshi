@@ -12,7 +12,6 @@
                     <%= Oroshi::SupplyReceptionTime.model_name.human %>
                 </button>
             </li>
-            <!--
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-production-zones-tab" data-bs-toggle="pill" data-bs-target="#pills-production-zones" type="button" role="tab" aria-controls="pills-production-zones" aria-selected="false">
                     <%= Oroshi::ProductionZone.model_name.human %>
@@ -33,7 +32,6 @@
                     <%= Oroshi::PaymentReceiptAdjustmentType.model_name.human %>
                 </button>
             </li>
-            -->
         </ul>
     </div>
     <%= information_tippy('home') %>
@@ -61,20 +59,20 @@
     </div>
     <div class="tab-pane fade" id="pills-reception-times" role="tabpanel" aria-labelledby="pills-reception-times-tab" tabindex="0">
         <% if @supplier_organization %>
-          <%= turbo_frame_tag 'supply_reception_times', 
+        <%= turbo_frame_tag 'supply_reception_times', 
                             src: oroshi_supply_reception_times_path(supplier_organization_id: @supplier_organization.id), 
                             loading: 'lazy', 
                             class: 'card m-1 overflow-y-scroll',
                             style: 'max-height: 500px;' do %>
-          <%= render partial: 'oroshi/shared/card_body_spinner' %>
-          <% end %>
+        <%= render partial: 'oroshi/shared/card_body_spinner' %>
+        <% end %>
         <% else %>
-          <div class="card m-1">
+        <div class="card m-1">
             <div class="card-body text-center text-muted">
-              <p><%= t('.no_suppliers_yet') %></p>
-              <p><small><%= t('.create_supplier_first') %></small></p>
+                <p><%= t('.no_suppliers_yet') %></p>
+                <p><small><%= t('.create_supplier_first') %></small></p>
             </div>
-          </div>
+        </div>
         <% end %>
     </div>
     <div class="tab-pane fade" id="pills-production-zones" role="tabpanel" aria-labelledby="pills-production-zones-tab" tabindex="0">

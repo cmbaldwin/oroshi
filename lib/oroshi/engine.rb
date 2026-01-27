@@ -74,6 +74,9 @@ module Oroshi
     # Configure assets
     initializer "oroshi.assets" do |app|
       if app.config.respond_to?(:assets)
+        # Add vendor/javascript to asset paths for importmap vendored JS files
+        app.config.assets.paths << root.join("vendor/javascript")
+
         app.config.assets.precompile += %w[
           oroshi/application.css
           oroshi/application.js

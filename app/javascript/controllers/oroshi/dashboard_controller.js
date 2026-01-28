@@ -4,12 +4,15 @@ export default class extends Controller {
   static targets = ['modal', 'supplier', 'supplyTypeVariation'];
 
   connect() {
-    this.modalTarget.addEventListener('hidden.bs.modal', () => {
-      const turboFrame = this.modalTarget.querySelector('#modal-content');
-      if (turboFrame) {
-        turboFrame.innerHTML = window.loading_overlay;
-      }
-    });
+    const dialog = this.modalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
+    if (dialog) {
+      dialog.addEventListener('close', () => {
+        const turboFrame = this.modalTarget.querySelector('turbo-frame#oroshi_modal_content');
+        if (turboFrame) {
+          turboFrame.innerHTML = window.loading_overlay;
+        }
+      });
+    }
   }
 
   onTabClick(event) {
@@ -35,8 +38,10 @@ export default class extends Controller {
   }
 
   showModal(_event) {
-    const modal = bootstrap.Modal.getOrCreateInstance(this.modalTarget);
-    modal.show();
+    const dialog = this.modalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
+    if (dialog) {
+      dialog.showModal();
+    }
   }
 
   toggleActive(event) {
@@ -103,7 +108,7 @@ export default class extends Controller {
   modalFormSubmit(event) {
     // submit the form referenced by the event target, via fetch
     const form = event.target;
-    const modal = bootstrap.Modal.getOrCreateInstance(this.modalTarget);
+    const dialog = this.modalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
     const url = form.action;
     const method = form.method;
     const refreshTarget = form.dataset.refreshTarget
@@ -114,7 +119,9 @@ export default class extends Controller {
     })
       .then(response => {
         if (response.ok) {
-          modal.hide();
+          if (dialog) {
+            dialog.close();
+          }
           const frame = document.querySelector(`turbo-frame#${refreshTarget}`);
           frame.reload();
         } else {
@@ -123,7 +130,7 @@ export default class extends Controller {
       })
       .then(html => {
         if (html) {
-          this.modalTarget.querySelector('.modal-body').innerHTML = html;
+          this.modalTarget.querySelector('turbo-frame#oroshi_modal_content .modal-body').innerHTML = html;
         }
       });
   }

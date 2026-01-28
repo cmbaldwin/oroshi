@@ -20,9 +20,16 @@ export default class extends Controller {
       loading: function (loading) { controllerInstance.onLoading(loading) }
     });
     this.calendar.render();
-    this.orderModal.addEventListener('shown.bs.modal', (_event) => {
-      this.calendar.updateSize();
-    });
+
+    // Listen for dialog show event using stimulus-dialog
+    const dialog = this.orderModal?.querySelector('dialog[data-dialog-target="dialog"]');
+    if (dialog) {
+      dialog.addEventListener('toggle', (event) => {
+        if (dialog.open) {
+          this.calendar.updateSize();
+        }
+      });
+    }
   }
 
   settings(_controllerInstance) {
@@ -50,9 +57,10 @@ export default class extends Controller {
   }
 
   closeModal() {
-    const dismissButton = this.orderModal.querySelector('[data-bs-dismiss="modal"]');
-    if (dismissButton) {
-      dismissButton.click();
+    // Close the dialog element using stimulus-dialog API
+    const dialog = this.orderModal?.querySelector('dialog[data-dialog-target="dialog"]');
+    if (dialog && dialog.open) {
+      dialog.close();
     }
   }
 
@@ -66,10 +74,7 @@ export default class extends Controller {
 
   refreshCalendarPage() {
     this.calendar.refetchEvents();
-    const modalBackdrop = document.querySelector('.modal-backdrop');
-    if (modalBackdrop) {
-      modalBackdrop.remove();
-    }
+    // No need to remove backdrop - native dialog elements don't use Bootstrap backdrop
   }
 
 }

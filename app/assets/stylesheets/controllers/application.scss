@@ -42,9 +42,9 @@ svg.bi {
 
 body {
   background-color: white;
-  font-family: "メイリオ", "Hiragino Kaku Gothic Pro", Meiryo,
-    "ヒラギノ角ゴ Pro W3", "MS PGothic", "MS UI Gothic", Helvetica, Arial,
-    sans-serif;
+  font-family:
+    "メイリオ", "Hiragino Kaku Gothic Pro", Meiryo, "ヒラギノ角ゴ Pro W3",
+    "MS PGothic", "MS UI Gothic", Helvetica, Arial, sans-serif;
 }
 
 #index .card-columns {
@@ -62,7 +62,7 @@ body {
   }
 }
 
-/* Notification */
+/* Notification - Stimulus Components */
 .notice_container {
   display: block;
   position: fixed;
@@ -70,7 +70,133 @@ body {
   right: 50px;
   z-index: 9999;
   width: 400px;
-  text-align: center;
+  text-align: left;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.notice_container .alert {
+  margin-bottom: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Alert container animations */
+.alert_container {
+  display: block;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 9999;
+  width: 400px;
+  text-align: left;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.alert_container .alert {
+  margin-bottom: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Notification hide animation */
+[data-controller="notification"][data-notification-hidden-value="true"] {
+  animation: slideOutRight 0.3s ease-in forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Dialog Modals - Stimulus Components */
+dialog[data-dialog-target="dialog"] {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  padding: 0;
+
+  /* Ensure proper max-width for lg modals */
+  &.order-modal {
+    max-width: 1000px; /* modal-lg */
+  }
+
+  &.supply-modal {
+    max-width: 1000px; /* modal-lg */
+  }
+
+  &.dismiss-checklist-modal {
+    max-width: 500px; /* default modal-dialog size */
+  }
+}
+
+/* Dialog backdrop with smooth animation */
+dialog[data-dialog-target="dialog"]::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Opening animation for dialog */
+dialog[data-dialog-target="dialog"][open] {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Closing animation for dialog */
+dialog[data-dialog-target="dialog"][closing] {
+  animation: slideDown 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+}
+
+/* Ensure dialog scrolling doesn't affect body */
+body:has(dialog[data-dialog-target="dialog"][open]) {
+  overflow: hidden;
 }
 
 .vertical {

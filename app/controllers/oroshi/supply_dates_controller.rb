@@ -108,7 +108,9 @@ class Oroshi::SupplyDatesController < Oroshi::ApplicationController
       format.turbo_stream do
         render "oroshi/supplies/modal/replace_supply_modal", locals: { path: path }
       end
-      format.html { render path }
+      format.html { 
+        render partial: "oroshi/supplies/modal/frame_wrapper", locals: { path: path }
+      }
     end
   end
 end

@@ -7,15 +7,19 @@ export default class extends Controller {
     this.adjustNavbarForScreenSize();
     window.addEventListener('resize', () => this.adjustNavbarForScreenSize());
 
-    this.orderModalTarget.addEventListener('hidden.bs.modal', () => {
-      const turboFrame = this.orderModalTarget.querySelector('#orders_modal_content .modal-body');
-      const form = this.orderModalTarget.querySelector('form');
+    // Listen for dialog close event from stimulus-dialog
+    const dialog = this.orderModalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
+    if (dialog) {
+      dialog.addEventListener('close', () => {
+        const turboFrame = this.orderModalTarget.querySelector('turbo-frame#orders_modal_content .modal-body');
+        const form = this.orderModalTarget.querySelector('form');
 
-      if (turboFrame) { turboFrame.innerHTML = this.spinnerHtml() };
-      if ((form && form.dataset.model_altered === 'true') && turboFrame.dataset.refresh) {
-        window.location.reload();
-      }
-    });
+        if (turboFrame) { turboFrame.innerHTML = this.spinnerHtml() };
+        if ((form && form.dataset.model_altered === 'true') && turboFrame?.dataset.refresh) {
+          window.location.reload();
+        }
+      });
+    }
   }
 
   spinnerHtml() {
@@ -68,14 +72,16 @@ export default class extends Controller {
   }
 
   showModal() {
-    const modal = bootstrap.Modal.getOrCreateInstance(this.orderModalTarget);
-    modal.show();
+    const dialog = this.orderModalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
+    if (dialog) {
+      dialog.showModal();
+    }
   }
 
   orderModalFormSubmit(event) {
     // submit the form referenced by the event target, via fetch
     const form = event.target;
-    const modal = bootstrap.Modal.getOrCreateInstance(this.orderModalTarget);
+    const dialog = this.orderModalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
     const url = form.action;
     const method = form.method;
     const refreshTarget = form.dataset.refreshTarget

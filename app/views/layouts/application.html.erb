@@ -9,12 +9,14 @@
     <title><%= content_for?(:title) ? content_for(:title) : t('layouts.application.title') %></title>
 
     <%= capybara_lockstep if defined?(Capybara::Lockstep) %>
+    <!--
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="船曳商店" />
     <link rel="manifest" href="/site.webmanifest" />
+    -->
 
     <%# Google Fonts - Playfair Display for OROSHI branding %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +46,7 @@
 </head>
 
 <body data-spy="scroll" class="d-flex flex-column h-100">
-      <%= turbo_frame_tag "modal" %>
-<%= render partial: 'layouts/shared/navbar' %>
+    <%= render partial: 'layouts/shared/navbar' %>
 
     <main class="flex-shrink-0">
         <div id="messages-container" data-controller="messages" data-user-id="<%= current_user.id if user_signed_in? %>" class="d-flex overflow-x-auto overflow-y-visible bg-light mb-3 p-1" data-turbo-permanent>
@@ -56,7 +57,7 @@
         <%= yield %>
 
         <% if user_signed_in? %>
-          <%= render partial: 'oroshi/onboarding/checklist_sidebar' %>
+        <%= render partial: 'oroshi/onboarding/checklist_sidebar' %>
         <% end %>
 
         <% if user_signed_in? && !current_user.approved? %>
@@ -73,13 +74,27 @@
         <div id="notifications" data-turbo-permanent>
             <!-- Alerts -->
             <% if notice %>
-            <div class="container notice_container mt-2" data-controller="notice">
-                <div class="alert alert-success"><%= notice %></div>
+            <div 
+              class="container notice_container mt-2" 
+              data-controller="notification"
+              data-notification-delay-value="3000"
+            >
+                <div class="alert alert-success d-flex justify-content-between align-items-center">
+                    <span><%= notice %></span>
+                    <button type="button" class="btn-close" data-action="notification#hide"></button>
+                </div>
             </div>
             <% end %>
             <% if alert %>
-            <div class="container alert_container mt-2" data-controller="notice">
-                <div class="alert alert-danger"><%= alert %></div>
+            <div 
+              class="container alert_container mt-2" 
+              data-controller="notification"
+              data-notification-delay-value="4000"
+            >
+                <div class="alert alert-danger d-flex justify-content-between align-items-center">
+                    <span><%= alert %></span>
+                    <button type="button" class="btn-close btn-close-white" data-action="notification#hide"></button>
+                </div>
             </div>
             <% end %>
         </div>

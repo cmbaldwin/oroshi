@@ -5,7 +5,7 @@
 # Application, hotwire, turbo, stimulus
 pin "application", preload: true
 pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
-pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
+pin "@hotwired/stimulus", to: "@hotwired--stimulus.js" # @3.2.2
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
 
 # Stimulus controllers - need explicit pins for index and application
@@ -52,3 +52,6 @@ pin "moment" # @2.29.4 vendored (copy and paste)
 pin "flatpickr", to: "https://ga.jspm.io/npm:flatpickr@4.6.13/dist/esm/index.js"
 pin "flatpickr/dist/l10n/ja", to: "https://ga.jspm.io/npm:flatpickr@4.6.13/dist/l10n/ja.js"
 pin "ultimate_turbo_modal" # @2.2.1
+pin "@stimulus-components/dialog", to: "@stimulus-components--dialog.js" # @1.0.1
+pin "@stimulus-components/notification", to: "@stimulus-components--notification.js" # @3.0.0
+pin "stimulus-use" # @0.52.3

@@ -37,6 +37,10 @@ export default class extends Controller {
     // Listen for modal close to refresh calendar
     this.boundOnModalClose = this.onModalClose.bind(this);
     document.addEventListener('modal:close', this.boundOnModalClose);
+
+    // Listen for turbo frame load to open the dialog
+    this.boundOnFrameLoad = this.onFrameLoad.bind(this);
+    document.addEventListener('turbo:frame-load', this.boundOnFrameLoad);
   }
 
   onModalClose() {
@@ -44,10 +48,21 @@ export default class extends Controller {
     this.calendar.refetchEvents();
   }
 
+  onFrameLoad(event) {
+    // Open the dialog when the supply_modal_content frame finishes loading
+    if (event.target.id === 'supply_modal_content') {
+      const dialog = document.querySelector('dialog[data-dialog-target="dialog"]');
+      if (dialog && !dialog.open) {
+        dialog.showModal();
+      }
+    }
+  }
+
   disconnect() {
     this.calendar.destroy();
     this.calendarTarget.innerHTML = '';
     document.removeEventListener('modal:close', this.boundOnModalClose);
+    document.removeEventListener('turbo:frame-load', this.boundOnFrameLoad);
   }
 
   settings(controllerInstance) {
@@ -131,9 +146,10 @@ export default class extends Controller {
     // Convert the array of dates to a query string
     const queryString = supplyDates.map(date => `supply_dates[]=${date}`).join('&');
 
-    // Use Turbo to open the modal
+    // Use Turbo to load content into the supply_modal_content frame
+    // The dialog will open automatically via the onFrameLoad listener
     const url = `supply_dates/${path}?${queryString}`;
-    Turbo.visit(url, { frame: "modal" });
+    Turbo.visit(url, { frame: "supply_modal_content" });
   }
 
   onEventClick(info) {

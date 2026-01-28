@@ -55,13 +55,10 @@ export default class extends Controller {
   }
 
   closeModal() {
-    // close the bootstrap modal
-    const modal = document.getElementById('supplyModal')
-    if (modal) {
-      const modalInstance = bootstrap.Modal.getInstance(modal)
-      if (modalInstance) {
-        modalInstance.hide();
-      }
+    // Close the dialog element using stimulus-dialog API
+    const dialog = document.querySelector('dialog[data-dialog-target="dialog"]');
+    if (dialog && dialog.open) {
+      dialog.close();
     }
   }
 }

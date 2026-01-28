@@ -1,3 +1,7 @@
+// DEPRECATED: This controller is no longer used. 
+// Notifications are now handled by the Stimulus Notification component (@stimulus-components/notification)
+// See: docs/STIMULUS_COMPONENTS.md for implementation details
+
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {

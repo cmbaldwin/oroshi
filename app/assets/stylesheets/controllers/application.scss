@@ -140,6 +140,31 @@ dialog[data-dialog-target="dialog"] {
 
   &.supply-modal {
     max-width: 1000px; /* modal-lg */
+    border: 3px solid #4ecdc4; /* Primary brand color - greenish-cyan */
+    border-radius: 0.75rem;
+
+    .modal-header {
+      background: linear-gradient(135deg, #4ecdc4 0%, #6ba3d4 100%);
+      color: white;
+      border-top-left-radius: calc(0.75rem - 3px);
+      border-top-right-radius: calc(0.75rem - 3px);
+      padding: 1rem 1.5rem;
+
+      .btn-close {
+        filter: brightness(0) invert(1);
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .modal-footer {
+      border-bottom-left-radius: calc(0.75rem - 3px);
+      border-bottom-right-radius: calc(0.75rem - 3px);
+      background-color: #f8f9fa;
+    }
   }
 
   &.dismiss-checklist-modal {

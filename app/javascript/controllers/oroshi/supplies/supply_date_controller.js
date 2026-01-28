@@ -1,48 +1,53 @@
 import { Controller } from "@hotwired/stimulus";
+import { useIdle, useVisibility } from "stimulus-use";
 
 export default class extends Controller {
   static targets = ['input', 'supplierColumn', 'entryLink', 'supplyEntryFrame'];
 
   connect() {
-    this.refreshHandler();
+    // 3 minute (180000ms) inactivity refresh using stimulus-use
+    useIdle(this, { ms: 180000, initialState: false });
+    useVisibility(this);
+
     this.keyBindings();
-    window.addEventListener('popstate', this.historyStateChanged);
+    this.boundHistoryStateChanged = this.historyStateChanged.bind(this);
+    window.addEventListener('popstate', this.boundHistoryStateChanged);
+  }
+
+  disconnect() {
+    if (this.boundHistoryStateChanged) {
+      window.removeEventListener('popstate', this.boundHistoryStateChanged);
+    }
+  }
+
+  /**
+   * Called by useIdle when user becomes idle (3 minutes of inactivity)
+   */
+  away() {
+    window.location.reload();
+  }
+
+  /**
+   * Called by useVisibility when page becomes hidden
+   * Note: useIdle handles this automatically, but we can add extra logic here if needed
+   */
+  invisible() {
+    // The idle timer continues to run when the page is hidden
+  }
+
+  /**
+   * Called by useVisibility when page becomes visible again
+   */
+  visible() {
+    // User returned to the page - idle timer will reset on next activity
   }
 
   historyStateChanged(_event) {
-    // Links to this page come from Turbo.visit on the calendar page for supplies, 
+    // Links to this page come from Turbo.visit on the calendar page for supplies,
     // so we need to manually perform visit if the back button is pressed
     // because the page is not properly loaded from the Turbo cache
     Turbo.visit(window.location.href, { action: "advance" });
-    window.removeEventListener('popstate', this.historyStateChanged);
-  }
-
-  refreshHandler() {
-    // 3 minute inactivity refresh timer
-    let t;
-    const events = ['mousemove', 'keydown', 'scroll', 'touchstart'];
-
-    function resetTimeout() {
-      clearTimeout(t);
-      t = setTimeout(function () {
-        window.location.reload()
-      }, 180000);
-    }
-
-    events.forEach(event => {
-      window.addEventListener(event, resetTimeout);
-    });
-
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) {
-        t = setTimeout(() => window.location.reload(), 180000);
-      } else {
-        clearTimeout(t);
-      }
-    });
-
-    // Start the timeout when the page loads
-    resetTimeout();
+    window.removeEventListener('popstate', this.boundHistoryStateChanged);
   }
 
   selectEntry(event) {

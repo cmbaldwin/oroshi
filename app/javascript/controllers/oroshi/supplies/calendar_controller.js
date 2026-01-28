@@ -3,6 +3,15 @@ import { Controller } from "@hotwired/stimulus";
 import moment from 'moment';
 import FullCalendar from 'fullcalendar';
 
+// Loading overlay HTML - defined locally to avoid module loading order issues
+const LOADING_OVERLAY = `
+<div class="loading_overlay rounded">
+  <div class="spinner-border text-primary position-absolute top-50 start-50" role="status">
+    <span class="visually-hidden">読み込み中...</span>
+  </div>
+</div>
+`;
+
 export default class extends Controller {
   static calendar;
   static targets = ['calendar', 'supplyModal', 'dateChangeForm',
@@ -204,7 +213,7 @@ export default class extends Controller {
 
   onLoading(loading) {
     if (loading) {
-      document.getElementById('supply_calendar').insertAdjacentHTML('afterbegin', loading_overlay);
+      document.getElementById('supply_calendar').insertAdjacentHTML('afterbegin', LOADING_OVERLAY);
     } else {
       document.querySelector('.loading_overlay')?.remove();
     }

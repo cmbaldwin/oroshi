@@ -44,7 +44,8 @@
 </head>
 
 <body data-spy="scroll" class="d-flex flex-column h-100">
-    <%= render partial: 'layouts/shared/navbar' %>
+      <%= turbo_frame_tag "modal" %>
+<%= render partial: 'layouts/shared/navbar' %>
 
     <main class="flex-shrink-0">
         <div id="messages-container" data-controller="messages" data-user-id="<%= current_user.id if user_signed_in? %>" class="d-flex overflow-x-auto overflow-y-visible bg-light mb-3 p-1" data-turbo-permanent>

@@ -14,7 +14,7 @@ const LOADING_OVERLAY = `
 
 export default class extends Controller {
   static calendar;
-  static targets = ['calendar', 'supplyModal', 'dateChangeForm',
+  static targets = ['calendar', 'dateChangeForm',
     'startDate', 'endDate', 'supplyDates', 'modalBody',
     'selectedSupplyDates', 'modalChangeDateSubmitButton'];
 
@@ -33,23 +33,21 @@ export default class extends Controller {
       loading: function (loading) { controllerInstance.onLoading(loading) }
     });
     this.calendar.render();
-    this.supplyModalTarget.addEventListener('hidden.bs.modal', () => {
-      // refresh current calendar data
-      this.calendar.refetchEvents();
-      // set interior html to .modal-body to clear out any previous content
-      this.supplyModalTarget.querySelector('.modal-body').innerHTML = `
-        <div class="w-100 text-center">
-          <div class="spinner-border spinner-border-sm" role="status">
-            <span class="visually-hidden">読み込み中...</span>
-          </div>
-        </div>`;
 
-    })
+    // Listen for modal close to refresh calendar
+    this.boundOnModalClose = this.onModalClose.bind(this);
+    document.addEventListener('modal:close', this.boundOnModalClose);
+  }
+
+  onModalClose() {
+    // Refresh calendar data when modal closes
+    this.calendar.refetchEvents();
   }
 
   disconnect() {
     this.calendar.destroy();
     this.calendarTarget.innerHTML = '';
+    document.removeEventListener('modal:close', this.boundOnModalClose);
   }
 
   settings(controllerInstance) {
@@ -120,7 +118,7 @@ export default class extends Controller {
     }
   }
 
-  requestAction = (controllerInstance, path) => {
+  requestAction = (_controllerInstance, path) => {
     const startDate = new Date(document.getElementById('supply_calendar').dataset.startDate);
     const endDate = new Date(document.getElementById('supply_calendar').dataset.endDate);
 
@@ -133,27 +131,9 @@ export default class extends Controller {
     // Convert the array of dates to a query string
     const queryString = supplyDates.map(date => `supply_dates[]=${date}`).join('&');
 
-    fetch(`supply_dates/${path}?${queryString}`,
-      {
-        method: "GET",
-        headers: {
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-          'Content-Type': 'application/json',
-          "X-Requested-With": "XMLHttpRequest"
-        },
-        credentials: "same-origin",
-      })
-      .then(response => response.text())
-      .then(body => Turbo.renderStreamMessage(body))
-
-    controllerInstance.showModal();
-  }
-
-  showModal() {
-    const modal = bootstrap.Modal.getOrCreateInstance(this.supplyModalTarget, {
-      keyboard: false
-    });
-    modal.show();
+    // Use Turbo to open the modal
+    const url = `supply_dates/${path}?${queryString}`;
+    Turbo.visit(url, { frame: "modal" });
   }
 
   onEventClick(info) {
@@ -161,19 +141,8 @@ export default class extends Controller {
     info.jsEvent.preventDefault();
     switch (info.event.extendedProps.type) {
       case 'invoice':
-        fetch(`/oroshi/invoices/${info.event.id}/edit`,
-          {
-            method: "GET",
-            headers: {
-              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-              'Content-Type': 'application/json',
-              "X-Requested-With": "XMLHttpRequest"
-            },
-            credentials: "same-origin",
-          })
-          .then(response => response.text())
-          .then(body => { Turbo.renderStreamMessage(body) })
-        this.showModal();
+        // Use Turbo to open the invoice edit modal
+        Turbo.visit(`/oroshi/invoices/${info.event.id}/edit`, { frame: "modal" });
         break;
       default:
         this.onDateClick(info);
@@ -221,10 +190,6 @@ export default class extends Controller {
 
   refreshCalendarPage() {
     this.calendar.refetchEvents();
-    const modalBackdrop = document.querySelector('.modal-backdrop');
-    if (modalBackdrop) {
-      modalBackdrop.remove();
-    }
   }
 
   dateChangeFormTargetConnected() {

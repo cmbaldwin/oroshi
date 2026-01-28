@@ -48,12 +48,12 @@
                 <% end %>
             </div>
             <div class="d-flex flex-grow-1 align-self-stretch min-w-16">
-                <%# turbo_frame_tag 'oroshi_dashboard_stats',
+                <%= turbo_frame_tag 'oroshi_dashboard_stats',
                               src: oroshi_dashboard_stats_path,
                               loading: 'lazy',
                               class: 'card w-100 m-1' do %>
-                <%# render partial: 'oroshi/shared/card_body_spinner' %>
-                <%# end %>
+                <%= render partial: 'oroshi/shared/card_body_spinner' %>
+                <% end %>
             </div>
         </div>
     </div>

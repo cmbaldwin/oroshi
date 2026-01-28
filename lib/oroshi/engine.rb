@@ -13,6 +13,9 @@ require "pundit"
 # Search
 require "ransack"
 
+# UI Components
+require "ultimate_turbo_modal"
+
 module Oroshi
   class Engine < ::Rails::Engine
     isolate_namespace Oroshi

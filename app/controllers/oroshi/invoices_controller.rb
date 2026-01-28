@@ -98,6 +98,9 @@ class Oroshi::InvoicesController < Oroshi::ApplicationController
         render "oroshi/supplies/modal/replace_supply_modal",
                locals: { path: "oroshi/supplies/modal/supply_invoice_actions" }
       end
+      format.html do
+        render "oroshi/supplies/modal/supply_invoice_actions", layout: false
+      end
     end
   end
 

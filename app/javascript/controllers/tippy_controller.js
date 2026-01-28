@@ -1,20 +1,12 @@
 import { Controller } from "@hotwired/stimulus";
-
-// tippy.js is loaded via importmap as a UMD bundle that attaches to window.tippy
-// We import it for side effects only, then access via window
-import "tippy.js";
+import tippy from "tippy.js";
 
 export default class extends Controller {
   tippyInstance;
   static targets = [];
 
   connect() {
-    // Access tippy from window since it's a UMD bundle
-    if (typeof window.tippy === 'function') {
-      this.tippyInstance = this.initTippy(this.element);
-    } else {
-      console.warn('tippy.js not loaded');
-    }
+    this.tippyInstance = this.initTippy(this.element);
   }
 
   initTippy(element) {
@@ -32,7 +24,7 @@ export default class extends Controller {
       ...(element.classList.contains("exp_card") && this.expCardOptions())
     };
 
-    return window.tippy(element, options);
+    return tippy(element, options);
   }
 
   expCardOptions() {

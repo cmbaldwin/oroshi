@@ -27,6 +27,7 @@ gem "importmap-rails"               # JavaScript import maps
 gem "rack-cache"                    # HTTP caching middleware
 gem "stimulus-rails"                # Hotwire Stimulus framework
 gem "turbo-rails", github: "hotwired/turbo-rails" # Hotwire Turbo framework
+gem "ultimate_turbo_modal"          # Turbo-native modal system
 
 # Database and server
 gem "pg"   # PostgreSQL adapter

@@ -68,18 +68,20 @@ module Oroshi
     initializer "oroshi.importmap", before: "importmap" do |app|
       if app.config.respond_to?(:importmap)
         app.config.importmap.paths << root.join("config/importmap.rb") if root.join("config/importmap.rb").exist?
+        app.config.importmap.cache_sweepers << root.join("app/javascript") if root.join("app/javascript").exist?
       end
     end
 
     # Configure assets
     initializer "oroshi.assets" do |app|
       if app.config.respond_to?(:assets)
-        # Add vendor/javascript to asset paths for importmap vendored JS files
+        # Add engine's JavaScript directories to asset paths
+        app.config.assets.paths << root.join("app/javascript")
         app.config.assets.paths << root.join("vendor/javascript")
 
         app.config.assets.precompile += %w[
-          oroshi/application.css
-          oroshi/application.js
+          application.css
+          application.js
         ]
       end
     end

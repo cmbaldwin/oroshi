@@ -7,7 +7,13 @@ pin "application", preload: true
 pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
 pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
-pin_all_from "app/javascript/controllers", under: "controllers", to: "controllers"
+
+# Stimulus controllers - need explicit pins for index and application
+pin "controllers", to: "controllers/index.js", preload: true
+pin "controllers/application", to: "controllers/application.js", preload: true
+# Pin all controller files from engine's app/javascript/controllers directory
+# Must use absolute path via Engine.root so it works when loaded by parent apps
+pin_all_from Oroshi::Engine.root.join("app/javascript/controllers"), under: "controllers", to: "controllers"
 
 # Channels/ActionCable
 pin "@rails/actioncable", to: "actioncable.esm.js"

@@ -12,6 +12,72 @@ class OroshiDashboardTest < ApplicationSystemTestCase
     login_as(@admin, scope: :user)
   end
 
+  test "inner pill tabs switch content correctly" do
+    create_list(:oroshi_supplier, 2)
+
+    visit oroshi_root_path
+
+    # Wait for the dashboard frame to load
+    assert_selector "#pills-tab", wait: 10
+
+    # Verify we start on the main tab
+    assert_selector "#pills-main-tab.active", wait: 5
+    assert_selector "#pills-main.show.active", wait: 5
+
+    # Click on the production zones tab
+    find("#pills-production-zones-tab").click
+
+    # Verify the production zones tab is now active
+    assert_selector "#pills-production-zones-tab.active", wait: 5
+    assert_selector "#pills-production-zones.show.active", wait: 5
+
+    # Verify the main tab is no longer active
+    assert_no_selector "#pills-main-tab.active"
+    assert_no_selector "#pills-main.show.active"
+
+    # Click on the order categories tab
+    find("#pills-order-categories-tab").click
+
+    # Verify the order categories tab is now active
+    assert_selector "#pills-order-categories-tab.active", wait: 5
+    assert_selector "#pills-order-categories.show.active", wait: 5
+
+    # Verify previous tab is no longer active
+    assert_no_selector "#pills-production-zones-tab.active"
+
+    # Click back to main tab
+    find("#pills-main-tab").click
+
+    # Verify we're back on the main tab
+    assert_selector "#pills-main-tab.active", wait: 5
+    assert_selector "#pills-main.show.active", wait: 5
+  end
+
+  test "inner pill tabs load lazy turbo frames" do
+    create_list(:oroshi_supplier, 2)
+    create(:oroshi_production_zone)
+    create(:oroshi_order_category)
+
+    visit oroshi_root_path
+
+    # Wait for the dashboard frame to load
+    assert_selector "#pills-tab", wait: 10
+
+    # Click on production zones tab
+    find("#pills-production-zones-tab").click
+
+    # Wait for the lazy-loaded turbo frame to load content
+    assert_selector "#pills-production-zones.show.active", wait: 5
+    assert_selector "#production_zones", wait: 10
+
+    # Click on order categories tab
+    find("#pills-order-categories-tab").click
+
+    # Wait for the lazy-loaded turbo frame
+    assert_selector "#pills-order-categories.show.active", wait: 5
+    assert_selector "#order_categories", wait: 10
+  end
+
   # context 'interaction with empty dashboard'
   test "loads empty dashboard" do
     visit oroshi_root_path

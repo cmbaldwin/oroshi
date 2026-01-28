@@ -1,24 +1,47 @@
 import { Controller } from "@hotwired/stimulus";
+import { useWindowResize } from "stimulus-use";
 
 export default class extends Controller {
   static targets = ['orderModal', 'navbar', 'menuButton', 'orderFilterForm'];
 
   connect() {
+    // Use stimulus-use for window resize handling - automatically cleaned up on disconnect
+    useWindowResize(this);
     this.adjustNavbarForScreenSize();
-    window.addEventListener('resize', () => this.adjustNavbarForScreenSize());
 
     // Listen for dialog close event from stimulus-dialog
-    const dialog = this.orderModalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
-    if (dialog) {
-      dialog.addEventListener('close', () => {
-        const turboFrame = this.orderModalTarget.querySelector('turbo-frame#orders_modal_content .modal-body');
-        const form = this.orderModalTarget.querySelector('form');
+    if (this.hasOrderModalTarget) {
+      const dialog = this.orderModalTarget.querySelector('dialog[data-dialog-target="dialog"]');
+      if (dialog) {
+        this.boundOnDialogClose = this.onDialogClose.bind(this);
+        dialog.addEventListener('close', this.boundOnDialogClose);
+      }
+    }
+  }
 
-        if (turboFrame) { turboFrame.innerHTML = this.spinnerHtml() };
-        if ((form && form.dataset.model_altered === 'true') && turboFrame?.dataset.refresh) {
-          window.location.reload();
-        }
-      });
+  disconnect() {
+    if (this.hasOrderModalTarget && this.boundOnDialogClose) {
+      const dialog = this.orderModalTarget.querySelector('dialog[data-dialog-target="dialog"]');
+      if (dialog) {
+        dialog.removeEventListener('close', this.boundOnDialogClose);
+      }
+    }
+  }
+
+  /**
+   * Called by stimulus-use useWindowResize when the window is resized
+   */
+  windowResize({ width, height }) {
+    this.adjustNavbarForScreenSize();
+  }
+
+  onDialogClose() {
+    const turboFrame = this.orderModalTarget.querySelector('turbo-frame#orders_modal_content .modal-body');
+    const form = this.orderModalTarget.querySelector('form');
+
+    if (turboFrame) { turboFrame.innerHTML = this.spinnerHtml() };
+    if ((form && form.dataset.model_altered === 'true') && turboFrame?.dataset.refresh) {
+      window.location.reload();
     }
   }
 
@@ -30,10 +53,6 @@ export default class extends Controller {
         </div>
       </div>
     `
-  }
-
-  disconnect() {
-    window.removeEventListener('resize', () => this.adjustNavbarForScreenSize());
   }
 
   adjustNavbarForScreenSize() {

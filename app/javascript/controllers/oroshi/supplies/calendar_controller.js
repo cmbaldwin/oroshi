@@ -51,7 +51,7 @@ export default class extends Controller {
   onFrameLoad(event) {
     // Open the dialog when the supply_modal_content frame finishes loading
     if (event.target.id === 'supply_modal_content') {
-      const dialog = document.querySelector('dialog[data-dialog-target="dialog"]');
+      const dialog = document.querySelector('dialog[data-oroshi--supplies--dialog-target="dialog"]');
       if (dialog && !dialog.open) {
         dialog.showModal();
       }

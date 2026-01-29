@@ -48,14 +48,8 @@ module Oroshi
       end
     end
 
-    # Configure Solid Cable
-    initializer "oroshi.solid_cable" do |app|
-      if Rails.env.production?
-        config.solid_cable.connects_to = {
-          database: { writing: :cable }
-        }
-      end
-    end
+    # Solid Cable is configured via cable.yml (no config accessor available)
+    # See parent app's config/cable.yml for configuration
 
     # Configure autoload paths
     initializer "oroshi.autoload", before: :set_autoload_paths do |app|

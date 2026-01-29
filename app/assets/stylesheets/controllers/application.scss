@@ -141,14 +141,14 @@ dialog[data-oroshi--supplies--dialog-target="dialog"] {
 
   &.supply-modal {
     max-width: 1000px; /* modal-lg */
-    border: 3px solid #4ecdc4; /* Primary brand color - greenish-cyan */
+    border: 2px solid #4ecdc4; /* Primary brand color - greenish-cyan */
     border-radius: 0.75rem;
 
     .modal-header {
       background: linear-gradient(135deg, #4ecdc4 0%, #6ba3d4 100%);
       color: white;
-      border-top-left-radius: calc(0.75rem - 3px);
-      border-top-right-radius: calc(0.75rem - 3px);
+      border-top-left-radius: calc(0.75rem - 2px);
+      border-top-right-radius: calc(0.75rem - 2px);
       padding: 1rem 1.5rem;
 
       .btn-close {
@@ -161,10 +161,15 @@ dialog[data-oroshi--supplies--dialog-target="dialog"] {
       }
     }
 
+    .modal-body {
+      padding: 1.5rem;
+    }
+
     .modal-footer {
-      border-bottom-left-radius: calc(0.75rem - 3px);
-      border-bottom-right-radius: calc(0.75rem - 3px);
+      border-bottom-left-radius: calc(0.75rem - 2px);
+      border-bottom-right-radius: calc(0.75rem - 2px);
       background-color: #f8f9fa;
+      padding: 1rem 1.5rem;
     }
   }
 

@@ -320,7 +320,7 @@ cp -r ../vendor/javascript/* vendor/javascript/ 2>/dev/null || true
 # Symlink compiled CSS from engine (so dartsass:watch updates are reflected)
 echo "🎨 Linking CSS assets from engine..."
 mkdir -p app/assets/builds
-ln -sf ../../app/assets/builds/application.css app/assets/builds/application.css
+ln -sf ../../../../app/assets/builds/application.css app/assets/builds/application.css
 
 # Copy application layout (includes Bootstrap CDN and navbar)
 echo "📄 Copying application layout from engine..."

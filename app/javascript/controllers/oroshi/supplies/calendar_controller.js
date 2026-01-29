@@ -18,6 +18,18 @@ export default class extends Controller {
     'startDate', 'endDate', 'supplyDates', 'modalBody',
     'selectedSupplyDates', 'modalChangeDateSubmitButton'];
 
+  // Get the engine mount path from the body data attribute
+  get mountPath() {
+    return document.body.dataset.oroshiMountPath || '';
+  }
+
+  // Helper to construct full paths with mount prefix
+  enginePath(path) {
+    const mount = this.mountPath;
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return mount ? `${mount}${cleanPath}` : cleanPath;
+  }
+
   connect() {
     this.calendarTarget.innerHTML = ''; // clear calendar
     const controllerInstance = this;
@@ -105,7 +117,7 @@ export default class extends Controller {
       shikiriList: {
         text: '仕切り表',
         click: function () {
-          Turbo.visit('/oroshi/invoices', { frame: 'app ', action: 'advance' })
+          Turbo.visit(controllerInstance.enginePath('/invoices'), { frame: 'app ', action: 'advance' })
         },
         hint: 'すべとの仕切りを表示します。'
       },
@@ -158,7 +170,7 @@ export default class extends Controller {
     switch (info.event.extendedProps.type) {
       case 'invoice':
         // Use Turbo to open the invoice edit modal
-        Turbo.visit(`/oroshi/invoices/${info.event.id}/edit`, { frame: "modal" });
+        Turbo.visit(this.enginePath(`/invoices/${info.event.id}/edit`), { frame: "modal" });
         break;
       default:
         this.onDateClick(info);
@@ -170,7 +182,7 @@ export default class extends Controller {
     if (info?.event?.url) return Turbo.visit(info.event.url, { frame: 'app', action: 'advance' })
 
     const new_date = moment(info.date).format('YYYY-MM-DD');
-    const url = `/oroshi/supply_dates/${encodeURI(new_date)}`;
+    const url = this.enginePath(`/supply_dates/${encodeURI(new_date)}`);
     Turbo.visit(url, { frame: 'app', action: 'advance' })
   }
 

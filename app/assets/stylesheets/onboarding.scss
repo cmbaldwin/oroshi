@@ -104,65 +104,6 @@
   align-items: center;
 }
 
-// Checklist Sidebar Styles
-.onboarding-checklist-sidebar {
-  // Base styles are in _oroshi_utilities.scss
-  // Additional theme-consistent styling
-  background-color: #f8f9fa !important;
-  border-left: 1px solid #dee2e6 !important;
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.05);
-
-  h6 {
-    color: #495057;
-    font-weight: 600;
-  }
-
-  .list-unstyled {
-    li {
-      transition: background-color 0.15s ease-in-out;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      margin-left: -0.5rem;
-      margin-right: -0.5rem;
-      border-radius: 0.25rem;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.03);
-      }
-    }
-  }
-
-  .bi-check-circle-fill {
-    color: #198754 !important; // Bootstrap success green
-  }
-
-  .bi-circle {
-    color: #adb5bd !important; // Muted gray
-  }
-
-  a {
-    color: $primary;
-
-    &:hover {
-      color: darken($primary, 15%);
-      text-decoration: underline !important;
-    }
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, $primary 0%, $secondary 100%);
-    border: none;
-
-    &:hover {
-      background: linear-gradient(
-        135deg,
-        darken($primary, 10%) 0%,
-        darken($secondary, 10%) 100%
-      );
-    }
-  }
-}
-
 // Responsive styles
 @media (max-width: 768px) {
   .onboarding-card {
@@ -171,11 +112,6 @@
 
   .onboarding-brand {
     font-size: 1.5rem;
-  }
-
-  .onboarding-checklist-sidebar {
-    // Hide sidebar on mobile by default
-    display: none;
   }
 
   .onboarding-modal-card {
@@ -187,11 +123,5 @@
   .onboarding-modal-footer {
     flex-direction: column-reverse;
     gap: 1rem;
-  }
-}
-
-@media (max-width: 992px) {
-  .onboarding-checklist-sidebar {
-    width: 250px;
   }
 }

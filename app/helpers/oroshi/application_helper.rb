@@ -114,5 +114,13 @@ module Oroshi
         icon("info-circle")
       end
     end
+
+    # Engine mount path helper
+    # Returns the path where the Oroshi engine is mounted (e.g., "/", "/oroshi", "/wholesale")
+    def oroshi_mount_path
+      # Try to get the script name from the engine routes
+      # This will be empty string for root mount, or the mount path for others
+      Oroshi::Engine.routes.find_script_name({}) || ""
+    end
   end
 end

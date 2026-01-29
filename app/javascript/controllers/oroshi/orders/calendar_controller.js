@@ -7,13 +7,25 @@ export default class extends Controller {
   static calendar;
   static targets = ['calendar'];
 
+  // Get the engine mount path from the body data attribute
+  get mountPath() {
+    return document.body.dataset.oroshiMountPath || '';
+  }
+
+  // Helper to construct full paths with mount prefix
+  enginePath(path) {
+    const mount = this.mountPath;
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return mount ? `${mount}${cleanPath}` : cleanPath;
+  }
+
   connect() {
     this.calendarTarget.innerHTML = ''; // clear calendar
     this.orderModal = document.getElementById('orderModal');
     const controllerInstance = this;
     this.calendar = new FullCalendar.Calendar(this.calendarTarget, {
       ...controllerInstance.settings(controllerInstance),
-      events: '/oroshi/orders/calendar/orders',
+      events: controllerInstance.enginePath('/orders/calendar/orders'),
       eventClick: function (info) { controllerInstance.onEventClick(info) },
       selectable: false,
       dateClick: function (info) { controllerInstance.onDateClick(info) },
@@ -52,7 +64,7 @@ export default class extends Controller {
   onDateClick(info) {
     this.closeModal();
     let url = new URL(window.location.origin);
-    url.pathname = `/oroshi/orders/${info.dateStr}`;
+    url.pathname = this.enginePath(`/orders/${info.dateStr}`);
     window.location.href = url.href;
   }
 

@@ -1,16 +1,16 @@
-<nav id="top_nav" class="navbar navbar-light bg-silver navbar-expand-lg px-3" data-turbo-permanent>
+<nav id="top_nav" class="navbar navbar-light bg-silver navbar-expand-lg px-3" data-turbo-permanent data-controller="navbar">
     <%= link_to oroshi.root_path, class: 'navbar-brand p-0 d-block d-lg-none', data: { turbo: false } do %>
     <%= image_tag "oroshi.png", class: "oroshi-brand", alt: "OROSHI", height: 30 %>
     <% end %>
-    <button class="navbar-toggler m-1 float-end bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_t" aria-controls="navbar_t" aria-expanded="false" aria-label="<%= t('layouts.application.navbar.toggle') %>">
+    <button class="navbar-toggler m-1 float-end bg-light" type="button" data-navbar-target="toggle" aria-controls="navbar_t" aria-expanded="false" aria-label="<%= t('layouts.application.navbar.toggle') %>">
         <%= icon('menu-down', class: 'text-primary') %>
     </button>
-    <div class="collapse navbar-collapse" id="navbar_t">
+    <div class="collapse navbar-collapse" id="navbar_t" data-navbar-target="collapse">
         <%= link_to oroshi.root_path, class: 'navbar-brand m-0 p-0 d-none d-lg-block' do %>
         <%= image_tag "oroshi.png", class: "oroshi-brand", alt: "OROSHI", height: 30 %>
         <% end %>
         <% if user_signed_in? %>
-        <ul class="navbar-nav h5 ms-3 me-auto mt-2 mt-lg-0">
+        <ul class="navbar-nav h5 ms-3 me-auto mt-2 mt-lg-0 mobile-center">
             <li><%= link_to t('layouts.application.navbar.supply_settings'), oroshi.root_path, class: "nav-link light_link" %></li>
             <li><%= link_to t('layouts.application.navbar.supplies'), oroshi.supplies_path, class: "nav-link light_link" %></li>
             <li class="nav-item"><%= link_to t('layouts.application.navbar.orders'), oroshi.orders_path, class: "nav-link light_link" %></li>
@@ -19,28 +19,22 @@
             <li><%= link_to t('layouts.application.navbar.payments'), oroshi.payment_receipts_path, class: "nav-link light_link" %></li>
             <% end %>
         </ul>
-        <ul class="navbar-nav">
+        <ul class="navbar-nav align-items-center gap-2">
             <% if user_signed_in? %>
-            <span class="navbar-text">
+            <%= render 'oroshi/onboarding/checklist_dropdown' %>
+            <li class="nav-item">
                 <div class="btn-group" role="group" aria-label="Basic">
-                    <% if current_user.onboarding_progress&.checklist_dismissed? %>
-                    <%= link_to icon("play-circle", class: 'text-dark'),
-                                          oroshi.resume_onboarding_path(current_user.onboarding_progress.current_step || 'company_info'),
-                                          method: :post,
-                                          class: 'navbar-link btn btn-warning tippy',
-                                          data: { tippy_content: t('layouts.application.navbar.setup_resume') } %>
-                    <% end %>
                     <%= button_to main_app.destroy_user_session_path,
                             id: "sign_out",
-                            class: "bg-warning text-dark border-0 p-0 m-0",
+                            class: "btn btn-outline-light border-0 p-2",
                             method: :delete,
-                            form_class: 'navbar-link btn btn-warning tippy',
-                            form: { data: { tippy_content: t('layouts.application.navbar.logout'), turbo: false } } do %>
-                    <%= icon("arrow-up-right-circle-fill", class: 'text-dark') %>
+                            form_class: 'd-inline',
+                            form: { data: { tippy_content: t('layouts.application.navbar.logout'), turbo: false }, class: 'tippy' } do %>
+                    <%= icon("arrow-up-right-circle-fill") %>
                     <% end %>
-                    <%= link_to icon("file-person", class: 'text-dark'),
+                    <%= link_to icon("file-person"),
                           main_app.edit_user_registration_path,
-                          class: 'navbar-link btn btn-warning tippy',
+                          class: 'btn btn-outline-light border-0 tippy p-2',
                           data: {
                             tippy_content: "
                               #{t('layouts.application.navbar.email')}<strong>:<br><small>#{current_user.email}
@@ -48,7 +42,7 @@
                             "
                           } %>
                 </div>
-            </span>
+            </li>
             <% else %>
             <span class="ms-auto navbar-text">
                 <%= link_to t('layouts.application.navbar.signup'), main_app.new_user_registration_path, class: 'navbar-link'  %> |

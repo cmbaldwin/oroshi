@@ -36,8 +36,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <%# Flatpickr CSS from CDN %>
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-    <%# Tippy.js light-border theme from CDN %>
-    <link href="https://unpkg.com/tippy.js@6/themes/light-border.css" rel="stylesheet">
+    <%# Tippy.js base CSS (required for arrow and positioning) - always latest %>
+    <link href="https://unpkg.com/tippy.js@latest/dist/tippy.css" rel="stylesheet">
+    <%# Tippy.js light-border theme - always latest %>
+    <link href="https://unpkg.com/tippy.js@latest/themes/light-border.css" rel="stylesheet">
     <%# Custom Oroshi styles (app-specific, non-Bootstrap) %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>

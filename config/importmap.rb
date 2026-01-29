@@ -37,8 +37,8 @@ pin "draggable", to: "https://cdn.jsdelivr.net/npm/@shopify/draggable/build/esm/
 pin "draggable-plugins", to: "https://cdn.jsdelivr.net/npm/@shopify/draggable/build/esm/Plugins/index.mjs"
 pin "muuri", to: "https://cdn.jsdelivr.net/npm/muuri@0.9.5/dist/muuri.min.js"
 
-# Tippy.js - browser-ready ESM via jsdelivr +esm
-pin "tippy.js", to: "https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm"
+# Tippy.js - browser-ready ESM via jsdelivr +esm (always latest)
+pin "tippy.js", to: "https://cdn.jsdelivr.net/npm/tippy.js@latest/+esm"
 
 # Chartkick - use CDN (not currently used in app)
 # pin "chartkick", to: "https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.esm.js"

@@ -26,7 +26,7 @@
                 <div class="btn-group" role="group" aria-label="Basic">
                     <%= button_to main_app.destroy_user_session_path,
                             id: "sign_out",
-                            class: "btn btn-outline-light border-0 p-2",
+                            class: "btn btn-outline-dark border-0 p-2",
                             method: :delete,
                             form_class: 'd-inline',
                             form: { data: { tippy_content: t('layouts.application.navbar.logout'), turbo: false }, class: 'tippy' } do %>
@@ -34,7 +34,7 @@
                     <% end %>
                     <%= link_to icon("file-person"),
                           main_app.edit_user_registration_path,
-                          class: 'btn btn-outline-light border-0 tippy p-2',
+                          class: 'btn btn-outline-dark border-0 tippy p-2',
                           data: {
                             tippy_content: "
                               #{t('layouts.application.navbar.email')}<strong>:<br><small>#{current_user.email}

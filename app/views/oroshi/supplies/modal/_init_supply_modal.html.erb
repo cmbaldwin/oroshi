@@ -8,12 +8,12 @@
             </div>
             <button type="button" class="btn-close" data-action="oroshi--supplies--dialog#close" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body py-2">
             <%= turbo_frame_tag 'supply_modal_content' do  %>
-                <%= render partial: 'oroshi/shared/spinner' %>
+            <%= render partial: 'oroshi/shared/spinner' %>
             <% end %>
         </div>
-        <div class="modal-footer border-top">
+        <div class="modal-footer border-top mt-2">
             <button type="button" class="btn btn-secondary" data-action="oroshi--supplies--dialog#close">閉じる</button>
         </div>
     </dialog>

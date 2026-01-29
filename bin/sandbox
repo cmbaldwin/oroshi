@@ -286,21 +286,41 @@ production:
     migrations_paths: db/cable_migrate
 YAML
 
-# Create Procfile.dev for development (no CSS build needed - engine uses CDN)
+# Create Procfile.dev for development with CSS compilation from engine
 echo "📋 Creating Procfile.dev..."
 cat > Procfile.dev <<PROCFILE
 web: bin/rails server -p 3000
+css: cd .. && bin/rails dartsass:watch
 PROCFILE
+
+# Create bin/dev script to use foreman
+echo "📋 Creating bin/dev script..."
+cat > bin/dev <<'BINDEV'
+#!/usr/bin/env sh
+
+if ! gem list foreman -i --silent; then
+  echo "Installing foreman..."
+  gem install foreman
+fi
+
+# Get the gem directory and construct the path to foreman
+GEM_DIR=$(gem environment gemdir)
+FOREMAN_BIN="$GEM_DIR/gems/foreman-0.90.0/bin/foreman"
+
+# Use the full path to foreman
+exec "$FOREMAN_BIN" start -f Procfile.dev "$@"
+BINDEV
+chmod +x bin/dev
 
 # Copy vendored JavaScript files from engine
 echo "📋 Copying vendored JavaScript files..."
 mkdir -p vendor/javascript
 cp -r ../vendor/javascript/* vendor/javascript/ 2>/dev/null || true
 
-# Copy compiled CSS from engine
-echo "🎨 Copying CSS assets..."
+# Symlink compiled CSS from engine (so dartsass:watch updates are reflected)
+echo "🎨 Linking CSS assets from engine..."
 mkdir -p app/assets/builds
-cp ../app/assets/builds/oroshi.css app/assets/builds/ 2>/dev/null || true
+ln -sf ../../app/assets/builds/application.css app/assets/builds/application.css
 
 # Copy application layout (includes Bootstrap CDN and navbar)
 echo "📄 Copying application layout from engine..."

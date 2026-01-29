@@ -9,8 +9,7 @@
 @import "scaffolds";
 @import "flatpickr/flatpickr"; // flatpickr@4.6.13
 
-// Tippy Theme, Light-border
-@import "tippy.js/light-border";
+// Tippy.js CSS loaded via CDN in layout (see application.html.erb)
 
 // Oroshi Utilities
 @import "oroshi_utilities";

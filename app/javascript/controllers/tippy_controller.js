@@ -15,7 +15,8 @@ export default class extends Controller {
       allowHTML: true,
       duration: [300, 0],
       touch: "hold",
-      followCursor: true,
+      theme: 'light-border', // Default theme with styled background
+      placement: 'top', // Default placement
     };
 
     // Merge options: basicOptions <- dataOptions <- expCardOptions (if exp_card class is present)

@@ -89,7 +89,7 @@ Oroshi::Engine.routes.draw do
   resources :supplies, except: %i[new destroy]
   get "supplies/entry", to: "supplies#new", as: :supply_entry
 
-  get "invoices/preview", as: :invoice_preview, to: "invoices#preview"
+  get "invoices/preview", as: :w, to: "invoices#preview"
   resources :invoices do
     get :send_mail_now, on: :member
     get :mail_notification_preview, on: :member

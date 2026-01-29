@@ -13,6 +13,9 @@ require "pundit"
 # Search
 require "ransack"
 
+# Pagination
+require "will_paginate"
+
 # UI Components
 require "ultimate_turbo_modal"
 

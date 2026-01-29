@@ -1,7 +1,7 @@
 class Oroshi::OnboardingController < Oroshi::ApplicationController
   layout "onboarding"
 
-  skip_before_action :maybe_authenticate_user
+  skip_before_action :maybe_authenticate_user, raise: false
   before_action :authenticate_user_for_onboarding
   before_action :find_or_create_progress
   before_action :set_step, only: [ :show, :update ]
@@ -52,13 +52,13 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
     else
       # All steps complete
       @progress.update!(completed_at: Time.current)
-      redirect_to oroshi_root_path, notice: "Onboarding complete!"
+      redirect_to root_path, notice: "Onboarding complete!"
     end
   end
 
   def skip
     @progress.update!(skipped_at: Time.current)
-    redirect_to oroshi_root_path, notice: "Onboarding skipped. You can resume anytime."
+    redirect_to root_path, notice: "Onboarding skipped. You can resume anytime."
   end
 
   def resume
@@ -68,7 +68,7 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
 
   def dismiss_checklist
     @progress.update!(checklist_dismissed_at: Time.current)
-    redirect_to oroshi_root_path, notice: "チェックリストを非表示にしました"
+    redirect_to root_path, notice: "チェックリストを非表示にしました"
   end
 
   private

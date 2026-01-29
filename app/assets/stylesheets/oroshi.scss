@@ -4,12 +4,12 @@
  */
 
 // Oroshi Brand Colors (Analogous Blue-Green Harmony)
-$greenish-cyan: #4ecdc4;      // Primary brand color - vibrant cyan
-$lynx-screen-blue: #6ba3d4;   // Secondary blue
-$frozen-state: #a8dadc;        // Light blue/cyan for backgrounds
+$greenish-cyan: #4ecdc4; // Primary brand color - vibrant cyan
+$lynx-screen-blue: #6ba3d4; // Secondary blue
+$frozen-state: #a8dadc; // Light blue/cyan for backgrounds
 $synthetic-spearmint: #72dda5; // Fresh green accent
-$clear-blue: #1e90ff;          // Bright clear blue
-$poseidon-jr: #2b7a8e;         // Deep blue-green
+$clear-blue: #1e90ff; // Bright clear blue
+$poseidon-jr: #2b7a8e; // Deep blue-green
 
 // Supporting Neutral Colors
 $gunmetal: rgba(45, 49, 66, 1);
@@ -25,14 +25,14 @@ $terra: rgba(204, 75, 75, 1);
  */
 
 // Override Bootstrap's default theme color variables
-$primary: $greenish-cyan;       // Main brand color - cyan
-$secondary: $lynx-screen-blue;  // Secondary actions - soft blue
+$primary: $greenish-cyan; // Main brand color - cyan
+$secondary: $lynx-screen-blue; // Secondary actions - soft blue
 $success: $synthetic-spearmint; // Success states - fresh green
-$info: $silver;               // Informational - bright
-$warning: $ochre;               // Warnings - warm orange
-$danger: $terra;                // Errors - red
-$light: $frozen-state;          // Light backgrounds - pale cyan
-$dark: $poseidon-jr;            // Dark text/elements - deep blue-green
+$info: $silver; // Informational - bright
+$warning: $ochre; // Warnings - warm orange
+$danger: $terra; // Errors - red
+$light: $frozen-state; // Light backgrounds - pale cyan
+$dark: $poseidon-jr; // Dark text/elements - deep blue-green
 
 // Override body and text colors for better integration
 $body-bg: $white;
@@ -54,7 +54,7 @@ $theme-colors: (
   "danger": $danger,
   "light": $light,
   "dark": $dark,
-  "yellow": #ffed94,  // Custom utility color
+  "yellow": #ffed94, // Custom utility color
 );
 
 /* Custom Colors */
@@ -171,7 +171,9 @@ form {
 }
 
 .active-order-overlay {
-  transition: visibility 0s 0.5s, opacity 0.5s ease-in-out;
+  transition:
+    visibility 0s 0.5s,
+    opacity 0.5s ease-in-out;
   background-color: rgba(255, 255, 255, 0.5);
   z-index: 1000;
 }
@@ -183,7 +185,9 @@ form {
 .active-order-overlay.hidden {
   opacity: 0;
   visibility: hidden;
-  transition: visibility 0s 0.2s, opacity 0.5s ease-in-out;
+  transition:
+    visibility 0s 0.2s,
+    opacity 0.5s ease-in-out;
 }
 
 .order-title-modal-link {
@@ -244,4 +248,151 @@ form {
 
 .required {
   color: #e8411c;
+}
+
+/* Notification Containers */
+
+.notice_container,
+.alert_container {
+  position: fixed;
+  top: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050; // Above onboarding sidebar (1040)
+  min-width: 300px;
+  max-width: 600px;
+}
+
+#notifications {
+  position: relative;
+  z-index: 1050;
+}
+
+/* Notification Transition Classes for stimulus-use */
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+/* Onboarding Dropdown */
+
+.onboarding-dropdown-menu {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  position: absolute;
+  right: 0;
+  left: auto;
+  margin-top: 0.5rem;
+  padding: 0;
+  overflow: hidden;
+
+  .dropdown-header {
+    padding: 0.75rem 1rem;
+    margin: 0;
+  }
+
+  .hover-bg-light:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transition: background-color 0.15s ease-in-out;
+  }
+}
+
+// Right-align dropdown on desktop
+@media (min-width: 992px) {
+  .nav-item.dropdown {
+    position: relative;
+  }
+
+  .onboarding-dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+}
+
+/* Mobile Navbar Styling */
+
+@media (max-width: 991.98px) {
+  .navbar-collapse .mobile-center {
+    text-align: center;
+    margin: 1rem 0;
+
+    li {
+      display: block;
+      width: 100%;
+    }
+
+    .nav-link {
+      padding: 0.75rem 1rem;
+      border-radius: 0.25rem;
+      margin: 0.25rem 0;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .navbar-nav {
+    align-items: center !important;
+
+    .btn-group {
+      margin: 1rem 0;
+    }
+  }
+
+  // Center dropdown on mobile
+  .nav-item.dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+  }
+
+  .onboarding-dropdown-menu {
+    right: auto !important;
+    margin-top: 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .onboarding-dropdown-menu.show {
+  }
+}
+
+/* Transition scale classes for dropdown animation */
+
+.transition-all {
+  transition-property: all;
+}
+
+.duration-200 {
+  transition-duration: 200ms;
+}
+
+.duration-150 {
+  transition-duration: 150ms;
+}
+
+.scale-95 {
+  transform: scale(0.95);
+}
+
+.scale-100 {
+  transform: scale(1);
 }

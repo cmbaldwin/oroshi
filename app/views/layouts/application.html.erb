@@ -47,7 +47,7 @@
     <%= yield :head %>
 </head>
 
-<body data-spy="scroll" class="d-flex flex-column h-100">
+<body data-spy="scroll" class="d-flex flex-column h-100" data-oroshi-mount-path="<%= oroshi_mount_path %>">
     <%= render partial: 'layouts/shared/navbar' %>
 
     <main class="flex-shrink-0">
@@ -58,9 +58,7 @@
 
         <%= yield %>
 
-        <% if user_signed_in? %>
-        <%= render partial: 'oroshi/onboarding/checklist_sidebar' %>
-        <% end %>
+        <%# Onboarding checklist is now in navbar dropdown %>
 
         <% if user_signed_in? && !current_user.approved? %>
         <div class="container m-3">

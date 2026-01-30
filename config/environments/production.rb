@@ -140,21 +140,7 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
-  # Configure Solid Cache database connection for production
-  # Skip during asset precompilation when database may not be available
-  if !ENV.fetch('SECRET_KEY_BASE_DUMMY', nil) && config.respond_to?(:solid_cache)
-    config.solid_cache.connects_to = { database: { writing: :cache } }
-  end
-
-  # Configure Solid Cable database connection for production
-  # Skip during asset precompilation when database may not be available
-  if !ENV.fetch('SECRET_KEY_BASE_DUMMY', nil) && config.respond_to?(:solid_cable)
-    config.solid_cable.connects_to = { database: { writing: :cable } }
-  end
-
-  # Configure Solid Queue database connection for production
-  # Skip during asset precompilation when database may not be available
-  if !ENV.fetch('SECRET_KEY_BASE_DUMMY', nil) && config.respond_to?(:solid_queue)
-    config.solid_queue.connects_to = { database: { writing: :queue } }
-  end
+  # Solid Cache, Solid Cable, and Solid Queue database connections are configured
+  # via the parent app's database.yml (cache:, cable:, queue: entries)
+  # Do NOT set connects_to here — it conflicts with database.yml multi-db config in Rails 8.1
 end

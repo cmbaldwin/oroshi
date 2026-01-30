@@ -29,24 +29,9 @@ module Oroshi
       g.factory_bot dir: "test/factories"
     end
 
-    # Configure Solid Queue
-    initializer "oroshi.solid_queue" do |app|
-      # Configure production queue connection
-      if Rails.env.production?
-        config.solid_queue.connects_to = {
-          database: { writing: :queue }
-        }
-      end
-    end
-
-    # Configure Solid Cache
-    initializer "oroshi.solid_cache" do |app|
-      if Rails.env.production?
-        config.solid_cache.connects_to = {
-          database: { writing: :cache }
-        }
-      end
-    end
+    # Solid Queue and Solid Cache database connections are configured
+    # via the parent app's database.yml (queue: and cache: entries)
+    # Do NOT set connects_to here — it conflicts with database.yml multi-db config in Rails 8.1
 
     # Solid Cable is configured via cable.yml (no config accessor available)
     # See parent app's config/cable.yml for configuration

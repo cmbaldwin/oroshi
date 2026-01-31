@@ -490,6 +490,10 @@ config.active_record.default_timezone = :utc
 9. **Gem Initialization Order**: Wrap gem configs in `if defined?(GemName)` to avoid db:create/migrate errors
 10. **Migration Execution**: Use `db:schema:load` for demo apps to avoid loading models during migration
 11. **Exit Code ≠ Success**: In bash scripts, intermediate command failures may not propagate without `set -e -u -o pipefail`
+12. **`connects_to` conflict (Rails 8.1+)**: Never set `config.solid_queue.connects_to` or `config.solid_cache.connects_to` in `production.rb` when using multi-database `database.yml`. Rails treats both as duplicate specifications and raises `ArgumentError`.
+13. **Zeitwerk vs Generators**: The engine adds `lib/` to autoload paths but MUST exclude `lib/generators/` and `lib/tasks/` via `Rails.autoloaders.main.ignore()` — generators follow Rails naming, not Zeitwerk conventions.
+14. **Gemfile conditional logic**: Do NOT use `if ENV["DOCKER_BUILD"]` conditionals in the Gemfile for switching between path and git sources. This causes lockfile mismatches. Use Kamal hooks to swap the source at deploy time instead.
+15. **Platform lockfile**: When deploying from arm64 (Apple Silicon) to amd64 servers, run `bundle lock --add-platform x86_64-linux` and commit the lockfile.
 
 ## Troubleshooting
 
@@ -782,17 +786,15 @@ sandbox/                    # Generated demo app (not committed)
 
 ## Deployment
 
-**Note:** Deployment configuration should be set up in your parent application. Oroshi is a Rails engine gem and does not include deployment tooling.
+Deployment is configured in parent applications. See [README.md § Deployment](README.md#deployment) for the full Kamal guide based on the [oroshi.moab.jp](https://oroshi.moab.jp) production deployment.
 
-For production deployment, configure your parent app with your preferred deployment strategy (Kamal, Capistrano, Heroku, etc.).
+**Key production patterns:**
 
-**Key requirements for production:**
-
-- PostgreSQL 16 with 4-database setup (primary, queue, cache, cable)
-- Background job processing (Solid Queue)
-- Asset compilation (Tailwind CSS + Propshaft)
-- Email delivery (configure Action Mailer)
-- File storage (configure Active Storage)
+- Use Kamal pre-build/post-deploy hooks to swap Gemfile between local path and git source
+- Define all 4 databases in `database.yml` — do NOT also set `connects_to` in `production.rb`
+- Create `db/production_setup.sql` for additional database creation on first PostgreSQL boot
+- Run `bundle lock --add-platform x86_64-linux` when deploying from arm64 to amd64
+- The engine excludes `lib/generators/` and `lib/tasks/` from Zeitwerk autoloading
 
 ## Resources
 
@@ -804,7 +806,7 @@ For production deployment, configure your parent app with your preferred deploym
 
 ---
 
-**Last Updated:** January 11, 2026
+**Last Updated:** January 31, 2026
 **Rails Version:** 8.1.1
 **Ruby Version:** 4.0.0
 **Test Coverage:** 539+ examples

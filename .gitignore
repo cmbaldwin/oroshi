@@ -48,8 +48,10 @@ seeds.rb
 /sorbet
 *.pdf
 tapioca
-/app/assets/builds/*
-!/app/assets/builds/.keep
+# NOTE: Engine commits compiled CSS so parent apps get it via git.
+# dartsass:build compiles SCSS during development; output is committed.
+# /app/assets/builds/*
+# !/app/assets/builds/.keep
 
 /config/credentials/development.key
 

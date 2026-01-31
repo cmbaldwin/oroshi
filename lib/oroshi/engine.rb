@@ -36,12 +36,16 @@ module Oroshi
     # Solid Cable is configured via cable.yml (no config accessor available)
     # See parent app's config/cable.yml for configuration
 
-    # Configure autoload paths
+    # Configure autoload paths (exclude generators — they use Rails naming, not Zeitwerk)
     initializer "oroshi.autoload", before: :set_autoload_paths do |app|
       config.autoload_paths << root.join("lib")
       config.autoload_paths << root.join("lib/printables")
       config.eager_load_paths << root.join("lib")
       config.eager_load_paths << root.join("lib/printables")
+
+      # Exclude generators and tasks from Zeitwerk autoloading
+      Rails.autoloaders.main.ignore(root.join("lib/generators"))
+      Rails.autoloaders.main.ignore(root.join("lib/tasks"))
     end
 
     # Configure i18n

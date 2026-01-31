@@ -1,150 +1,122 @@
-# Oroshi - Wholesale Order Management Rails Engine
+# Oroshi - 卸売注文管理 Rails エンジン
 
-> **⚠️ Development Status**: This project is under heavy active development. The sandbox currently works but has lots of bugs that are being worked through slowly.
->
-> **Most Stable Version**: For the most stable version, use the branch before gemification at commit `13265f7ca5e642163e1c072dc9b88283983ad693` ("Merge branch 'ralph/user-onboarding'")
+日本の食品流通ビジネス向けに構築された、Ruby on Rails 8.1.1 による包括的な卸売注文管理システム Rails エンジン Gem。
 
-A comprehensive wholesale order management system packaged as a Rails engine gem. Built with Ruby on Rails 8.1.1 for Japanese food distribution businesses.
+## 機能
 
-## Features
+- **注文管理**: 作成から履行までの完全な注文ライフサイクル
+- **仕入追跡**: マルチユーザーによる仕入入力と検証
+- **帳票生成**: 請求書、梱包リスト、レポートの自動生成（日本語フォント対応 PDF）
+- **リアルタイム更新**: Solid Cable によるライブ注文更新（Turbo Streams）
+- **バックグラウンドジョブ**: メール配信と非同期処理（Solid Queue）
+- **顧客管理**: 配送先住所追跡を含むアカウント管理
+- **マルチデータベースアーキテクチャ**: プライマリ、キュー、キャッシュ、ケーブル用の分離されたデータベース
+- **日本語ファースト設計**: 完全な日本語ローカライゼーション（i18n）と Asia/Tokyo タイムゾーン
 
-- **Order Management**: Complete order lifecycle from creation to fulfillment
-- **Supply Tracking**: Multi-user supply entry and verification
-- **Document Generation**: Automated invoices, packing lists, and reports (PDF with Japanese fonts)
-- **Real-time Updates**: Turbo Streams with Solid Cable for live order updates
-- **Background Jobs**: Solid Queue for email delivery and async processing
-- **Customer Management**: Account management with delivery address tracking
-- **Multi-Database Architecture**: Separated databases for primary, queue, cache, and cable
-- **Japanese-First Design**: Complete Japanese localization (i18n) with Asia/Tokyo timezone
-
-## Tech Stack
+## 技術スタック
 
 - **Ruby** 4.0.0
 - **Rails** 8.1.1
-- **Database**: PostgreSQL 16 (4-database architecture)
-- **Testing**: Minitest (539 passing examples)
-- **Background Jobs**: Solid Queue
-- **Real-time**: Solid Cable (WebSockets via PostgreSQL)
-- **Caching**: Solid Cache
-- **Authentication**: Devise
-- **Frontend**: Hotwire (Turbo + Stimulus) + Bootstrap 5
-- **Assets**: Propshaft + Importmap (no Node.js required)
-- **PDF Generation**: Prawn with Japanese fonts (MPLUS1p, Sawarabi, TakaoPMincho)
+- **データベース**: PostgreSQL 16（4 データベース構成）
+- **テスト**: Minitest（539 テスト成功）
+- **バックグラウンドジョブ**: Solid Queue
+- **リアルタイム**: Solid Cable（PostgreSQL 経由 WebSockets）
+- **キャッシュ**: Solid Cache
+- **認証**: Devise
+- **フロントエンド**: Hotwire（Turbo + Stimulus）+ Bootstrap 5
+- **アセット**: Propshaft + Importmap（Node.js 不要）
+- **PDF 生成**: Prawn（日本語フォント：MPLUS1p、Sawarabi、TakaoPMincho）
 
-## Quick Start (3 Commands)
+## クイックスタート（3 コマンド）
 
-### For New Rails Applications
+### 新規 Rails アプリケーションの場合
 
 ```bash
-# 1. Create a new Rails app
+# 1. 新規Railsアプリを作成
 rails new my_oroshi_app --database=postgresql
 cd my_oroshi_app
 
-# 2. Add Oroshi gem and install
-echo 'gem "oroshi", path: "path/to/oroshi"' >> Gemfile  # Or gem "oroshi" for published gem
+# 2. Oroshi gemを追加してインストール
+echo 'gem "oroshi", path: "path/to/oroshi"' >> Gemfile  # または公開gem用: gem "oroshi"
 bundle install
 rails generate oroshi:install
 
-# 3. Setup and start
+# 3. セットアップして起動
 bin/rails db:setup
 bin/rails server
 ```
 
-Visit http://localhost:3000 and sign in with the demo admin account.
+http://localhost:3000 にアクセスして、デモ管理者アカウントでサインインします。
 
-### For Existing Rails Applications
+### 既存 Rails アプリケーションの場合
 
 ```bash
-# 1. Add to Gemfile
-gem "oroshi", path: "path/to/oroshi"  # Or gem "oroshi" for published gem
+# 1. Gemfileに追加
+gem "oroshi", path: "path/to/oroshi"  # または公開gem用: gem "oroshi"
 bundle install
 
-# 2. Run install generator
+# 2. インストールジェネレータを実行
 rails generate oroshi:install
 
-# 3. Setup databases
+# 3. データベースをセットアップ
 bin/rails db:create db:migrate
 bin/rails db:schema:load:queue
 bin/rails db:schema:load:cache
 bin/rails db:schema:load:cable
 
-# 4. (Optional) Seed demo data
+# 4. （オプション）デモデータを投入
 bin/rails db:seed
 
-# 5. Verify installation (optional but recommended)
-bin/rails oroshi:verify_installation
-
-# 6. Start server
+# 5. サーバーを起動
 bin/rails server
 ```
 
-## Verifying Installation
+## インストール詳細
 
-After installation, you can verify everything is set up correctly:
+### インストールジェネレータの動作内容
 
-```bash
-bin/rails oroshi:verify_installation
-```
+`rails generate oroshi:install` を実行すると以下が行われます：
 
-This command checks:
-- ✓ Engine is mounted in routes
-- ✓ Initializer exists
-- ✓ Root route is defined
-- ✓ All 4 databases are configured
-- ✓ Migrations have been run
-- ✓ Solid Queue/Cache/Cable schemas are loaded
-- ✓ User model is configured
+1. **Oroshi イニシャライザを作成**（`config/initializers/oroshi.rb`）
 
-If all checks pass, you'll see:
+   - タイムゾーン、ロケール、ドメインを設定
 
-```
-🎉 All checks passed! Oroshi is properly installed and configured.
-```
+2. **User モデルを作成**（`app/models/user.rb`）
 
-If any checks fail, the command provides specific instructions on how to fix each issue.
+   - Devise ベースの認証
+   - ロールベースアクセス（user、vip、admin、supplier、employee）
 
-## Installation Details
+3. **Oroshi エンジンをマウント**（routes）
 
-### What the Install Generator Does
+   - すべての Oroshi ルートを "/" で利用可能に
 
-Running `rails generate oroshi:install` will:
+4. **マイグレーションをコピー**（エンジンから）
 
-1. **Create Oroshi initializer** (`config/initializers/oroshi.rb`)
-   - Configures timezone, locale, and domain
+   - すべての Oroshi モデルとアソシエーション
 
-2. **Create User model** (`app/models/user.rb`)
-   - Devise-based authentication
-   - Role-based access (user, vip, admin, supplier, employee)
+5. **Solid スキーマをコピー**（queue、cache、cable）
+   - バックグラウンドジョブ、キャッシング、WebSocket 用のデータベーススキーマ
 
-3. **Mount Oroshi engine** in routes
-   - Makes all Oroshi routes available at "/"
+### 設定
 
-4. **Copy migrations** from the engine
-   - All Oroshi models and associations
-
-5. **Copy Solid schemas** (queue, cache, cable)
-   - Database schemas for background jobs, caching, and WebSockets
-
-### Configuration
-
-After installation, configure Oroshi in `config/initializers/oroshi.rb`:
+インストール後、`config/initializers/oroshi.rb` で Oroshi を設定します：
 
 ```ruby
 Oroshi.configure do |config|
-  # Application timezone (Japanese time zone by default)
+  # アプリケーションタイムゾーン（デフォルトは日本時間）
   config.time_zone = "Asia/Tokyo"
 
-  # Default locale (Japanese by default)
+  # デフォルトロケール（デフォルトは日本語）
   config.locale = :ja
 
-  # Application domain (for URL generation)
+  # アプリケーションドメイン（URL生成用）
   config.domain = ENV.fetch("OROSHI_DOMAIN", "localhost")
 end
 ```
 
-### Multi-Database Setup
+### マルチデータベース設定
 
-Oroshi requires a 4-database PostgreSQL setup. Update `config/database.yml`:
+Oroshi には 4 データベースの PostgreSQL 設定が必要です。`config/database.yml` を更新します：
 
 ```yaml
 development:
@@ -165,485 +137,498 @@ development:
     migrations_paths: db/cable_migrate
 ```
 
-## Troubleshooting
+## サンドボックスアプリケーション
 
-### Common Installation Issues
-
-#### "No route matches" errors after installation
-
-**Problem:** Getting 404 errors or "No route matches" when visiting `/oroshi` or other routes.
-
-**Solutions:**
-1. **Verify engine is mounted** in `config/routes.rb`:
-   ```ruby
-   mount Oroshi::Engine, at: "/oroshi"  # Or at: "/"
-   ```
-
-2. **Check that root route exists** if using `main_app.root_path`:
-   ```ruby
-   root "oroshi/dashboard#index"  # or any other controller
-   ```
-
-3. **Restart Rails server** after running the installer
-
-#### Asset loading failures (CSS/JavaScript not loading)
-
-**Problem:** Styles or JavaScript not working after installation.
-
-**Solutions:**
-1. **Check asset pipeline configuration** in `config/application.rb`:
-   ```ruby
-   config.assets.paths << Oroshi::Engine.root.join("app/assets")
-   ```
-
-2. **Verify Propshaft is configured** (not Sprockets):
-   ```ruby
-   # Gemfile should have:
-   gem "propshaft"
-   ```
-
-3. **Restart server** after changing asset configuration
-
-4. **Check browser console** for specific asset loading errors
-
-#### Database connection errors
-
-**Problem:** "ActiveRecord::StatementInvalid" or "PG::ConnectionBad" errors.
-
-**Solutions:**
-1. **Verify all 4 databases are created**:
-   ```bash
-   bin/rails db:create
-   psql -l | grep my_app  # Should show 4 databases
-   ```
-
-2. **Check database.yml configuration** includes all 4 databases (primary, queue, cache, cable)
-
-3. **Verify PostgreSQL is running**:
-   ```bash
-   pg_isready
-   brew services list | grep postgresql  # macOS with Homebrew
-   ```
-
-4. **Load Solid schemas** if migrations succeeded but Solid gems fail:
-   ```bash
-   bin/rails db:schema:load:queue
-   bin/rails db:schema:load:cache
-   bin/rails db:schema:load:cable
-   ```
-
-#### "Table does not exist" errors for solid_* tables
-
-**Problem:** Errors like "PG::UndefinedTable: ERROR:  relation 'solid_queue_jobs' does not exist"
-
-**Solution:**
-```bash
-# Load the Solid schemas
-bin/rails db:schema:load:queue
-bin/rails db:schema:load:cache
-bin/rails db:schema:load:cable
-```
-
-**Why this happens:** Solid Queue/Cache/Cable use separate databases with their own schemas. These must be loaded separately from main migrations.
-
-#### Devise errors ("devise_for :users not found")
-
-**Problem:** "undefined method `devise_for'" or Devise routes not working.
-
-**Solutions:**
-1. **Install Devise** if not already present:
-   ```bash
-   bundle add devise
-   rails generate devise:install
-   ```
-
-2. **Run installer again** with Devise installed:
-   ```bash
-   rails generate oroshi:install
-   ```
-
-3. **Manually add Devise routes** if needed:
-   ```ruby
-   # config/routes.rb
-   devise_for :users
-   ```
-
-#### User model conflicts
-
-**Problem:** "User model already exists" or authentication errors.
-
-**Solutions:**
-1. **Skip user model generation** if you have an existing User model:
-   ```bash
-   rails generate oroshi:install --skip-user-model
-   ```
-
-2. **Ensure your User model has required Devise modules**:
-   ```ruby
-   class User < ApplicationRecord
-     devise :database_authenticatable, :registerable,
-            :recoverable, :rememberable, :validatable,
-            :confirmable, :trackable
-     
-     # Required enum for Oroshi
-     enum role: { user: 0, vip: 1, admin: 2, supplier: 3, employee: 4 }
-   end
-   ```
-
-#### "uninitialized constant Oroshi::" errors
-
-**Problem:** Getting constant loading errors for Oroshi models or controllers.
-
-**Solutions:**
-1. **Restart Rails server** to reload autoload paths
-
-2. **Check Zeitwerk is configured correctly**:
-   ```ruby
-   # config/application.rb
-   config.autoload_paths += Dir[Oroshi::Engine.root.join("app/*/")]
-   ```
-
-3. **Verify gem is properly installed**:
-   ```bash
-   bundle show oroshi
-   ```
-
-#### Background jobs not processing
-
-**Problem:** Emails not sending or jobs stuck in queue.
-
-**Solutions:**
-1. **Start Solid Queue worker**:
-   ```bash
-   bin/jobs  # Or bin/rails solid_queue:start
-   ```
-
-2. **Check queue database is accessible**:
-   ```bash
-   bin/rails dbconsole -d queue
-   ```
-
-3. **Verify recurring.yml is present** in config directory
-
-4. **Check logs** for job errors:
-   ```bash
-   tail -f log/development.log
-   ```
-
-#### WebSocket/Turbo Streams not working
-
-**Problem:** Real-time updates not appearing.
-
-**Solutions:**
-1. **Verify cable database is loaded**:
-   ```bash
-   bin/rails db:schema:load:cable
-   ```
-
-2. **Check Action Cable is configured**:
-   ```ruby
-   # config/cable.yml should have:
-   development:
-     adapter: solid_cable
-     connects_to:
-       database:
-         writing: cable
-   ```
-
-3. **Restart server** to reinitialize Action Cable
-
-### Getting Help
-
-If you encounter issues not covered here:
-
-1. **Check logs** first: `log/development.log` or `log/production.log`
-2. **Search existing issues**: https://github.com/cmbaldwin/oroshi/issues
-3. **Create new issue** with:
-   - Ruby version (`ruby -v`)
-   - Rails version (`rails -v`)
-   - Error message (full stack trace)
-   - Steps to reproduce
-   - Your database.yml configuration (sanitized)
-
-## Sandbox Application
-
-A fully-functional demo application can be generated for testing and development:
+テストと開発用の完全機能デモアプリケーションを生成できます：
 
 ```bash
-# Generate sandbox application
+# サンドボックスアプリケーションを生成
 bin/sandbox
 
-# Start the sandbox
+# サンドボックスを起動
 cd sandbox
 bin/dev
 ```
 
-**Important:** Always use `bin/dev` (not `bin/rails server`) to ensure CSS compilation runs alongside the web server.
+**重要**: CSS コンパイルが Web サーバーと並行して実行されるよう、必ず `bin/dev`（`bin/rails server` ではなく）を使用してください。
 
-The sandbox demonstrates complete Oroshi integration with:
+サンドボックスは以下を含む完全な Oroshi 統合をデモンストレーションします：
 
-- **3 demo users** (admin, VIP, regular) - all password: `password123`
-- **Complete master data** (suppliers, products, buyers, shipping methods)
-- **Multi-database setup** (primary, queue, cache, cable)
-- **Bootstrap 5 CDN** (no build step required)
-- **Propshaft** asset serving (no complex pipeline)
-- **Minimal configuration** (generated automatically)
+- **3 人のデモユーザー**（管理者、VIP、一般）- すべてパスワード: `password123`
+- **完全なマスターデータ**（仕入先、商品、得意先、配送方法）
+- **マルチデータベース設定**（primary、queue、cache、cable）
+- **Bootstrap 5 CDN**（ビルドステップ不要）
+- **Propshaft** アセット配信（複雑なパイプラインなし）
+- **最小限の設定**（自動生成）
 
-### How Sandbox Creation Works
+### サンドボックス作成の仕組み
 
-The sandbox script uses a carefully orchestrated process to avoid initialization errors:
+サンドボックススクリプトは初期化エラーを避けるため、慎重にオーケストレーションされたプロセスを使用します：
 
-1. **Generates Rails app** in temporary directory (to avoid "Rails within Rails" errors)
-2. **Installs Oroshi gem** and dependencies
-3. **Creates conditional initializers** (wrapped in `if defined?` checks)
-4. **Copies migrations** directly from engine
-5. **Creates minimal User model** (for migration compatibility)
-6. **Uses schema:load** instead of db:migrate (avoids migration code execution issues)
-7. **Replaces with full User model** after database setup
-8. **Seeds demo data** with realistic examples
+1. **一時ディレクトリに Rails アプリを生成**（"Rails 内の Rails"エラーを回避）
+2. **Oroshi gem と依存関係をインストール**
+3. **条件付きイニシャライザを作成**（`if defined?` チェックでラップ）
+4. **マイグレーションをエンジンから直接コピー**
+5. **最小限の User モデルを作成**（マイグレーション互換性のため）
+6. **db:migrate の代わりに schema:load を使用**（マイグレーションコード実行の問題を回避）
+7. **データベースセットアップ後に完全な User モデルに置換**
+8. **リアルな例でデモデータを投入**
 
-This approach ensures reliable sandbox creation even when gems have complex initialization requirements.
+このアプローチにより、複雑な初期化要件を持つ gem でも確実なサンドボックス作成が保証されます。
 
-### Demo Accounts
+### デモアカウント
 
-- **Admin**: `admin@oroshi.local` / `password123` - Full system access
-- **VIP**: `vip@oroshi.local` / `password123` - Dashboard and orders
-- **Regular**: `user@oroshi.local` / `password123` - Limited access
+- **管理者**: `admin@oroshi.local` / `password123` - 全システムアクセス
+- **VIP**: `vip@oroshi.local` / `password123` - ダッシュボードと注文
+- **一般**: `user@oroshi.local` / `password123` - 限定アクセス
 
-### Sandbox Commands
+### サンドボックスコマンド
 
 ```bash
-bin/sandbox              # Create sandbox (default)
-bin/sandbox reset        # Destroy and recreate
-bin/sandbox destroy      # Remove sandbox
-bin/sandbox help         # Show all commands
+bin/sandbox              # サンドボックス作成（デフォルト）
+bin/sandbox reset        # 破棄して再作成
+bin/sandbox destroy      # サンドボックスを削除
+bin/sandbox help         # すべてのコマンドを表示
 
-# Use different database
-DB=mysql bin/sandbox     # Create with MySQL instead of PostgreSQL
+# 異なるデータベースを使用
+DB=mysql bin/sandbox     # PostgreSQLの代わりにMySQLで作成
 ```
 
-## Onboarding
+## オンボーディング
 
-New users are guided through a step-by-step onboarding wizard to set up:
+新規ユーザーは以下の設定をステップバイステップのオンボーディングウィザードでガイドされます：
 
-1. **Company Information** - Business details and invoice settings
-2. **Supply Chain** - Reception times, supplier organizations, suppliers, supply types
-3. **Sales** - Buyers and products with variations
-4. **Shipping** - Organizations, methods, receptacles, and order categories
+1. **会社情報** - ビジネス詳細と請求書設定
+2. **サプライチェーン** - 受付時間、仕入先組織、仕入先、仕入タイプ
+3. **販売** - 得意先とバリエーション付き商品
+4. **配送** - 組織、方法、容器、注文カテゴリー
 
-The wizard can be skipped and resumed later via a persistent checklist sidebar.
+ウィザードはスキップ可能で、永続的なチェックリストサイドバーから後で再開できます。
 
-## Development
+## 開発
 
-### Running Tests
+### テストの実行
 
 ```bash
-# Run full test suite (539 examples)
+# 完全なテストスイートを実行（539例）
 bin/rails test
 
-# Run specific test file
+# 特定のテストファイルを実行
 bin/rails test test/models/oroshi/order_test.rb
 
-# Run system tests
+# システムテストを実行
 bin/rails test:system
 
-# Run sandbox end-to-end test (creates real sandbox, tests it, destroys it)
+# サンドボックスエンドツーエンドテスト（実際のサンドボックスを作成、テスト、破棄）
 rake sandbox:test
 ```
 
-**Note:** The E2E test takes 2-3 minutes as it creates a complete sandbox, starts a server, runs browser-based user journey tests, and cleans up.
+**注意**: E2E テストは完全なサンドボックスの作成、サーバー起動、ブラウザベースのユーザージャーニーテスト実行、クリーンアップを行うため、2〜3 分かかります。
 
-See [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) for complete E2E testing documentation.
+完全な E2E テストドキュメントは [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) を参照してください。
 
-### Code Quality
+### コード品質
 
 ```bash
-# Linting
+# リンティング
 bundle exec rubocop
 
-# Security scan
+# セキュリティスキャン
 bundle exec brakeman
 ```
 
-## Deployment
+## デプロイメント
 
-Deployment configuration should be set up in your parent application. Oroshi is a Rails engine gem and does not include deployment tooling.
+Oroshi は Rails エンジン gem であり、デプロイメントは親アプリケーションで設定します。以下は [oroshi.moab.jp](https://oroshi.moab.jp) の本番デプロイメントに基づく Kamal 2 を使用した完全ガイドです。
 
-For production deployment, configure your parent app with your preferred deployment strategy (Kamal, Capistrano, Heroku, etc.).
+### 前提条件（ユーザー側の準備）
 
-**Key requirements for production:**
+デプロイ前に以下を自分で準備する必要があります：
 
-- PostgreSQL 16 with 4-database setup (primary, queue, cache, cable)
-- Background job processing (Solid Queue)
-- Asset compilation (Tailwind CSS)
-- Email delivery (configure Action Mailer)
-- File storage (configure Active Storage)
+- **サーバー** — SSH アクセスと Docker がインストールされたもの（例: Hetzner、DigitalOcean、AWS EC2）
+- **コンテナレジストリ** — AWS ECR、Docker Hub、GitHub Container Registry など
+- **ドメイン** — サーバーに向けた DNS A レコード
+- **SSL 証明書** — Kamal proxy 経由の Let's Encrypt、または Cloudflare オリジン証明書
+- **Rails 認証情報** — `bin/rails credentials:edit` で設定済みの `RAILS_MASTER_KEY`
+- **Kamal インストール済み** — `gem install kamal` と `.kamal/secrets` にシークレットを設定
+- **Action Mailer** — メール配信の設定（SMTP、Resend など）
+- **Active Storage** — ファイルアップロードの設定（ローカルディスク、S3 など）
+- **oroshi gem リポジトリ** — Docker がフェッチできるよう GitHub（または他の Git ホスト）にプッシュ済み
 
-## Architecture
+### 本番環境の要件
 
-### Engine Structure
+- 4 データベース設定の PostgreSQL 16（primary、queue、cache、cable）
+- バックグラウンドジョブ処理（Solid Queue）
+- アセットコンパイル（Propshaft + Tailwind CSS）
+- `linux/amd64` プラットフォームサポートの Docker
 
-Oroshi uses Rails engine architecture with namespace isolation:
+### Kamal によるデプロイ
 
-- **Models**: All namespaced under `Oroshi::` (e.g., `Oroshi::Order`, `Oroshi::Buyer`)
-- **Tables**: Prefixed with `oroshi_` (e.g., `oroshi_orders`, `oroshi_buyers`)
-- **Routes**: Engine routes mounted in host application (see [Route Architecture](#route-architecture))
-- **User Model**: Lives at application level (NOT namespaced) for flexibility
+#### 1. Gemfile の設定
 
-### Route Architecture
-
-Oroshi uses the **single route file pattern** standard for Rails engines:
-
-```
-config/routes.rb                    # Engine routes (Oroshi::Engine.routes.draw)
-test/dummy/config/routes.rb         # Test app routes (mounts engine)
-sandbox/config/routes.rb            # Generated sandbox routes (mounts engine)
-```
-
-**Key Principle**: The engine's `config/routes.rb` uses `Oroshi::Engine.routes.draw` (NOT `Rails.application.routes.draw`). This ensures proper engine isolation and allows parent applications to control where the engine is mounted.
-
-**Parent Application Setup:**
+開発時はローカルパスを使用。Kamal フックがデプロイ時に自動的に git ソースに切り替えます：
 
 ```ruby
-# Parent app's config/routes.rb
-Rails.application.routes.draw do
-  devise_for :users                           # Devise routes at /users/*
-  mount Oroshi::Engine, at: "/oroshi"         # Engine routes at /oroshi/*
-  root "home#index"                           # Required for main_app.root_path
-end
+# Gemfile
+gem "oroshi", path: "../oroshi"
 ```
 
-**Route Helpers:**
+**Gemfile で条件分岐ロジックを使用しないでください**（`if ENV["DOCKER_BUILD"]`）— 環境間でロックファイルの不一致が発生します。代わりに pre-build/post-deploy フックを使用します（手順 5 参照）。
 
-| Context | Engine Routes | Parent App Routes |
-|---------|---------------|-------------------|
-| Engine views/controllers | `oroshi_orders_path` | `main_app.root_path` |
-| Parent app views/controllers | `oroshi.orders_path` | `root_path` |
-
-**Critical Requirements:**
-1. Parent apps MUST provide Devise routes (`devise_for :users`)
-2. Parent apps MUST define a root route if engine uses `main_app.root_path`
-3. Engine routes use `Oroshi::Engine.routes.draw`, never `Rails.application.routes.draw`
-
-See [Engine Isolation & Routing](#engine-isolation--routing) in CLAUDE.md for detailed patterns.
-
-### Multi-Database Architecture
-
-Four PostgreSQL databases for separation of concerns:
-
-1. **Primary** - Main application data (44 models)
-2. **Queue** - Solid Queue background jobs
-3. **Cache** - Solid Cache entries
-4. **Cable** - Solid Cable WebSocket messages
-
-### Background Jobs
-
-Five Solid Queue jobs handle async operations:
-
-- `Oroshi::MailerJob` - Email delivery (recurring every 10 minutes)
-- `Oroshi::InvoiceJob` - PDF invoice generation
-- `Oroshi::InvoicePreviewJob` - Invoice previews
-- `Oroshi::OrderDocumentJob` - Order document PDFs
-- `Oroshi::SupplyCheckJob` - Supply verification PDFs
-
-### Frontend Styling
-
-- **Bootstrap 5**: Primary UI framework
-- **Custom Theme**: Oroshi brand colors defined in `app/assets/stylesheets/funabiki.scss`
-- **Component Standards**: See [docs/BOOTSTRAP_COMPONENTS.md](docs/BOOTSTRAP_COMPONENTS.md)
-
-**IMPORTANT**: All styling must use Bootstrap 5 utility classes or application stylesheets. Inline styles (`style="..."`) are **strictly prohibited**.
-
-Button examples:
-
-```erb
-<!-- Primary action -->
-<%= button_tag "Submit", class: "btn btn-primary" %>
-
-<!-- Secondary action -->
-<%= link_to "Back", previous_path, class: "btn btn-secondary" %>
-
-<!-- Less prominent action -->
-<%= link_to "Skip", skip_path, class: "btn btn-outline-secondary" %>
-```
-
-## Documentation
-
-### Main Documentation
-
-- [README.md](README.md) - This file
-- [docs/archives/](docs/archives/) - Archived documentation and research
-
-### Technical Guides
-
-- [docs/TURBO.md](docs/TURBO.md) - Hotwire Turbo patterns
-- [docs/STIMULUS.md](docs/STIMULUS.md) - Stimulus controller patterns
-- [docs/ACTION_CABLE.md](docs/ACTION_CABLE.md) - WebSocket implementation
-- [docs/BOOTSTRAP_COMPONENTS.md](docs/BOOTSTRAP_COMPONENTS.md) - Bootstrap component standards
-- [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) - End-to-end sandbox testing
-
-## Generators
-
-### Install Generator
-
-Sets up Oroshi in your Rails application.
+Apple Silicon（arm64）で amd64 サーバー向けにビルドする場合、プラットフォームをロックファイルに追加：
 
 ```bash
-rails generate oroshi:install [options]
-
-Options:
-  --skip-migrations    Skip copying migrations
-  --skip-devise        Skip Devise setup
-  --skip-user-model    Skip User model generation
+bundle lock --add-platform x86_64-linux
 ```
 
-See [Installation Details](#installation-details) section for what the generator creates.
+#### 2. データベース設定
 
-## Browser Requirements
+**`config/database.yml`** — 各環境で 4 つのデータベースを定義：
 
-Oroshi requires modern browsers supporting:
+```yaml
+production:
+  primary: &primary_production
+    <<: *default
+    database: <%= ENV["POSTGRES_DB"] || "myapp_production" %>
+    username: <%= ENV["POSTGRES_USER"] || "myapp" %>
+    password: <%= ENV["POSTGRES_PASSWORD"] %>
+    host: <%= ENV["DB_HOST"] %>
+    port: <%= ENV["DB_PORT"] || 5432 %>
+  cache:
+    <<: *primary_production
+    database: myapp_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: myapp_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: myapp_production_cable
+    migrations_paths: db/cable_migrate
+```
 
-- WebP images
-- Web push notifications
+**`config/cable.yml`** — 本番環境の Solid Cable 設定：
+
+```yaml
+production:
+  adapter: solid_cable
+  connects_to:
+    database:
+      writing: cable
+  polling_interval: 0.1.seconds
+  message_retention: 1.day
+```
+
+**`config/environments/production.rb`** — キャッシュストアとジョブアダプタを設定。ただし `connects_to` は設定**しない**：
+
+```ruby
+config.cache_store = :solid_cache_store
+config.active_job.queue_adapter = :solid_queue
+# ここに solid_queue.connects_to や solid_cache.connects_to を追加しないでください。
+# database.yml のマルチデータベースエントリが自動的に処理します。
+# 両方設定すると: ArgumentError: You can only specify one of :database, :databases, or :connects_to
+```
+
+#### 3. データベース初期化 SQL
+
+PostgreSQL コンテナ初回起動時に追加データベースを作成する `db/production_setup.sql` を作成：
+
+```sql
+-- メインデータベース（POSTGRES_DB）とユーザー（POSTGRES_USER）作成後に実行される
+
+CREATE DATABASE myapp_production_cache;
+CREATE DATABASE myapp_production_queue;
+CREATE DATABASE myapp_production_cable;
+
+GRANT ALL PRIVILEGES ON DATABASE myapp_production_cache TO myapp;
+GRANT ALL PRIVILEGES ON DATABASE myapp_production_queue TO myapp;
+GRANT ALL PRIVILEGES ON DATABASE myapp_production_cable TO myapp;
+```
+
+> **注意:** この SQL はコンテナ初回起動時（データボリュームが空の場合）のみ実行されます。既存の PostgreSQL アクセサリーの場合は `kamal accessory exec db` で手動作成してください。
+
+#### 4. Kamal deploy.yml
+
+```yaml
+service: myapp
+image: myorg/myapp
+
+servers:
+  web:
+  - 1.2.3.4
+  job:
+    hosts:
+    - 1.2.3.4
+    cmd: bin/rails solid_queue:start
+
+proxy:
+  host: myapp.example.com
+  ssl: true            # Cloudflare の場合は certificate_pem/private_key_pem を指定
+  forward_headers: true
+
+registry:
+  server: your.registry.example.com
+  username: YOUR_USER
+  password:
+  - REGISTRY_PASSWORD
+
+env:
+  secret:
+  - RAILS_MASTER_KEY
+  - POSTGRES_PASSWORD
+  clear:
+    SOLID_QUEUE_IN_PUMA: true
+    DB_HOST: myapp-db
+    DB_PORT: 5432
+    POSTGRES_USER: myapp
+    POSTGRES_DB: myapp_production
+
+volumes:
+- "myapp_storage:/rails/storage"
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+
+accessories:
+  db:
+    image: postgres:16
+    host: 1.2.3.4
+    port: "127.0.0.1:5432:5432"
+    env:
+      clear:
+        POSTGRES_DB: myapp_production
+        POSTGRES_USER: myapp
+      secret:
+      - POSTGRES_PASSWORD
+    volumes:
+    - myapp_postgres_data:/var/lib/postgresql/data
+    files:
+    - db/production_setup.sql:/docker-entrypoint-initdb.d/setup.sql
+```
+
+#### 5. Gem ソース切り替え用 Kamal フック
+
+Gemfile は開発時にローカルパスを使用するため、Kamal フックが Docker ビルド用に自動的に git ソースに切り替え、デプロイ後に元に戻します。
+
+**`.kamal/hooks/pre-build`:**
+
+```bash
+#!/bin/bash
+set -e
+
+if command -v rbenv &> /dev/null; then eval "$(rbenv init -)"; fi
+
+# oroshi リポジトリが最新か確認
+OROSHI_DIR="../oroshi"
+if [ -d "$OROSHI_DIR" ]; then
+  OROSHI_LOCAL=$(git -C "$OROSHI_DIR" rev-parse HEAD)
+  git -C "$OROSHI_DIR" fetch origin --quiet
+  OROSHI_REMOTE=$(git -C "$OROSHI_DIR" rev-parse origin/master)
+  if [ "$OROSHI_LOCAL" != "$OROSHI_REMOTE" ]; then
+    echo "警告: ローカルの oroshi リポジトリが origin/master と同期していません！"
+    read -p "続行しますか？ [y/N] " -n 1 -r && echo
+    [[ ! $REPLY =~ ^[Yy]$ ]] && exit 1
+  fi
+  OROSHI_REF="$OROSHI_LOCAL"
+else
+  echo "oroshi リポジトリが $OROSHI_DIR に見つかりません" && exit 1
+fi
+
+# Gemfile を git ソースに切り替え（ローカルパスと古い git ref の両方に対応）
+sed -i '' "s|gem \"oroshi\",.*|gem \"oroshi\", git: \"https://github.com/YOUR_ORG/oroshi.git\", ref: \"${OROSHI_REF}\"|" Gemfile
+bundle install
+
+if [[ -n $(git status --porcelain Gemfile Gemfile.lock) ]]; then
+  git add Gemfile Gemfile.lock
+  git commit -m "Pre-deploy: switch oroshi to git source (ref: ${OROSHI_REF:0:8})"
+fi
+```
+
+**`.kamal/hooks/post-deploy`:**
+
+```bash
+#!/bin/bash
+set -e
+
+if command -v rbenv &> /dev/null; then eval "$(rbenv init -)"; fi
+
+sed -i '' 's|gem "oroshi", git: "https://github.com/YOUR_ORG/oroshi.git".*|gem "oroshi", path: "../oroshi"|' Gemfile
+bundle install
+
+if [[ -n $(git status --porcelain Gemfile Gemfile.lock) ]]; then
+  git add Gemfile Gemfile.lock
+  git commit -m "Post-deploy: revert oroshi to local path"
+fi
+```
+
+フックを実行可能にする: `chmod +x .kamal/hooks/pre-build .kamal/hooks/post-deploy`
+
+#### 6. 初回デプロイ
+
+```bash
+# まずデータベースアクセサリーを起動
+kamal accessory boot db
+
+# アプリケーションをデプロイ
+kamal deploy
+```
+
+#### 便利な Kamal コマンド
+
+```bash
+kamal app logs -f                    # アプリケーションログをフォロー
+kamal app exec "bin/rails c"         # サーバー上の Rails コンソール
+kamal app exec "bin/rails db:migrate"  # マイグレーション実行
+kamal accessory exec db "psql -U myapp -d myapp_production"  # DB コンソール
+kamal accessory reboot db            # データベース再起動（注意: ダウンタイム発生）
+```
+
+### 本番環境の注意点
+
+1. **`connects_to` 競合（Rails 8.1+）**: マルチデータベース `database.yml` エントリを使用する場合、`production.rb` で `config.solid_queue.connects_to` や `config.solid_cache.connects_to` を設定しないでください。Rails はこれを重複指定として `ArgumentError` を発生させます。
+
+2. **Zeitwerk 自動読み込み**: エンジンは `lib/` を自動読み込みパスに追加しますが、Rails 命名規則に従う `lib/generators/` と `lib/tasks/` は除外しています。本番環境で `Zeitwerk::NameError` が表示された場合は、自動読み込みパスの設定を確認してください。
+
+3. **Docker 内のフローズンバンドル**: Docker ビルドは `BUNDLE_DEPLOYMENT=1`（フローズン）で実行されます。ビルド開始前に Gemfile と Gemfile.lock が一致している必要があります — これが pre-build フックアプローチの理由です。
+
+4. **データベース初期化スクリプトは一度だけ実行**: PostgreSQL エントリポイントディレクトリにマウントされた `production_setup.sql` はデータボリュームが空の場合（初回起動時）のみ実行されます。既存データベースの場合は手動で追加データベースを作成してください。
+
+5. **失敗したデプロイ後の古い git ref**: post-deploy フック実行前にデプロイが失敗すると、Gemfile は git ソースを指したままになります。pre-build フックの sed パターン（`gem "oroshi",.*`）はどのソース形式にもマッチするため、これを処理します。
+
+6. **プラットフォーム不一致**: Apple Silicon で開発し amd64 にデプロイする場合、`bundle lock --add-platform x86_64-linux` を実行し、更新されたロックファイルをコミットしてください。
+
+## アーキテクチャ
+
+### エンジン構造
+
+Oroshi は名前空間分離を持つ Rails エンジンアーキテクチャを使用：
+
+- **モデル**: すべて `Oroshi::` 配下で名前空間化（例: `Oroshi::Order`、`Oroshi::Buyer`）
+- **テーブル**: `oroshi_` プレフィックス付き（例: `oroshi_orders`、`oroshi_buyers`）
+- **ルート**: ホストアプリケーションで "/" にマウント
+- **User モデル**: 柔軟性のためアプリケーションレベルに配置（名前空間化なし）
+
+### マルチデータベースアーキテクチャ
+
+関心事の分離のための 4 つの PostgreSQL データベース：
+
+1. **Primary** - メインアプリケーションデータ（44 モデル）
+2. **Queue** - Solid Queue バックグラウンドジョブ
+3. **Cache** - Solid Cache エントリ
+4. **Cable** - Solid Cable WebSocket メッセージ
+
+### バックグラウンドジョブ
+
+5 つの Solid Queue ジョブが非同期操作を処理：
+
+- `Oroshi::MailerJob` - メール配信（10 分ごとに定期実行）
+- `Oroshi::InvoiceJob` - PDF 請求書生成
+- `Oroshi::InvoicePreviewJob` - 請求書プレビュー
+- `Oroshi::OrderDocumentJob` - 注文書 PDF
+- `Oroshi::SupplyCheckJob` - 仕入検証 PDF
+
+### フロントエンドスタイリング
+
+- **Bootstrap 5**: プライマリ UI フレームワーク
+- **カスタムテーマ**: `app/assets/stylesheets/funabiki.scss` で定義された Oroshi ブランドカラー
+- **コンポーネント標準**: [docs/BOOTSTRAP_COMPONENTS.md](docs/BOOTSTRAP_COMPONENTS.md) 参照
+
+**重要**: すべてのスタイリングは Bootstrap 5 ユーティリティクラスまたはアプリケーションスタイルシートを使用する必要があります。インラインスタイル（`style="..."`）は**厳格に禁止**されています。
+
+ボタンの例：
+
+```erb
+<!-- プライマリアクション -->
+<%= button_tag "送信", class: "btn btn-primary" %>
+
+<!-- セカンダリアクション -->
+<%= link_to "戻る", previous_path, class: "btn btn-secondary" %>
+
+<!-- 控えめなアクション -->
+<%= link_to "スキップ", skip_path, class: "btn btn-outline-secondary" %>
+```
+
+## ドキュメント
+
+### メインドキュメント
+
+- [README.md](README.md) - 英語版 README ファイル
+- [README.ja.md](README.ja.md) - 日本語版 README ファイル（このファイル）
+- [docs/archives/](docs/archives/) - アーカイブされたドキュメントと調査
+
+### 技術ガイド
+
+- [docs/TURBO.md](docs/TURBO.md) - Hotwire Turbo パターン
+- [docs/STIMULUS.md](docs/STIMULUS.md) - Stimulus コントローラーパターン
+- [docs/ACTION_CABLE.md](docs/ACTION_CABLE.md) - WebSocket 実装
+- [docs/BOOTSTRAP_COMPONENTS.md](docs/BOOTSTRAP_COMPONENTS.md) - Bootstrap コンポーネント標準
+- [docs/SANDBOX_TESTING.md](docs/SANDBOX_TESTING.md) - エンドツーエンドサンドボックステスト
+
+## ジェネレータ
+
+### インストールジェネレータ
+
+Rails アプリケーションに Oroshi をセットアップします。
+
+```bash
+rails generate oroshi:install [オプション]
+
+オプション:
+  --skip-migrations    マイグレーションのコピーをスキップ
+  --skip-devise        Deviseセットアップをスキップ
+  --skip-user-model    Userモデル生成をスキップ
+```
+
+ジェネレータが作成する内容については [インストール詳細](#インストール詳細) セクションを参照してください。
+
+## ブラウザ要件
+
+Oroshi には以下をサポートする最新ブラウザが必要です：
+
+- WebP 画像
+- Web プッシュ通知
 - Import maps
-- CSS nesting
-- CSS `:has()` selector
+- CSS ネスティング
+- CSS `:has()` セレクタ
 
-## Version
+## バージョン
 
-**Current Version**: 1.0.0
+**現在のバージョン**: 1.0.0
 
-See [GEM_CONVERSION_COMPLETE.md](GEM_CONVERSION_COMPLETE.md) for complete version history and conversion details.
+完全なバージョン履歴と変換詳細については [GEM_CONVERSION_COMPLETE.md](GEM_CONVERSION_COMPLETE.md) を参照してください。
 
-## Contributing
+## 貢献
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Write tests (TDD approach)
-4. Implement feature
-5. Run test suite (`bin/rails test`)
-6. Run linter (`bundle exec rubocop`)
-7. Commit changes (`git commit -m 'Add amazing feature'`)
-8. Push to branch (`git push origin feature/amazing-feature`)
-9. Open Pull Request
+1. リポジトリをフォーク
+2. フィーチャーブランチを作成（`git checkout -b feature/amazing-feature`）
+3. テストを書く（TDD アプローチ）
+4. 機能を実装
+5. テストスイートを実行（`bin/rails test`）
+6. リンターを実行（`bundle exec rubocop`）
+7. 変更をコミット（`git commit -m 'Add amazing feature'`）
+8. ブランチにプッシュ（`git push origin feature/amazing-feature`）
+9. プルリクエストを開く
 
-## License
+## ライセンス
 
 Copyright © 2026 MOAB Co., Ltd. All rights reserved.
 
-## Support
+## サポート
 
-- **Repository**: https://github.com/cmbaldwin/oroshi
+- **リポジトリ**: https://github.com/cmbaldwin/oroshi
 - **Issues**: https://github.com/cmbaldwin/oroshi/issues
-- **Documentation**: See `docs/` directory
+- **ドキュメント**: `docs/` ディレクトリを参照
 
-## Acknowledgments
+## 謝辞
 
-Built with ❤️ using Ruby on Rails 8.1.1 and modern web technologies.
+Ruby on Rails 8.1.1 とモダン Web 技術で ❤️ を込めて構築されました。
 
-Special thanks to the Rails community and the creators of Solid Queue, Solid Cache, and Solid Cable.
+Rails コミュニティ、および Solid Queue、Solid Cache、Solid Cable の作成者に特別な感謝を。
 
-Conversion to Rails engine inspired by [Spree](https://spreecommerce.org/) and [Solidus](https://solidus.io/).
+Rails エンジンへの変換は [Spree](https://spreecommerce.org/) と [Solidus](https://solidus.io/) にインスパイアされました。
 
 ---
 

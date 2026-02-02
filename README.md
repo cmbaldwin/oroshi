@@ -1,5 +1,7 @@
 # Oroshi - 卸売注文管理 Rails エンジン
 
+> **English version**: [README.en.md](README.en.md)
+
 日本の食品流通ビジネス向けに構築された、Ruby on Rails 8.1.1 による包括的な卸売注文管理システム Rails エンジン Gem。
 
 ## 機能
@@ -320,15 +322,27 @@ production:
   message_retention: 1.day
 ```
 
-**`config/environments/production.rb`** — キャッシュストアとジョブアダプタを設定。ただし `connects_to` は設定**しない**：
+**`config/environments/production.rb`** — キャッシュストアとジョブアダプタを設定：
 
 ```ruby
 config.cache_store = :solid_cache_store
 config.active_job.queue_adapter = :solid_queue
-# ここに solid_queue.connects_to や solid_cache.connects_to を追加しないでください。
-# database.yml のマルチデータベースエントリが自動的に処理します。
-# 両方設定すると: ArgumentError: You can only specify one of :database, :databases, or :connects_to
+config.solid_queue.connects_to = { database: { writing: :queue } }
+# solid_cache は config/cache.yml の database: cache で設定されるため、ここでは不要
+# solid_cable は config/cable.yml の connects_to で設定
 ```
+
+**`config/cache.yml`** — Solid Cache のデータベース指定：
+
+```yaml
+production:
+  database: cache
+  store_options:
+    max_size: <%= 256.megabytes %>
+    namespace: <%= Rails.env %>
+```
+
+> **重要:** `solid_queue.connects_to` を `production.rb` に設定しない場合、Solid Queue はプライマリデータベースに接続しようとし、テーブルが存在しないためクラッシュします。Oroshi エンジンにはこの設定を含めないでください — 親アプリケーションで設定する必要があります。
 
 #### 3. データベース初期化 SQL
 
@@ -476,6 +490,24 @@ kamal accessory boot db
 kamal deploy
 ```
 
+#### 7. 初回デプロイ後: Solid スキーマの読み込み（必須）
+
+`production_setup.sql` は追加データベースを **作成** しますが、テーブルは作成しません。初回デプロイ後、Solid Queue / Cache / Cable のスキーマを手動で読み込む必要があります。**これを行わないとアプリケーションがクラッシュします。**
+
+Solid Queue のテーブルが存在しない場合、ジョブコンテナが `PG::UndefinedTable: relation "solid_queue_recurring_tasks" does not exist` で即座にクラッシュします。`SOLID_QUEUE_IN_PUMA=true` を設定している場合、Puma は Solid Queue の停止を検知して自身もシャットダウンするため、Web コンテナも巻き込まれます。
+
+```bash
+# 各 Solid データベースのスキーマを読み込み
+kamal app exec --roles=web 'bash -c "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bin/rails db:schema:load:queue"'
+kamal app exec --roles=web 'bash -c "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bin/rails db:schema:load:cache"'
+kamal app exec --roles=web 'bash -c "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bin/rails db:schema:load:cable"'
+
+# アプリケーションを再起動してスキーマの変更を反映
+kamal app boot
+```
+
+> **注意:** `DISABLE_DATABASE_ENVIRONMENT_CHECK=1` は本番データベースに対するスキーマ読み込みに必要です。これらは新しい空のデータベースなので安全です。この手順は初回デプロイ時のみ必要で、以降のデプロイでは不要です。
+
 #### 便利な Kamal コマンド
 
 ```bash
@@ -488,7 +520,7 @@ kamal accessory reboot db            # データベース再起動（注意: ダ
 
 ### 本番環境の注意点
 
-1. **`connects_to` 競合（Rails 8.1+）**: マルチデータベース `database.yml` エントリを使用する場合、`production.rb` で `config.solid_queue.connects_to` や `config.solid_cache.connects_to` を設定しないでください。Rails はこれを重複指定として `ArgumentError` を発生させます。
+1. **`connects_to` の正しい設定**: `config.solid_queue.connects_to = { database: { writing: :queue } }` は親アプリケーションの `production.rb` に設定**する必要があります**。設定しないと Solid Queue はプライマリデータベースに接続し、テーブルが存在しないためクラッシュします。ただし、Solid Cache は `config/cache.yml` の `database: cache`、Solid Cable は `config/cable.yml` の `connects_to` で設定します。Oroshi エンジン内にはこれらの設定を含めないでください — 親アプリケーション側のみで設定してください。
 
 2. **Zeitwerk 自動読み込み**: エンジンは `lib/` を自動読み込みパスに追加しますが、Rails 命名規則に従う `lib/generators/` と `lib/tasks/` は除外しています。本番環境で `Zeitwerk::NameError` が表示された場合は、自動読み込みパスの設定を確認してください。
 
@@ -499,6 +531,8 @@ kamal accessory reboot db            # データベース再起動（注意: ダ
 5. **失敗したデプロイ後の古い git ref**: post-deploy フック実行前にデプロイが失敗すると、Gemfile は git ソースを指したままになります。pre-build フックの sed パターン（`gem "oroshi",.*`）はどのソース形式にもマッチするため、これを処理します。
 
 6. **プラットフォーム不一致**: Apple Silicon で開発し amd64 にデプロイする場合、`bundle lock --add-platform x86_64-linux` を実行し、更新されたロックファイルをコミットしてください。
+
+7. **初回デプロイ時の Solid スキーマ未読み込み**: `production_setup.sql` はデータベースを作成しますがテーブルは作成しません。初回デプロイ後に `db:schema:load:queue`、`db:schema:load:cache`、`db:schema:load:cable` を実行しないと、Solid Queue が `PG::UndefinedTable` でクラッシュし、`SOLID_QUEUE_IN_PUMA=true` の場合は Web コンテナも停止します。
 
 ## アーキテクチャ
 
@@ -555,8 +589,8 @@ Oroshi は名前空間分離を持つ Rails エンジンアーキテクチャを
 
 ### メインドキュメント
 
-- [README.md](README.md) - 英語版 README ファイル
-- [README.ja.md](README.ja.md) - 日本語版 README ファイル（このファイル）
+- [README.md](README.md) - 日本語版 README ファイル（このファイル）
+- [README.en.md](README.en.md) - 英語版 README ファイル
 - [docs/archives/](docs/archives/) - アーカイブされたドキュメントと調査
 
 ### 技術ガイド

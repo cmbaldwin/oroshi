@@ -1,0 +1,7 @@
+ja:
+  oroshi:
+    invoices:
+      modal:
+        mail_preview_title: "メールのプレビュー"
+        attachments_label: "添付ファイル:"
+        browser_notice: "注意: 受信者のブラウザやメールアプリケーションにより、表示が若干異なる場合があります。"

@@ -1,0 +1,11 @@
+ja:
+  oroshi:
+    supplies:
+      modals:
+        price_actions:
+          update_button: "更新"
+          reflect_confirmation: "の単価データを反映する？"
+          cannot_reflect_no_supply: "供給なしので、反映できません。"
+          multi_select_help: "クリックしてドラッグするか、Shift（MacではCommand）を押したままでクリックすると複数の仕入先を選択する"
+          remove_section_help: "最後の単価区別枠と記載されてあるデータを削除する"
+          add_section_help: "もう一つの単価区別枠を追加する"

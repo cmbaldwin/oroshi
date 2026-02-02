@@ -1,0 +1,5 @@
+ja:
+  oroshi:
+    payment_receipts:
+      dashboard:
+        no_outstanding_buyers: "支払い受け取りレコードがありません"

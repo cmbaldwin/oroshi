@@ -2,7 +2,7 @@
     <dialog data-oroshi--supplies--dialog-target="dialog" class="supply-modal">
         <div class="modal-header border-bottom">
             <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
-                <div class="fs-5">供給ツールパネル</div>
+                <div class="fs-5"><%= t('oroshi.supplies.modal.panel_title') %></div>
                 <div class="d-flex fs-6" id="date_title">
                 </div>
             </div>
@@ -14,7 +14,7 @@
             <% end %>
         </div>
         <div class="modal-footer border-top mt-2">
-            <button type="button" class="btn btn-secondary" data-action="oroshi--supplies--dialog#close">閉じる</button>
+            <button type="button" class="btn btn-secondary" data-action="oroshi--supplies--dialog#close"><%= t('common.buttons.close') %></button>
         </div>
     </dialog>
     <button type="button" style="display: none;" data-oroshi--supplies--dialog-trigger="true"></button>

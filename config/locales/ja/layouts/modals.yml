@@ -1,0 +1,6 @@
+ja:
+  layouts:
+    modals:
+      title: "タイトル"
+      content: "内容"
+      close: "閉じる"

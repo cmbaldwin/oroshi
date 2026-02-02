@@ -2,7 +2,7 @@
 <div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start justify-content-around gap-2">
     <div class="material-navigation card" style="min-width: 15rem;">
         <div class="p-2 d-flex justify-content-between align-items-center align-middle">
-            <h6 class="mb-0">製造材料カテゴリー</h6>
+            <h6 class="mb-0"><%= t('oroshi.material_categories.index.page_title') %></h6>
         </div>
         <% if @material_categories.exists? %>
         <div class="list-group overflow-auto border" style="max-height: 65vh;">
@@ -24,7 +24,7 @@
         </div>
         <% else %>
         <div class="alert alert-warning small m-2" role="alert">
-            製造材料カテゴリが登録されていません。まずは製造材料カテゴリを登録してください。
+            <%= t('oroshi.material_categories.index.no_records_warning') %>
         </div>
         <% end %>
         <h6 class="card-subtitle p-2 d-flex justify-content-between align-items-center align-middle">
@@ -57,7 +57,7 @@
                             loading: 'lazy' %>
         <% else %>
         <div class="alert alert-warning small" role="alert">
-            製造材料カテゴリが登録されていません。まずは製造材料カテゴリを登録してください。
+            <%= t('oroshi.material_categories.index.no_records_warning') %>
         </div>
         <% end %>
     </div>

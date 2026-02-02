@@ -18,3 +18,5 @@ ja:
           no_products_warning: "商品が登録されていません。まずは商品を登録してください。"
       modal:
         edit_title: "%{name}の商品を編集する"
+      messages:
+        positions_updated: "表示順序を更新しました"

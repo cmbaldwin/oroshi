@@ -1,0 +1,12 @@
+ja:
+  oroshi:
+    onboarding:
+      messages:
+        step_completed: "ステップが完了しました！"
+        complete: "オンボーディングが完了しました！"
+        skipped: "オンボーディングをスキップしました。いつでも再開できます。"
+        resuming: "オンボーディングを再開しています..."
+        checklist_hidden: "チェックリストを非表示にしました"
+        deleted: "削除しました"
+        invalid_step: "無効なステップです"
+        sign_in_required: "続行するにはサインインしてください。"

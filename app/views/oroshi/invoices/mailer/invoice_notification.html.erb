@@ -6,16 +6,16 @@
   <body style="font-family: 'メイリオ','Hiragino Kaku Gothic Pro',Meiryo,'ヒラギノ角ゴ Pro W3','MS PGothic','MS UI Gothic',Helvetica,Arial,sans-serif; width: 100%; text-align: center;">
     <div style="font-size: 1rem; width: 100%; font-weight: bold; margin: 5px;"><%= @header.html_safe %></div>
     <p>
-      いつもお世話になっております。<br>
-      支払い明細書を送付いたします。<br>
-      宜しくお願い致します。 <br>
+      <%= t('mailers.invoices.greeting') %><br>
+      <%= t('mailers.invoices.description') %><br>
+      <%= t('mailers.invoices.closing') %> <br>
     </p>
     <table style="width: 650px; margin: 0 auto; text-align: center; border-collapse: collapse; font-size: 12px;">
       <thead style="background: #83D6F8; border-bottom: 1px solid #FFFFFF;">
         <tr style="border: 1px solid #000; padding: 8px; font-size: 12px; font-weight: bold; color: #FFFFFF; text-align: center;">
-          <th scope="col">場所</th>
-          <th scope="col">ファイル</th>
-          <th scope="col">パスワード</th>
+          <th scope="col"><%= t('mailers.invoices.location_label') %></th>
+          <th scope="col"><%= t('mailers.invoices.file_label') %></th>
+          <th scope="col"><%= t('mailers.invoices.password_label') %></th>
         </tr>
       </thead>
       <tbody>

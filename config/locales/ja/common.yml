@@ -54,6 +54,8 @@ ja:
       dismiss_checklist_limitation_2: "注文の作成と管理"
       dismiss_checklist_limitation_3: "配送スケジュールの設定"
       dismiss_checklist_info: "後からダッシュボードの設定メニューから再開できます。"
+      access_denied: "そのページはアクセスできません。"
+      sign_in_required: "続行するにはサインインしてください。"
 
     empty_states:
       no_data: "データがありません"

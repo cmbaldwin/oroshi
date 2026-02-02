@@ -31,7 +31,7 @@
                                   },
                                   disabled: @invoice&.persisted? %>
                     <button type="submit" class="btn btn-secondary" data-oroshi--supplies--calendar-target="modalChangeDateSubmitButton" disabled>
-                        日付変更
+                        <%= t('oroshi.supplies.modals.action_scaffold.date_change') %>
                     </button>
                 </div>
             </div>
@@ -41,18 +41,18 @@
     <div class="d-flex mb-3 cursor-pointer" data-oroshi--supplies--calendar-target="selectedSupplyDates">
         <% joins = @supply_dates.flat_map(&:supply_date_supply_type_variations) %>
         <% if joins.empty? %>
-        供給なし
+        <%= t('oroshi.supplies.modals.action_scaffold.no_supply') %>
         <% else %>
         <% supply_dates_with_supply = @supply_dates.select{|supply_date| supply_date.supply.any? } %>
         <span data-controller='tippy' data-tippy-content="<center><%= supply_dates_with_supply.map{ |supply_date| l(supply_date.date, format: :long) }.join(', ') %></center>">
-            選択した日付の範囲内の供給ある日: <%= supply_dates_with_supply.count %>日
+            <%= t('oroshi.supplies.modals.action_scaffold.supply_days_count', count: supply_dates_with_supply.count) %>
         </span>
         <% end %>
     </div>
     <div data-oroshi--supplies--calendar-target="modalBody">
         <% if joins.empty? %>
         <div class="w-100 text-center">
-            供給なしので、反映できません。
+            <%= t('oroshi.supplies.modals.action_scaffold.cannot_reflect_no_supply') %>
         </div>
         <% else %>
         <%= yield :modal_content %>

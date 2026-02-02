@@ -20,16 +20,16 @@
     </div>
     <% end %>
     <div class="d-flex flex-row justify-content-center align-items-center">
-        <%= f.submit  '更新', 
-                    data: { 
-                      confirm: "#{l(@supply_dates.first.date, format: :long)} ~ #{l(@supply_dates.last.date, format: :long)}の単価データを反映する？"
-                    }, 
+        <%= f.submit  t('oroshi.supplies.modals.price_actions.update_button'),
+                    data: {
+                      confirm: "#{l(@supply_dates.first.date, format: :long)} ~ #{l(@supply_dates.last.date, format: :long)}#{t('oroshi.supplies.modals.price_actions.reflect_confirmation')}"
+                    },
                     class: 'btn btn-primary' %>
     </div>
     <% end %>
 </div>
 <% else %>
 <div class="w-100 text-center">
-    供給なしので、反映できません。
+    <%= t('oroshi.supplies.modals.price_actions.cannot_reflect_no_supply') %>
 </div>
 <% end %>

@@ -88,12 +88,12 @@ class Oroshi::SupplyDatesController < Oroshi::ApplicationController
   end
 
   def set_message
-    @filename = "供給チェック表 #{params.values[2..].join}.pdf"
+    @filename = "#{t('oroshi.supply_dates.pdf.filename')} #{params.values[2..].join}.pdf"
     @message = Message.new(
       user: current_user.id,
       model: "supply_check",
       state: false,
-      message: "#{params[:date]}供給受入れチェック表を作成中…",
+      message: "#{params[:date]}#{t('oroshi.supply_dates.pdf.processing_message')}",
       data: {
         supply_date: params[:date],
         filename: @filename,

@@ -5,7 +5,7 @@
   <% else %>
     <h2 class="mb-4"><%= @step.titleize %></h2>
     <div class="alert alert-info">
-      <strong>Coming soon:</strong> Form fields for <%= @step %> configuration.
+      <%= t('oroshi.onboarding.template_missing', step: @step) %>
     </div>
   <% end %>
 <% end %>

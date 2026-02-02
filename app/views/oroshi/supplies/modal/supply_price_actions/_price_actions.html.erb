@@ -22,7 +22,7 @@
                                           oroshi__supplies__supply_price_actions_target: "suppliersSelect",
                                           action: "oroshi--supplies--supply-price-actions#selectSupplier",
                                           controller: 'tippy',
-                                          tippy_content: 'クリックしてドラッグするか、Shift（MacではCommand）を押したままでクリックすると複数の仕入先を選択する'
+                                          tippy_content: t('oroshi.supplies.modals.price_actions.multi_select_help')
                                         }} %>
             </div>
             <div id="suppliers_prices_<%= i %>" class="suppliers_prices flex-shrink-1">
@@ -41,7 +41,7 @@
                       data: {
                         action: "oroshi--supplies--supply-price-actions#removeSection:prevent",
                         controller: 'tippy',
-                        tippy_content: '最後の単価区別枠と記載されてあるデータを削除する'
+                        tippy_content: t('oroshi.supplies.modals.price_actions.remove_section_help')
                       } %>
       <%= button_tag  "#{icon('plus-circle')}→".html_safe,
                       id: 'add-section',
@@ -49,7 +49,7 @@
                       data: {
                         action: "oroshi--supplies--supply-price-actions#addSection:prevent",
                         controller: 'tippy',
-                        tippy_content: 'もう一つの単価区別枠を追加する'
+                        tippy_content: t('oroshi.supplies.modals.price_actions.add_section_help')
                       } %>
     </div>
   </div>

@@ -18,7 +18,7 @@
       <% end %>
     <% else %>
       <%= turbo_frame_tag 'buyer_payment_entry', class: 'container ms-lg-0' do %>
-        <div class="alert alert-info">未払いの買い手がいません</div>
+        <div class="alert alert-info"><%= t('oroshi.payment_receipts.dashboard.no_outstanding_buyers') %></div>
       <% end %>
     <% end %>
 

@@ -1,0 +1,9 @@
+ja:
+  oroshi:
+    supplies:
+      modals:
+        action_scaffold:
+          date_change: "日付変更"
+          no_supply: "供給なし"
+          supply_days_count: "選択した日付の範囲内の供給ある日: %{count}日"
+          cannot_reflect_no_supply: "供給なしので、反映できません。"

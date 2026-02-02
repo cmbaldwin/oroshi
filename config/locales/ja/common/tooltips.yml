@@ -1,0 +1,7 @@
+ja:
+  common:
+    tooltips:
+      close_button: "このダイアログを閉じます"
+      required_field: "このフィールドは必須です"
+      optional_field: "このフィールドはオプションです"
+      help_text: "ヘルプ"

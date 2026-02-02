@@ -12,3 +12,6 @@ ja:
         supplier_number: "生産者番号"
         total_label: "%{name}合計【%{units}】"
         supplier_disabled_tooltip: "この生産者はこの種類変種を生産しない設定になっている"
+      pdf:
+        filename: "供給チェック表"
+        processing_message: "供給受入れチェック表を作成中…"

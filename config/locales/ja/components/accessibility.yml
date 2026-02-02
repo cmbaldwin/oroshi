@@ -1,0 +1,7 @@
+ja:
+  components:
+    accessibility:
+      incomplete_tasks: "未完了のタスク"
+      section_help: "このセクションについてのヘルプ"
+      navigation_menu: "ナビゲーション メニュー"
+      close_dialog: "ダイアログを閉じる"

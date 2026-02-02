@@ -23,7 +23,8 @@ class Oroshi::ApplicationController < ApplicationController
   end
 
   def authentication_notice
-    flash[:notice] = "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
-    redirect_to root_path, error: "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
+    message = t('common.messages.access_denied')
+    flash[:notice] = message
+    redirect_to root_path, error: message
   end
 end

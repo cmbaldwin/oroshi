@@ -3,6 +3,7 @@ ja:
     onboarding:
       progress:
         step: "ステップ %{current} / %{total}"
+      template_missing: "このステップのテンプレートはまだ利用できません: %{step}"
       phases:
         foundation: "基礎設定"
         supply_chain: "供給チェーン"
@@ -12,6 +13,11 @@ ja:
         company_info:
           title: "会社情報"
           description: "基本的な会社情報を入力してください。この情報は請求書やその他の書類に表示されます。"
+          validations:
+            company_name_required: "会社名は必須です"
+            postal_code_required: "郵便番号は必須です"
+            address_required: "住所は必須です"
+            required_fields_missing: "必須項目が入力されていません"
         supply_reception_time:
           title: "入荷時間帯"
           description: "材料の入荷時間帯を設定してください。複数の時間帯を追加できます。"

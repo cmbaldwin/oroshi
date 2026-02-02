@@ -1,0 +1,8 @@
+ja:
+  oroshi:
+    product_variations:
+      form:
+        select_container: "発送容器を選択してください"
+        calculate_button: "計算"
+        show_cost_details: "コスト計算明細表示"
+        cost_currency: "円"

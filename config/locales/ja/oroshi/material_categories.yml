@@ -1,0 +1,6 @@
+ja:
+  oroshi:
+    material_categories:
+      index:
+        page_title: "製造材料カテゴリー"
+        no_records_warning: "製造材料カテゴリが登録されていません。まずは製造材料カテゴリを登録してください。"

@@ -1,0 +1,11 @@
+ja:
+  mailers:
+    invoices:
+      greeting: "いつもお世話になっております。"
+      description: "支払い明細書を送付いたします。"
+      closing: "宜しくお願い致します。"
+      attachments_label: "添付ファイル:"
+      location_label: "場所"
+      file_label: "ファイル"
+      password_label: "パスワード"
+      browser_notice: "注意: 受信者のブラウザやメールアプリケーションにより、表示が若干異なる場合があります。"

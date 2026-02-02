@@ -2,7 +2,7 @@
   <dialog data-dialog-target="dialog" class="order-modal">
     <div class="modal-header border-bottom">
       <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
-        <div class="fs-5">注文ツールパネル</div>
+        <div class="fs-5"><%= t('oroshi.orders.modal.panel_title') %></div>
       </div>
       <button type="button" class="btn-close" data-action="dialog#close" aria-label="Close"></button>
     </div>
@@ -11,7 +11,7 @@
         <%= render partial: 'oroshi/shared/spinner' %>
       </div>
       <div class="modal-footer border-top">
-        <button type="button" class="btn btn-secondary" data-action="dialog#close">閉じる</button>
+        <button type="button" class="btn btn-secondary" data-action="dialog#close"><%= t('common.buttons.close') %></button>
       </div>
     <% end %>
   </dialog>

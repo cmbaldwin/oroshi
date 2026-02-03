@@ -45,6 +45,15 @@
 <body data-spy="scroll" class="d-flex flex-column h-100" data-oroshi-mount-path="<%= oroshi_mount_path %>">
     <%= render partial: 'layouts/shared/navbar' %>
 
+    <%# Demo account indicator banner %>
+    <% if user_signed_in? && current_user.demo_account? %>
+    <div class="alert alert-info mb-0 text-center border-0 rounded-0" role="alert">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong><%= t('demo_indicator.banner') %>:</strong>
+        <%= t('demo_indicator.message') %>
+    </div>
+    <% end %>
+
     <main class="flex-shrink-0">
         <div id="messages-container" data-controller="messages" data-user-id="<%= current_user.id if user_signed_in? %>" class="d-flex overflow-x-auto overflow-y-visible bg-light mb-3 p-1" data-turbo-permanent>
             <%= turbo_frame_tag 'messages', class: 'd-flex flex-nowrap', data: { messages_target: 'messagesList' } do %>

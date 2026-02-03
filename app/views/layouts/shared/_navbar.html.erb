@@ -20,6 +20,13 @@
             <% end %>
         </ul>
         <ul class="navbar-nav align-items-center gap-2">
+            <%# Language Picker %>
+            <li class="nav-item">
+                <div class="btn-group" role="group">
+                    <%= link_to "🇯🇵", oroshi.root_path(locale: :ja), class: "btn btn-sm btn-outline-secondary border-0 #{'active' if I18n.locale == :ja}", title: "日本語" %>
+                    <%= link_to "🇬🇧", oroshi.root_path(locale: :en), class: "btn btn-sm btn-outline-secondary border-0 #{'active' if I18n.locale == :en}", title: "English" %>
+                </div>
+            </li>
             <% if user_signed_in? %>
             <%= render 'oroshi/onboarding/checklist_dropdown' %>
             <li class="nav-item">

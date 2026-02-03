@@ -19,6 +19,9 @@ require "will_paginate"
 # UI Components
 require "ultimate_turbo_modal"
 
+# Localization & Data
+require "carmen"
+
 module Oroshi
   class Engine < ::Rails::Engine
     isolate_namespace Oroshi

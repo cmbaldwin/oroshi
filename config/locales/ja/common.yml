@@ -46,6 +46,7 @@ ja:
       error: "エラーが発生しました"
       success: "成功しました"
       no_results: "結果がありません"
+      setup: "セットアップ"
       setup_checklist: "セットアップチェックリスト"
       continue_setup: "セットアップを続ける"
       dismiss_checklist_title: "チェックリストを非表示にしますか？"

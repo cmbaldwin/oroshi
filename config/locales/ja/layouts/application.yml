@@ -1,8 +1,8 @@
 ja:
   layouts:
     application:
-      title: "Funabiki Online"
-      description: "Funabiki Online Mangement System"
+      title: "Oroshi"
+      description: "Oroshi Mangement System"
       meta:
         title: "船曳商店"
       navbar:

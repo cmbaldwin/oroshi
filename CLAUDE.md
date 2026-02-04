@@ -477,6 +477,242 @@ config.time_zone = "Asia/Tokyo"
 config.active_record.default_timezone = :utc
 ```
 
+## Knowledge Management & Search
+
+### QMD - Semantic Documentation Search
+
+Oroshi uses **qmd** (Query MarkDown) for fast, semantic search across all project documentation. This is the **most efficient way** to find information in the codebase when you need to understand patterns, conventions, or past decisions.
+
+**Why use qmd instead of grep/Glob:**
+
+- **Semantic search** - Finds conceptually related content, not just exact keyword matches
+- **Lightning fast** - Vector embeddings enable instant searches across all docs
+- **Context-aware** - Returns ranked results with relevance scores
+- **Low overhead** - Searches indexed content without file I/O on every query
+
+### When to Use QMD
+
+**✅ USE QMD for:**
+
+- Understanding architectural patterns ("How does Solid Queue integrate?")
+- Finding past solutions ("How did we handle timezone issues?")
+- Learning conventions ("What's the i18n pattern for buttons?")
+- Researching implementation approaches ("How does sandbox creation work?")
+- Discovering related documentation ("What deployment gotchas exist?")
+- Cross-referencing decisions across multiple docs
+
+**❌ DON'T USE QMD for:**
+
+- Finding specific code files (use `Glob` for file patterns)
+- Searching code by class/method name (use `Grep` for exact matches)
+- Finding todos or fixmes in code (use `Grep`)
+- Locating specific file paths (use file navigation tools)
+
+**Rule of thumb:** Use qmd for **conceptual/architectural questions**, use Grep/Glob for **code location tasks**.
+
+### Setup & Configuration
+
+**Collections configured:**
+
+```bash
+# oroshi collection (this project)
+qmd://oroshi/
+  Path: /Users/cody/Dev/oroshi
+  Pattern: **/*.md
+  Files: 26 markdown files
+  Includes: CLAUDE.md, README.md, docs/**/*.md
+
+# oroshi-moab collection (parent application)
+qmd://oroshi-moab/
+  Path: /Users/cody/Dev/oroshi-moab
+  Pattern: **/*.md
+  Files: 18 markdown files
+```
+
+**Initial setup was:**
+
+```bash
+# Install qmd
+bun install -g https://github.com/tobi/qmd
+
+# Add collections
+qmd collection add /Users/cody/Dev/oroshi --name oroshi --mask "**/*.md"
+qmd collection add /Users/cody/Dev/oroshi-moab --name oroshi-moab --mask "**/*.md"
+
+# Build vector embeddings (only needed once)
+qmd embed
+```
+
+### Using QMD with Claude Code
+
+**In Claude Code CLI - Automatic invocation:**
+
+I will automatically use the `/qmd` skill when you ask conceptual questions:
+
+```
+You: "How do we handle Japanese fonts in PDFs?"
+→ I use /qmd to search and find lib/oroshi/fonts.rb documentation
+
+You: "What's the pattern for i18n button translations?"
+→ I search qmd for i18n conventions and locale file structure
+
+You: "How does the sandbox script avoid Rails-in-Rails errors?"
+→ I query qmd for sandbox architecture details
+```
+
+**Manual invocation:**
+
+```bash
+# Via Claude Code
+/qmd search "your semantic query here"
+/qmd search "solid queue configuration" --collection oroshi
+
+# Direct CLI usage
+qmd search "sandbox architecture"
+qmd search "deployment patterns" --collection oroshi-moab
+qmd search "devise integration" --limit 5
+```
+
+### Best Practices
+
+**1. Write semantic queries, not keywords:**
+```bash
+# ✅ Good - Describes what you want to know
+qmd search "how to configure background jobs with solid queue"
+qmd search "patterns for testing engine isolation"
+
+# ❌ Less effective - Just keywords
+qmd search "solid queue"
+qmd search "testing"
+```
+
+**2. Scope searches when you know the source:**
+```bash
+# Search only oroshi engine docs
+qmd search "engine routing patterns" --collection oroshi
+
+# Search only parent app docs
+qmd search "production deployment" --collection oroshi-moab
+```
+
+**3. Use qmd for "why" and "how", not "where":**
+
+```bash
+# ✅ Good qmd usage
+"Why do we load Solid gems before Rails configuration?"
+"How does the sandbox handle gem initialization order?"
+
+# ❌ Better with Grep/Glob
+"Where is the Order model defined?"
+"Find all controllers in the checkout flow"
+```
+
+**4. Combine qmd with code tools:**
+
+```bash
+# Step 1: Understand the pattern (qmd)
+qmd search "how to write printables with japanese fonts"
+
+# Step 2: Find existing examples (Grep)
+grep -r "class.*Printable" lib/printables/
+
+# Step 3: Implement using discovered patterns
+```
+
+### Maintaining the Index
+
+**When to re-index:**
+
+- After adding new markdown documentation
+- After major updates to CLAUDE.md or README.md
+- Weekly maintenance for active documentation
+
+**Re-indexing:**
+
+```bash
+# Quick re-index (only changed files)
+qmd embed
+
+# Full re-index (if embeddings seem stale)
+qmd collection remove oroshi
+qmd collection add /Users/cody/Dev/oroshi --name oroshi --mask "**/*.md"
+qmd embed
+```
+
+**Collection status:**
+
+```bash
+# Check what's indexed
+qmd collection list
+
+# View collection details
+qmd collection info oroshi
+```
+
+### Search Examples for Common Tasks
+
+**Understanding Architecture:**
+
+```bash
+qmd search "how does multi-database setup work?"
+qmd search "engine isolation and namespacing patterns"
+qmd search "solid queue worker configuration"
+```
+
+**Finding Conventions:**
+
+```bash
+qmd search "japanese translation file structure"
+qmd search "test organization patterns"
+qmd search "git commit message format"
+```
+
+**Solving Problems:**
+
+```bash
+qmd search "sandbox creation fails with gem errors"
+qmd search "turbo streams not updating in production"
+qmd search "zeitwerk autoloading issues"
+```
+
+**Learning Workflows:**
+
+```bash
+qmd search "how to add a new background job"
+qmd search "testing patterns for controllers"
+qmd search "deployment checklist for parent apps"
+```
+
+### Performance Notes
+
+- **First search**: ~500ms (loads model into memory)
+- **Subsequent searches**: ~50-100ms (model cached)
+- **Index size**: ~328MB embedding model + ~2MB index data
+- **Embedding generation**: ~22s for 44 documents (one-time cost)
+
+### QMD Troubleshooting
+
+**"Collection not found" error:**
+
+```bash
+qmd collection list  # Verify collection exists
+qmd collection add /Users/cody/Dev/oroshi --name oroshi --mask "**/*.md"
+```
+
+**Stale results (missing recent docs):**
+
+```bash
+qmd embed  # Re-run embedding generation
+```
+
+**Slow searches:**
+
+```bash
+# First search is always slower (loading model)
+# If all searches are slow, check:
+ls -lh ~/.cache/qmd/models/  # Verify model downloaded
+```
+
 ## Common Gotchas
 
 1. **Solid Queue Configuration**: Ensure `config/recurring.yml` exists and is properly configured

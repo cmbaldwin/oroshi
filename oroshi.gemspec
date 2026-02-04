@@ -49,10 +49,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency "stimulus-rails", "~> 1.3"
   spec.add_dependency "dartsass-rails", "~> 0.5"
   spec.add_dependency "bootstrap", "~> 5.3"
-  spec.add_dependency "ultimate_turbo_modal"
 
   # Forms & UI
+  spec.add_dependency "simple_form", "~> 5.3"
   spec.add_dependency "will_paginate", "~> 4.0"
+  spec.add_dependency "ultimate_turbo_modal", "~> 2.2"
 
   # Search & Filtering
   spec.add_dependency "ransack", "~> 4.2"

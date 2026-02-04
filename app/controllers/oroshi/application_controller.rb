@@ -2,14 +2,8 @@
 
 class Oroshi::ApplicationController < ApplicationController
   include Pundit::Authorization
-
-  # Require authentication for all engine actions
-  # This ensures the engine works regardless of parent app configuration
-  before_action :authenticate_user!
-
   helper OroshiHelper
   helper Oroshi::UrlHelper
-  helper Oroshi::DashboardHelper
 
   def address_attributes
     %i[id default active name company country_id subregion_id postal_code city address1 address2]
@@ -24,8 +18,7 @@ class Oroshi::ApplicationController < ApplicationController
   end
 
   def authentication_notice
-    message = t('common.messages.access_denied')
-    flash[:notice] = message
-    redirect_to root_path, error: message
+    flash[:notice] = "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
+    redirect_to root_path, error: "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
   end
 end

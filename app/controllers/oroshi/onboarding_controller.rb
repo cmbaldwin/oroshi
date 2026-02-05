@@ -1,7 +1,7 @@
 class Oroshi::OnboardingController < Oroshi::ApplicationController
   layout "onboarding"
 
-  skip_before_action :maybe_authenticate_user
+  skip_before_action :maybe_authenticate_user, raise: false
   before_action :authenticate_user_for_onboarding
   before_action :find_or_create_progress
   before_action :set_step, only: [ :show, :update ]

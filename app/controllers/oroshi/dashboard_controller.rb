@@ -78,12 +78,18 @@ class Oroshi::DashboardController < Oroshi::ApplicationController
   def set_supplier_organization
     if current_user.respond_to?(:supplier?) && current_user.supplier?
       # Suppliers are restricted to their own organization
-      @supplier_organization = current_user.supplier&.supplier_organization
+      # Note: User has supplier role but may not have supplier association yet
+      if current_user.respond_to?(:supplier) && current_user.supplier
+        @supplier_organization = current_user.supplier.supplier_organization
 
-      # If they try to access another org, strictly redirect or just override
-      if params[:id].present? && @supplier_organization && params[:id].to_i != @supplier_organization.id
-        # In a partial render context, redirects can be tricky, but let's assume standard behavior
-        # or just ignore the param and use the scoped one.
+        # If they try to access another org, strictly redirect or just override
+        if params[:id].present? && @supplier_organization && params[:id].to_i != @supplier_organization.id
+          # In a partial render context, redirects can be tricky, but let's assume standard behavior
+          # or just ignore the param and use the scoped one.
+        end
+      else
+        # Supplier role but no supplier record - show first org
+        @supplier_organization = Oroshi::SupplierOrganization.active.by_supplier_count.first
       end
     else
       # Admin, VIP, Employee can view any organization

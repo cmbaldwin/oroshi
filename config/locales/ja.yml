@@ -278,3 +278,10 @@ ja:
       last_word_connector: "、"
       two_words_connector: "、"
       words_connector: "、"
+  
+  # Demo account indicator translations
+  demo_indicator:
+    banner: "デモモード"
+    message: "現在デモアカウントでログインしています。セッションは5分後に自動的に終了します。"
+    switch_user: "別のユーザーとしてログイン"
+    logout: "ログアウト"

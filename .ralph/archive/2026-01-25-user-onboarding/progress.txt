@@ -1,5 +1,0 @@
-# Ralph Progress Log
-Started: Sat Jan 25 2026
-Branch: ralph/realizations-and-tests
----
-

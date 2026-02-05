@@ -1,0 +1,74 @@
+{
+  "productName": "Oroshi Engine Test Suite",
+  "version": "1.0.0",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Fix missing 'message' factory",
+      "description": "As a developer, I want all factory references to resolve correctly so that job tests can run without KeyError exceptions",
+      "acceptanceCriteria": [
+        "Identify all references to create(:message) in test files",
+        "Either create the missing message factory or update tests to use correct factory",
+        "All job tests pass without Factory not registered errors",
+        "Run bin/rails test test/jobs/ and verify no factory errors"
+      ],
+      "priority": 1,
+      "passes": false
+    },
+    {
+      "id": "US-002",
+      "title": "Fix WebMock configuration for sandbox E2E test",
+      "description": "As a developer, I want the sandbox E2E test to allow real HTTP connections to localhost so that server health checks work",
+      "acceptanceCriteria": [
+        "Configure WebMock to allow localhost connections in test_helper.rb or sandbox_e2e_test.rb",
+        "Add WebMock.allow_net_connect! for localhost:3001 during sandbox tests",
+        "Sandbox E2E test can successfully check server health at http://localhost:3001/up",
+        "Run bin/rails test test/sandbox_e2e_test.rb and verify it passes"
+      ],
+      "priority": 2,
+      "passes": false
+    },
+    {
+      "id": "US-003",
+      "title": "Investigate and fix remaining test failures",
+      "description": "As a developer, I want to identify and fix the 9 test failures to improve test suite reliability",
+      "acceptanceCriteria": [
+        "Run bin/rails test with verbose output to identify specific failures",
+        "Categorize failures by type (assertion, routing, data setup, etc)",
+        "Fix assertion failures and update expected values where needed",
+        "Ensure all 9 failures are addressed",
+        "Document any test changes in progress.txt"
+      ],
+      "priority": 3,
+      "passes": false
+    },
+    {
+      "id": "US-004",
+      "title": "Review and update test fixtures/factories",
+      "description": "As a developer, I want all test data factories to be properly defined and maintained so that tests have reliable data",
+      "acceptanceCriteria": [
+        "Audit all factory files in test/factories/",
+        "Ensure all associations and required fields are properly set",
+        "Remove references to undefined factories",
+        "Add missing factories for models referenced in tests",
+        "Run full test suite and verify factory-related errors are gone"
+      ],
+      "priority": 4,
+      "passes": false
+    },
+    {
+      "id": "US-005",
+      "title": "Achieve 100% test pass rate",
+      "description": "As a developer, I want all 647 tests to pass so that the engine is verified as working correctly",
+      "acceptanceCriteria": [
+        "Run bin/rails test and get 0 failures, 0 errors",
+        "All 647 tests pass successfully",
+        "Document any changes made to achieve this in progress.txt",
+        "Update CLAUDE.md with new test count if changed",
+        "Commit changes with descriptive message"
+      ],
+      "priority": 5,
+      "passes": false
+    }
+  ]
+}

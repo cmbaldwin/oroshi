@@ -45,7 +45,7 @@ module Oroshi
       volume = calculate_volume(order)
       product_variation = order.product_variation
       product = product_variation.product
-      region_name = product_variation.region.name
+      region_name = product_variation.region&.name || "未設定地域"
 
       hash[region_name] ||= {}
       hash[region_name][product] ||= { total: 0, units: product.supply_type.units }

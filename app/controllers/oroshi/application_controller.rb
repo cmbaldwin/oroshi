@@ -4,6 +4,7 @@ class Oroshi::ApplicationController < ApplicationController
   include Pundit::Authorization
   helper OroshiHelper
   helper Oroshi::UrlHelper
+  helper Oroshi::DashboardHelper
 
   def address_attributes
     %i[id default active name company country_id subregion_id postal_code city address1 address2]

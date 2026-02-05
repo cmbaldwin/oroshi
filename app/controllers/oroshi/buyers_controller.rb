@@ -69,7 +69,9 @@ class Oroshi::BuyersController < Oroshi::ApplicationController
 
   # Only allow a list of trusted parameters through.
   def buyer_params
-    params[:oroshi_buyer][:active] = false if params[:oroshi_buyer][:active].to_i.zero?
+    if params[:oroshi_buyer] && params[:oroshi_buyer][:active]
+      params[:oroshi_buyer][:active] = false if params[:oroshi_buyer][:active].to_i.zero?
+    end
     params.require(:oroshi_buyer)
           .permit(:name, :entity_type, :handle, :representative_phone, :fax, :associated_system_id,
                   :color, :handling_cost, :handling_cost_notes, :daily_cost, :daily_cost_notes,

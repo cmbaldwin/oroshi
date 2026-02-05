@@ -2,8 +2,8 @@
 
 class Oroshi::Buyer::BuyerCategory < ApplicationRecord
   # Associations
-  belongs_to :buyer, class_name: "Oroshi::Order"
-  belongs_to :buyer_category, class_name: "Oroshi::OrderCategory"
+  belongs_to :buyer, class_name: "Oroshi::Buyer"
+  belongs_to :buyer_category, class_name: "Oroshi::BuyerCategory"
 
   # Validations
   validates :buyer_id, presence: true

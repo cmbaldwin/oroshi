@@ -57,8 +57,9 @@ class Oroshi::ShippingOrganizationsController < Oroshi::ApplicationController
 
   # Only allow a list of trusted parameters through.
   def shipping_organization_params
-    params[:oroshi_shipping_organization][:active] = false if params[:oroshi_shipping_organization][:active]
-                                                              .to_i.zero?
+    if params[:oroshi_shipping_organization] && params[:oroshi_shipping_organization][:active]
+      params[:oroshi_shipping_organization][:active] = false if params[:oroshi_shipping_organization][:active].to_i.zero?
+    end
     params.require(:oroshi_shipping_organization)
           .permit(:name, :handle, :active,
                   addresses_attributes: %i[id default active name company country_id phone

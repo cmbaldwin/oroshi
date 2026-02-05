@@ -75,20 +75,23 @@ class Oroshi::SupplierOrganizationsController < Oroshi::ApplicationController
   end
 
   def boolean_param_set
+    return unless params[:oroshi_supplier_organization]
+
     set_supplier_organization_booleans
     set_address_booleans if params[:oroshi_supplier_organization][:addresses_attributes]
   end
 
   def set_supplier_organization_booleans
     %i[free_entry active].each do |boolean|
+      next unless params[:oroshi_supplier_organization][boolean]
       params[:oroshi_supplier_organization][boolean] = !params[:oroshi_supplier_organization][boolean].to_i.zero?
     end
   end
 
   def set_address_booleans
     params[:oroshi_supplier_organization][:addresses_attributes].each_value do |address|
-      address[:default] = !address[:default].to_i.zero?
-      address[:active] = !address[:active].to_i.zero?
+      address[:default] = !address[:default].to_i.zero? if address[:default]
+      address[:active] = !address[:active].to_i.zero? if address[:active]
     end
   end
 end

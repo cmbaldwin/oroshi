@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_10_143000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_04_062157) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -76,6 +76,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_10_143000) do
     t.integer "subregion_id"
     t.datetime "updated_at", null: false
     t.index ["addressable_type", "addressable_id"], name: "index_oroshi_addresses_on_addressable"
+  end
+
+  create_table "oroshi_buyer_buyer_categories", force: :cascade do |t|
+    t.bigint "buyer_category_id", null: false
+    t.bigint "buyer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["buyer_category_id"], name: "index_oroshi_buyer_buyer_categories_on_buyer_category_id"
+    t.index ["buyer_id"], name: "index_oroshi_buyer_buyer_categories_on_buyer_id"
   end
 
   create_table "oroshi_buyer_categories", force: :cascade do |t|
@@ -183,6 +192,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_10_143000) do
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "oroshi_order_order_categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "order_category_id", null: false
+    t.bigint "order_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_category_id"], name: "index_oroshi_order_order_categories_on_order_category_id"
+    t.index ["order_id"], name: "index_oroshi_order_order_categories_on_order_id"
   end
 
   create_table "oroshi_order_templates", force: :cascade do |t|
@@ -607,6 +625,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_10_143000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "credentials", "users"
+  add_foreign_key "oroshi_buyer_buyer_categories", "oroshi_buyer_categories", column: "buyer_category_id"
+  add_foreign_key "oroshi_buyer_buyer_categories", "oroshi_buyers", column: "buyer_id"
   add_foreign_key "oroshi_buyers_shipping_methods", "oroshi_buyers", column: "buyer_id"
   add_foreign_key "oroshi_buyers_shipping_methods", "oroshi_shipping_methods", column: "shipping_method_id"
   add_foreign_key "oroshi_invoice_supplier_organizations", "oroshi_invoices", column: "invoice_id", on_delete: :cascade
@@ -615,6 +635,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_10_143000) do
   add_foreign_key "oroshi_invoice_supply_dates", "oroshi_supply_dates", column: "supply_date_id"
   add_foreign_key "oroshi_materials", "oroshi_material_categories", column: "material_category_id"
   add_foreign_key "oroshi_onboarding_progresses", "users"
+  add_foreign_key "oroshi_order_order_categories", "oroshi_order_categories", column: "order_category_id"
+  add_foreign_key "oroshi_order_order_categories", "oroshi_orders", column: "order_id"
   add_foreign_key "oroshi_order_templates", "oroshi_orders", column: "order_id"
   add_foreign_key "oroshi_orders", "oroshi_buyers", column: "buyer_id"
   add_foreign_key "oroshi_orders", "oroshi_orders", column: "bundled_with_order_id"

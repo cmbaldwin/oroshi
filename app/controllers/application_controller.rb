@@ -5,12 +5,6 @@ require "csv"
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  # Include Pundit for authorization
-  include Pundit::Authorization
-
-  # Handle unauthorized access attempts
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-
   # Conditionally add Devise authentication if available
   before_action :maybe_authenticate_user
   before_action :check_user
@@ -31,7 +25,7 @@ class ApplicationController < ActionController::Base
   def check_user
     return unless respond_to?(:current_user)
     return unless current_user
-    return if current_user.approved?
+    return if current_user.approved? || !current_user.user? || !current_user.employee?
 
     authentication_notice
   end
@@ -66,10 +60,6 @@ class ApplicationController < ActionController::Base
   def authentication_notice
     flash[:notice] = "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
     redirect_to root_path, error: "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
-  end
-
-  def user_not_authorized
-    authentication_notice
   end
 
   def set_locale

@@ -115,7 +115,7 @@ rails new sandbox \
   --skip-keeps \
   --skip-rc \
   --skip-test \
-  --skip-asset-pipeline \
+  --css=tailwind \
   --javascript=importmap
 
 # Move the generated app to the oroshi directory
@@ -128,9 +128,6 @@ rm -rf "$TEMP_DIR"
 # Add Oroshi and development gems to Gemfile
 echo "📝 Adding Oroshi to Gemfile..."
 cat <<RUBY >> Gemfile
-
-# Asset pipeline (required since we used --skip-asset-pipeline)
-gem "propshaft"
 
 # Oroshi engine (local development) - must be loaded in all environments
 gem "oroshi", path: "..", require: "oroshi"
@@ -154,10 +151,6 @@ RUBY
 # Bundle install (unbundled to avoid inheriting parent's gem environment)
 echo "📦 Installing gems..."
 unbundled bundle install --quiet
-
-# Remove default mailer layouts (we'll copy engine's main layout later)
-rm -f app/views/layouts/mailer.html.erb
-rm -f app/views/layouts/mailer.text.erb
 
 # Configure Oroshi (do this AFTER bundle install so Oroshi is loaded)
 echo "⚙️  Configuring Oroshi..."
@@ -286,46 +279,21 @@ production:
     migrations_paths: db/cable_migrate
 YAML
 
-# Create Procfile.dev for development with CSS compilation from engine
+# Create Procfile.dev for development
 echo "📋 Creating Procfile.dev..."
 cat > Procfile.dev <<PROCFILE
 web: bin/rails server -p 3000
-css: cd .. && bin/rails dartsass:watch
+css: bin/rails tailwindcss:watch
 PROCFILE
-
-# Create bin/dev script to use foreman
-echo "📋 Creating bin/dev script..."
-cat > bin/dev <<'BINDEV'
-#!/usr/bin/env sh
-
-if ! gem list foreman -i --silent; then
-  echo "Installing foreman..."
-  gem install foreman
-fi
-
-# Get the gem directory and construct the path to foreman
-GEM_DIR=$(gem environment gemdir)
-FOREMAN_BIN="$GEM_DIR/gems/foreman-0.90.0/bin/foreman"
-
-# Use the full path to foreman
-exec "$FOREMAN_BIN" start -f Procfile.dev "$@"
-BINDEV
-chmod +x bin/dev
 
 # Copy vendored JavaScript files from engine
 echo "📋 Copying vendored JavaScript files..."
 mkdir -p vendor/javascript
 cp -r ../vendor/javascript/* vendor/javascript/ 2>/dev/null || true
 
-# Symlink compiled CSS from engine (so dartsass:watch updates are reflected)
-echo "🎨 Linking CSS assets from engine..."
-mkdir -p app/assets/builds
-ln -sf ../../../../app/assets/builds/application.css app/assets/builds/application.css
-
-# Copy application layout (includes Bootstrap CDN and navbar)
-echo "📄 Copying application layout from engine..."
-mkdir -p app/views/layouts
-cp ../app/views/layouts/application.html.erb app/views/layouts/application.html.erb
+# Build Tailwind CSS (one-time build for initial setup)
+echo "🎨 Building Tailwind CSS..."
+unbundled bin/rails tailwindcss:build 2>/dev/null || echo "  Tailwind build skipped (will build on server start)"
 
 # Copy migrations from engine
 echo "📋 Copying migrations..."
@@ -410,8 +378,6 @@ unbundled bin/rails runner "
 User.insert({
   email: 'admin@oroshi.local',
   username: 'admin',
-  approved: true,
-  admin: true,
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:admin],
   confirmed_at: Time.current,
@@ -421,8 +387,6 @@ User.insert({
 User.insert({
   email: 'vip@oroshi.local',
   username: 'vip',
-  approved: true,
-  admin: false,
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:vip],
   confirmed_at: Time.current,
@@ -432,8 +396,6 @@ User.insert({
 User.insert({
   email: 'user@oroshi.local',
   username: 'user',
-  approved: true,
-  admin: false,
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:user],
   confirmed_at: Time.current,

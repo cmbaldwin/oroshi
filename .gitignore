@@ -73,3 +73,7 @@ tmp/local_secret.txt
 /.ralph/node_modules
 /.ralph/dist
 /.ralph/.last-branch
+
+# Test dummy app runtime files
+test/dummy/log/
+test/dummy/tmp/

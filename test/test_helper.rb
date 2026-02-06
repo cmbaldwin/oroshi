@@ -10,6 +10,7 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "dummy/config/environment"
 require "rails/test_help"
 require_relative "support/route_helpers"
+require "mocha/minitest"
 
 # Suppress Turbo broadcasts in tests (they fail with routing errors)
 module Turbo
@@ -27,6 +28,66 @@ module Turbo
     end
 
     def broadcast_remove_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_replace_later_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_append_later_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_prepend_later_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_remove_later_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_render_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_render_later_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_action_later_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_replace_later(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_remove(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_action_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_replace(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_append(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_prepend(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_refresh_later_to(*args, **kwargs)
+      # No-op in tests
+    end
+
+    def broadcast_refresh_later(*args, **kwargs)
       # No-op in tests
     end
   end

@@ -13,7 +13,7 @@
         "Run bin/rails test test/jobs/ and verify no factory errors"
       ],
       "priority": 1,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-002",

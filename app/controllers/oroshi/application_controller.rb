@@ -2,9 +2,7 @@
 
 class Oroshi::ApplicationController < ApplicationController
   include Pundit::Authorization
-  helper OroshiHelper
-  helper Oroshi::UrlHelper
-  helper Oroshi::DashboardHelper
+  helper :all
 
   def address_attributes
     %i[id default active name company country_id subregion_id postal_code city address1 address2]
@@ -19,7 +17,7 @@ class Oroshi::ApplicationController < ApplicationController
   end
 
   def authentication_notice
-    flash[:notice] = "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
-    redirect_to root_path, error: "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
+    flash[:notice] = t("common.messages.access_denied")
+    redirect_to root_path, error: t("common.messages.access_denied")
   end
 end

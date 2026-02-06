@@ -33,8 +33,8 @@ class Oroshi::TemplatesRouteTest < ActionDispatch::IntegrationTest
     get oroshi_orders_templates_path(date: "2026-01-10")
 
     assert_response :success
-    assert_no_selector ".alert-warning"
-    assert_selector ".order-grid"
+    assert_select ".alert-warning", false, "Should not show warning when templates exist"
+    assert_select ".order-grid"
   end
 
   test "templates route with filters and no results" do
@@ -53,6 +53,6 @@ class Oroshi::TemplatesRouteTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     # Should show no orders warning when filter results are empty
-    assert_selector ".alert-warning"
+    assert_select ".alert-warning"
   end
 end

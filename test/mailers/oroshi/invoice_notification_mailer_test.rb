@@ -11,7 +11,11 @@ class Oroshi::InvoiceNotificationMailerTest < ActionMailer::TestCase
     assert_includes mail.subject, invoice_supplier_organization.supplier_organization.micro_region
     assert_equal [ invoice_supplier_organization.supplier_organization.email ], mail.to
     expected_from = Setting.find_by(name: "oroshi_company_settings")&.settings&.dig("mail") || ENV.fetch("MAIL_SENDER", nil)
-    assert_equal [ expected_from ], mail.from
+    if expected_from
+      assert_equal [ expected_from ], mail.from
+    else
+      assert_nil mail.from
+    end
   end
 
   test "invoice_notification renders the body" do

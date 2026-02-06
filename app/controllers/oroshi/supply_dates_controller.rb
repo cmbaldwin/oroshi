@@ -90,11 +90,11 @@ class Oroshi::SupplyDatesController < Oroshi::ApplicationController
   def set_message
     @filename = "#{t('oroshi.supply_dates.pdf.filename')} #{params.values[2..].join}.pdf"
     @message = Message.new(
-      user: current_user.id,
-      model: "supply_check",
       state: false,
       message: "#{params[:date]}#{t('oroshi.supply_dates.pdf.processing_message')}",
       data: {
+        user: current_user.id,
+        model: "supply_check",
         supply_date: params[:date],
         filename: @filename,
         expiration: (DateTime.now + 1.day)

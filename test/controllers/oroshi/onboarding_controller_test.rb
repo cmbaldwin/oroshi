@@ -3,6 +3,9 @@ require "test_helper"
 class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user)
+    # Destroy the factory-created onboarding progress so tests can control it
+    @user.onboarding_progress&.destroy
+    @user.reload
     sign_in @user
     @first_step = Oroshi::OnboardingController::ALL_STEPS.first
     @second_step = Oroshi::OnboardingController::ALL_STEPS.second
@@ -41,7 +44,7 @@ class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
     @user.create_onboarding_progress!(current_step: @first_step)
     get oroshi_onboarding_path("invalid_step")
     assert_redirected_to oroshi_onboarding_index_path
-    assert_equal "Invalid step", flash[:alert]
+    assert_equal I18n.t("oroshi.onboarding.messages.invalid_step"), flash[:alert]
   end
 
   test "update marks step complete with valid company_info data" do
@@ -82,7 +85,7 @@ class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
     @user.create_onboarding_progress!(current_step: last_step)
     patch oroshi_onboarding_path(last_step)
     assert_redirected_to oroshi_root_path
-    assert_equal "Onboarding complete!", flash[:notice]
+    assert_equal I18n.t("oroshi.onboarding.messages.complete"), flash[:notice]
   end
 
   test "skip sets skipped_at" do
@@ -95,7 +98,7 @@ class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
     @user.create_onboarding_progress!(current_step: @first_step)
     post oroshi.skip_onboarding_path(@first_step)
     assert_redirected_to oroshi_root_path
-    assert_match(/skipped/i, flash[:notice])
+    assert_equal I18n.t("oroshi.onboarding.messages.skipped"), flash[:notice]
   end
 
   test "resume clears skipped_at" do
@@ -108,7 +111,7 @@ class Oroshi::OnboardingControllerTest < ActionDispatch::IntegrationTest
     @user.create_onboarding_progress!(current_step: @first_step, skipped_at: Time.current)
     post oroshi.resume_onboarding_path(@first_step)
     assert_redirected_to oroshi_onboarding_index_path
-    assert_match(/resuming/i, flash[:notice])
+    assert_equal I18n.t("oroshi.onboarding.messages.resuming"), flash[:notice]
   end
 
   test "company_info update fails without company name" do

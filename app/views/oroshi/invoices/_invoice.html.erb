@@ -29,12 +29,12 @@
                     },
                     class: 'btn btn-sm btn-primary' %>
         <% if @invoice.sent_at.nil? %>
-        <%= button_to '削除', 
-                @invoice, 
-                method: :delete, 
-                data: { 
+        <%= button_to '削除',
+                oroshi_invoice_path(@invoice),
+                method: :delete,
+                data: {
                   turbo_confirm: '削除しますか?'
-                }, 
+                },
                 class: 'btn btn-sm btn-danger float-end' %>
         <% else %>
         <button class="btn btn-sm btn-danger float-end" data-controller="tippy" data-tippy-content="削除できません。送信済みのため、受信者がファイルを開けなくなり、取引データが失われます。">

@@ -3,6 +3,8 @@
 require "csv"
 
 class ApplicationController < ActionController::Base
+  include Oroshi::UrlHelper
+
   protect_from_forgery with: :exception
 
   # Conditionally add Devise authentication if available
@@ -25,7 +27,8 @@ class ApplicationController < ActionController::Base
   def check_user
     return unless respond_to?(:current_user)
     return unless current_user
-    return if current_user.approved? || !current_user.user? || !current_user.employee?
+    return if current_user.approved?
+    return unless current_user.user? || current_user.employee?
 
     authentication_notice
   end
@@ -58,8 +61,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authentication_notice
-    flash[:notice] = "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
-    redirect_to root_path, error: "\u305D\u306E\u30DA\u30FC\u30B8\u306F\u30A2\u30AF\u30BB\u30B9\u3067\u304D\u307E\u305B\u3093\u3002"
+    flash[:notice] = t("common.messages.access_denied")
+    redirect_to root_path, error: t("common.messages.access_denied")
   end
 
   def set_locale

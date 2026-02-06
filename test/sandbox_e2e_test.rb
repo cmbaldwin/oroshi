@@ -4,6 +4,11 @@ require "test_helper"
 require "capybara/minitest"
 require "selenium-webdriver"
 require "open3"
+require "webmock"
+
+# Allow localhost connections for E2E testing
+# This is needed because we spin up a real sandbox server
+WebMock.allow_net_connect!(allow_localhost: true)
 
 # End-to-End Sandbox Test
 #

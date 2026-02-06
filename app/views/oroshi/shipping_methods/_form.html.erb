@@ -31,7 +31,7 @@
         <%= form.collection_select :shipping_organization_id, 
                                 @shipping_organizations, :id, 
                                 :name, 
-                                { selected: @shipping_method.shipping_organization ? @shipping_method.shipping_organization.id : @shipping_organizations.first.id }, 
+                                { selected: @shipping_method.shipping_organization ? @shipping_method.shipping_organization.id : @shipping_organizations.first&.id },
                                 { class: 'form-select form-select-sm' } %>
     </div>
 

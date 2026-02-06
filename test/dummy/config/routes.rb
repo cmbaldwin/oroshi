@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   # The User model is at the application level (not inside the engine)
   devise_for :users
 
+  # Health check route (standard in Rails 8+)
+  get "up", to: proc { [200, {}, ["OK"]] }
+
   # Mount Oroshi engine at /oroshi
   mount Oroshi::Engine => "/oroshi"
 

@@ -15,6 +15,11 @@ FactoryBot.define do
       user.skip_confirmation_notification!
     end
 
+    # Create a skipped onboarding progress so tests don't redirect to onboarding
+    after(:create) do |user|
+      user.create_onboarding_progress!(skipped_at: Time.current) unless user.onboarding_progress
+    end
+
     trait :admin do
       role { :admin }
       admin { true }

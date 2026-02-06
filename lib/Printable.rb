@@ -117,6 +117,10 @@ class Printable < Prawn::Document
   end
 
   def root(file)
+    if defined?(Oroshi::Engine)
+      engine_path = Oroshi::Engine.root.join(file)
+      return engine_path if engine_path.exist?
+    end
     Rails.root.join(file)
   end
 

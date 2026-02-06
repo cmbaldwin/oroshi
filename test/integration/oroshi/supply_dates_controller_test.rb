@@ -15,47 +15,43 @@ class Oroshi::SupplyDatesControllerTest < ActionDispatch::IntegrationTest
     supply_date = create(:oroshi_supply_date)
     supplier_organization = create(:oroshi_supplier_organization)
     supply_reception_time = create(:oroshi_supply_reception_time)
-    get oroshi_supply_dates_entry_path, params: {
-      date: supply_date.date,
-      supplier_organization_id: supplier_organization.id,
-      supply_reception_time_id: supply_reception_time.id
-    }, as: :turbo_stream
+    post entry_oroshi_supply_date_path(supply_date.date, supplier_organization.id, supply_reception_time.id),
+         as: :turbo_stream
     assert_response :success
   end
 
   # GET #checklist
   test "GET checklist returns http success" do
-    get oroshi_supply_dates_checklist_path, params: {
-      date: "2022-01-01",
-      subregion_ids: [ "1" ],
-      supply_reception_time_ids: [ "1" ]
-    }
+    get checklist_oroshi_supply_date_path("2022-01-01", "1", "1")
     assert_response :success
   end
 
   # GET #supply_price_actions
   test "GET supply_price_actions returns http success" do
-    get oroshi_supply_dates_supply_price_actions_path, as: :turbo_stream
+    supply_date = create(:oroshi_supply_date)
+    get supply_price_actions_oroshi_supply_dates_path, params: {
+      supply_dates: [ supply_date.date ]
+    }, as: :turbo_stream
     assert_response :ok
   end
 
   # GET #supply_invoice_actions
   test "GET supply_invoice_actions returns http success" do
     supply_date = create(:oroshi_supply_date)
-    get oroshi_supply_dates_supply_invoice_actions_path, params: {
+    get supply_invoice_actions_oroshi_supply_dates_path, params: {
       supply_dates: [ supply_date.date ]
     }, as: :turbo_stream
     assert_response :ok
   end
 
-  # GET #set_supply_prices
-  test "GET set_supply_prices returns http success and sets supply prices" do
+  # POST #set_supply_prices
+  test "POST set_supply_prices returns http success and sets supply prices" do
     supply_date = create(:oroshi_supply_date, :with_supplies, zero_price: true)
     supply_dates = [ supply_date ]
     set_supply_price_params = build_set_supply_price_params(supply_date, supply_dates)
 
     assert supply_date.supply.count > 0
-    get oroshi_supply_dates_set_supply_prices_path, params: set_supply_price_params, as: :turbo_stream
+    post set_supply_prices_oroshi_supply_dates_path, params: set_supply_price_params, as: :turbo_stream
     assert_response :success
     assert_equal 0, supply_date.incomplete_supply.count
   end

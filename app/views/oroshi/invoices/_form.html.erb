@@ -23,7 +23,7 @@
         </div>
         <% end %>
 
-        <%= form_with model: @invoice do |form| %>
+        <%= form_with model: @invoice, url: @invoice.persisted? ? oroshi_invoice_path(@invoice) : oroshi_invoices_path do |form| %>
         <%= form.hidden_field :start_date, value: @invoice.start_date %>
         <%= form.hidden_field :end_date, value: @invoice.end_date %>
         <% @supply_dates.each do |supply_date| %>

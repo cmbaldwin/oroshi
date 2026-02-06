@@ -36,7 +36,7 @@
         <%= form.collection_select :supplier_organization_id, 
                             @supplier_organizations, :id, 
                             :entity_name, 
-                            { selected: @supplier.supplier_organization ? @supplier.supplier_organization.id : @supplier_organizations.first.id }, 
+                            { selected: @supplier.supplier_organization ? @supplier.supplier_organization.id : @supplier_organizations.first&.id },
                             { class: 'form-select form-select-sm' } %>
     </div>
 

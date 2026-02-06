@@ -34,7 +34,7 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
 
     # Handle deletion - stay on same step
     if save_result == :deleted
-      redirect_to oroshi_onboarding_path(@step), notice: "削除しました"
+      redirect_to oroshi_onboarding_path(@step), notice: t("oroshi.onboarding.messages.deleted")
       return
     end
 
@@ -48,27 +48,27 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
     @progress.update!(current_step: next_step)
 
     if next_step
-      redirect_to oroshi_onboarding_path(next_step), notice: "Step completed!"
+      redirect_to oroshi_onboarding_path(next_step), notice: t("oroshi.onboarding.messages.step_completed")
     else
       # All steps complete
       @progress.update!(completed_at: Time.current)
-      redirect_to oroshi_root_path, notice: "Onboarding complete!"
+      redirect_to oroshi_root_path, notice: t("oroshi.onboarding.messages.complete")
     end
   end
 
   def skip
     @progress.update!(skipped_at: Time.current)
-    redirect_to oroshi_root_path, notice: "Onboarding skipped. You can resume anytime."
+    redirect_to oroshi_root_path, notice: t("oroshi.onboarding.messages.skipped")
   end
 
   def resume
     @progress.update!(skipped_at: nil, checklist_dismissed_at: nil)
-    redirect_to oroshi_onboarding_index_path, notice: "Resuming onboarding..."
+    redirect_to oroshi_onboarding_index_path, notice: t("oroshi.onboarding.messages.resuming")
   end
 
   def dismiss_checklist
     @progress.update!(checklist_dismissed_at: Time.current)
-    redirect_to oroshi_root_path, notice: "チェックリストを非表示にしました"
+    redirect_to oroshi_root_path, notice: t("oroshi.onboarding.messages.checklist_hidden")
   end
 
   private
@@ -81,7 +81,7 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
     if respond_to?(:authenticate_user!, true)
       authenticate_user!
     else
-      redirect_to root_path, alert: "Please sign in to continue."
+      redirect_to root_path, alert: t("common.messages.sign_in_required")
     end
   end
 
@@ -91,7 +91,7 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
 
   def set_step
     @step = params[:id]
-    redirect_to oroshi_onboarding_index_path, alert: "Invalid step" unless ALL_STEPS.include?(@step)
+    redirect_to oroshi_onboarding_index_path, alert: t("oroshi.onboarding.messages.invalid_step") unless ALL_STEPS.include?(@step)
   end
 
   def next_step
@@ -136,15 +136,15 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
     @validation_errors = []
 
     if company_settings_params[:name].blank?
-      @validation_errors << "会社名は必須です"
+      @validation_errors << t("oroshi.onboarding.steps.company_info.validations.company_name_required")
     end
 
     if company_settings_params[:postal_code].blank?
-      @validation_errors << "郵便番号は必須です"
+      @validation_errors << t("oroshi.onboarding.steps.company_info.validations.postal_code_required")
     end
 
     if company_settings_params[:address].blank?
-      @validation_errors << "住所は必須です"
+      @validation_errors << t("oroshi.onboarding.steps.company_info.validations.address_required")
     end
 
     return false if @validation_errors.any?
@@ -152,7 +152,7 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
     Setting.find_or_initialize_by(name: "oroshi_company_settings")
            .update(settings: company_settings_params.to_h)
   rescue ActionController::ParameterMissing => e
-    @validation_errors << "必須項目が入力されていません"
+    @validation_errors << t("oroshi.onboarding.steps.company_info.validations.required_fields_missing")
     false
   end
 

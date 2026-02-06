@@ -79,6 +79,7 @@ group :test do
   gem "faker"                       # Fake data generator
   gem "ffaker"                      # Fast fake data generator
   gem "minitest", "< 6.0"           # Testing framework
+  gem "mocha"                       # Mocking and stubbing for Minitest
   gem "parallel_tests"              # Parallel test execution
   gem "selenium-webdriver"          # Browser automation for system tests
   gem "webmock"                     # HTTP request stubbing

@@ -15,9 +15,9 @@ FactoryBot.define do
     end
 
     after(:create) do |material|
-      # Attach an image from a URL
+      # Attach a minimal placeholder image for testing
       material.image.attach(
-        io: URI.open("https://placehold.co/600x400"),
+        io: StringIO.new("fake-image-data"),
         filename: "placeholder.png",
         content_type: "image/png"
       )

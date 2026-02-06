@@ -20,8 +20,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.string "name", null: false
     t.bigint "record_id", null: false
     t.string "record_type", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index [ "blob_id" ], name: "index_active_storage_attachments_on_blob_id"
+    t.index [ "record_type", "record_id", "name", "blob_id" ], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -33,13 +33,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.string "key", null: false
     t.text "metadata"
     t.string "service_name", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index [ "key" ], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index [ "blob_id", "variation_digest" ], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "credentials", force: :cascade do |t|
@@ -52,10 +52,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.text "value"
-    t.index ["expires_at"], name: "index_credentials_on_expires_at"
-    t.index ["service", "key_name", "user_id"], name: "index_credentials_on_service_key_user", unique: true
-    t.index ["status"], name: "index_credentials_on_status"
-    t.index ["user_id"], name: "index_credentials_on_user_id"
+    t.index [ "expires_at" ], name: "index_credentials_on_expires_at"
+    t.index [ "service", "key_name", "user_id" ], name: "index_credentials_on_service_key_user", unique: true
+    t.index [ "status" ], name: "index_credentials_on_status"
+    t.index [ "user_id" ], name: "index_credentials_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -83,7 +83,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.string "postal_code"
     t.integer "subregion_id"
     t.datetime "updated_at", null: false
-    t.index ["addressable_type", "addressable_id"], name: "index_oroshi_addresses_on_addressable"
+    t.index [ "addressable_type", "addressable_id" ], name: "index_oroshi_addresses_on_addressable"
   end
 
   create_table "oroshi_buyer_buyer_categories", force: :cascade do |t|
@@ -91,8 +91,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "buyer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["buyer_category_id"], name: "index_oroshi_buyer_buyer_categories_on_buyer_category_id"
-    t.index ["buyer_id"], name: "index_oroshi_buyer_buyer_categories_on_buyer_id"
+    t.index [ "buyer_category_id" ], name: "index_oroshi_buyer_buyer_categories_on_buyer_category_id"
+    t.index [ "buyer_id" ], name: "index_oroshi_buyer_buyer_categories_on_buyer_id"
   end
 
   create_table "oroshi_buyer_categories", force: :cascade do |t|
@@ -129,8 +129,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.datetime "created_at", null: false
     t.bigint "shipping_method_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["buyer_id"], name: "index_oroshi_buyers_shipping_methods_on_buyer_id"
-    t.index ["shipping_method_id"], name: "index_oroshi_buyers_shipping_methods_on_shipping_method_id"
+    t.index [ "buyer_id" ], name: "index_oroshi_buyers_shipping_methods_on_buyer_id"
+    t.index [ "shipping_method_id" ], name: "index_oroshi_buyers_shipping_methods_on_shipping_method_id"
   end
 
   create_table "oroshi_invoice_supplier_organizations", force: :cascade do |t|
@@ -141,8 +141,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.datetime "sent_at"
     t.bigint "supplier_organization_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["invoice_id"], name: "index_oroshi_invoice_supplier_organizations_on_invoice_id"
-    t.index ["supplier_organization_id"], name: "idx_on_supplier_organization_id_85375e363b"
+    t.index [ "invoice_id" ], name: "index_oroshi_invoice_supplier_organizations_on_invoice_id"
+    t.index [ "supplier_organization_id" ], name: "idx_on_supplier_organization_id_85375e363b"
   end
 
   create_table "oroshi_invoice_supply_dates", force: :cascade do |t|
@@ -150,8 +150,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "invoice_id", null: false
     t.bigint "supply_date_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["invoice_id"], name: "index_oroshi_invoice_supply_dates_on_invoice_id"
-    t.index ["supply_date_id"], name: "index_oroshi_invoice_supply_dates_on_supply_date_id"
+    t.index [ "invoice_id" ], name: "index_oroshi_invoice_supply_dates_on_invoice_id"
+    t.index [ "supply_date_id" ], name: "index_oroshi_invoice_supply_dates_on_supply_date_id"
   end
 
   create_table "oroshi_invoices", force: :cascade do |t|
@@ -180,7 +180,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.string "name", null: false
     t.integer "per", null: false
     t.datetime "updated_at", null: false
-    t.index ["material_category_id"], name: "index_oroshi_materials_on_material_category_id"
+    t.index [ "material_category_id" ], name: "index_oroshi_materials_on_material_category_id"
   end
 
   create_table "oroshi_onboarding_progresses", force: :cascade do |t|
@@ -192,7 +192,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.datetime "skipped_at"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_oroshi_onboarding_progresses_on_user_id"
+    t.index [ "user_id" ], name: "index_oroshi_onboarding_progresses_on_user_id"
   end
 
   create_table "oroshi_order_categories", force: :cascade do |t|
@@ -207,8 +207,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "order_category_id", null: false
     t.bigint "order_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["order_category_id"], name: "index_oroshi_order_order_categories_on_order_category_id"
-    t.index ["order_id"], name: "index_oroshi_order_order_categories_on_order_id"
+    t.index [ "order_category_id" ], name: "index_oroshi_order_order_categories_on_order_category_id"
+    t.index [ "order_id" ], name: "index_oroshi_order_order_categories_on_order_id"
   end
 
   create_table "oroshi_order_templates", force: :cascade do |t|
@@ -217,7 +217,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.text "notes"
     t.bigint "order_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["order_id"], name: "index_oroshi_order_templates_on_order_id"
+    t.index [ "order_id" ], name: "index_oroshi_order_templates_on_order_id"
   end
 
   create_table "oroshi_orders", force: :cascade do |t|
@@ -243,13 +243,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "shipping_receptacle_id", null: false
     t.integer "status"
     t.datetime "updated_at", null: false
-    t.index ["bundled_with_order_id"], name: "index_oroshi_orders_on_bundled_with_order_id"
-    t.index ["buyer_id"], name: "index_oroshi_orders_on_buyer_id"
-    t.index ["payment_receipt_id"], name: "index_oroshi_orders_on_payment_receipt_id"
-    t.index ["product_inventory_id"], name: "index_oroshi_orders_on_product_inventory_id"
-    t.index ["product_variation_id"], name: "index_oroshi_orders_on_product_variation_id"
-    t.index ["shipping_method_id"], name: "index_oroshi_orders_on_shipping_method_id"
-    t.index ["shipping_receptacle_id"], name: "index_oroshi_orders_on_shipping_receptacle_id"
+    t.index [ "bundled_with_order_id" ], name: "index_oroshi_orders_on_bundled_with_order_id"
+    t.index [ "buyer_id" ], name: "index_oroshi_orders_on_buyer_id"
+    t.index [ "payment_receipt_id" ], name: "index_oroshi_orders_on_payment_receipt_id"
+    t.index [ "product_inventory_id" ], name: "index_oroshi_orders_on_product_inventory_id"
+    t.index [ "product_variation_id" ], name: "index_oroshi_orders_on_product_variation_id"
+    t.index [ "shipping_method_id" ], name: "index_oroshi_orders_on_shipping_method_id"
+    t.index [ "shipping_receptacle_id" ], name: "index_oroshi_orders_on_shipping_receptacle_id"
   end
 
   create_table "oroshi_packagings", force: :cascade do |t|
@@ -259,7 +259,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.string "name", null: false
     t.bigint "product_id"
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_oroshi_packagings_on_product_id"
+    t.index [ "product_id" ], name: "index_oroshi_packagings_on_product_id"
   end
 
   create_table "oroshi_payment_receipt_adjustment_types", force: :cascade do |t|
@@ -275,8 +275,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "payment_receipt_adjustment_type_id", null: false
     t.bigint "payment_receipt_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["payment_receipt_adjustment_type_id"], name: "idx_on_payment_receipt_adjustment_type_id_9bd7deeb86"
-    t.index ["payment_receipt_id"], name: "index_oroshi_payment_receipt_adjustments_on_payment_receipt_id"
+    t.index [ "payment_receipt_adjustment_type_id" ], name: "idx_on_payment_receipt_adjustment_type_id_9bd7deeb86"
+    t.index [ "payment_receipt_id" ], name: "index_oroshi_payment_receipt_adjustments_on_payment_receipt_id"
   end
 
   create_table "oroshi_payment_receipts", force: :cascade do |t|
@@ -289,7 +289,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.string "note"
     t.decimal "total", default: "0.0", null: false
     t.datetime "updated_at", null: false
-    t.index ["buyer_id"], name: "index_oroshi_payment_receipts_on_buyer_id"
+    t.index [ "buyer_id" ], name: "index_oroshi_payment_receipts_on_buyer_id"
   end
 
   create_table "oroshi_product_inventories", force: :cascade do |t|
@@ -299,7 +299,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "product_variation_id", null: false
     t.integer "quantity", default: 0, null: false
     t.datetime "updated_at", null: false
-    t.index ["product_variation_id"], name: "index_oroshi_product_inventories_on_product_variation_id"
+    t.index [ "product_variation_id" ], name: "index_oroshi_product_inventories_on_product_variation_id"
   end
 
   create_table "oroshi_product_materials", force: :cascade do |t|
@@ -307,8 +307,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "material_id", null: false
     t.bigint "product_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["material_id"], name: "index_oroshi_product_materials_on_material_id"
-    t.index ["product_id"], name: "index_oroshi_product_materials_on_product_id"
+    t.index [ "material_id" ], name: "index_oroshi_product_materials_on_material_id"
+    t.index [ "product_id" ], name: "index_oroshi_product_materials_on_product_id"
   end
 
   create_table "oroshi_product_variation_packagings", force: :cascade do |t|
@@ -316,8 +316,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "packaging_id", null: false
     t.bigint "product_variation_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["packaging_id"], name: "index_oroshi_product_variation_packagings_on_packaging_id"
-    t.index ["product_variation_id"], name: "idx_on_product_variation_id_9188fea723"
+    t.index [ "packaging_id" ], name: "index_oroshi_product_variation_packagings_on_packaging_id"
+    t.index [ "product_variation_id" ], name: "idx_on_product_variation_id_9188fea723"
   end
 
   create_table "oroshi_product_variation_production_zones", force: :cascade do |t|
@@ -325,8 +325,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "product_variation_id", null: false
     t.bigint "production_zone_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_variation_id"], name: "idx_on_product_variation_id_d080048cfb"
-    t.index ["production_zone_id"], name: "idx_on_production_zone_id_cc4cc5a5ab"
+    t.index [ "product_variation_id" ], name: "idx_on_product_variation_id_d080048cfb"
+    t.index [ "production_zone_id" ], name: "idx_on_production_zone_id_cc4cc5a5ab"
   end
 
   create_table "oroshi_product_variation_supply_type_variations", force: :cascade do |t|
@@ -334,8 +334,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "product_variation_id", null: false
     t.bigint "supply_type_variation_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_variation_id"], name: "idx_on_product_variation_id_0daf74b3b8"
-    t.index ["supply_type_variation_id"], name: "idx_on_supply_type_variation_id_8cd5e1bc89"
+    t.index [ "product_variation_id" ], name: "idx_on_product_variation_id_0daf74b3b8"
+    t.index [ "supply_type_variation_id" ], name: "idx_on_supply_type_variation_id_8cd5e1bc89"
   end
 
   create_table "oroshi_product_variations", force: :cascade do |t|
@@ -352,8 +352,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.integer "shelf_life"
     t.decimal "spacing_volume_adjustment", precision: 5, scale: 2, default: "1.0"
     t.datetime "updated_at", null: false
-    t.index ["default_shipping_receptacle_id"], name: "idx_on_default_shipping_receptacle_id_8db7516e01"
-    t.index ["product_id"], name: "index_oroshi_product_variations_on_product_id"
+    t.index [ "default_shipping_receptacle_id" ], name: "idx_on_default_shipping_receptacle_id_8db7516e01"
+    t.index [ "product_id" ], name: "index_oroshi_product_variations_on_product_id"
   end
 
   create_table "oroshi_production_requests", force: :cascade do |t|
@@ -366,10 +366,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "shipping_receptacle_id"
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
-    t.index ["product_inventory_id"], name: "index_oroshi_production_requests_on_product_inventory_id"
-    t.index ["product_variation_id"], name: "index_oroshi_production_requests_on_product_variation_id"
-    t.index ["production_zone_id"], name: "index_oroshi_production_requests_on_production_zone_id"
-    t.index ["shipping_receptacle_id"], name: "index_oroshi_production_requests_on_shipping_receptacle_id"
+    t.index [ "product_inventory_id" ], name: "index_oroshi_production_requests_on_product_inventory_id"
+    t.index [ "product_variation_id" ], name: "index_oroshi_production_requests_on_product_variation_id"
+    t.index [ "production_zone_id" ], name: "index_oroshi_production_requests_on_production_zone_id"
+    t.index [ "shipping_receptacle_id" ], name: "index_oroshi_production_requests_on_shipping_receptacle_id"
   end
 
   create_table "oroshi_production_zones", force: :cascade do |t|
@@ -392,7 +392,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.decimal "tax_rate", precision: 5, scale: 2, default: "0.0"
     t.string "units", null: false
     t.datetime "updated_at", null: false
-    t.index ["supply_type_id"], name: "index_oroshi_products_on_supply_type_id"
+    t.index [ "supply_type_id" ], name: "index_oroshi_products_on_supply_type_id"
   end
 
   create_table "oroshi_shipping_methods", force: :cascade do |t|
@@ -406,7 +406,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.float "per_shipping_receptacle_cost", default: 0.0, null: false
     t.bigint "shipping_organization_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["shipping_organization_id"], name: "index_oroshi_shipping_methods_on_shipping_organization_id"
+    t.index [ "shipping_organization_id" ], name: "index_oroshi_shipping_methods_on_shipping_organization_id"
   end
 
   create_table "oroshi_shipping_organizations", force: :cascade do |t|
@@ -454,8 +454,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
   create_table "oroshi_supplier_organizations_oroshi_supply_reception_times", force: :cascade do |t|
     t.bigint "supplier_organization_id", null: false
     t.bigint "supply_reception_time_id", null: false
-    t.index ["supplier_organization_id"], name: "idx_on_supplier_organization_id_cecc289244"
-    t.index ["supply_reception_time_id"], name: "idx_on_supply_reception_time_id_bd1921216d"
+    t.index [ "supplier_organization_id" ], name: "idx_on_supplier_organization_id_cecc289244"
+    t.index [ "supply_reception_time_id" ], name: "idx_on_supply_reception_time_id_bd1921216d"
   end
 
   create_table "oroshi_suppliers", force: :cascade do |t|
@@ -472,7 +472,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "supplier_organization_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.index ["supplier_organization_id"], name: "index_oroshi_suppliers_on_supplier_organization_id"
+    t.index [ "supplier_organization_id" ], name: "index_oroshi_suppliers_on_supplier_organization_id"
   end
 
   create_table "oroshi_suppliers_oroshi_supply_type_variations", force: :cascade do |t|
@@ -480,8 +480,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "supplier_id", null: false
     t.bigint "supply_type_variation_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["supplier_id"], name: "idx_on_supplier_id_78ea5376f0"
-    t.index ["supply_type_variation_id"], name: "idx_on_supply_type_variation_id_ed73826397"
+    t.index [ "supplier_id" ], name: "idx_on_supplier_id_78ea5376f0"
+    t.index [ "supply_type_variation_id" ], name: "idx_on_supply_type_variation_id_ed73826397"
   end
 
   create_table "oroshi_supplies", force: :cascade do |t|
@@ -495,10 +495,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "supply_reception_time_id", null: false
     t.bigint "supply_type_variation_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["supplier_id"], name: "index_oroshi_supplies_on_supplier_id"
-    t.index ["supply_date_id"], name: "index_oroshi_supplies_on_supply_date_id"
-    t.index ["supply_reception_time_id"], name: "index_oroshi_supplies_on_supply_reception_time_id"
-    t.index ["supply_type_variation_id"], name: "index_oroshi_supplies_on_supply_type_variation_id"
+    t.index [ "supplier_id" ], name: "index_oroshi_supplies_on_supplier_id"
+    t.index [ "supply_date_id" ], name: "index_oroshi_supplies_on_supply_date_id"
+    t.index [ "supply_reception_time_id" ], name: "index_oroshi_supplies_on_supply_reception_time_id"
+    t.index [ "supply_type_variation_id" ], name: "index_oroshi_supplies_on_supply_type_variation_id"
   end
 
   create_table "oroshi_supply_date_supplier_organizations", force: :cascade do |t|
@@ -506,10 +506,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "supplier_organization_id", null: false
     t.bigint "supply_date_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["supplier_organization_id", "supply_date_id"], name: "index_supplier_organizations_supply_dates_on_ids"
-    t.index ["supplier_organization_id"], name: "idx_on_supplier_organization_id_a9291c6a52"
-    t.index ["supply_date_id", "supplier_organization_id"], name: "index_supply_date_supplier_organizations_on_ids", unique: true
-    t.index ["supply_date_id"], name: "idx_on_supply_date_id_c5793d363e"
+    t.index [ "supplier_organization_id", "supply_date_id" ], name: "index_supplier_organizations_supply_dates_on_ids"
+    t.index [ "supplier_organization_id" ], name: "idx_on_supplier_organization_id_a9291c6a52"
+    t.index [ "supply_date_id", "supplier_organization_id" ], name: "index_supply_date_supplier_organizations_on_ids", unique: true
+    t.index [ "supply_date_id" ], name: "idx_on_supply_date_id_c5793d363e"
   end
 
   create_table "oroshi_supply_date_suppliers", force: :cascade do |t|
@@ -517,10 +517,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "supplier_id", null: false
     t.bigint "supply_date_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["supplier_id", "supply_date_id"], name: "index_suppliers_supply_dates_on_ids"
-    t.index ["supplier_id"], name: "index_oroshi_supply_date_suppliers_on_supplier_id"
-    t.index ["supply_date_id", "supplier_id"], name: "index_supply_date_suppliers_on_ids", unique: true
-    t.index ["supply_date_id"], name: "index_oroshi_supply_date_suppliers_on_supply_date_id"
+    t.index [ "supplier_id", "supply_date_id" ], name: "index_suppliers_supply_dates_on_ids"
+    t.index [ "supplier_id" ], name: "index_oroshi_supply_date_suppliers_on_supplier_id"
+    t.index [ "supply_date_id", "supplier_id" ], name: "index_supply_date_suppliers_on_ids", unique: true
+    t.index [ "supply_date_id" ], name: "index_oroshi_supply_date_suppliers_on_supply_date_id"
   end
 
   create_table "oroshi_supply_date_supply_type_variations", force: :cascade do |t|
@@ -529,10 +529,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "supply_type_variation_id", null: false
     t.integer "total", default: 0
     t.datetime "updated_at", null: false
-    t.index ["supply_date_id", "supply_type_variation_id"], name: "index_supply_date_supply_type_variations_on_ids", unique: true
-    t.index ["supply_date_id"], name: "idx_on_supply_date_id_2fa23a9b0e"
-    t.index ["supply_type_variation_id", "supply_date_id"], name: "index_supply_type_variations_supply_dates_on_ids"
-    t.index ["supply_type_variation_id"], name: "idx_on_supply_type_variation_id_87a1480921"
+    t.index [ "supply_date_id", "supply_type_variation_id" ], name: "index_supply_date_supply_type_variations_on_ids", unique: true
+    t.index [ "supply_date_id" ], name: "idx_on_supply_date_id_2fa23a9b0e"
+    t.index [ "supply_type_variation_id", "supply_date_id" ], name: "index_supply_type_variations_supply_dates_on_ids"
+    t.index [ "supply_type_variation_id" ], name: "idx_on_supply_type_variation_id_87a1480921"
   end
 
   create_table "oroshi_supply_date_supply_types", force: :cascade do |t|
@@ -541,10 +541,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.bigint "supply_type_id", null: false
     t.integer "total", default: 0
     t.datetime "updated_at", null: false
-    t.index ["supply_date_id", "supply_type_id"], name: "index_supply_date_supply_types_on_ids", unique: true
-    t.index ["supply_date_id"], name: "index_oroshi_supply_date_supply_types_on_supply_date_id"
-    t.index ["supply_type_id", "supply_date_id"], name: "index_supply_types_supply_dates_on_ids"
-    t.index ["supply_type_id"], name: "index_oroshi_supply_date_supply_types_on_supply_type_id"
+    t.index [ "supply_date_id", "supply_type_id" ], name: "index_supply_date_supply_types_on_ids", unique: true
+    t.index [ "supply_date_id" ], name: "index_oroshi_supply_date_supply_types_on_supply_date_id"
+    t.index [ "supply_type_id", "supply_date_id" ], name: "index_supply_types_supply_dates_on_ids"
+    t.index [ "supply_type_id" ], name: "index_oroshi_supply_date_supply_types_on_supply_type_id"
   end
 
   create_table "oroshi_supply_dates", force: :cascade do |t|
@@ -552,7 +552,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.date "date", null: false
     t.jsonb "totals", default: {}
     t.datetime "updated_at", null: false
-    t.index ["date"], name: "index_oroshi_supply_dates_on_date", unique: true
+    t.index [ "date" ], name: "index_oroshi_supply_dates_on_date", unique: true
   end
 
   create_table "oroshi_supply_reception_times", force: :cascade do |t|
@@ -571,7 +571,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.integer "position", default: 1, null: false
     t.bigint "supply_type_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["supply_type_id"], name: "index_oroshi_supply_type_variations_on_supply_type_id"
+    t.index [ "supply_type_id" ], name: "index_oroshi_supply_type_variations_on_supply_type_id"
   end
 
   create_table "oroshi_supply_types", force: :cascade do |t|
@@ -591,8 +591,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.boolean "enabled", default: false, null: false
     t.string "service", null: false
     t.datetime "updated_at", null: false
-    t.index ["enabled"], name: "index_service_configurations_on_enabled"
-    t.index ["service"], name: "index_service_configurations_on_service", unique: true
+    t.index [ "enabled" ], name: "index_service_configurations_on_enabled"
+    t.index [ "service" ], name: "index_service_configurations_on_service", unique: true
   end
 
   create_table "settings", force: :cascade do |t|
@@ -623,11 +623,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_000001) do
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "username"
-    t.index ["approved"], name: "index_users_on_approved"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
+    t.index [ "approved" ], name: "index_users_on_approved"
+    t.index [ "confirmation_token" ], name: "index_users_on_confirmation_token", unique: true
+    t.index [ "email" ], name: "index_users_on_email", unique: true
+    t.index [ "reset_password_token" ], name: "index_users_on_reset_password_token", unique: true
+    t.index [ "username" ], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

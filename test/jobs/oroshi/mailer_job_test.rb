@@ -40,7 +40,7 @@ class Oroshi::MailerJobTest < ActiveJob::TestCase
     invoice = stub(
       id: 1,
       sent_at: nil,
-      invoice_supplier_organizations: [join],
+      invoice_supplier_organizations: [ join ],
       errors: stub(full_messages: [])
     )
     invoice.stubs(:sent_at=)
@@ -72,7 +72,7 @@ class Oroshi::MailerJobTest < ActiveJob::TestCase
     invoice = stub(
       id: 1,
       sent_at: nil,
-      invoice_supplier_organizations: [join],
+      invoice_supplier_organizations: [ join ],
       errors: stub(full_messages: [])
     )
     invoice.stubs(:sent_at=)
@@ -105,7 +105,7 @@ class Oroshi::MailerJobTest < ActiveJob::TestCase
     invoice = stub(
       id: 1,
       sent_at: nil,
-      invoice_supplier_organizations: [join],
+      invoice_supplier_organizations: [ join ],
       errors: stub(full_messages: [])
     )
     invoice.stubs(:sent_at=)
@@ -160,7 +160,7 @@ class Oroshi::MailerJobTest < ActiveJob::TestCase
     invoice1 = stub(
       id: 1,
       sent_at: nil,
-      invoice_supplier_organizations: [join1],
+      invoice_supplier_organizations: [ join1 ],
       errors: stub(full_messages: [])
     )
     invoice1.stubs(:sent_at=)
@@ -169,7 +169,7 @@ class Oroshi::MailerJobTest < ActiveJob::TestCase
     invoice2 = stub(
       id: 2,
       sent_at: nil,
-      invoice_supplier_organizations: [join2],
+      invoice_supplier_organizations: [ join2 ],
       errors: stub(full_messages: [])
     )
     invoice2.stubs(:sent_at=)
@@ -177,7 +177,7 @@ class Oroshi::MailerJobTest < ActiveJob::TestCase
 
     mailer_double = stub(deliver_now: true)
 
-    Oroshi::Invoice.stubs(:unsent).returns([invoice1, invoice2])
+    Oroshi::Invoice.stubs(:unsent).returns([ invoice1, invoice2 ])
     Oroshi::InvoiceMailer.stubs(:invoice_notification).returns(mailer_double)
 
     # Should call save on both invoices

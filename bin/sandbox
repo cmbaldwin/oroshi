@@ -295,11 +295,6 @@ cp -r ../vendor/javascript/* vendor/javascript/ 2>/dev/null || true
 echo "🎨 Building Tailwind CSS..."
 unbundled bin/rails tailwindcss:build 2>/dev/null || echo "  Tailwind build skipped (will build on server start)"
 
-# Copy migrations from engine
-echo "📋 Copying migrations..."
-mkdir -p db/migrate
-cp -r ../db/migrate/* db/migrate/
-
 # Copy Solid schemas
 echo "📋 Setting up Solid Queue, Cache, and Cable..."
 mkdir -p db/queue_migrate db/cache_migrate db/cable_migrate
@@ -328,6 +323,11 @@ fi
 unbundled bin/rails db:schema:load:queue
 unbundled bin/rails db:schema:load:cache
 unbundled bin/rails db:schema:load:cable
+
+# Remove migration files after schema load to prevent pending migration warnings
+# Since we loaded the schema directly, we don't need the individual migrations
+echo "🧹 Cleaning up migration files..."
+rm -rf db/migrate/*
 
 # Now create full User model with Devise configuration
 echo "👤 Creating full User model..."

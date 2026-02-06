@@ -52,7 +52,7 @@ class Oroshi::SupplyTypeVariationsController < Oroshi::ApplicationController
 
     # Respond to the AJAX request
     respond_to do |format|
-      format.json { render json: { message: t('oroshi.supply_type_variations.messages.positions_updated') }, status: :ok }
+      format.json { render json: { message: t("oroshi.supply_type_variations.messages.positions_updated") }, status: :ok }
     end
   rescue StandardError => e
     respond_to do |format|

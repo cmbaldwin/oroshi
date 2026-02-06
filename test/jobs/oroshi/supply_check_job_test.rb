@@ -6,8 +6,8 @@ class Oroshi::SupplyCheckJobTest < ActiveJob::TestCase
   setup do
     @message = create(:message, data: { filename: "supply_check.pdf" })
     @supply_date = Date.new(2025, 10, 8)
-    @subregion_ids = [1, 2, 3]
-    @supply_reception_time_ids = [1, 2]
+    @subregion_ids = [ 1, 2, 3 ]
+    @supply_reception_time_ids = [ 1, 2 ]
   end
 
   test "attaches PDF to message" do
@@ -74,9 +74,9 @@ class Oroshi::SupplyCheckJobTest < ActiveJob::TestCase
     supply_check = stub(render: "PDF content")
 
     Oroshi::SupplyDate.stubs(:find_by).returns(supply_date_record)
-    SupplyCheck.expects(:new).with(@supply_date, [1], @supply_reception_time_ids).returns(supply_check)
+    SupplyCheck.expects(:new).with(@supply_date, [ 1 ], @supply_reception_time_ids).returns(supply_check)
 
-    Oroshi::SupplyCheckJob.perform_now(@supply_date, @message.id, [1], @supply_reception_time_ids)
+    Oroshi::SupplyCheckJob.perform_now(@supply_date, @message.id, [ 1 ], @supply_reception_time_ids)
   end
 
   test "handles empty arrays" do
@@ -90,8 +90,8 @@ class Oroshi::SupplyCheckJobTest < ActiveJob::TestCase
   end
 
   test "handles multiple IDs" do
-    large_subregion_ids = [1, 2, 3, 4, 5]
-    large_reception_ids = [1, 2, 3]
+    large_subregion_ids = [ 1, 2, 3, 4, 5 ]
+    large_reception_ids = [ 1, 2, 3 ]
     supply_date_record = stub(date: @supply_date)
     supply_check = stub(render: "PDF content")
 

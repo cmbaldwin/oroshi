@@ -28,11 +28,11 @@ class Oroshi::InvoiceJobTest < ActiveJob::TestCase
       end_date: Date.new(2025, 10, 31),
       invoice_layout: "standard",
       invoice_date: Date.new(2025, 10, 31),
-      invoice_supplier_organizations: [join]
+      invoice_supplier_organizations: [ join ]
     )
 
     invoices_attachment.stubs(:purge)
-    invoices_attachment.stubs(:attach).returns([invoice_record])
+    invoices_attachment.stubs(:attach).returns([ invoice_record ])
 
     Oroshi::Invoice.stubs(:find).with(1).returns(invoice)
     OroshiInvoice.stubs(:new).returns(oroshi_invoice)
@@ -66,10 +66,10 @@ class Oroshi::InvoiceJobTest < ActiveJob::TestCase
       invoice_layout: "standard",
       invoice_date: Date.new(2025, 10, 31)
     )
-    invoice.expects(:invoice_supplier_organizations).returns([join])
+    invoice.expects(:invoice_supplier_organizations).returns([ join ])
 
     invoices_attachment.stubs(:purge)
-    invoices_attachment.stubs(:attach).returns([invoice_record])
+    invoices_attachment.stubs(:attach).returns([ invoice_record ])
 
     Oroshi::Invoice.stubs(:find).returns(invoice)
     OroshiInvoice.stubs(:new).returns(oroshi_invoice)
@@ -98,11 +98,11 @@ class Oroshi::InvoiceJobTest < ActiveJob::TestCase
       end_date: Date.new(2025, 10, 31),
       invoice_layout: "standard",
       invoice_date: Date.new(2025, 10, 31),
-      invoice_supplier_organizations: [join]
+      invoice_supplier_organizations: [ join ]
     )
 
     invoices_attachment.expects(:purge)
-    invoices_attachment.stubs(:attach).returns([invoice_record])
+    invoices_attachment.stubs(:attach).returns([ invoice_record ])
 
     Oroshi::Invoice.stubs(:find).returns(invoice)
     OroshiInvoice.stubs(:new).returns(oroshi_invoice)
@@ -131,11 +131,11 @@ class Oroshi::InvoiceJobTest < ActiveJob::TestCase
       end_date: Date.new(2025, 10, 31),
       invoice_layout: "standard",
       invoice_date: Date.new(2025, 10, 31),
-      invoice_supplier_organizations: [join]
+      invoice_supplier_organizations: [ join ]
     )
 
     invoices_attachment.stubs(:purge)
-    invoices_attachment.stubs(:attach).returns([invoice_record])
+    invoices_attachment.stubs(:attach).returns([ invoice_record ])
 
     Oroshi::Invoice.stubs(:find).returns(invoice)
     OroshiInvoice.expects(:new).twice.returns(oroshi_invoice)
@@ -164,11 +164,11 @@ class Oroshi::InvoiceJobTest < ActiveJob::TestCase
       end_date: Date.new(2025, 10, 31),
       invoice_layout: "standard",
       invoice_date: Date.new(2025, 10, 31),
-      invoice_supplier_organizations: [join]
+      invoice_supplier_organizations: [ join ]
     )
 
     invoices_attachment.stubs(:purge)
-    invoices_attachment.expects(:attach).twice.returns([invoice_record])
+    invoices_attachment.expects(:attach).twice.returns([ invoice_record ])
 
     Oroshi::Invoice.stubs(:find).returns(invoice)
     OroshiInvoice.stubs(:new).returns(oroshi_invoice)
@@ -198,11 +198,11 @@ class Oroshi::InvoiceJobTest < ActiveJob::TestCase
       end_date: Date.new(2025, 10, 31),
       invoice_layout: "standard",
       invoice_date: Date.new(2025, 10, 31),
-      invoice_supplier_organizations: [join]
+      invoice_supplier_organizations: [ join ]
     )
 
     invoices_attachment.stubs(:purge)
-    invoices_attachment.stubs(:attach).returns([invoice_record])
+    invoices_attachment.stubs(:attach).returns([ invoice_record ])
 
     Oroshi::Invoice.stubs(:find).returns(invoice)
     OroshiInvoice.stubs(:new).returns(oroshi_invoice)

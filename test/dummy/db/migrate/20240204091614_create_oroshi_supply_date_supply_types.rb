@@ -6,7 +6,7 @@ class CreateOroshiSupplyDateSupplyTypes < ActiveRecord::Migration[7.1]
       t.integer :total, default: 0
       t.timestamps
     end
-    add_index :oroshi_supply_date_supply_types, [:supply_date_id, :supply_type_id], unique: true, name: 'index_supply_date_supply_types_on_ids'
-    add_index :oroshi_supply_date_supply_types, [:supply_type_id, :supply_date_id], name: 'index_supply_types_supply_dates_on_ids'
+    add_index :oroshi_supply_date_supply_types, [ :supply_date_id, :supply_type_id ], unique: true, name: "index_supply_date_supply_types_on_ids"
+    add_index :oroshi_supply_date_supply_types, [ :supply_type_id, :supply_date_id ], name: "index_supply_types_supply_dates_on_ids"
   end
 end

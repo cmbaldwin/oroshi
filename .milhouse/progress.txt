@@ -25,3 +25,11 @@ Tests: PASSING (617 runs, 0 failures, 0 errors)
 Learnings for future iterations:
 - Stimulus action bindings on forms must include explicit event syntax (submit->controller#method); omitting the event prevents handler invocation.
 - The quantity input change wiring in order_number_field was already correct; the submit action string was the blocking issue for inline save.
+
+[2026-02-07 16:23:16] Story: Fix order price inline editing (単価記載 tab)
+Implemented: Updated the order sales form Stimulus wiring so price inputs use the sales-form namespace and submit through the order controller with explicit submit/change events to the price_update endpoint.
+Files: app/views/oroshi/orders/dashboard/sales/_order_sales_form.html.erb, .milhouse/prd.json, .milhouse/progress.txt
+Tests: PASSING
+Learnings for future iterations:
+- For nested Turbo-frame forms, attach both controllers on the form when targets/actions span multiple Stimulus namespaces.
+- Use explicit submit->... and change->... actions to avoid brittle implicit event behavior in inline edit flows.

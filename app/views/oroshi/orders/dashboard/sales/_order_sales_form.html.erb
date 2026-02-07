@@ -5,8 +5,8 @@
                 method: :patch,
                 class: 'w-100 d-flex flex-column justify-content-between align-items-center align-middle rounded border-0 border-success mb-1',
                 data: {
-                  controller: 'oroshi--orders--order',
-                  action: 'change->oroshi--orders--order#orderFormSubmit:prevent',
+                  controller: 'oroshi--orders--order oroshi--orders--sales-form',
+                  action: 'submit->oroshi--orders--order#orderFormSubmit:prevent'
                 } do |order_form| %>
     <%= order_sales_title_modal_link %>
     <div class="input-group input-group-sm justify-content-center align-items-center align-middle">
@@ -34,10 +34,11 @@
                                     class: 'order-number-field small form-control form-control-sm align-middle text-center d-table-cell cursor-pointer',
                                     style: "max-width: 4rem;",
                                     data: {
+                                      action: 'change->oroshi--orders--order#orderFormSubmit',
                                       oroshi__orders__sales_form_target: 'salePriceInput',
                                       controller: 'tippy',
                                       tippy_content: '商品単価を入力してください',
-                                      tippy_placement: 'bottom',
+                                      tippy_placement: 'bottom'
                                     } %>
         <%= button_tag type: 'submit',
                       class: 'btn btn-sm btn-light border',

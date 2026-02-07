@@ -59,7 +59,7 @@
         "No JS errors in console when editing prices"
       ],
       "priority": 4,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",

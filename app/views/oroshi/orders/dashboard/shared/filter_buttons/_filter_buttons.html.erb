@@ -13,7 +13,7 @@
 <% category_instance_var_name = "@unique_#{filter_category_name.camelize.underscore.pluralize}"  %>
 <% filter_category_items = instance_variable_get(category_instance_var_name) || [] %>
 
-<ul class="nav nav-pills">
+<ul class="nav nav-pills flex-wrap gap-1">
     <li class="nav-item">
         <% model_name = "Oroshi::#{filter_category_name.camelize}".constantize.model_name.human %>
         <%= link_to "全ての#{model_name}", 

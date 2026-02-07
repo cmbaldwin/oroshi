@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { Turbo } from "@hotwired/turbo-rails";
 import { useWindowResize } from "stimulus-use";
 
 export default class extends Controller {
@@ -152,8 +153,24 @@ export default class extends Controller {
 
   resetOrderFilters(event) {
     event.preventDefault();
-    this.orderFilterFormTarget.querySelectorAll("select").forEach((select) => {
-      select.value = "";
+
+    const resetPath = event.currentTarget?.dataset?.resetPath;
+    if (resetPath) {
+      Turbo.visit(resetPath, { frame: event.currentTarget.dataset.turboFrame || "orders_dashboard" });
+      return;
+    }
+
+    const form = event.currentTarget.form || this.orderFilterFormTarget.querySelector("form");
+    if (!form) {
+      return;
+    }
+
+    form.querySelectorAll("select").forEach((select) => {
+      Array.from(select.options).forEach((option) => {
+        option.selected = false;
+      });
     });
+
+    form.requestSubmit();
   }
 }

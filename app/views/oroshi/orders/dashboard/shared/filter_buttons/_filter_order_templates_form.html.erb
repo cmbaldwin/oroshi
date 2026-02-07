@@ -57,7 +57,7 @@
 
     <!-- Submit Buttons -->
     <%= form.submit "フィルター", class: 'btn btn-sm btn-primary' %>
-    <%= form.submit 'リセット', class: 'btn btn-sm btn-secondary', data: { action: 'oroshi--orders--order-dashboard#resetOrderFilters:passive' } %>
+    <%= form.submit 'リセット', class: 'btn btn-sm btn-secondary', data: { action: 'click->oroshi--orders--order-dashboard#resetOrderFilters' } %>
 
     <% end %>
 </div>

@@ -92,7 +92,7 @@
         "No horizontal overflow or clipping of filter buttons on mobile-width screens"
       ],
       "priority": 6,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-007",

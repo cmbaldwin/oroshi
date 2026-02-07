@@ -1,12 +1,38 @@
-<div class="card mb-2">
-    <div class="p-1 d-flex gap-2">
-        <%= filter_orders_templates_button(view) %>
-        <% %w[order_category_ids buyer_category_ids buyer_ids shipping_method_ids].each do |filter_category| %>
-        <% filter_params = instance_variable_get("@#{filter_category}") %>
-        <% show_buttons = @dashboard_settings["show_#{filter_category}"] == "1" || filter_params&.any? %>
-        <% next unless show_buttons %>
+<% reset_path = case view
+                when 'orders'
+                  oroshi_orders_orders_path(date: @date)
+                when 'templates'
+                  oroshi_orders_templates_path(date: @date)
+                when 'shipping'
+                  oroshi_orders_shipping_path(date: @date)
+                when 'revenue'
+                  oroshi_orders_revenue_path(date: @date)
+                end %>
+<% active_filter_count = [@order_category_ids, @buyer_category_ids, @buyer_ids, @shipping_method_ids].compact.sum(&:size) %>
 
-        <%= render 'oroshi/orders/dashboard/shared/filter_buttons/filter_buttons', view:, filter_category:, filter_params: %>
-        <% end %>
-    </div>
+<div class="card mb-2 <%= 'border-primary bg-primary-subtle' if active_filter_count.positive? %>">
+  <div class="p-1 d-flex flex-wrap align-items-center gap-2">
+    <%= filter_orders_templates_button(view) %>
+
+    <%= button_tag 'リセット',
+                   type: 'button',
+                   class: 'btn btn-sm btn-outline-secondary',
+                   data: {
+                     action: 'click->oroshi--orders--order-dashboard#resetOrderFilters',
+                     reset_path: reset_path,
+                     turbo_frame: 'orders_dashboard'
+                   } %>
+
+    <% if active_filter_count.positive? %>
+      <span class="badge text-bg-primary">フィルター適用中 <%= active_filter_count %>件</span>
+    <% end %>
+
+    <% %w[order_category_ids buyer_category_ids buyer_ids shipping_method_ids].each do |filter_category| %>
+      <% filter_params = instance_variable_get("@#{filter_category}") %>
+      <% show_buttons = @dashboard_settings["show_#{filter_category}"] == "1" || filter_params&.any? %>
+      <% next unless show_buttons %>
+
+      <%= render 'oroshi/orders/dashboard/shared/filter_buttons/filter_buttons', view:, filter_category:, filter_params: %>
+    <% end %>
+  </div>
 </div>

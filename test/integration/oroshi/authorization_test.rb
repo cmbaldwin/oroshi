@@ -8,7 +8,7 @@ class Oroshi::AuthorizationTest < ActionDispatch::IntegrationTest
     @vip = create(:user, :vip)
     @supplier_user = create(:user, :supplier)
     @employee = create(:user, :employee)
-    @unapproved = create(:user, approved: false)
+    @unapproved = create(:user, role: :user, approved: false)
 
     # Setup associated data (using oroshi_ prefix for namespaced factories)
     @supplier_org = create(:oroshi_supplier_organization)

@@ -15,6 +15,9 @@ module Oroshi
       engine_method = strip_oroshi_prefix(method_name)
       if engine_method && oroshi.respond_to?(engine_method)
         oroshi.public_send(engine_method, *args, **kwargs, &block)
+      elsif method_name.to_s.include?("rails_") || method_name.to_s.include?("_blob_") || method_name.to_s.include?("_attachment_")
+        # Delegate Active Storage and Rails service routes to main_app
+        main_app.public_send(method_name, *args, **kwargs, &block) if respond_to?(:main_app) && main_app.respond_to?(method_name)
       else
         super
       end
@@ -22,7 +25,13 @@ module Oroshi
 
     def respond_to_missing?(method_name, include_private = false)
       engine_method = strip_oroshi_prefix(method_name)
-      (engine_method && oroshi.respond_to?(engine_method)) || super
+      if engine_method && oroshi.respond_to?(engine_method)
+        true
+      elsif method_name.to_s.include?("rails_") || method_name.to_s.include?("_blob_") || method_name.to_s.include?("_attachment_")
+        respond_to?(:main_app) && main_app.respond_to?(method_name)
+      else
+        super
+      end
     end
 
     private

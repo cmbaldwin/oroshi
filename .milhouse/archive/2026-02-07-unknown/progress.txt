@@ -1,0 +1,27 @@
+# Milhouse Progress Log
+Started: Thu Feb  5 15:26:56 JST 2026
+
+[2026-02-06 15:32:00] Story: Fix WebMock configuration for sandbox E2E test
+Implemented: Fixed pending migration error in sandbox by removing migration files after schema load
+Files:
+- bin/sandbox (added cleanup of db/migrate/* after schema:load)
+- test/sandbox_e2e_test.rb (already had WebMock.allow_net_connect!)
+Tests: PASSING (sandbox E2E test completes successfully)
+Learnings for future iterations:
+- The actual issue wasn't WebMock - it was pending migrations causing 500 errors on /up health check
+- When using db:schema:load instead of db:migrate, migrations in db/migrate/ are seen as pending
+- Solution: Remove migration files after schema load since we don't need them
+- Sandbox E2E test takes ~90s but provides excellent validation of full system
+- WebMock was already configured correctly in test/sandbox_e2e_test.rb on line 11
+
+[2026-02-06 17:35:00] Story: Investigate and fix remaining test failures (US-003, US-004, US-005)
+Implemented: Fixed all test failures to achieve 100% pass rate (617 tests, 0 failures, 0 errors)
+Files:
+- test/integration/oroshi/authorization_test.rb (fixed unapproved user role from default vip to user)
+- test/lib/generators/oroshi/install/install_generator_test.rb (fixed parallel execution race condition)
+Tests: PASSING (617 runs, 1140 assertions, 0 failures, 0 errors, 0 skips)
+Learnings for future iterations:
+- Authorization test: The check_user method in ApplicationController only blocks unapproved users with `user` or `employee` roles. VIP/admin/supplier roles bypass the approval check. Test must specify role: :user when creating an unapproved user.
+- Generator test parallelism: Rails::Generators::TestCase destination is a class_attribute. In parallel execution (10 processes), a fixed path causes race conditions where one process's prepare_destination wipes another's mid-test. Fix: set self.destination_root = Dir.mktmpdir in setup block for per-test isolation.
+- The PRD originally estimated 9 test failures but actual count was 4 (3 failures + 1 error). Generator test failures were caused by parallel execution race conditions, not code bugs.
+- Full test suite takes ~86s including sandbox E2E test (~86s of that). Non-E2E tests complete in seconds.

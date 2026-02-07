@@ -152,7 +152,11 @@ module Oroshi
 
           # Check if devise routes already exist
           routes_path = File.join(destination_root, "config/routes.rb")
-          unless File.read(routes_path).include?("devise_for :users")
+          if File.exist?(routes_path)
+            unless File.read(routes_path).include?("devise_for :users")
+              route 'devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }'
+            end
+          else
             route 'devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }'
           end
 

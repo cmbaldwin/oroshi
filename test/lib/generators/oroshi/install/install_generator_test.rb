@@ -23,6 +23,8 @@ class Oroshi::Generators::InstallGeneratorTest < Rails::Generators::TestCase
   destination File.expand_path("../tmp", __dir__)
 
   setup do
+    # Use a unique destination per test to avoid race conditions in parallel execution
+    self.destination_root = Dir.mktmpdir("oroshi_generator_test")
     prepare_destination
     create_routes_file
     create_gemfile

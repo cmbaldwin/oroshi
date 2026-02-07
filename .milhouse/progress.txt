@@ -1,3 +1,19 @@
 # Milhouse Progress Log
-Started: Sat Feb  7 13:07:54 JST 2026
+Started: Fri Feb  7 13:30:00 JST 2026
 ---
+
+[2026-02-07 13:35:00] Story: US-001 - Fix CSS 404 for ultimate_turbo_modal_bootstrap.css
+Implemented: Removed .css extension from @import directive in application.scss
+Files: app/assets/stylesheets/application.scss
+Tests: PASSING (617 runs, 0 failures, 0 errors)
+Learnings for future iterations:
+- Propshaft SCSS: @import "file.css" generates a CSS @import url() request (causes 404). Remove the .css extension to embed file contents inline.
+- This is a one-line fix with high impact — eliminates persistent console 404 error.
+
+[2026-02-07 14:57:00] Story: US-002 - Fix Bootstrap ScrollSpy import in revenue controller
+Implemented: Added explicit Bootstrap ESM import in the revenue Stimulus controller so bootstrap.ScrollSpy resolves in module scope.
+Files: app/javascript/controllers/oroshi/orders/revenue_controller.js, .milhouse/prd.json
+Tests: PASSING (617 runs, 0 failures, 0 errors)
+Learnings for future iterations:
+- Stimulus controllers cannot rely on Bootstrap imported in application.js; each controller using bootstrap.* must import bootstrap directly.
+- The existing ScrollSpy initialization logic worked once bootstrap was in scope; this story required a minimal targeted JS change.

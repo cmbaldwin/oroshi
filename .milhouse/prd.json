@@ -1,77 +1,127 @@
 {
-  "productName": "Oroshi Engine Test Suite",
+  "productName": "Oroshi Engine Frontend Fixes",
   "version": "1.0.0",
+  "branchName": "fix/frontend-bugs-and-polish",
+  "description": "Fix frontend bugs and UI polish across the Oroshi engine: CSS 404, order page JS errors, modal standardization, ScrollSpy, supply dates legacy text, and filter UX improvements.",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Fix missing 'message' factory",
-      "description": "As a developer, I want all factory references to resolve correctly so that job tests can run without KeyError exceptions",
+      "title": "Fix CSS 404 for ultimate_turbo_modal_bootstrap.css",
+      "description": "As a developer, I want to eliminate the persistent 404 console error for ultimate_turbo_modal_bootstrap.css so the console is clean and assets load correctly.",
       "acceptanceCriteria": [
-        "Identify all references to create(:message) in test files",
-        "Either create the missing message factory or update tests to use correct factory",
-        "All job tests pass without Factory not registered errors",
-        "Run bin/rails test test/jobs/ and verify no factory errors"
+        "Change @import 'ultimate_turbo_modal_bootstrap.css' to @import 'ultimate_turbo_modal_bootstrap' in app/assets/stylesheets/application.scss (line 18)",
+        "Verify the CSS content is properly embedded into the compiled application.css",
+        "No 404 errors in browser console on any page",
+        "Modal styling still renders correctly",
+        "bundle exec rubocop --parallel passes"
       ],
       "priority": 1,
       "passes": true
     },
     {
       "id": "US-002",
-      "title": "Fix WebMock configuration for sandbox E2E test",
-      "description": "As a developer, I want the sandbox E2E test to allow real HTTP connections to localhost so that server health checks work",
+      "title": "Fix Bootstrap ScrollSpy import in revenue controller",
+      "description": "As a user viewing the revenue/pricing tab, I want ScrollSpy navigation to work so I can navigate between product sections smoothly.",
       "acceptanceCriteria": [
-        "Configure WebMock to allow localhost connections in test_helper.rb or sandbox_e2e_test.rb",
-        "Add WebMock.allow_net_connect! for localhost:3001 during sandbox tests",
-        "Sandbox E2E test can successfully check server health at http://localhost:3001/up",
-        "Run bin/rails test test/sandbox_e2e_test.rb and verify it passes"
+        "Add 'import * as bootstrap from \"bootstrap\"' to app/javascript/controllers/oroshi/orders/revenue_controller.js",
+        "new bootstrap.ScrollSpy() executes without ReferenceError",
+        "ScrollSpy nav highlights correct section when scrolling on the revenue tab",
+        "No console errors from revenue_controller on any order page"
       ],
       "priority": 2,
       "passes": true
     },
     {
       "id": "US-003",
-      "title": "Investigate and fix remaining test failures",
-      "description": "As a developer, I want to identify and fix the 9 test failures to improve test suite reliability",
+      "title": "Fix order quantity inline editing (注文表 tab)",
+      "description": "As a user on the 注文表 tab, I want to change order quantities inline so that values save without a full page reload.",
       "acceptanceCriteria": [
-        "Run bin/rails test with verbose output to identify specific failures",
-        "Categorize failures by type (assertion, routing, data setup, etc)",
-        "Fix assertion failures and update expected values where needed",
-        "Ensure all 9 failures are addressed",
-        "Document any test changes in progress.txt"
+        "Fix Stimulus action binding in app/views/oroshi/orders/edit.html.erb - ensure explicit event type in data-action (e.g., submit->oroshi--orders--order#orderFormSubmit)",
+        "Quantity input changes trigger the correct Stimulus controller method",
+        "Form submits via fetch to the quantity_update endpoint and receives a successful response",
+        "Updated quantity values persist after page reload",
+        "No JS errors in console when editing quantities",
+        "bin/rails test test/controllers/ passes"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "Found 4 issues (3 failures + 1 error), not 9. Fixed authorization test (wrong role for unapproved user) and generator test race condition (shared temp dir in parallel execution)."
+      "passes": false
     },
     {
       "id": "US-004",
-      "title": "Review and update test fixtures/factories",
-      "description": "As a developer, I want all test data factories to be properly defined and maintained so that tests have reliable data",
+      "title": "Fix order price inline editing (単価記載 tab)",
+      "description": "As a user on the 単価記載 tab, I want to enter sale prices inline so that pricing data saves correctly.",
       "acceptanceCriteria": [
-        "Audit all factory files in test/factories/",
-        "Ensure all associations and required fields are properly set",
-        "Remove references to undefined factories",
-        "Add missing factories for models referenced in tests",
-        "Run full test suite and verify factory-related errors are gone"
+        "Fix controller namespace mismatch in app/views/oroshi/orders/dashboard/sales/_order_sales_form.html.erb - form controller and input target must use the same Stimulus controller namespace",
+        "Fix event binding - ensure the form submission action uses the correct event type routed to the right controller method",
+        "Price input changes trigger the correct Stimulus controller and submit to the price_update endpoint",
+        "Updated price values persist after page reload",
+        "The salePriceInput target in sales_form_controller.js connects properly (price warning highlight works for zero-value inputs)",
+        "No JS errors in console when editing prices"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "All factory-related errors were resolved by previous stories. Full suite runs with 0 factory errors."
+      "passes": false
     },
     {
       "id": "US-005",
-      "title": "Achieve 100% test pass rate",
-      "description": "As a developer, I want all 647 tests to pass so that the engine is verified as working correctly",
+      "title": "Refactor order modal to match supply modal pattern",
+      "description": "As a user, I want the order tool panel modal to have consistent styling and working close buttons, matching the supply page modal behavior.",
       "acceptanceCriteria": [
-        "Run bin/rails test and get 0 failures, 0 errors",
-        "All 647 tests pass successfully",
-        "Document any changes made to achieve this in progress.txt",
-        "Update CLAUDE.md with new test count if changed",
-        "Commit changes with descriptive message"
+        "Create app/javascript/controllers/oroshi/orders/order_dialog_controller.js extending @stimulus-components/dialog (following the pattern in oroshi/supplies/dialog_controller.js)",
+        "Update app/views/oroshi/orders/modal/_order_modal.html.erb to use oroshi--orders--order-dialog controller instead of generic dialog controller",
+        "Close button (X) in modal header works via oroshi--orders--order-dialog#close",
+        "Close button in modal footer works via oroshi--orders--order-dialog#close",
+        "Backdrop click closes the modal via click->oroshi--orders--order-dialog#backdropClose",
+        "Move turbo-frame to wrap only .modal-body content, not the footer",
+        "Fix orderModalFormSubmit in order_dashboard_controller.js - replace undefined modal variable (line 114) with dialog.close()",
+        "Fix onDestroyOrderFromModal in order_dashboard_controller.js - replace bootstrap.Modal.getOrCreateInstance() (line 129) with dialog.close()",
+        "Add custom event dispatching on dialog close for Turbo compatibility",
+        "Modal opens, displays content via turbo-frame, and closes cleanly without JS errors",
+        "bin/rails test passes"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "617 tests pass with 0 failures, 0 errors. Count is 617 (not 647 as originally estimated)."
+      "passes": false
+    },
+    {
+      "id": "US-006",
+      "title": "Improve order filters UI/UX (minimal)",
+      "description": "As a user filtering orders on the 注文明細 page, I want a clearer, more responsive filter area so I can quickly find the orders I need.",
+      "acceptanceCriteria": [
+        "Add a visible Reset Filters button (リセット) that clears all active filters - wire to existing resetOrderFilters method in order_dashboard_controller.js",
+        "Active filters have a stronger visual indicator (bolder styling, badge count, or distinct background color)",
+        "Filter pills wrap properly on smaller screens (add flex-wrap if missing)",
+        "No horizontal overflow or clipping of filter buttons on mobile-width screens"
+      ],
+      "priority": 6,
+      "passes": false
+    },
+    {
+      "id": "US-007",
+      "title": "Replace legacy 牡蠣 references on supply dates page",
+      "description": "As a user, I want the supply dates page to use generic terminology instead of legacy oyster-specific text.",
+      "acceptanceCriteria": [
+        "Update config/locales/ja/oroshi/supply_dates.yml - change header_title from 牡蠣供給記載表 to a generic term (e.g., 原料供給記載表 or 供給記載表)",
+        "Review and update remaining 牡蠣 references in: config/locales/oroshi.ja.yml, config/locales/oroshi.hints.ja.yml, lib/printables/supply_check/header_and_footer.rb",
+        "Update any test assertions that reference the old header text",
+        "bin/rails test passes"
+      ],
+      "priority": 7,
+      "passes": false
+    },
+    {
+      "id": "US-008",
+      "title": "Fix 'undefined' display on supply dates page",
+      "description": "As a user, I want sub-reception-time buttons on the supply dates page to load turbo frames without showing 'undefined' text.",
+      "acceptanceCriteria": [
+        "Add null/undefined guards in app/javascript/controllers/oroshi/supplies/supply_date_input_controller.js where this.element.form.dataset.supplyTypeVariation and supplyType are read",
+        "Add null checks before querySelector calls in subtotal update methods to prevent operating on null elements",
+        "Ensure form elements in app/views/oroshi/supplies/_supply.html.erb and _new.html.erb always have required data-supply-type-variation and data-supply-type attributes",
+        "No 'undefined' text appears anywhere on the page after clicking sub-reception-time buttons",
+        "No JS errors in console during supply date frame loading",
+        "Subtotal calculations still update correctly when editing supply quantities",
+        "bin/rails test passes"
+      ],
+      "priority": 8,
+      "passes": false
     }
   ]
 }

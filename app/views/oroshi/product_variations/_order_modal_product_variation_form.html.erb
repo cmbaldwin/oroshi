@@ -3,7 +3,7 @@
     <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
       <div class="fs-5"><%= t('oroshi.product_variations.modal.edit_title', name: @product_variation.name) %></div>
     </div>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-action="oroshi--orders--order-dialog#close" aria-label="Close"></button>
   </div>
   <div class="modal-body" data-refresh="true">
     <%= form_with model: @product_variation,

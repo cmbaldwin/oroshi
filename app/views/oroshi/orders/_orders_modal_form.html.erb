@@ -3,12 +3,12 @@
     <div class="modal-title w-100 d-flex flex-column gap-1 justify-content-center align-items-center align-middle" id="supplyActionModalLabel">
       <div class="fs-5"><%= t('oroshi.orders.modal.new_order_title') %></div>
     </div>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-action="oroshi--orders--order-dialog#close" aria-label="Close"></button>
   </div>
   <%= form_with model: @order,
                       data: {
                         controller: 'oroshi--orders--order-form',
-                        action: 'oroshi--orders--order-dashboard#orderModalFormSubmit:prevent',
+                        action: 'submit->oroshi--orders--order-dashboard#orderModalFormSubmit:prevent',
                         refresh_target: 'orders_dashboard',
                         order_id: @order.id,
                       } do |form| %>
@@ -33,7 +33,7 @@
         <% else %>
           <%= form.submit t('common.buttons.create'), class: 'btn btn-primary my-2' %>
         <% end %>
-        <button type="button" class="btn btn-secondary my-2" data-bs-dismiss="modal"><%= t('oroshi.orders.modal.close_button') %></button>
+        <button type="button" class="btn btn-secondary my-2" data-action="oroshi--orders--order-dialog#close"><%= t('oroshi.orders.modal.close_button') %></button>
       </div>
     </div>
   <% end %>

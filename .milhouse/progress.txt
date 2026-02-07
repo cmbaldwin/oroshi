@@ -33,3 +33,11 @@ Tests: PASSING
 Learnings for future iterations:
 - For nested Turbo-frame forms, attach both controllers on the form when targets/actions span multiple Stimulus namespaces.
 - Use explicit submit->... and change->... actions to avoid brittle implicit event behavior in inline edit flows.
+
+[2026-02-07 16:28:29] Story: US-005 - Refactor order modal to match supply modal pattern
+Implemented: Added a dedicated order dialog Stimulus controller extending @stimulus-components/dialog, migrated the order modal wrapper/actions to that namespace, moved the orders turbo-frame into modal-body only, and replaced Bootstrap modal close/hide usage in dashboard handlers with native dialog.close() flow.
+Files: app/javascript/controllers/oroshi/orders/order_dialog_controller.js, app/javascript/controllers/oroshi/orders/order_dashboard_controller.js, app/javascript/controllers/oroshi/orders/calendar_controller.js, app/views/oroshi/orders/modal/_order_modal.html.erb, app/views/oroshi/orders/_orders_modal_form.html.erb, app/views/oroshi/orders/modal/_calendar.html.erb, app/views/oroshi/products/_order_modal_product_form.html.erb, app/views/oroshi/product_variations/_order_modal_product_variation_form.html.erb, app/views/oroshi/product_inventories/show.html.erb, .milhouse/prd.json
+Tests: PASSING (617 runs, 0 failures, 0 errors)
+Learnings for future iterations:
+- For dialog migration, use controller-specific target attributes (data-oroshi--...-target="dialog") and add a fallback selector during transition to avoid breaking existing callers.
+- Native <dialog> + @stimulus-components/dialog needs explicit close event dispatch to keep Turbo-dependent cleanup logic deterministic.

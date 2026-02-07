@@ -2,45 +2,48 @@ import { Controller } from "@hotwired/stimulus";
 import { useWindowResize } from "stimulus-use";
 
 export default class extends Controller {
-  static targets = ['orderModal', 'navbar', 'menuButton', 'orderFilterForm'];
+  static targets = ["orderModal", "navbar", "menuButton", "orderFilterForm"];
 
   connect() {
-    // Use stimulus-use for window resize handling - automatically cleaned up on disconnect
     useWindowResize(this);
     this.adjustNavbarForScreenSize();
 
-    // Listen for dialog close event from stimulus-dialog
-    if (this.hasOrderModalTarget) {
-      const dialog = this.orderModalTarget.querySelector('dialog[data-dialog-target="dialog"]');
-      if (dialog) {
-        this.boundOnDialogClose = this.onDialogClose.bind(this);
-        dialog.addEventListener('close', this.boundOnDialogClose);
-      }
+    const dialog = this.orderDialog();
+    if (dialog) {
+      this.boundOnDialogClose = this.onDialogClose.bind(this);
+      dialog.addEventListener("close", this.boundOnDialogClose);
     }
   }
 
   disconnect() {
-    if (this.hasOrderModalTarget && this.boundOnDialogClose) {
-      const dialog = this.orderModalTarget.querySelector('dialog[data-dialog-target="dialog"]');
-      if (dialog) {
-        dialog.removeEventListener('close', this.boundOnDialogClose);
-      }
+    const dialog = this.orderDialog();
+    if (dialog && this.boundOnDialogClose) {
+      dialog.removeEventListener("close", this.boundOnDialogClose);
     }
   }
 
-  /**
-   * Called by stimulus-use useWindowResize when the window is resized
-   */
-  windowResize({ width, height }) {
+  orderDialog() {
+    if (!this.hasOrderModalTarget) {
+      return null;
+    }
+
+    return this.orderModalTarget.querySelector("dialog[data-oroshi--orders--order-dialog-target='dialog']") ||
+      this.orderModalTarget.querySelector("dialog[data-dialog-target='dialog']");
+  }
+
+  windowResize(_event) {
     this.adjustNavbarForScreenSize();
   }
 
   onDialogClose() {
-    const turboFrame = this.orderModalTarget.querySelector('turbo-frame#orders_modal_content .modal-body');
-    const form = this.orderModalTarget.querySelector('form');
+    const turboFrame = this.orderModalTarget.querySelector("turbo-frame#orders_modal_content");
+    const form = this.orderModalTarget.querySelector("form");
 
-    if (turboFrame) { turboFrame.innerHTML = this.spinnerHtml() };
-    if ((form && form.dataset.model_altered === 'true') && turboFrame?.dataset.refresh) {
+    if (turboFrame) {
+      turboFrame.innerHTML = this.spinnerHtml();
+    }
+
+    if ((form && form.dataset.model_altered === "true") && turboFrame?.dataset.refresh) {
       window.location.reload();
     }
   }
@@ -52,101 +55,105 @@ export default class extends Controller {
           <span class="visually-hidden">読み込み中...</span>
         </div>
       </div>
-    `
+    `;
   }
 
   adjustNavbarForScreenSize() {
-    // Bootstrap's medium breakpoint is 768px
     const mediumBreakpoint = 768;
     const screenWidth = window.innerWidth;
 
     if (screenWidth <= mediumBreakpoint) {
-      // Collapse the navbar for medium or smaller screens
-      this.navbarTarget.classList.remove('show');
-      this.menuButtonTarget.classList.remove('d-none');
+      this.navbarTarget.classList.remove("show");
+      this.menuButtonTarget.classList.remove("d-none");
     } else {
-      // Expand the navbar for larger screens
-      this.navbarTarget.classList.add('show');
-      this.menuButtonTarget.classList.add('d-none');
+      this.navbarTarget.classList.add("show");
+      this.menuButtonTarget.classList.add("d-none");
     }
   }
 
   toggleActiveLink(event) {
-    // if event element has a dat-turbo-frame target, fill that frame with a loading spinner before proceeding
     const turboFrame = event.target.dataset.turboFrame;
     if (turboFrame) {
       const frame = document.querySelector(`turbo-frame#${turboFrame}`);
-      frame.innerHTML = this.spinnerHtml();
+      if (frame) {
+        frame.innerHTML = this.spinnerHtml();
+      }
     }
-    // find closest .nav
-    const nav = event.target.closest('.nav');
-    // find all .nav-link
-    const navLinks = nav.querySelectorAll('.nav-link');
-    // remove active class from all .nav-link
+
+    const nav = event.target.closest(".nav");
+    const navLinks = nav.querySelectorAll(".nav-link");
     navLinks.forEach((link) => {
-      link.classList.remove('active');
+      link.classList.remove("active");
     });
-    // add active class to clicked link
-    event.target.closest('.nav-link').classList.add('active');
+
+    event.target.closest(".nav-link").classList.add("active");
   }
 
   showModal() {
-    const dialog = this.orderModalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
+    const dialog = this.orderDialog();
     if (dialog) {
       dialog.showModal();
     }
   }
 
   orderModalFormSubmit(event) {
-    // submit the form referenced by the event target, via fetch
     const form = event.target;
-    const dialog = this.orderModalTarget?.querySelector('dialog[data-dialog-target="dialog"]');
+    const dialog = this.orderDialog();
     const url = form.action;
     const method = form.method;
-    const refreshTarget = form.dataset.refreshTarget
+    const refreshTarget = form.dataset.refreshTarget;
     const formData = new FormData(form);
+
     fetch(url, {
       method: method,
       body: formData
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
-          modal.hide();
+          dialog?.close();
           const frame = document.querySelector(`turbo-frame#${refreshTarget}`);
-          frame.reload();
+          frame?.reload();
         } else {
           return response.text();
         }
       })
-      .then(html => {
+      .then((html) => {
         if (html) {
-          this.element.querySelector('#orders_modal_content').innerHTML = html;
+          const frame = this.orderModalTarget.querySelector("turbo-frame#orders_modal_content");
+          if (frame) {
+            frame.innerHTML = html;
+          }
         }
       });
   }
 
   onDestroyOrderFromModal(_event) {
-    const modal = bootstrap.Modal.getOrCreateInstance(this.orderModalTarget);
-    modal.hide();
-    const turboFrame = this.orderModalTarget.querySelector('#orders_modal_content .modal-body');
-    if (turboFrame) { turboFrame.innerHTML = this.spinnerHtml() };
+    const dialog = this.orderDialog();
+    dialog?.close();
+
+    const turboFrame = this.orderModalTarget.querySelector("turbo-frame#orders_modal_content");
+    if (turboFrame) {
+      turboFrame.innerHTML = this.spinnerHtml();
+    }
   }
 
   inventoryUpdate(event) {
-    // even target is form, event is on submit
     const form = event.target;
-    const submitButton = form.querySelector('.btn');
-    submitButton.classList.remove('btn-primary');
-    submitButton.classList.add('btn-yellow');
-    submitButton.value = '更新中...';
+    const submitButton = form.querySelector(".btn");
+    submitButton.classList.remove("btn-primary");
+    submitButton.classList.add("btn-yellow");
+    submitButton.value = "更新中...";
+
     const refreshTarget = form.dataset.refreshTarget;
-    refreshTarget && document.querySelector(`turbo-frame#${refreshTarget}`).reload();
+    if (refreshTarget) {
+      document.querySelector(`turbo-frame#${refreshTarget}`)?.reload();
+    }
   }
 
   resetOrderFilters(event) {
     event.preventDefault();
-    this.orderFilterFormTarget.querySelectorAll('select').forEach(select => {
-      select.value = ""; // Reset select
+    this.orderFilterFormTarget.querySelectorAll("select").forEach((select) => {
+      select.value = "";
     });
   }
 }

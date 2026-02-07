@@ -33,10 +33,10 @@ export default class extends Controller {
     });
     this.calendar.render();
 
-    // Listen for dialog show event using stimulus-dialog
-    const dialog = this.orderModal?.querySelector('dialog[data-dialog-target="dialog"]');
+    // Listen for dialog show event
+    const dialog = this.orderDialog();
     if (dialog) {
-      dialog.addEventListener('toggle', (event) => {
+      dialog.addEventListener('toggle', () => {
         if (dialog.open) {
           this.calendar.updateSize();
         }
@@ -68,9 +68,13 @@ export default class extends Controller {
     window.location.href = url.href;
   }
 
+  orderDialog() {
+    return this.orderModal?.querySelector("dialog[data-oroshi--orders--order-dialog-target='dialog']") ||
+      this.orderModal?.querySelector("dialog[data-dialog-target='dialog']");
+  }
+
   closeModal() {
-    // Close the dialog element using stimulus-dialog API
-    const dialog = this.orderModal?.querySelector('dialog[data-dialog-target="dialog"]');
+    const dialog = this.orderDialog();
     if (dialog && dialog.open) {
       dialog.close();
     }

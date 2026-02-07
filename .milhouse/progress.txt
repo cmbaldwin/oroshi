@@ -17,3 +17,11 @@ Tests: PASSING (617 runs, 0 failures, 0 errors)
 Learnings for future iterations:
 - Stimulus controllers cannot rely on Bootstrap imported in application.js; each controller using bootstrap.* must import bootstrap directly.
 - The existing ScrollSpy initialization logic worked once bootstrap was in scope; this story required a minimal targeted JS change.
+
+[2026-02-07 14:59:57] Story: US-003 - Fix order quantity inline editing (注文表 tab)
+Implemented: Fixed the order edit form Stimulus submit action binding to use an explicit submit event so inline quantity updates trigger orderFormSubmit and PATCH to quantity_update via fetch.
+Files: app/views/oroshi/orders/edit.html.erb, .milhouse/prd.json
+Tests: PASSING (617 runs, 0 failures, 0 errors)
+Learnings for future iterations:
+- Stimulus action bindings on forms must include explicit event syntax (submit->controller#method); omitting the event prevents handler invocation.
+- The quantity input change wiring in order_number_field was already correct; the submit action string was the blocking issue for inline save.

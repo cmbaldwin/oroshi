@@ -23,5 +23,6 @@ class OroshiSupplyDateShowTest < ApplicationSystemTestCase
     find(".fc-daygrid-day-frame", match: :first).click
     # page should have text '原料供給記載表'
     assert_text "原料供給記載表"
+    assert_no_text "undefined"
   end
 end

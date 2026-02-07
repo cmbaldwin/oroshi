@@ -1,10 +1,12 @@
 <% supply ||= @supply %>
+<% supply_type_variation_id = supply.supply_type_variation_id || supply.supply_type_variation&.id %>
+<% supply_type_id = supply.supply_type_variation&.supply_type_id %>
 <%= turbo_frame_tag dom_id(supply) do %>
-<%= form_with model: supply, 
-                data: { 
+<%= form_with model: supply,
+                data: {
                   action: 'change->oroshi--supplies--supply-date#onChange',
-                  supply_type: supply.supply_type_variation.supply_type.id,
-                  supply_type_variation: supply.supply_type_variation.id,
+                  supply_type: supply_type_id.to_s,
+                  supply_type_variation: supply_type_variation_id.to_s,
                   supplier: supply.supplier.id,
                   supply_reception_time: supply.supply_reception_time.id
                 } do |f| %>

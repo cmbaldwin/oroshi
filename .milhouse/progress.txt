@@ -57,3 +57,11 @@ Tests: PASSING (617 runs, 0 failures, 0 errors)
 Learnings for future iterations:
 - Legacy domain terms can remain in locale hint examples and printable copy even after UI headers are updated, so run a focused keyword grep across both locale and printable files.
 - Updating visible header copy usually requires updating system-test text assertions to keep end-to-end expectations aligned.
+
+[2026-02-07 16:39:32] Story: US-008 - Fix 'undefined' display on supply dates page
+Implemented: Added defensive dataset/querySelector guards in supply_date_input_controller, ensured supply form data attributes always render as strings for supply type identifiers, and added a system assertion preventing visible 'undefined' text regressions.
+Files: app/javascript/controllers/oroshi/supplies/supply_date_input_controller.js, app/views/oroshi/supplies/_supply.html.erb, app/views/oroshi/supplies/_new.html.erb, test/system/oroshi/supply_dates/show_test.rb, .milhouse/prd.json
+Tests: PASSING (617 runs, 0 failures, 0 errors)
+Learnings for future iterations:
+- Turbo frame partial hydration can briefly render elements without expected datasets; guard Stimulus connect logic and subtotal DOM lookups to avoid brittle runtime behavior.
+- For required data-* attributes in Rails view data hashes, using stringified fallback values keeps attributes present and avoids undefined dataset values in JS.

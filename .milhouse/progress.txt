@@ -49,3 +49,11 @@ Tests: PASSING (617 runs, 0 failures, 0 errors)
 Learnings for future iterations:
 - For GET filter UIs rendered in Turbo frames, Turbo.visit with { frame: "orders_dashboard" } is a reliable way to reset query params without manual URL construction in JS.
 - Combining flex-wrap on both the filter-card container and each nav-pills group prevents clipping when multiple filter categories are visible on narrow widths.
+
+[2026-02-07 16:35:38] Story: US-007 - Replace legacy 牡蠣 references on supply dates page
+Implemented: Updated supply date header/title-related copy to generic 原料 terminology across locale and printable guideline files, and aligned the supply date system test assertion with the new header text.
+Files: config/locales/ja/oroshi/supply_dates.yml, config/locales/oroshi.ja.yml, config/locales/oroshi.hints.ja.yml, lib/printables/supply_check/header_and_footer.rb, test/system/oroshi/supply_dates/show_test.rb, .milhouse/prd.json
+Tests: PASSING (617 runs, 0 failures, 0 errors)
+Learnings for future iterations:
+- Legacy domain terms can remain in locale hint examples and printable copy even after UI headers are updated, so run a focused keyword grep across both locale and printable files.
+- Updating visible header copy usually requires updating system-test text assertions to keep end-to-end expectations aligned.

@@ -85,7 +85,7 @@ module SupplyCheck::HeaderAndFooter
     <<~GUIDELINE_PART_2
       ● 記録の頻度: 入荷ごとに海域および生産者別に行う。
 
-      ● 備考欄に生産者の牡蠣の質・状態についての一言を記入する、または
+      ● 備考欄に生産者の原料の質・状態についての一言を記入する、または
       最終判定が×の場合、その理由と措置を記入する
     GUIDELINE_PART_2
   end

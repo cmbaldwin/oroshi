@@ -148,7 +148,7 @@ ja:
       supply_type_variation_ids: "供給種類変種"
       supply_type_variations: "供給種類変種"
     supply_type: &oroshi_supply_type
-      name: "供給種類名（例：むき身牡蠣 [真牡蠣]）"
+      name: "供給種類名（例：むき身原料）"
       units: "単位（例：kg）"
       handle: "脈名（例：むき身）"
       liquid: "液体"

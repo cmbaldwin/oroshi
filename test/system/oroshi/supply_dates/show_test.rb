@@ -21,7 +21,7 @@ class OroshiSupplyDateShowTest < ApplicationSystemTestCase
 
     # find a .fc-daygrid-day-frame and click it (fullcalendar responds to interaction on this node)
     find(".fc-daygrid-day-frame", match: :first).click
-    # page should have text '牡蠣供給記載表'
-    assert_text "\u7261\u8823\u4F9B\u7D66\u8A18\u8F09\u8868"
+    # page should have text '原料供給記載表'
+    assert_text "原料供給記載表"
   end
 end

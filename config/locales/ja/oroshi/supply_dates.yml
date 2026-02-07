@@ -3,7 +3,7 @@ ja:
     supply_dates:
       show:
         page_title_suffix: "生産原料供給記載表"
-        header_title: "牡蠣供給記載表"
+        header_title: "原料供給記載表"
         reception_date_label: "受け入れ日付"
         price_display_toggle: "値段表示"
         reception_list: "受け入り表"

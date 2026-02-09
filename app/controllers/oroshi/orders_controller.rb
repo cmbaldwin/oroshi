@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Oroshi::OrdersController < Oroshi::ApplicationController
+  include Oroshi::CalendarHelpers
   include Oroshi::OrdersDashboard::Shared
   include Oroshi::OrdersDashboard::Ransack
   include Oroshi::OrdersDashboard::OrderEntry

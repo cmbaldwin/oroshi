@@ -6,6 +6,7 @@ import FullCalendar from 'fullcalendar';
 export default class extends Controller {
   static calendar;
   static targets = ['calendar'];
+  static values = { eventsUrl: String };
 
   // Get the engine mount path from the body data attribute
   get mountPath() {
@@ -25,7 +26,7 @@ export default class extends Controller {
     const controllerInstance = this;
     this.calendar = new FullCalendar.Calendar(this.calendarTarget, {
       ...controllerInstance.settings(controllerInstance),
-      events: controllerInstance.enginePath('/orders/calendar/orders'),
+      events: this.eventsUrlValue,
       eventClick: function (info) { controllerInstance.onEventClick(info) },
       selectable: false,
       dateClick: function (info) { controllerInstance.onDateClick(info) },
@@ -47,11 +48,19 @@ export default class extends Controller {
   settings(_controllerInstance) {
     return {
       locale: 'ja',
+      aspectRatio: 1.78, // 16:9
       themeSystem: 'bootstrap5',
       headerToolbar: {
         left: 'prevYear,prev,next,nextYear',
         center: '',
         right: 'title'
+      },
+      progressiveEventRendering: true,
+      dayMaxEventRows: true, // for all non-TimeGrid views
+      moreLinkClassNames: 'text-center w-100',
+      eventOrder: ['order', 'title'],
+      moreLinkContent: function (args) {
+        return `${args.num}注文を表示`;
       }
     }
   }
@@ -82,7 +91,7 @@ export default class extends Controller {
 
   onLoading(loading) {
     if (loading) {
-      document.getElementById('order_calendar').insertAdjacentHTML('afterbegin', loading_overlay);
+      document.getElementById('order_calendar').insertAdjacentHTML('afterbegin', window.loading_overlay);
     } else {
       document.querySelector('.loading_overlay')?.remove();
     }

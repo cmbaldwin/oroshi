@@ -12,7 +12,7 @@
       <% buyer_incomplete_orders = @orders.select { |order| order.buyer_id == buyer.id && order.sale_price_per_item == 0 }.count %>
       <% incomplete_target = buyer_incomplete_orders.positive? ? { 'oroshi--orders--sales-form-target': 'incompleteBuyer' } : {} %>
       <li class="nav-item" role="presentation">
-        <%= link_to oroshi_orders_buyer_sales_path(@date, buyer),
+        <%= link_to oroshi.orders_buyer_sales_path(@date, buyer),
                     class: "btn btn-outline-light text-dark #{'active' if active}",
                     data: {
                       turbo_prefetch: 'false',

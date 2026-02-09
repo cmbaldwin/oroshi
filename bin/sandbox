@@ -399,6 +399,7 @@ echo "📋 Creating Procfile.dev..."
 cat > Procfile.dev <<PROCFILE
 web: bin/rails server -p 3000
 css: bin/rails tailwindcss:watch
+scss: bin/rails dartsass:watch
 PROCFILE
 
 # Copy vendored JavaScript files from engine

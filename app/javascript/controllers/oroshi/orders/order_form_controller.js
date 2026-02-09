@@ -350,7 +350,7 @@ export default class extends Controller {
 
   loading(loading) {
     if (loading) {
-      this.element.insertAdjacentHTML('afterbegin', loading_overlay);
+      this.element.insertAdjacentHTML('afterbegin', window.loading_overlay);
     } else {
       this.element.querySelector('.loading_overlay')?.remove();
     }

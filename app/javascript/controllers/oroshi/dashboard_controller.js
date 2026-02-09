@@ -87,7 +87,7 @@ export default class extends Controller {
   toggleShowInactive(event) {
     const targetFrame = event.target.dataset.target
     const frame = document.querySelector(`turbo-frame#${targetFrame}`);
-    frame.insertAdjacentHTML('afterbegin', loading_overlay);
+    frame.insertAdjacentHTML('afterbegin', window.loading_overlay);
     // check if it has show_inactive param, if so remove it
     const url = new URL(frame.src);
     const params = new URLSearchParams(url.search);

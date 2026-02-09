@@ -6,7 +6,7 @@ module Oroshi
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_sales_orders, only: %i[sales]
+    before_action :set_sales_orders, only: %i[sales price_update]
     before_action :set_order_buyers, only: %i[sales price_update]
   end
 
@@ -18,7 +18,6 @@ module Oroshi
   # PATCH/PUT /oroshi/orders/1/price_update
   def price_update
     if @order.update(price_update_order_params)
-      @orders = Oroshi::Order.non_template.where(shipping_date: @date).includes(:buyer)
       render turbo_stream: [
         turbo_stream.replace("order_sales_form_#{@order.id}",
                              partial: "oroshi/orders/dashboard/sales/order_sales_form",

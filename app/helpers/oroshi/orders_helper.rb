@@ -109,7 +109,7 @@ module Oroshi::OrdersHelper
     if item.is_a?(Oroshi::Order)
       # Render order
       turbo_stream_from(item) +
-        turbo_frame_tag(dom_id(item), class: "w-100", src: edit_order_path(item), loading: "lazy") do
+        turbo_frame_tag(dom_id(item), class: "w-100", src: oroshi.edit_order_path(item), loading: "lazy") do
           render(partial: "oroshi/shared/spinner")
         end
     else

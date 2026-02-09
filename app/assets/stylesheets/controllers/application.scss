@@ -136,10 +136,7 @@ dialog[data-oroshi--orders--order-dialog-target="dialog"] {
   padding: 0;
 
   /* Ensure proper max-width for lg modals */
-  &.order-modal {
-    max-width: 1000px; /* modal-lg */
-  }
-
+  &.order-modal,
   &.supply-modal {
     max-width: 1000px; /* modal-lg */
     border: 2px solid #4ecdc4; /* Primary brand color - greenish-cyan */
@@ -342,6 +339,23 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* Calendar */
+
+.order-modal {
+  max-width: 90vw;
+
+  // Responsive width based on screen size
+  @media (min-width: 576px) {
+    min-width: 500px;
+  }
+
+  @media (min-width: 768px) {
+    min-width: 700px;
+  }
+
+  @media (min-width: 992px) {
+    min-width: 900px;
+  }
+}
 
 .loading_overlay {
   height: 100%;

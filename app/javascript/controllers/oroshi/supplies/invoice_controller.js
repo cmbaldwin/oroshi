@@ -51,7 +51,7 @@ export default class extends Controller {
 
   setLoading(_event) {
     const targetElement = this.element.querySelector(`.invoice-form`)
-    targetElement?.insertAdjacentHTML('afterbegin', loading_overlay)
+    targetElement?.insertAdjacentHTML('afterbegin', window.loading_overlay)
   }
 
   closeModal() {

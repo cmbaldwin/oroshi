@@ -1,0 +1,258 @@
+en:
+  oroshi:
+    dashboard:
+      information_tippys:
+        home: |
+          <b>Home Description</b>:<br>
+          This page allows you to view and edit your company settings and information.
+          You can also set your company's reception times here.
+          Organizations without reception times cannot register supplies.
+        company_settings: |
+          <b>Company Settings Description</b>:<br>
+          These settings are used in invoices, statements, and other printed materials.
+        stats: |
+          <b>Current Wholesale Statistics Description</b>:<br>
+          This panel displays current wholesale statistics.<br>
+          <br>
+          If you would like to add data to this panel, please contact your system administrator.
+        buyers: |
+          <b>Buyer Description</b>:<br>
+          <br>
+          All orders require a buyer.<br>
+          <br>
+          Buyer handles are used for template view input and are
+          selected on the order entry page to save space and make
+          the interface easier to use.<br>
+          <br>
+          Buyer type changes the available inputs for orders and
+          is also useful for searching orders.<br>
+          <br>
+          Buyer associated system ID is optional but is also the
+          default way to sort buyers.<br>
+          <br>
+          Buyer addresses are displayed on invoices unless left blank.<br>
+          <br>
+          Buyer categories are not required but are used to
+          categorize buyers when searching orders and entering
+          payment receipt data.<br>
+          <br>
+          The three types of costs are required but can be set to 0.
+          <br>
+          Buyers cannot be deleted because all orders registered
+          to that buyer would become orphaned.
+          To disable a buyer, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        buyer_categories: |
+          <b>Buyer Category Description</b>:<br>
+          Buyer categories are used to separate orders for financial
+          and analytics purposes on pages such as Order Processing Income & Calculation.
+        shipping_organizations: |
+          <b>Shipping Organizations & Shipping Methods Description</b>:<br>
+          All buyers have shipping methods.
+          These are used when creating orders or order templates
+          on the shipping table and for correctly calculating
+          expenses in daily accounting.
+        shipping_organizations_edit: |
+          <b>Shipping Organization Description</b>:<br>
+          All orders must be shipped with a valid shipping method under a valid shipping organization.<br>
+          <br>
+          Shipping organizations cannot be deleted because all orders
+          registered to that shipping method would become orphaned.
+          To disable a shipping method, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        shipping_organizations_selection: |
+          <b>Shipping Organization Selection Description</b>:<br>
+          Select a shipping organization. After creating a new one,
+          you may need to refresh the page depending on the situation
+          for it to appear in this list.<br>
+          <br>
+          Shipping organizations cannot be deleted because all orders
+          registered to that shipping organization would become orphaned.
+          To disable a shipping organization, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        suppliers_edit: |
+          <b>Supplier Description</b>:<br>
+          All supplies must be supplied from a valid supplier under a valid supply organization.<br>
+          <br>
+          To enter supplies, users must first select a supply reception time
+          associated with the supply organization.
+          A list of suppliers and supply type variations that must be
+          selected will be displayed in this panel.
+          Supplies are displayed in supplier number order.<br>
+          <br>
+          The invoice name is used in official documents such as
+          payment invoices. Within the app, the company name is used
+          to identify suppliers. The short name (for checklist) is used
+          in supply checklists printed before reception for quality control.<br>
+          <br>
+          When you select a date on the Raw Materials Supply tab and
+          click the Create Statement button, a modal will open and
+          a preview invoice will be created.<br>
+          <br>
+          Suppliers cannot be deleted because all supplies registered
+          to that supplier would become orphaned.
+          To disable a supplier, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        suppliers_organizations: |
+          <b>Supply Organizations & Suppliers Description</b>:<br>
+          All supplies require a valid supplier, and all suppliers
+          require a valid supply organization, as well as valid
+          supply types and supply type variations.
+          Payment invoices are issued from suppliers to supplier organizations.
+          Therefore, data such as the supplier organization's tax code
+          and address are used in invoice documents.
+        suppliers_organizations_edit: |
+          <b>Supply Organization Description</b>:<br>
+          The data for "supply organization" here is primarily used
+          to fill in information for payment invoice documents.
+          The registered email will be sent with scheduled documents attached.<br>
+          <br>
+          The invoice name (for invoices) is displayed on official documents.<br>
+          <br>
+          Supply organizations cannot be deleted because all supplies
+          registered to that supply organization would become orphaned.
+          To disable a supply organization, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        supplier_organizations_selection: |
+          <b>Supply Organization Selection Description</b>:<br>
+          Select a supply organization. After creating a new one,
+          you may need to refresh the page depending on the situation
+          for it to appear in this list.<br>
+          <br>
+          Supply organizations cannot be deleted because all supplies
+          registered to that supply organization would become orphaned.
+          To disable a supply organization, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        supply_reception_times: |
+          <b>Supply Reception Time Description</b>:<br>
+          Supply organizations without reception times cannot register supplies.<br>
+          <br>
+          All registered supplies must include a supply time used to
+          create data entry pages for the combination of valid supply
+          type variations within supply types, valid suppliers within
+          supply organizations, and variables, such as distributing
+          payment invoices and statements to suppliers.<br>
+          <br>
+          Supply reception times cannot be deleted if they have been
+          used in the past because supplies that used this supply
+          reception time would no longer have an associated supply time.
+          To disable these, simply deselect all supplier organizations.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        supply_types: |
+          <b>Supply Types & Variations Description</b>:<br>
+          Supply items are associated with suppliers and are displayed
+          on the Raw Materials Supply page when a date and supply
+          reception time are selected.
+          Supply types are sorted by supply type on the supply input page.<br>
+          <br>
+          The unit setting determines the price and input method for
+          a given supply. For example, raw materials (weight managed)
+          are usually displayed in "kg" units, and raw materials
+          (count managed) are usually displayed in "item" units.<br>
+          <br>
+          The "liquid" setting is related to supply check documents
+          for quality control created before supplies arrive at the factory.
+          If an item is set to "liquid", pH, temperature, and
+          salinity fields become active.
+        supply_types_selection: |
+          <b>Supply Type Selection Description</b>:<br>
+          Select a supply type. After creating a new one,
+          you may need to refresh the page depending on the situation
+          for it to appear in this list.<br>
+          <br>
+          Supply types cannot be deleted because all supplies registered
+          to that supply type would become orphaned.
+          To disable a supply type, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        supply_type_variation_edit: |
+          "Variation name" is used in official documents,
+          and "handle" is used in the app and quality control
+          supply check documents. The input count in supply form is
+          the number of input boxes displayed on the supply input page.
+          For example, for small-batch raw materials, suppliers usually
+          only provide one bucket.
+        materials: |
+          <b>View and edit product and manufacturing materials information.</b><br>
+          <br>
+          Shipping receptacles are selected for each order, but defaults
+          are set in product variations and can be set when creating
+          order templates.<br>
+          <br>
+          Manufacturing materials only apply to products, not their
+          product variations, so they must be materials that apply to
+          all sub-products. They can be set to apply to products
+          by item, by box, by freight, or by supply unit (kg, etc.).<br>
+          <br>
+          Packaging materials only apply to product variations.
+          Generally, this refers to the film or tray that products
+          are packaged in. However, they can also be used for other
+          materials, such as if special paper is inserted into product variations.
+        production_zones: |
+          <b>Production Zone Description</b>:<br>
+          Production zones are used to create daily production charts
+          based on inventory after orders are entered into the system
+          and before they are shipped.<br>
+          <br>
+          All orders require a valid product variation within a valid product,
+          and all product variations require a production zone.<br>
+          <br>
+          Production zones cannot be deleted if they have been used
+          previously because product variations that used this production
+          zone would no longer have an associated production zone.
+          To disable a production zone, simply toggle the display switch.<br>
+          <br>
+          If you believe this is an exceptional situation,
+          please contact your system administrator.
+        products: |
+          <b>Product Description</b>:<br>
+          <br>
+          All product variations require a main product, and all orders require a product variation.<br>
+          <br>
+          Think of products as base product settings, and product variations
+          as sets with other related costs (shipping receptacles,
+          shipping bands, ice, etc.).<br>
+          <br>
+          When using the production request and inventory system, the
+          supply type is used to calculate the supplies needed for that request.
+          There is a loss setting used to adjust that number.<br>
+          <br>
+          Product dimensions are used to estimate the amount of product
+          that fits in a specified shipping receptacle. This can be
+          changed on the product variation by manually adjusting the
+          default items per shipping receptacle. If this value is left
+          blank, the aforementioned estimate will be used as the default
+          when this product is selected for an order.<br>
+          <br>
+          Cost estimates are calculated when orders are entered into
+          the system based on the materials selected for individual products.
+          Cost adjustments can also be manually changed for each order
+          or order template.
+        order_categories: |
+          Order categories are used to separate orders for financial
+          and analytics purposes on pages such as Order Processing Income & Calculation.
+        order_categories: |
+          Buyer categories are used to separate orders for financial
+          and analytics purposes on pages such as Order Processing
+          Shipping Table, Income & Calculation.
+        payment_receipt: |
+          Orders can be registered as payment receipts by buyers for
+          record-keeping and tax purposes. In quick entry mode,
+          unpaid orders by buyer are displayed. Among these orders,
+          you can select the period to apply payment credit.
+          This data is also used in revenue analysis.

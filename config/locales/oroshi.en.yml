@@ -1,0 +1,477 @@
+en:
+  world:
+    japan:
+      '01': "Hokkaido"
+      '02': "Aomori"
+      '03': "Iwate"
+      '04': "Miyagi"
+      '05': "Akita"
+      '06': "Yamagata"
+      '07': "Fukushima"
+      '08': "Ibaraki"
+      '09': "Tochigi"
+      '10': "Gunma"
+      '11': "Saitama"
+      '12': "Chiba"
+      '13': "Tokyo"
+      '14': "Kanagawa"
+      '15': "Niigata"
+      '16': "Toyama"
+      '17': "Ishikawa"
+      '18': "Fukui"
+      '19': "Yamanashi"
+      '20': "Nagano"
+      '21': "Gifu"
+      '22': "Shizuoka"
+      '23': "Aichi"
+      '24': "Mie"
+      '25': "Shiga"
+      '26': "Kyoto"
+      '27': "Osaka"
+      '28': "Hyogo"
+      '29': "Nara"
+      '30': "Wakayama"
+      '31': "Tottori"
+      '32': "Shimane"
+      '33': "Okayama"
+      '34': "Hiroshima"
+      '35': "Yamaguchi"
+      '36': "Tokushima"
+      '37': "Kagawa"
+      '38': "Ehime"
+      '39': "Kochi"
+      '40': "Fukuoka"
+      '41': "Saga"
+      '42': "Nagasaki"
+      '43': "Kumamoto"
+      '44': "Oita"
+      '45': "Miyazaki"
+      '46': "Kagoshima"
+      '47': "Okinawa"
+  oroshi:
+    address: &oroshi_address
+      name: "Name"
+      company: "Company Name"
+      address1: "Address Line 1"
+      address2: "Address Line 2 (Building/Room)"
+      city: "City"
+      postal_code: "Postal Code"
+      phone: "Phone Number"
+      alternative_phone: "Alternative Phone"
+      subregion_id: "Prefecture"
+      country_id: "Country"
+      default: "Default"
+      default_tip: "Default address is displayed on invoices."
+      active: "Display Address"
+    invoices:
+      form:
+        schedule_email: "%{action} and Schedule Email for %{model_name}"
+        actions:
+          update: "Update"
+          create: "Create"
+    dashboard:
+      add_record: "Add"
+      display_all: "Display All"
+      edit_message: "Edit %{model_name} for %{entity_name}"
+      edit_sub_models: "Edit %{model_name} for %{parent_name}"
+      enlarge_frame: "Enlarge Frame for Settings"
+      form_error_header: "%{error_count} error(s) prohibited this %{model_name} from being saved"
+      uncheck_all: "Uncheck All"
+      update_record: "Edit %{model_name}"
+      update_record_success: "%{model_name} was successfully updated."
+      loading: "Loading..."
+      new_record: "Create New %{model_name}"
+      position_tooltip: "Drag this element to change position (list order)."
+      reset_frame: "Reset Settings Frame"
+      home:
+        home: "Home"
+        no_suppliers_yet: "No supplier organizations registered yet"
+        create_supplier_first: "Please create a supplier organization first"
+        company:
+          company_settings: "Company Settings"
+          company_name: "Company Name"
+          postal_code: "Postal Code"
+          address: "Company Address"
+          phone: "Company Phone"
+          fax: "Company Fax"
+          mail: "Company Email"
+          website: "Website"
+          invoice_number: "Invoice Registration Number"
+        stats:
+          stats: "Current Wholesale Statistics"
+      index:
+        dashboard: "Wholesale Dashboard"
+        home: "Home"
+        stats: "Current Wholesale Statistics"
+        suppliers_organizations: "Supply Organizations & Suppliers"
+        supply_types: "Supply Types & Variations"
+        shipping: "Shipping Organizations & Methods"
+        buyers: "Buyers"
+        materials: "Manufacturing Materials"
+        products: "Products & Product Variations"
+      no_record_warning: "No %{model_name} registered. Please register %{model_name} first."
+    supply_reception_time: &oroshi_supply_reception_time
+      time_qualifier: "Time Qualifier (e.g., 'PM' if twice a day)"
+      hour: "Loading/Weighing Hour (e.g., 16 = 4:00 PM)"
+      supplier_organization_ids: "Related Organizations"
+      supplier_organizations: "Related Organizations"
+    supplier_organization: &oroshi_supplier_organization
+      addresses:
+        <<: *oroshi_address
+      entity_name: "Organization Name"
+      entity_type: "Organization Type"
+      country_id: "Organization Country"
+      subregion_id: "Organization Prefecture"
+      micro_region: "Organization Region/Sea Area"
+      invoice_number: "Invoice ID"
+      invoice_name: "Invoice Name (for invoices)"
+      honorific_title: "Honorific Title (for invoices)"
+      fax: "Fax Number"
+      email: "Email"
+      free_entry: "Free Entry in Supply Checklist"
+      active: "Display Organization"
+    supplier: &oroshi_supplier
+      addresses:
+        <<: *oroshi_address
+      company_name: "Company Name"
+      short_name: "Short Name (for checklist)"
+      supplier_number: "Supplier Number"
+      user_id: "User ID"
+      location: "Location"
+      representatives: "Representatives"
+      invoice_number: "Invoice ID"
+      invoice_name: "Invoice Name (for invoices)"
+      honorific_title: "Honorific Title (for invoices)"
+      active: "Display Supplier"
+      supplier_organization_id: "Organization"
+      supplier_organization: "Organization"
+      supply_type_variation_ids: "Supply Type Variations"
+      supply_type_variations: "Supply Type Variations"
+    supply_type: &oroshi_supply_type
+      name: "Supply Type Name (e.g., Shucked Raw Material)"
+      units: "Units (e.g., kg)"
+      handle: "Handle (e.g., Shucked)"
+      liquid: "Liquid"
+      position: "Position (List Order)"
+      active: "Display Supply Type"
+    supply_type_variation: &oroshi_supply_type_variation
+      name: "Variation Name"
+      handle: "Handle"
+      supply_type_id: "Supply Type"
+      supply_type: "Supply Type"
+      default_container_count: "Input Count in Supply Form"
+      position: "Position (List Order)"
+      active: "Display Supply Type Variation"
+    supplies: &oroshi_supplies
+      no_supplier_organizations: "No organizations or suppliers registered. Please register organizations, suppliers, and supply reception times first."
+      no_selected_supply_type_variations: "No supply type variations registered or selected for this organization's suppliers."
+      select_entry_form: "Please select supplier and supply date/time."
+    invoice: &oroshi_invoice
+      supplier_organization_ids: "Organizations"
+      supplier_organizations: "Organizations"
+      send_email: "Send Email?"
+      send_at: "Send At"
+      sent_at: "Sent At"
+      invoice_layout: "Template"
+    shipping_organization: &oroshi_shipping_organization
+      addresses:
+        <<: *oroshi_address
+      name: "Shipping Organization Name"
+      handle: "Handle"
+      active: "Display Shipping Organization"
+    shipping_method: &oroshi_shipping_method
+      name: "Shipping Method Name"
+      handle: "Handle"
+      active: "Display Shipping Method"
+      daily_cost: "Daily Cost"
+      per_shipping_receptacle_cost: "Per Shipping Receptacle Cost (e.g., per box, per bundle)"
+      per_freight_unit_cost: "Per Freight Unit Cost (e.g., per bundle, per koori)"
+      shipping_organization_id: "Shipping Organization"
+      shipping_organization: "Shipping Organization"
+    buyer_categories: &oroshi_buyer_category
+      name: "Category Name"
+      symbol: "Symbol Character"
+      color: "Color"
+    buyer: &oroshi_buyer
+      name: "Name"
+      entity_type: "Buyer Type"
+      handle: "Handle"
+      representative_phone: "Representative Phone"
+      fax: "Fax Number"
+      associated_system_id: "Associated System ID"
+      color: "Color"
+      handling_cost: "Handling Cost (per bundle)"
+      handling_cost_explanation: "※Handling cost is the cost per cargo bundle for this single buyer. (Handling cost per bundle or administrative cost per bundle, etc.)"
+      handling_cost_notes: "Handling Cost Notes"
+      daily_cost: "Daily Cost"
+      daily_cost_explanation: "※Daily cost is the one-time cost for all orders in a single day for this single buyer. (Fax or average transfer fees, etc.)"
+      daily_cost_notes: "Daily Cost Notes"
+      optional_cost: "Optional Cost (per bundle)"
+      optional_cost_explanation: "※Optional cost is the cost per cargo bundle to a single wholesaler that can be optionally selected. (For example, like handling cost, if there is a general adjustment that is often applied each time an order is made for a single product variation for this buyer.)"
+      optional_cost_notes: "Optional Cost Notes"
+      commission_percentage: "Commission Percentage"
+      commission_percentage_explanation: "※Commission percentage is a number (as a decimal percentage) that each order is multiplied by for this single wholesaler, before deducting total manufacturing costs"
+      brokerage: "Broker/Supermarket, etc."
+      shipping_method_ids: "Shipping Methods"
+      shipping_methods: "Shipping Methods"
+      active: "Display Buyer"
+    shipping_receptacle: &oroshi_shipping_receptacle
+      name: "Name"
+      handle: "Handle"
+      cost: "Cost"
+      default_freight_bundle_quantity: "Default Freight Bundle Quantity"
+      interior_height: "Interior Height (mm)"
+      interior_width: "Interior Width (mm)"
+      interior_depth: "Interior Depth (mm)"
+      exterior_height: "Exterior Height (mm)"
+      exterior_width: "Exterior Width (mm)"
+      exterior_depth: "Exterior Depth (mm)"
+      active: "Display Shipping Receptacle"
+      image: "Image"
+    packaging: &oroshi_packaging
+      name: "Name"
+      cost: "Cost"
+      active: "Display Package"
+      image: "Image"
+      product: "Product"
+    material_category: &oroshi_material_category
+      name: "Name"
+      active: "Display Category"
+    material: &oroshi_material
+      name: "Name"
+      cost: "Cost"
+      per: "Per Unit (calculated by this)"
+      active: "Display Material"
+      material_category_id: "Category"
+      material_category: "Category"
+      image: "Image"
+    product: &oroshi_product
+      name: "Name"
+      units: "Units"
+      exterior_height: "Exterior Height (mm)"
+      exterior_width: "Exterior Width (mm)"
+      exterior_depth: "Exterior Depth (mm)"
+      supply_type_id: "Supply Type"
+      active: "Display Product"
+      supply_type_id: "Supply Type"
+      supply_type: "Supply Type"
+      tax_rate: "Tax Rate"
+      supply_loss_adjustment: "Supply Loss Adjustment (loss of supply to make product)"
+      materials: "Materials"
+      position: "Position (List Order)"
+      drag_to_reorder: "Drag to Reorder"
+    product_variation: &oroshi_product_variation
+      name: "Name"
+      handle: "Handle"
+      product_id: "Product"
+      default_shipping_receptacle_id: "Default Shipping Receptacle"
+      default_shipping_receptacle: "Default Shipping Receptacle"
+      primary_content_country_id: "Primary Content Country"
+      primary_content_subregion_id: "Primary Content Prefecture"
+      primary_content_volume: "Primary Content Volume"
+      shelf_life: "Default Shelf Life (Manufacturing Date + D)"
+      spacing_volume_adjustment: "Shipping Receptacle Space Adjustment (for automatic calculation of items per receptacle)"
+      default_per_box: "Default Items Per Shipping Receptacle"
+      active: "Display Product Variation"
+      supply_type_variation_ids: "Supply Type Variations"
+      supply_type_variations: "Supply Type Variations"
+      packaging_ids: "Packaging"
+      packagings: "Packaging"
+      production_zone_ids: "Production Zones"
+      image: "Image"
+      production_cost_estimate: "Production Cost Estimate"
+      with: "with"
+      cost_estimate_explanation: "※Production cost estimate is calculated with the above settings. The actual cost of each order is calculated each time an order is saved and the order quantity is updated."
+      production_cost_estimate_per_item: "¥%{per_unit} per %{unit}"
+    payment_receipt: &oroshi_payment_receipt
+      id: "Payment Receipt Number"
+      total: "Total Amount"
+      deposit_total: "Deposit Amount"
+      note: "Note"
+      buyer: "Buyer"
+      buyer_id: "Buyer"
+      deposit_date: "Deposit Date"
+      deadline_date: "Deadline Date"
+      issue_date: "Issue Date"
+      order_ids: "Select Related Orders"
+      payment_receipt_adjustment: "Payment Receipt Adjustment"
+    payment_receipts:
+      dashboard:
+        quick_entry:
+          no_record_warning: "There are no %{model_name} with orders that have not been registered for payment."
+        search:
+          payment_receipt_search_results: "Payment Receipts"
+          payment_receipt_deposit_sum_total: "Total Deposits"
+          no_payment_receipts_from_params: "No payment receipts found matching search criteria."
+          search_form:
+            payment_receipt_search: "Payment Receipt Search"
+            deposit_date_gteq: "Deposit Date (from)"
+            deposit_date_lteq: "Deposit Date (to)"
+            buyer_id_in: "Buyer"
+            buyer_category_id_in: "Buyer Category"
+      form:
+        add_adjustment: "Add Adjustment"
+        remove_adjustment: "Remove Adjustment"
+        orders_date_select: "(Select all orders before date)"
+      index:
+        quick_entry: "Quick Entry"
+        single_entry: "Manual Entry"
+        search: "Payment Receipt Search & Statement Output"
+    payment_receipt_adjustment: &oroshi_payment_receipt_adjustment
+      id: "Adjustment Type Number"
+      amount: "Amount"
+      note: "Note"
+      payment_receipt_id: "Payment Receipt"
+      payment_receipt: "Payment Receipt"
+      payment_receipt_adjustment_type_id: "Payment Receipt Adjustment Type"
+      payment_receipt_adjustment_type: "Payment Receipt Adjustment Type"
+    payment_receipt_adjustment_type: &oroshi_payment_receipt_adjustment_type
+      name: "Adjustment Type Name"
+    production_zone: &oroshi_production_zone
+      name: "Name"
+      active: "Display Production Zone"
+    orders: &oroshi_order
+      search:
+        order_search_results: "Order Search Results"
+        no_orders_from_search_params: "No orders found matching search criteria."
+        search_form:
+          order_search: "Order Search"
+          shipping_date_gteq: "Shipping Date (from)"
+          shipping_date_lteq: "Shipping Date (to)"
+          arrival_date_gteq: "Arrival Date (from)"
+          arrival_date_lteq: "Arrival Date (to)"
+      no_orders_warning: "No orders or order templates registered yet."
+      arrival_date: "Arrival Date"
+      shipping_date: "Shipping Date"
+      buyer: "Buyer"
+      product: "Product"
+      product_variation: "Product Variation"
+      shipping_receptacle: "Shipping Receptacle"
+      shipping_organization: "Shipping Organization"
+      shipping_method: "Shipping Method"
+      id: "Order Number"
+      item_quantity: "Item Quantity"
+      receptacle_quantity: "Receptacle Quantity"
+      freight_quantity: "Freight Quantity"
+      shipping_cost: "Shipping Cost"
+      materials_cost: "Materials Cost"
+      sale_price_per_item: "Sale Price Per Item"
+      adjustment: "Total Adjustment"
+      note: "Note (Adjustment Explanation, etc.)"
+      status: "Status"
+      bundle_order: "Bundle with Order"
+      bundled_with_order: "Select Bundled Order"
+      bundled_shipping_receptacle: "Share shipping receptacle cost with bundled order?"
+      add_buyer_optional_cost: "Add buyer optional cost"
+      order_template: "Save this order as an order template?"
+      manufacture_date: "Product Manufacturing Date"
+      expiration_date: "Product Expiration Date"
+    order_categories: &oroshi_order_category
+      name: "Category Name"
+      color: "Color"
+  activerecord:
+    attributes:
+      oroshi/address:
+        <<: *oroshi_address
+      oroshi/buyer_category:
+        <<: *oroshi_buyer_category
+      oroshi/supplier_organization:
+        <<: *oroshi_supplier_organization
+      oroshi/supplier:
+        <<: *oroshi_supplier
+      oroshi/supply_type:
+        <<: *oroshi_supply_type
+      oroshi/supply_type_variation:
+        <<: *oroshi_supply_type_variation
+      oroshi/supply_reception_time:
+        <<: *oroshi_supply_reception_time
+      oroshi/supplies:
+        <<: *oroshi_supplies
+      oroshi/invoice:
+        <<: *oroshi_invoice
+      oroshi/shipping_organization:
+        <<: *oroshi_shipping_organization
+      oroshi/shipping_method:
+        <<: *oroshi_shipping_method
+      oroshi/buyer:
+        <<: *oroshi_buyer
+      oroshi/shipping_receptacle:
+        <<: *oroshi_shipping_receptacle
+      oroshi/packaging:
+        <<: *oroshi_packaging
+      oroshi/material_category:
+        <<: *oroshi_material_category
+      oroshi/material:
+        <<: *oroshi_material
+      oroshi/payment_receipt:
+        <<: *oroshi_payment_receipt
+      oroshi/payment_receipt_adjustment:
+        <<: *oroshi_payment_receipt_adjustment
+      oroshi/payment_receipt_adjustment_type:
+        <<: *oroshi_payment_receipt_adjustment_type
+      oroshi/product:
+        <<: *oroshi_product
+      oroshi/product_variation:
+        <<: *oroshi_product_variation
+      oroshi/production_zone:
+        <<: *oroshi_production_zone
+      oroshi/order:
+        <<: *oroshi_order
+      oroshi/order_category:
+        <<: *oroshi_order_category
+    models:
+      oroshi/address: "Address"
+      oroshi/buyer_category: "Buyer Category"
+      oroshi/supplier_organization: "Supplier Organization"
+      oroshi/supplier: "Supplier"
+      oroshi/supply_type: "Supply Type"
+      oroshi/supply_type_variation: "Supply Type Variation"
+      oroshi/supply_reception_time: "Supply Reception Time"
+      oroshi/supplies: "Supplier Organization"
+      oroshi/invoice: "Invoice"
+      oroshi/shipping_organization: "Shipping Organization"
+      oroshi/shipping_method: "Shipping Method"
+      oroshi/buyer: "Buyer"
+      oroshi/shipping_receptacle: "Shipping Receptacle"
+      oroshi/packaging: "Packaging"
+      oroshi/material_category: "Material Category"
+      oroshi/material: "Material"
+      oroshi/product: "Product"
+      oroshi/product_variation: "Product Variation"
+      oroshi/production_zone: "Production Zone"
+      oroshi/order: "Order"
+      oroshi/order_category: "Order Category"
+      oroshi/payment_receipt: "Payment Receipt"
+      oroshi/payment_receipt_adjustment: "Payment Receipt Adjustment"
+      oroshi/payment_receipt_adjustment_type: "Payment Receipt Adjustment Type"
+      oroshi/product_inventory: "Product Inventory"
+      oroshi/production_request: "Production Request"
+  enums:
+    oroshi_supplier_organization:
+      entity_type:
+        union: "Union"
+        company: "Company"
+        individual: "Individual"
+        other: "Other"
+    oroshi_buyer:
+      entity_type:
+        wholesale_market: "Wholesale Market"
+        retailer: "Retailer"
+        company: "Company"
+        individual: "Individual"
+        other: "Other"
+    oroshi_invoice:
+      invoice_layout:
+        standard: "Standard"
+        simple: "Simple"
+    oroshi_material:
+      per:
+        item: "Item"
+        shipping_receptacle: "Shipping Receptacle"
+        freight: "Freight Bundle"
+        supply_type_unit: "Supply Type Unit (e.g., kg)"
+    oroshi_order:
+      status:
+        estimate: "Estimate"
+        confirmed: "Confirmed"
+        shipped: "Shipped"

@@ -1,0 +1,50 @@
+en:
+  activerecord:
+    attributes:
+      user:
+        email: "Email"
+        login: "Username or Email"
+        username: "Username"
+        password: "Password"
+        password_confirmation: "Password Confirmation"
+        remember_me: "Remember me"
+      oroshi/buyer:
+        name: "Name"
+        handle: "Handle"
+        color: "Color"
+        entity_type: "Entity Type"
+        handling_cost: "Handling Cost"
+        daily_cost: "Daily Cost"
+        optional_cost: "Optional Cost"
+        commission_percentage: "Commission Percentage"
+      oroshi/product_inventory:
+        manufacture_date: "Manufacturing Date"
+        expiration_date: "Expiration Date"
+        quantity: "Quantity"
+        product_variation: "Product Variation"
+      oroshi/invoice:
+        start_date: "Start Date"
+        end_date: "End Date"
+        invoice_layout: "Invoice Layout"
+        send_email: "Send Email"
+        send_at: "Send At"
+        supplier_organizations: "Supplier Organizations"
+    errors:
+      models:
+        oroshi/buyer:
+          attributes:
+            color:
+              invalid_hex: "must be a valid hexadecimal color"
+        oroshi/product_inventory:
+          attributes:
+            expiration_date:
+              must_be_after_manufacture: "must be after manufacturing date"
+            base:
+              immutable_fields: "Manufacturing date, expiration date, and product variation cannot be changed after creation."
+          uniqueness_error: "This inventory already exists"
+        oroshi/invoice:
+          attributes:
+            supplier_organizations:
+              at_least_one: "at least one is required"
+            base:
+              cannot_delete_sent: "Cannot delete sent invoice."

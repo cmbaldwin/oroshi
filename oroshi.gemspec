@@ -51,7 +51,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "bootstrap", "~> 5.3"
 
   # Forms & UI
-  spec.add_dependency "simple_form", "~> 5.3"
   spec.add_dependency "will_paginate", "~> 4.0"
   spec.add_dependency "ultimate_turbo_modal", "~> 2.2"
 

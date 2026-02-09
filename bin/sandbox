@@ -32,7 +32,11 @@ Commands:
   help      Show this help message
 
 Environment Variables:
-  DB        Database adapter (postgresql, mysql) - default: postgresql
+  DB           Database adapter (postgresql, mysql) - default: postgresql
+  SEED_CHOICE  Data seeding option (1, 2, or 3) - default: 3 (interactive prompt if not set)
+               1 = No data, no onboarding
+               2 = No data with onboarding
+               3 = Seeded example data
 
 Examples:
   bin/sandbox              # Create sandbox
@@ -78,34 +82,36 @@ case "$COMMAND" in
     ;;
 esac
 
-# Prompt for data seeding strategy (only if interactive)
-if [ -t 0 ]; then
-  echo ""
-  echo "📊 Sandbox Environment Data Settings"
-  echo ""
-  echo "How would you like to set up your sandbox data?"
-  echo ""
-  echo "  1) No data, no onboarding"
-  echo "     • Clean slate - empty database"
-  echo "     • No onboarding UI shown"
-  echo "     • Best for: Testing from scratch"
-  echo ""
-  echo "  2) No data with onboarding"
-  echo "     • Empty database"
-  echo "     • Full onboarding UI with guided setup"
-  echo "     • Best for: Testing the onboarding flow"
-  echo ""
-  echo "  3) Seeded example data (no onboarding needed)"
-  echo "     • Comprehensive demo data pre-loaded"
-  echo "     • Realistic Japanese business data"
-  echo "     • ~50+ orders, buyers, suppliers, products"
-  echo "     • Best for: Exploring features immediately"
-  echo ""
-  read -p "Enter your choice [1-3] (default: 3): " SEED_CHOICE
-  SEED_CHOICE="${SEED_CHOICE:-3}"
-else
-  # Non-interactive mode: default to seeded data
-  SEED_CHOICE=3
+# Prompt for data seeding strategy (only if interactive and not set)
+if [ -z "${SEED_CHOICE:-}" ]; then
+  if [ -t 0 ]; then
+    echo ""
+    echo "📊 Sandbox Environment Data Settings"
+    echo ""
+    echo "How would you like to set up your sandbox data?"
+    echo ""
+    echo "  1) No data, no onboarding"
+    echo "     • Clean slate - empty database"
+    echo "     • No onboarding UI shown"
+    echo "     • Best for: Testing from scratch"
+    echo ""
+    echo "  2) No data with onboarding"
+    echo "     • Empty database"
+    echo "     • Full onboarding UI with guided setup"
+    echo "     • Best for: Testing the onboarding flow"
+    echo ""
+    echo "  3) Seeded example data (no onboarding needed)"
+    echo "     • Comprehensive demo data pre-loaded"
+    echo "     • Realistic Japanese business data"
+    echo "     • ~50+ orders, buyers, suppliers, products"
+    echo "     • Best for: Exploring features immediately"
+    echo ""
+    read -p "Enter your choice [1-3] (default: 3): " SEED_CHOICE
+    SEED_CHOICE="${SEED_CHOICE:-3}"
+  else
+    # Non-interactive mode: default to seeded data
+    SEED_CHOICE=3
+  fi
 fi
 
 case "$SEED_CHOICE" in

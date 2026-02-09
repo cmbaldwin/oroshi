@@ -410,34 +410,54 @@ test_order.save!
 # ============================================================================
 
 puts "→ Order templates..."
-salmon_weekly = Oroshi::OrderTemplate.find_or_initialize_by(template_name: "週次サーモン配送")
-salmon_weekly.assign_attributes(
+# OrderTemplate requires an associated Order with the template data
+# Create template orders first
+salmon_template_order = Oroshi::Order.find_or_create_by!(
   buyer: tsukiji,
   product_variation: salmon_1kg,
   item_quantity: 50,
   receptacle_quantity: 5,
   freight_quantity: 2,
+  shipping_date: Date.today + 1,
+  arrival_date: Date.today + 2,
+  manufacture_date: Date.today,
+  expiration_date: Date.today + 7,
+  is_order_template: true
+)
+salmon_template_order.order_category_ids = [ regular_order.id ] if salmon_template_order.order_category_ids.empty?
+
+salmon_weekly = Oroshi::OrderTemplate.find_or_initialize_by(order: salmon_template_order)
+salmon_weekly.assign_attributes(
+  template_name: "週次サーモン配送",
   shipping_date_offset_days: 1,
   arrival_date_offset_days: 2,
   manufacture_date_offset_days: 0,
   expiration_date_offset_days: 7,
-  order_category: regular_order,
   active: true
 )
 salmon_weekly.save!
 
-tuna_biweekly = Oroshi::OrderTemplate.find_or_initialize_by(template_name: "隔週マグロ配送")
-tuna_biweekly.assign_attributes(
+tuna_template_order = Oroshi::Order.find_or_create_by!(
   buyer: toyosu,
   product_variation: tuna_saku_200g,
   item_quantity: 100,
   receptacle_quantity: 10,
   freight_quantity: 3,
+  shipping_date: Date.today + 2,
+  arrival_date: Date.today + 3,
+  manufacture_date: Date.today,
+  expiration_date: Date.today + 3,
+  is_order_template: true
+)
+tuna_template_order.order_category_ids = [ regular_order.id ] if tuna_template_order.order_category_ids.empty?
+
+tuna_biweekly = Oroshi::OrderTemplate.find_or_initialize_by(order: tuna_template_order)
+tuna_biweekly.assign_attributes(
+  template_name: "隔週マグロ配送",
   shipping_date_offset_days: 2,
   arrival_date_offset_days: 3,
   manufacture_date_offset_days: 0,
   expiration_date_offset_days: 3,
-  order_category: regular_order,
   active: true
 )
 tuna_biweekly.save!
@@ -451,7 +471,7 @@ base_date = Date.today
   order_date = base_date + days_ago
 
   # Morning salmon order to Tsukiji
-  Oroshi::Order.find_or_create_by!(
+  order = Oroshi::Order.find_or_create_by!(
     buyer: tsukiji,
     product_variation: salmon_1kg,
     item_quantity: 30 + rand(20),
@@ -461,13 +481,13 @@ base_date = Date.today
     arrival_date: order_date + 1,
     manufacture_date: order_date - 1,
     expiration_date: order_date + 7,
-    order_category: regular_order,
     is_order_template: false
   )
+  order.order_category_ids = [ regular_order.id ] if order.order_category_ids.empty?
 
   # Afternoon tuna order to Toyosu (every other day)
   if days_ago.even?
-    Oroshi::Order.find_or_create_by!(
+    order = Oroshi::Order.find_or_create_by!(
       buyer: toyosu,
       product_variation: tuna_saku_200g,
       item_quantity: 80 + rand(40),
@@ -477,14 +497,14 @@ base_date = Date.today
       arrival_date: order_date + 1,
       manufacture_date: order_date,
       expiration_date: order_date + 3,
-      order_category: regular_order,
       is_order_template: false
     )
+    order.order_category_ids = [ regular_order.id ] if order.order_category_ids.empty?
   end
 
   # Scallop order to Sapporo (twice a week)
   if [ -6, -3, -1 ].include?(days_ago)
-    Oroshi::Order.find_or_create_by!(
+    order = Oroshi::Order.find_or_create_by!(
       buyer: sapporo_central,
       product_variation: scallop_1kg,
       item_quantity: 20 + rand(10),
@@ -494,17 +514,18 @@ base_date = Date.today
       arrival_date: order_date + 1,
       manufacture_date: order_date,
       expiration_date: order_date + 5,
-      order_category: regular_order,
       is_order_template: false
     )
+    order.order_category_ids = [ regular_order.id ] if order.order_category_ids.empty?
   end
 end
 
 # Upcoming orders (next 7 days)
 (0..6).each do |days_ahead|
   order_date = base_date + days_ahead
+  category = [ regular_order, urgent_order, sample_order ].sample
 
-  Oroshi::Order.find_or_create_by!(
+  order = Oroshi::Order.find_or_create_by!(
     buyer: [ tsukiji, toyosu, sapporo_central ].sample,
     product_variation: [ salmon_1kg, salmon_500g, tuna_saku_200g, scallop_1kg ].sample,
     item_quantity: 20 + rand(50),
@@ -514,13 +535,13 @@ end
     arrival_date: order_date + 1,
     manufacture_date: order_date - 1,
     expiration_date: order_date + (4..7).to_a.sample,
-    order_category: [ regular_order, urgent_order, sample_order ].sample,
     is_order_template: false
   )
+  order.order_category_ids = [ category.id ] if order.order_category_ids.empty?
 end
 
 # Special sample order for demonstration
-Oroshi::Order.find_or_create_by!(
+order = Oroshi::Order.find_or_create_by!(
   buyer: direct_restaurant,
   product_variation: salmon_500g,
   item_quantity: 10,
@@ -530,9 +551,9 @@ Oroshi::Order.find_or_create_by!(
   arrival_date: base_date + 1,
   manufacture_date: base_date,
   expiration_date: base_date + 5,
-  order_category: sample_order,
   is_order_template: false
 )
+order.order_category_ids = [ sample_order.id ] if order.order_category_ids.empty?
 
 puts "✓ Created #{Oroshi::Order.count} orders"
 

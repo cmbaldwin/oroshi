@@ -415,6 +415,8 @@ puts "→ Order templates..."
 salmon_template_order = Oroshi::Order.find_or_create_by!(
   buyer: tsukiji,
   product_variation: salmon_1kg,
+  shipping_receptacle: salmon_1kg.default_shipping_receptacle,
+  shipping_method: cold_cargo,
   item_quantity: 50,
   receptacle_quantity: 5,
   freight_quantity: 2,
@@ -440,6 +442,8 @@ salmon_weekly.save!
 tuna_template_order = Oroshi::Order.find_or_create_by!(
   buyer: toyosu,
   product_variation: tuna_saku_200g,
+  shipping_receptacle: tuna_saku_200g.default_shipping_receptacle,
+  shipping_method: cold_cargo,
   item_quantity: 100,
   receptacle_quantity: 10,
   freight_quantity: 3,
@@ -474,6 +478,8 @@ base_date = Date.today
   order = Oroshi::Order.find_or_create_by!(
     buyer: tsukiji,
     product_variation: salmon_1kg,
+    shipping_receptacle: salmon_1kg.default_shipping_receptacle,
+    shipping_method: cold_cargo,
     item_quantity: 30 + rand(20),
     receptacle_quantity: 3 + rand(2),
     freight_quantity: 1 + rand(1),
@@ -490,6 +496,8 @@ base_date = Date.today
     order = Oroshi::Order.find_or_create_by!(
       buyer: toyosu,
       product_variation: tuna_saku_200g,
+      shipping_receptacle: tuna_saku_200g.default_shipping_receptacle,
+      shipping_method: cold_cargo,
       item_quantity: 80 + rand(40),
       receptacle_quantity: 8 + rand(4),
       freight_quantity: 2 + rand(2),
@@ -507,6 +515,8 @@ base_date = Date.today
     order = Oroshi::Order.find_or_create_by!(
       buyer: sapporo_central,
       product_variation: scallop_1kg,
+      shipping_receptacle: scallop_1kg.default_shipping_receptacle,
+      shipping_method: cold_cargo,
       item_quantity: 20 + rand(10),
       receptacle_quantity: 2 + rand(1),
       freight_quantity: 1,
@@ -524,10 +534,13 @@ end
 (0..6).each do |days_ahead|
   order_date = base_date + days_ahead
   category = [ regular_order, urgent_order, sample_order ].sample
+  product_var = [ salmon_1kg, salmon_500g, tuna_saku_200g, scallop_1kg ].sample
 
   order = Oroshi::Order.find_or_create_by!(
     buyer: [ tsukiji, toyosu, sapporo_central ].sample,
-    product_variation: [ salmon_1kg, salmon_500g, tuna_saku_200g, scallop_1kg ].sample,
+    product_variation: product_var,
+    shipping_receptacle: product_var.default_shipping_receptacle,
+    shipping_method: cold_cargo,
     item_quantity: 20 + rand(50),
     receptacle_quantity: 2 + rand(5),
     freight_quantity: 1 + rand(2),
@@ -544,6 +557,8 @@ end
 order = Oroshi::Order.find_or_create_by!(
   buyer: direct_restaurant,
   product_variation: salmon_500g,
+  shipping_receptacle: salmon_500g.default_shipping_receptacle,
+  shipping_method: direct_delivery,
   item_quantity: 10,
   receptacle_quantity: 1,
   freight_quantity: 1,

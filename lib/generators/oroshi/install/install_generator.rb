@@ -102,6 +102,33 @@ module Oroshi
         say ""
       end
 
+      # Step 1.5: Ask setup questions
+      def ask_setup_questions
+        say "=" * 80, :cyan
+        say "Oroshi Setup Configuration", :cyan
+        say "=" * 80, :cyan
+        say ""
+
+        # Ask about data seeding
+        @seed_choice = ask("Would you like to seed demo data?", :cyan, limited_to: %w[yes no y n])
+        @seed_demo_data = %w[yes y].include?(@seed_choice.downcase)
+
+        say ""
+
+        # Ask about onboarding
+        if @seed_demo_data
+          say "Note: Demo data includes all required records, so onboarding is not needed.", :yellow
+          @enable_onboarding = false
+        else
+          @onboarding_choice = ask("Enable onboarding UI for initial setup?", :cyan, limited_to: %w[yes no y n])
+          @enable_onboarding = %w[yes y].include?(@onboarding_choice.downcase)
+        end
+
+        say ""
+        say "=" * 80, :cyan
+        say ""
+      end
+
       # Helper method for templates to get app name
       def app_name
         @app_name ||= begin
@@ -233,6 +260,87 @@ module Oroshi
         rake "db:schema:load:cable"
       end
 
+      # Step 9.5: Create admin user
+      # Prompts for admin credentials and creates the user
+      def create_admin_user
+        return unless options[:run_migrations]
+
+        say ""
+        say "=" * 80, :cyan
+        say "Admin User Setup", :cyan
+        say "=" * 80, :cyan
+        say ""
+
+        # Prompt for admin credentials
+        admin_email = ask("Admin email (default: admin@#{app_name}.local):", :cyan)
+        admin_email = "admin@#{app_name}.local" if admin_email.blank?
+
+        admin_username = ask("Admin username (default: admin):", :cyan)
+        admin_username = "admin" if admin_username.blank?
+
+        admin_password = ask("Admin password (default: auto-generated):", :cyan, echo: false)
+        say "" # New line after password input
+
+        if admin_password.blank?
+          admin_password = SecureRandom.hex(16)
+          @generated_password = admin_password
+          say "⚠️  Auto-generated password: #{admin_password}", :yellow
+          say "⚠️  IMPORTANT: Save this password and change it after first login!", :yellow
+        end
+
+        say ""
+        say "Creating admin user...", :green
+
+        # Create the admin user
+        begin
+          # Use a rails runner to create the user
+          user_creation_code = <<~RUBY
+            user = User.create!(
+              email: '#{admin_email}',
+              username: '#{admin_username}',
+              password: '#{admin_password}',
+              password_confirmation: '#{admin_password}',
+              role: :admin,
+              approved: true,
+              confirmed_at: Time.current
+            )
+
+            # Skip onboarding for admin if demo data was seeded
+            if ENV['SEED_DEMO_DATA'] == 'true'
+              progress = user.create_onboarding_progress!
+              progress.update!(skipped_at: Time.current)
+            elsif ENV['ENABLE_ONBOARDING'] == 'true'
+              progress = user.create_onboarding_progress!
+            end
+
+            puts "✓ Admin user created successfully"
+          RUBY
+
+          env_vars = {}
+          env_vars["SEED_DEMO_DATA"] = "true" if @seed_demo_data
+          env_vars["ENABLE_ONBOARDING"] = "true" if @enable_onboarding
+
+          # Write the code to a temp file and execute it
+          require "tempfile"
+          Tempfile.create(["admin_user", ".rb"]) do |f|
+            f.write(user_creation_code)
+            f.flush
+            system(env_vars, "rails", "runner", f.path)
+          end
+
+          @admin_email = admin_email
+          @admin_username = admin_username
+          @admin_password_shown = @generated_password.present?
+
+        rescue => e
+          say "Error creating admin user: #{e.message}", :red
+          say "You can create an admin user manually later using:", :yellow
+          say "  User.create!(email: '#{admin_email}', username: '#{admin_username}', password: 'your_password', role: :admin, approved: true, confirmed_at: Time.current)"
+        end
+
+        say ""
+      end
+
       # Step 10: Show database configuration notes
       # Reminds user to configure multi-database setup
       def create_database_config
@@ -255,11 +363,37 @@ module Oroshi
         say "Oroshi Engine installed successfully!", :green
         say "=" * 80, :green
         say ""
+
+        # Show admin credentials if they were created
+        if @admin_email.present?
+          say "Admin User Credentials:", :cyan
+          say ""
+          say "  Email:    #{@admin_email}", :green
+          say "  Username: #{@admin_username}", :green
+          if @admin_password_shown
+            say "  Password: #{@generated_password}", :yellow
+            say ""
+            say "  ⚠️  SECURITY WARNING:", :red
+            say "  This password is auto-generated. You MUST change it after first login!", :yellow
+            say "  Leaving default credentials is a serious security risk.", :yellow
+          end
+          say ""
+          say "=" * 80, :cyan
+          say ""
+        end
+
         say "Next steps:", :cyan
         say ""
 
         if options[:run_migrations]
           say "Migrations have been run automatically.", :green
+
+          # Show data seeding info
+          if @seed_demo_data
+            say "Demo data was seeded.", :green
+          elsif @enable_onboarding
+            say "Onboarding is enabled - you'll be guided through setup.", :green
+          end
           say ""
         else
           say "1. Configure database.yml for multi-database setup", :cyan

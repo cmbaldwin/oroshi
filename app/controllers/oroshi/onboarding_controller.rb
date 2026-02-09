@@ -68,7 +68,7 @@ class Oroshi::OnboardingController < Oroshi::ApplicationController
 
   def dismiss_checklist
     @progress.update!(checklist_dismissed_at: Time.current)
-    redirect_to oroshi_root_path, notice: t("oroshi.onboarding.messages.checklist_hidden")
+    redirect_to root_path, notice: t("oroshi.onboarding.messages.checklist_hidden")
   end
 
   private

@@ -77,3 +77,4 @@ tmp/local_secret.txt
 # Test dummy app runtime files
 test/dummy/log/
 test/dummy/tmp/
+.playwright-mcp/

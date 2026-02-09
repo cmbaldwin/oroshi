@@ -161,13 +161,16 @@ create(:oroshi_order)
 build(:oroshi_order)
 ```
 
-## Known Issues (from prd.json)
+## Current Focus (from prd.json)
 
-1. **Missing 'message' factory** - Create it or remove references
-2. **WebMock blocking localhost** - Configure to allow localhost:3001
-3. **9 test failures** - Need to investigate each one
-4. **Factory references** - Some tests reference undefined factories
-5. **Sandbox E2E test** - Fails on server health check
+Frontend bug fixes and UI polish:
+1. **CSS 404** - Fix SCSS @import for ultimate_turbo_modal_bootstrap (remove .css extension)
+2. **ScrollSpy error** - Add missing Bootstrap import in revenue_controller.js
+3. **Order inline editing** - Fix Stimulus action bindings and controller namespace mismatches
+4. **Modal standardization** - Refactor order modal to match supply modal pattern (native dialog API)
+5. **Legacy text** - Replace 牡蠣 references with generic supply terms
+6. **Supply dates undefined** - Add null guards in supply_date_input_controller.js
+7. **Filter UX** - Add reset button and responsive improvements
 
 ## Progress Tracking
 

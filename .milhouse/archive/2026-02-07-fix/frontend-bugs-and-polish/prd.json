@@ -16,7 +16,8 @@
         "bundle exec rubocop --parallel passes"
       ],
       "priority": 1,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit 3e2119a. Removed .css extension from @import in application.scss."
     },
     {
       "id": "US-002",
@@ -29,7 +30,8 @@
         "No console errors from revenue_controller on any order page"
       ],
       "priority": 2,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit 338f866. Added Bootstrap import to revenue controller."
     },
     {
       "id": "US-003",
@@ -44,7 +46,8 @@
         "bin/rails test test/controllers/ passes"
       ],
       "priority": 3,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit f8dd502. Corrected Stimulus submit action binding."
     },
     {
       "id": "US-004",
@@ -59,7 +62,8 @@
         "No JS errors in console when editing prices"
       ],
       "priority": 4,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit b642d6c. Resolved controller namespace mismatch and event binding."
     },
     {
       "id": "US-005",
@@ -79,7 +83,8 @@
         "bin/rails test passes"
       ],
       "priority": 5,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit d77b9ae. Created order_dialog_controller extending @stimulus-components/dialog, migrated from Bootstrap modal to native dialog API."
     },
     {
       "id": "US-006",
@@ -92,7 +97,8 @@
         "No horizontal overflow or clipping of filter buttons on mobile-width screens"
       ],
       "priority": 6,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit 8756879. Added reset button, improved active filter styling, added flex-wrap for responsiveness."
     },
     {
       "id": "US-007",
@@ -105,7 +111,8 @@
         "bin/rails test passes"
       ],
       "priority": 7,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit b903716. Replaced 牡蠣 with generic supply terminology across locale files and printables."
     },
     {
       "id": "US-008",
@@ -121,7 +128,8 @@
         "bin/rails test passes"
       ],
       "priority": 8,
-      "passes": true
+      "passes": true,
+      "notes": "Fixed in commit 6c48f1c. Added null/undefined guards for supply type data attributes and querySelector calls."
     }
   ]
 }

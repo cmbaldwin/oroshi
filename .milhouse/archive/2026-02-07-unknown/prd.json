@@ -13,7 +13,7 @@
         "Run bin/rails test test/jobs/ and verify no factory errors"
       ],
       "priority": 1,
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-002",
@@ -26,7 +26,7 @@
         "Run bin/rails test test/sandbox_e2e_test.rb and verify it passes"
       ],
       "priority": 2,
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-003",
@@ -40,7 +40,7 @@
         "Document any test changes in progress.txt"
       ],
       "priority": 3,
-      "passes": true,
+      "passes": false,
       "notes": "Found 4 issues (3 failures + 1 error), not 9. Fixed authorization test (wrong role for unapproved user) and generator test race condition (shared temp dir in parallel execution)."
     },
     {
@@ -55,7 +55,7 @@
         "Run full test suite and verify factory-related errors are gone"
       ],
       "priority": 4,
-      "passes": true,
+      "passes": false,
       "notes": "All factory-related errors were resolved by previous stories. Full suite runs with 0 factory errors."
     },
     {
@@ -70,7 +70,7 @@
         "Commit changes with descriptive message"
       ],
       "priority": 5,
-      "passes": true,
+      "passes": false,
       "notes": "617 tests pass with 0 failures, 0 errors. Count is 617 (not 647 as originally estimated)."
     }
   ]

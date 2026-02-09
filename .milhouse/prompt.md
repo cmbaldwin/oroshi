@@ -18,7 +18,7 @@ You are an autonomous AI agent executing within the Milhouse loop system, workin
    - Read `prd.json` to see all user stories and their completion status
    - Read `progress.txt` to learn from previous iterations
    - Read `CLAUDE.md` for project conventions and critical patterns
-   - Check git branch matches the current story
+   - Check git branch matches `branchName` from prd.json. If not, check it out or create from master.
 
 2. **Select Task**
 
@@ -31,13 +31,14 @@ You are an autonomous AI agent executing within the Milhouse loop system, workin
    - Implement the single user story completely
    - Follow Rails 8 best practices and Oroshi conventions
    - Search codebase before assuming features don't exist
+   - This PRD is frontend-focused: JS fixes, Stimulus controllers, view templates, CSS, and locale files
 
 4. **Quality Checks** (MUST PASS before committing)
 
    - Run: `bundle exec rubocop --autocorrect` (linting)
    - Run: `bin/rails test` (tests - Test::Unit, NOT RSpec)
    - Verify no errors or failures
-   - For UI changes: manually verify in browser if possible
+   - For UI/JS changes: verify in browser if Playwright MCP tools are available
 
 5. **Commit Changes**
 
@@ -83,6 +84,34 @@ All commits require passing:
 
 This signals to Milhouse that the autonomous loop should terminate successfully.
 
+## Current PRD Focus: Frontend Bug Fixes & UI Polish
+
+This iteration focuses on fixing frontend issues across the engine:
+
+### Key Areas
+
+1. **Asset Pipeline** - CSS import fix (SCSS @import syntax)
+2. **Stimulus Controllers** - Missing Bootstrap imports, action binding mismatches, namespace conflicts
+3. **Modal Standardization** - Order modal must match the supply modal pattern (custom dialog controller extending @stimulus-components/dialog, native HTML5 `<dialog>` API)
+4. **Locale Updates** - Replace legacy 牡蠣 (oyster) references with generic supply terms
+5. **UI Polish** - Order filters responsiveness and reset functionality
+
+### Critical Patterns for This PRD
+
+- **Bootstrap in ES modules**: Each Stimulus controller that uses Bootstrap must `import * as bootstrap from "bootstrap"` in its own file. The import in `application.js` only creates a module-scoped variable.
+- **Native `<dialog>` API**: The codebase is migrating from Bootstrap modals to native HTML5 `<dialog>` with `@stimulus-components/dialog`. The supply modal (`oroshi/supplies/dialog_controller.js`) is the reference implementation.
+- **Stimulus action syntax**: Always use explicit event types: `submit->controller#method`, not just `controller#method`.
+- **Turbo frame placement**: Turbo-frames should wrap modal content only, not the footer. Wrapping the footer causes dialog lifecycle conflicts.
+- **Propshaft SCSS imports**: `@import "file.css"` generates a CSS `@import url()`. Remove the `.css` extension to embed the file contents.
+
+### Reference Files
+
+- **Supply dialog controller (working pattern)**: `app/javascript/controllers/oroshi/supplies/dialog_controller.js`
+- **Supply modal view (working pattern)**: `app/views/oroshi/supplies/modal/_init_supply_modal.html.erb`
+- **Order dashboard controller (needs fixes)**: `app/javascript/controllers/oroshi/orders/order_dashboard_controller.js`
+- **Revenue controller (needs Bootstrap import)**: `app/javascript/controllers/oroshi/orders/revenue_controller.js`
+- **Supply date input controller (needs null guards)**: `app/javascript/controllers/oroshi/supplies/supply_date_input_controller.js`
+
 ## Project-Specific Patterns
 
 ### Technology Stack
@@ -90,28 +119,23 @@ This signals to Milhouse that the autonomous loop should terminate successfully.
 - **Rails**: 8.1.1 (Ruby 4.0.0)
 - **Database**: PostgreSQL 16 (4 databases: main, queue, cache, cable)
 - **Background Jobs**: Solid Queue (NOT Sidekiq)
-- **Caching**: Solid Cache (PostgreSQL-backed)
-- **Cable**: Solid Cable (PostgreSQL-backed)
 - **Assets**: Propshaft + importmap (NOT Webpack/Sprockets)
 - **Testing**: Test::Unit + FactoryBot + Capybara (NOT RSpec)
-- **Real-time**: Turbo Streams + Action Cable
 - **CSS**: Tailwind CSS + Bootstrap 5
+- **Frontend**: Turbo + Stimulus
 - **Authentication**: Devise
-- **PDF**: Prawn with Japanese font support
 - **i18n**: Japanese-first (all UI in Japanese)
 
 ### Critical Gotchas
 
-1. **Solid gems must load first** - `lib/oroshi/engine.rb` requires solid-* gems at the top before Rails configuration
-2. **4 separate databases** - main, queue, cache, cable (schema files: `db/schema.rb`, `db/queue_schema.rb`, `db/cache_schema.rb`, `db/cable_schema.rb`)
-3. **No Sidekiq** - use Solid Queue for all background jobs
-4. **Test::Unit, NOT RSpec** - use `assert_equal`, `assert_not_nil`, not `expect().to`
-5. **Engine isolation** - all models namespaced `Oroshi::*`, all tables prefixed `oroshi_*`
-6. **User model exception** - `User` is NOT namespaced (application-level)
-7. **Japanese-first UI** - all user-facing text uses `t()` helper with Japanese locale files
-8. **Factory naming** - factories are named `oroshi_order`, `oroshi_buyer`, etc. (prefixed)
-9. **importmap for JS** - use `bin/importmap pin` to add dependencies, NOT npm install
-10. **Engine routes** - use `Oroshi::Engine.routes.draw`, never `Rails.application.routes.draw`
+1. **Solid gems must load first** - `lib/oroshi/engine.rb` requires solid-* gems at the top
+2. **Test::Unit, NOT RSpec** - use `assert_equal`, `assert_not_nil`, not `expect().to`
+3. **Engine isolation** - all models namespaced `Oroshi::*`, all tables prefixed `oroshi_*`
+4. **User model exception** - `User` is NOT namespaced (application-level)
+5. **Japanese-first UI** - all user-facing text uses `t()` helper with Japanese locale files
+6. **importmap for JS** - use `bin/importmap pin` to add dependencies, NOT npm install
+7. **Engine routes** - use `Oroshi::Engine.routes.draw`, never `Rails.application.routes.draw`
+8. **Stimulus controller naming** - directory `controllers/oroshi/orders/revenue_controller.js` auto-registers as `oroshi--orders--revenue`
 
 ### Quality Commands
 
@@ -126,37 +150,7 @@ bin/rails test
 bin/rails test test/models/oroshi/order_test.rb
 
 # Run tests for a directory
-bin/rails test test/jobs/
-
-# Database setup (if needed)
-bin/rails db:create db:migrate
-bin/rails db:schema:load:queue
-bin/rails db:schema:load:cache
-bin/rails db:schema:load:cable
-```
-
-### Factory Patterns
-
-```ruby
-# Factory definition (in test/factories/oroshi/*.rb)
-FactoryBot.define do
-  factory :oroshi_order, class: "Oroshi::Order" do
-    # attributes
-  end
-end
-
-# Usage in tests
-create(:oroshi_order)
-build(:oroshi_buyer)
-```
-
-### Test File Structure
-
-```
-# Tests mirror app structure
-app/jobs/oroshi/mailer_job.rb     → test/jobs/oroshi/mailer_job_test.rb
-app/models/oroshi/order.rb        → test/models/oroshi/order_test.rb
-app/controllers/oroshi/orders_controller.rb → test/controllers/oroshi/orders_controller_test.rb
+bin/rails test test/controllers/
 ```
 
 ## Documentation Search
@@ -164,19 +158,19 @@ app/controllers/oroshi/orders_controller.rb → test/controllers/oroshi/orders_c
 Search project documentation with qmd before making changes:
 
 ```bash
-qmd search "factory patterns" -c oroshi
-qmd search "solid queue configuration" -c oroshi
-qmd search "engine routing" -c oroshi
+qmd search "stimulus controller patterns" -c oroshi
+qmd search "modal implementation" -c oroshi
+qmd search "bootstrap import" -c oroshi
 ```
 
 ## Key Files
 
 - **Main CLAUDE.md**: `/Users/cody/Dev/oroshi/CLAUDE.md` - Full project conventions
-- **Test Helper**: `test/test_helper.rb` - Test configuration
-- **Factories**: `test/factories/oroshi/*.rb` - All FactoryBot factories
 - **Engine**: `lib/oroshi/engine.rb` - Core engine setup
 - **Routes**: `config/routes.rb` - Engine routes
 - **Locales**: `config/locales/*.yml` - i18n translations
+- **JS Controllers**: `app/javascript/controllers/` - Stimulus controllers
+- **Importmap**: `config/importmap.rb` - JS dependency pins
 
 ## Key Constraints
 

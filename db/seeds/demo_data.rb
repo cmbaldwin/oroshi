@@ -186,7 +186,7 @@ sapporo_central.save!
 direct_restaurant = Oroshi::Buyer.find_or_initialize_by(handle: "direct-restaurant")
 direct_restaurant.assign_attributes(
   name: "レストラン直送",
-  entity_type: :direct_delivery,
+  entity_type: :retailer,
   handling_cost: 500,
   daily_cost: 200,
   optional_cost: 0,

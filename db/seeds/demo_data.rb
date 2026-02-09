@@ -470,12 +470,16 @@ puts "→ Sample orders..."
 # Create orders for the past 2 weeks with various statuses
 base_date = Date.today
 
+# Skip broadcast callbacks during seeding (they fail outside request context)
+Oroshi::Order.skip_callback(:commit, :after, :broadcast_replace_to)
+Oroshi::Order.skip_callback(:commit, :after, :broadcast_destroy)
+
 # Recent orders (last week)
 (-7..-1).each do |days_ago|
   order_date = base_date + days_ago
 
   # Morning salmon order to Tsukiji
-  order = Oroshi::Order.find_or_create_by!(
+  order = create_order_safely(
     buyer: tsukiji,
     product_variation: salmon_1kg,
     shipping_receptacle: salmon_1kg.default_shipping_receptacle,
@@ -489,7 +493,7 @@ base_date = Date.today
     expiration_date: order_date + 7,
     is_order_template: false
   )
-  order.order_category_ids = [ regular_order.id ] if order.order_category_ids.empty?
+  order.order_category_ids = [ regular_order.id ] if order&.order_category_ids&.empty?
 
   # Afternoon tuna order to Toyosu (every other day)
   if days_ago.even?
@@ -568,7 +572,11 @@ order = Oroshi::Order.find_or_create_by!(
   expiration_date: base_date + 5,
   is_order_template: false
 )
-order.order_category_ids = [ sample_order.id ] if order.order_category_ids.empty?
+order.order_category_ids = [ sample_order.id ] if order&.order_category_ids&.empty?
+
+# Restore broadcast callbacks
+Oroshi::Order.set_callback(:commit, :after, :broadcast_replace_to)
+Oroshi::Order.set_callback(:commit, :after, :broadcast_destroy)
 
 puts "✓ Created #{Oroshi::Order.count} orders"
 

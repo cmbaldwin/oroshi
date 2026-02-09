@@ -125,6 +125,17 @@ cd "$OROSHI_ROOT/sandbox"
 # Clean up temp directory
 rm -rf "$TEMP_DIR"
 
+# Add CSS processing gems before Oroshi
+echo "📝 Adding CSS processing gems to Gemfile..."
+# Insert dartsass-rails and bootstrap after tailwindcss-rails
+sed -i.bak '/gem "tailwindcss-rails"/a\
+# Use Dart Sass for stylesheets [https://github.com/rails/dartsass-rails]\
+gem "dartsass-rails"\
+# Use Bootstrap for styling [https://github.com/twbs/bootstrap-rubygem]\
+gem "bootstrap", "~> 5.3"
+' Gemfile
+rm Gemfile.bak
+
 # Add Oroshi and development gems to Gemfile
 echo "📝 Adding Oroshi to Gemfile..."
 cat <<RUBY >> Gemfile
@@ -151,6 +162,50 @@ RUBY
 # Bundle install (unbundled to avoid inheriting parent's gem environment)
 echo "📦 Installing gems..."
 unbundled bundle install --quiet
+
+# Configure dartsass
+echo "🎨 Configuring Dart Sass..."
+unbundled bin/rails dartsass:install
+
+# Fix Procfile.dev to use unique process names
+echo "🔧 Fixing Procfile.dev..."
+cat > Procfile.dev <<PROCFILE
+web: bin/rails server
+tailwind: bin/rails tailwindcss:watch
+sass: bin/rails dartsass:watch
+PROCFILE
+
+# Create proper application.scss that imports Oroshi engine styles
+echo "📝 Creating application.scss..."
+cat > app/assets/stylesheets/application.scss <<'SCSS'
+/*
+ * Sandbox Application Stylesheet
+ *
+ * Imports all Oroshi engine styles
+ */
+
+// Bootstrap 5
+@use "sass:map";
+@import "oroshi";
+@import "bootstrap";
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
+
+// Oroshi engine styles
+@import "scaffolds";
+@import "flatpickr/flatpickr";
+@import "oroshi_utilities";
+@import "onboarding";
+@import "controllers/application";
+SCSS
+
+# Build CSS
+echo "🏗️  Building Sass..."
+unbundled bin/rails dartsass:build
+
+# Remove sandbox's application layout so engine layout is used
+echo "🗑️  Removing sandbox application layout (will use engine's layout)..."
+rm -f app/views/layouts/application.html.erb
 
 # Configure Oroshi (do this AFTER bundle install so Oroshi is loaded)
 echo "⚙️  Configuring Oroshi..."

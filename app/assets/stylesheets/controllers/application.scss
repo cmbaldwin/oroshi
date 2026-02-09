@@ -125,7 +125,8 @@ body {
 
 /* Dialog Modals - Stimulus Components */
 dialog[data-dialog-target="dialog"],
-dialog[data-oroshi--supplies--dialog-target="dialog"] {
+dialog[data-oroshi--supplies--dialog-target="dialog"],
+dialog[data-oroshi--orders--order-dialog-target="dialog"] {
   border: none;
   border-radius: 0.5rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -180,20 +181,23 @@ dialog[data-oroshi--supplies--dialog-target="dialog"] {
 
 /* Dialog backdrop with smooth animation */
 dialog[data-dialog-target="dialog"]::backdrop,
-dialog[data-oroshi--supplies--dialog-target="dialog"]::backdrop {
+dialog[data-oroshi--supplies--dialog-target="dialog"]::backdrop,
+dialog[data-oroshi--orders--order-dialog-target="dialog"]::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   animation: fadeIn 0.2s ease-out;
 }
 
 /* Opening animation for dialog */
 dialog[data-dialog-target="dialog"][open],
-dialog[data-oroshi--supplies--dialog-target="dialog"][open] {
+dialog[data-oroshi--supplies--dialog-target="dialog"][open],
+dialog[data-oroshi--orders--order-dialog-target="dialog"][open] {
   animation: slideUp 0.3s ease-out;
 }
 
 /* Closing animation for dialog */
 dialog[data-dialog-target="dialog"][closing],
-dialog[data-oroshi--supplies--dialog-target="dialog"][closing] {
+dialog[data-oroshi--supplies--dialog-target="dialog"][closing],
+dialog[data-oroshi--orders--order-dialog-target="dialog"][closing] {
   animation: slideDown 0.3s ease-in forwards;
 }
 
@@ -230,7 +234,8 @@ dialog[data-oroshi--supplies--dialog-target="dialog"][closing] {
 
 /* Ensure dialog scrolling doesn't affect body */
 body:has(dialog[data-dialog-target="dialog"][open]),
-body:has(dialog[data-oroshi--supplies--dialog-target="dialog"][open]) {
+body:has(dialog[data-oroshi--supplies--dialog-target="dialog"][open]),
+body:has(dialog[data-oroshi--orders--order-dialog-target="dialog"][open]) {
   overflow: hidden;
 }
 

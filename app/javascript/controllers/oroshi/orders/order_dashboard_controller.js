@@ -156,7 +156,13 @@ export default class extends Controller {
 
     const resetPath = event.currentTarget?.dataset?.resetPath;
     if (resetPath) {
-      Turbo.visit(resetPath, { frame: event.currentTarget.dataset.turboFrame || "orders_dashboard" });
+      const frameId = event.currentTarget.dataset.turboFrame || "orders_dashboard";
+      const frame = document.getElementById(frameId);
+      if (frame) {
+        frame.src = resetPath;
+      } else {
+        Turbo.visit(resetPath);
+      }
       return;
     }
 

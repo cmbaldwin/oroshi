@@ -13,7 +13,7 @@ Oroshi is a Rails engine gem providing a complete wholesale order management sys
 - **Opinionated & Complete**: Works out-of-box with sensible defaults
 - **Japanese-First**: All UI, i18n, and documentation in Japanese
 - **Modern Rails 8**: Uses Solid Queue, Solid Cache, Solid Cable
-- **Well-Tested**: 539+ test examples with comprehensive coverage
+- **Well-Tested**: 617 test examples with comprehensive coverage
 - **Generated Sandbox**: Full demo app for testing and development
 
 ## Build & Run
@@ -93,13 +93,15 @@ The sandbox is generated on-demand (not committed) following the Solidus pattern
 The sandbox script (`bin/sandbox`) orchestrates a complex process to create a working Rails app with Oroshi mounted. Key implementation details:
 
 1. **Temporary Directory Creation**: Creates Rails app in `/tmp/oroshi_sandbox_*` first, then moves to `sandbox/` to avoid Rails-within-Rails error
-2. **Conditional Gem Initializers**: All gem-specific initializers (Carmen, Devise, SimpleForm, Resend, Bullet) wrapped in `if defined?(GemName)` checks to prevent errors during database creation
-3. **Schema Loading vs Migration**: Uses `db:schema:load` instead of `db:migrate` to avoid executing migration code that references Oroshi:: models before they're initialized
-4. **Two-Stage User Model**: Creates minimal `User < ApplicationRecord` first, then replaces with full Devise-enabled version after database setup to avoid initialization timing issues
-5. **Explicit Error Handling**: Script uses `set -e -u -o pipefail` for proper error propagation in bash
-6. **Direct File Operations**: Copies schema files and migrations directly instead of using Rails tasks to avoid initialization conflicts
-7. **Port Isolation**: Server runs on port 3001 (not 3000) to avoid conflicts with development server
-8. **E2E Test Integration**: `rake sandbox:test` creates sandbox, runs browser-based journeys, verifies functionality, then destroys sandbox (takes 2-3 minutes)
+2. **CSS Processing Setup**: Automatically adds `dartsass-rails` and `bootstrap` gems, runs `dartsass:install`, creates proper `application.scss` with all Oroshi engine imports, fixes `Procfile.dev` to run both `tailwindcss:watch` and `dartsass:watch` with unique process names, and builds initial CSS
+3. **Layout Removal**: Deletes the generated `app/views/layouts/application.html.erb` so the sandbox uses the engine's layout instead of creating conflicts
+4. **Conditional Gem Initializers**: All gem-specific initializers (Carmen, Devise, SimpleForm, Resend, Bullet) wrapped in `if defined?(GemName)` checks to prevent errors during database creation
+5. **Schema Loading vs Migration**: Uses `db:schema:load` instead of `db:migrate` to avoid executing migration code that references Oroshi:: models before they're initialized
+6. **Two-Stage User Model**: Creates minimal `User < ApplicationRecord` first, then replaces with full Devise-enabled version after database setup to avoid initialization timing issues
+7. **Explicit Error Handling**: Script uses `set -e -u -o pipefail` for proper error propagation in bash
+8. **Direct File Operations**: Copies schema files and migrations directly instead of using Rails tasks to avoid initialization conflicts
+9. **Port Isolation**: Server runs on port 3000 by default
+10. **E2E Test Integration**: `rake sandbox:test` creates sandbox, runs browser-based journeys, verifies functionality, then destroys sandbox (takes 2-3 minutes)
 
 **Critical Gotchas:**
 
@@ -107,6 +109,8 @@ The sandbox script (`bin/sandbox`) orchestrates a complex process to create a wo
 - Don't assume gems are fully loaded during `db:create` or `db:migrate`
 - Migration execution can trigger model code before initializers run
 - Exit code 0 doesn't guarantee success if intermediate commands fail silently
+- Sandbox MUST NOT have `app/views/layouts/application.html.erb` as it overrides the engine's layout when the engine is mounted at root
+- Rails `--css=tailwind` only adds Tailwind; dartsass-rails must be added separately for SCSS compilation
 
 ### Testing
 
@@ -752,6 +756,9 @@ ls -lh ~/.cache/qmd/models/  # Verify model downloaded
 13. **Zeitwerk vs Generators**: The engine adds `lib/` to autoload paths but MUST exclude `lib/generators/` and `lib/tasks/` via `Rails.autoloaders.main.ignore()` — generators follow Rails naming, not Zeitwerk conventions.
 14. **Gemfile conditional logic**: Do NOT use `if ENV["DOCKER_BUILD"]` conditionals in the Gemfile for switching between path and git sources. This causes lockfile mismatches. Use Kamal hooks to swap the source at deploy time instead.
 15. **Platform lockfile**: When deploying from arm64 (Apple Silicon) to amd64 servers, run `bundle lock --add-platform x86_64-linux` and commit the lockfile.
+16. **Sandbox CSS Compilation**: The sandbox needs both `dartsass-rails` AND `tailwindcss-rails`. Rails' `--css=tailwind` only adds Tailwind. The `bin/sandbox` script now automatically adds dartsass-rails, bootstrap gem, configures dartsass, creates proper application.scss, fixes Procfile.dev, and removes the sandbox's application.html.erb layout so the engine's layout is used.
+17. **Engine Layout Portability**: Engine layouts should use `respond_to?` checks before calling methods that only exist in specific parent apps. Example: `current_user.respond_to?(:demo_account?) && current_user.demo_account?` instead of just `current_user.demo_account?`. This prevents errors when the engine is used in different parent applications.
+18. **Unused CSS Dependencies**: After switching UI frameworks (e.g., from ultimate_turbo_modal to native `<dialog>` elements), remove the old CSS imports from `app/assets/stylesheets/application.scss`. The compiled CSS can be stale even after restarting dartsass:watch - use `bin/rails dartsass:clobber && bin/rails dartsass:build` to force a clean rebuild.
 
 ## Troubleshooting
 

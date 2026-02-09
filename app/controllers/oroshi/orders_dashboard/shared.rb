@@ -33,7 +33,7 @@ module Oroshi
 
   def order_params
     params_with_date
-      .require(:oroshi_order)
+      .require(:order)
       .permit(:buyer_id, :product_variation_id, :shipping_receptacle_id, :shipping_method_id,
               :item_quantity, :receptacle_quantity, :freight_quantity, :shipping_cost, :materials_cost,
               :sale_price_per_item, :adjustment, :note, :is_order_template, :shipping_date,
@@ -45,11 +45,11 @@ module Oroshi
   def params_with_date
     modified_params = params.dup
     %i[shipping_date arrival_date manufacture_date expiration_date].each do |date_param|
-      endpoint = modified_params[:oroshi_order]
+      endpoint = modified_params[:order]
       endpoint[date_param] = parse_japanese_date(endpoint[date_param])
     end
-    modified_params[:oroshi_order][:is_order_template] =
-      modified_params[:oroshi_order][:is_order_template].to_i.positive?
+    modified_params[:order][:is_order_template] =
+      modified_params[:order][:is_order_template].to_i.positive?
     modified_params
   end
 

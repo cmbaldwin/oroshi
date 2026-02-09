@@ -67,7 +67,7 @@ module Oroshi
   end
 
   def quantity_update_order_params
-    params.require("oroshi_order").permit(:item_quantity, :receptacle_quantity, :freight_quantity)
+    params.require(:order).permit(:item_quantity, :receptacle_quantity, :freight_quantity)
   end
 
   def quantity_to_zero?

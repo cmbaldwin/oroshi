@@ -38,20 +38,20 @@ class Oroshi::OrdersControllerTest < ActionDispatch::IntegrationTest
   # POST #create
   test "POST create creates a new Oroshi::Order with valid parameters" do
     assert_difference("Oroshi::Order.count", 1) do
-      post oroshi_orders_path, params: { oroshi_order: @oroshi_order_attributes }
+      post oroshi_orders_path, params: { order: @oroshi_order_attributes }
     end
   end
 
   test "POST create does not create a new Oroshi::Order with invalid parameters" do
     @oroshi_order_attributes[:shipping_date] = nil
     assert_no_difference("Oroshi::Order.count") do
-      post oroshi_orders_path, params: { oroshi_order: @oroshi_order_attributes }
+      post oroshi_orders_path, params: { order: @oroshi_order_attributes }
     end
   end
 
   test "POST create returns unprocessable_entity status with invalid parameters" do
     @oroshi_order_attributes[:shipping_date] = nil
-    post oroshi_orders_path, params: { oroshi_order: @oroshi_order_attributes }
+    post oroshi_orders_path, params: { order: @oroshi_order_attributes }
     assert_response :unprocessable_entity
   end
 
@@ -60,7 +60,7 @@ class Oroshi::OrdersControllerTest < ActionDispatch::IntegrationTest
     new_date = Time.zone.tomorrow
     new_shipping_date = new_date.strftime("%Y\u5E74%m\u6708%d\u65E5")
     patch oroshi_order_path(@oroshi_order), params: {
-      oroshi_order: {
+      order: {
         shipping_date: new_shipping_date,
         # simulate the flatpickr date format for both dates
         arrival_date: @oroshi_order.arrival_date.strftime("%Y\u5E74%m\u6708%d\u65E5")

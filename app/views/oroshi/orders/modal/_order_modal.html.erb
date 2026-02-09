@@ -6,14 +6,14 @@
       </div>
       <button type="button" class="btn-close" data-action="oroshi--orders--order-dialog#close" aria-label="Close"></button>
     </div>
-    <div class="modal-body py-2">
-      <%= turbo_frame_tag 'orders_modal_content', class: 'overflow-hidden' do %>
+    <%= turbo_frame_tag 'orders_modal_content', class: 'overflow-hidden' do %>
+      <div class="modal-body py-2">
         <%= render partial: 'oroshi/shared/spinner' %>
-      <% end %>
-    </div>
-    <div class="modal-footer border-top mt-2">
-      <button type="button" class="btn btn-secondary" data-action="oroshi--orders--order-dialog#close"><%= t('common.buttons.close') %></button>
-    </div>
+      </div>
+      <div class="modal-footer border-top mt-2">
+        <button type="button" class="btn btn-secondary" data-action="oroshi--orders--order-dialog#close"><%= t('common.buttons.close') %></button>
+      </div>
+    <% end %>
   </dialog>
   <button type="button" style="display: none;" data-oroshi--orders--order-dialog-trigger="true"></button>
 </div>

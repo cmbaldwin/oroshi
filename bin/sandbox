@@ -427,14 +427,15 @@ RUBY
 echo "🎨 Removing default ApplicationHelper..."
 rm -f app/helpers/application_helper.rb
 
-# Seed demo data
-echo "🌱 Seeding demo data..."
+# Seed demo users
+echo "🌱 Seeding demo users..."
 unbundled bin/rails runner "
 User.insert({
   email: 'admin@oroshi.local',
   username: 'admin',
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:admin],
+  approved: true,
   confirmed_at: Time.current,
   created_at: Time.current,
   updated_at: Time.current
@@ -444,6 +445,7 @@ User.insert({
   username: 'vip',
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:vip],
+  approved: true,
   confirmed_at: Time.current,
   created_at: Time.current,
   updated_at: Time.current
@@ -453,12 +455,22 @@ User.insert({
   username: 'user',
   encrypted_password: Devise::Encryptor.digest(User, 'password123'),
   role: User.roles[:user],
+  approved: true,
   confirmed_at: Time.current,
   created_at: Time.current,
   updated_at: Time.current
 })
-puts '✓ Created demo users'
+puts '✓ Created 3 demo users'
 "
+
+# Seed comprehensive demo data
+echo "🌱 Seeding comprehensive demo data (this may take a minute)..."
+DEMO_DATA=true unbundled bin/rails runner "
+  demo_seed_file = Oroshi::Engine.root.join('db', 'seeds', 'demo_data.rb')
+  load demo_seed_file if File.exist?(demo_seed_file)
+"
+
+echo "✓ Demo data seeded successfully!"
 
 echo ""
 echo "✅ Sandbox application created successfully!"

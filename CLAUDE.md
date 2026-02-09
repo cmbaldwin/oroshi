@@ -112,6 +112,70 @@ The sandbox script (`bin/sandbox`) orchestrates a complex process to create a wo
 - Sandbox MUST NOT have `app/views/layouts/application.html.erb` as it overrides the engine's layout when the engine is mounted at root
 - Rails `--css=tailwind` only adds Tailwind; dartsass-rails must be added separately for SCSS compilation
 
+### Demo Data & Onboarding
+
+The sandbox automatically seeds comprehensive demo data to provide a realistic working environment.
+
+#### Demo Data System
+
+**Location**: `db/seeds/demo_data.rb` - 600+ line comprehensive seed file
+
+**What it creates**:
+
+- Company settings (Japanese business info)
+- Supply chain: 3 reception times, 2 supplier orgs, 3 suppliers, 3 supply types with variations
+- Sales: 4 buyers (markets + restaurants), 3 products with 4 variations, 3 production zones
+- Shipping: 3 receptacle sizes, 2 shipping orgs, 3 shipping methods
+- Orders: 4 categories, 2 templates, ~50+ sample orders (past 2 weeks + next 7 days)
+- Onboarding progress records for all users
+
+**Manual usage** (from sandbox or parent app):
+
+```bash
+DEMO_DATA=true bin/rails db:seed
+```
+
+The sandbox script automatically runs this during creation.
+
+#### User Onboarding Flow
+
+**When onboarding appears**:
+
+- User has `onboarding_progress` record (auto-created on first visit to onboarding)
+- Onboarding is NOT completed (`completed_at` is nil)
+- Onboarding is NOT dismissed (`checklist_dismissed_at` is nil)
+- Checklist shows in navbar dropdown with incomplete step count
+
+**Default behavior in sandbox**:
+
+- Admin users: onboarding marked as "skipped" (they have demo data)
+- Non-admin users: onboarding enabled, can see full UI and checklist
+
+**Onboarding steps** (13 total in 4 phases):
+
+1. Foundation: company_info, supply_reception_time
+2. Supply chain: supplier_organization, supplier, supply_type, supply_type_variation
+3. Sales: buyer, product, product_variation
+4. Shipping: shipping_organization, shipping_method, shipping_receptacle, order_category
+
+**Checklist location**: Navbar dropdown (shows incomplete count badge)
+
+**How it works**:
+
+- `OnboardingProgress` model tracks `completed_steps` (JSON array)
+- Each step validates actual data exists in database (not just completion flag)
+- `data_exists_for_step?` method checks if records exist for each step
+- When all steps complete, `completed_at` is set and checklist disappears
+
+**Troubleshooting**:
+
+- If onboarding doesn't appear: Check user has `onboarding_progress` record
+- If steps show incomplete with data: Run demo seeds to populate all models
+- To reset onboarding: `user.onboarding_progress.update(skipped_at: nil, completed_at: nil, checklist_dismissed_at: nil)`
+- To skip onboarding: Visit onboarding page and click "Skip for now"
+
+See `db/seeds/README.md` for complete demo data documentation.
+
 ### Testing
 
 ```bash

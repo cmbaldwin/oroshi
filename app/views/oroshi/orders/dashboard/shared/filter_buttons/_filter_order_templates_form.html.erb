@@ -21,22 +21,22 @@
                 } do |form| %>
 
     <!-- Select Fields -->
-    <%= form.label :order_category_ids, '注文カテゴリー選択', class: 'form-label' %>
-    <%= form.select :order_category_ids, 
-                    @unique_order_categories.map { |oc| [oc.name, oc.id] }, 
-                    { selected: @order_category_ids }, 
+    <%= form.label :order_category_ids, t('.order_category_ids_label'), class: 'form-label' %>
+    <%= form.select :order_category_ids,
+                    @unique_order_categories.map { |oc| [oc.name, oc.id] },
+                    { selected: @order_category_ids },
                     { multiple: true, class: 'form-select form-select-sm' } %>
-    <%= form.label :buyer_category_ids, '注文カテゴリー選択', class: 'form-label' %>
-    <%= form.select :buyer_category_ids, 
-                    @unique_buyer_categories.map { |oc| [oc.name, oc.id] }, 
-                    { selected: @buyer_category_ids }, 
+    <%= form.label :buyer_category_ids, t('.buyer_category_ids_label'), class: 'form-label' %>
+    <%= form.select :buyer_category_ids,
+                    @unique_buyer_categories.map { |oc| [oc.name, oc.id] },
+                    { selected: @buyer_category_ids },
                     { multiple: true, class: 'form-select form-select-sm' } %>
-    <%= form.label :buyer_ids, '卸先選択', class: 'form-label' %>
-    <%= form.select :buyer_ids, 
-                    @unique_buyers.map { |buyer| [buyer.name, buyer.id] }, 
-                    { selected: @buyer_ids }, 
+    <%= form.label :buyer_ids, t('.buyer_ids_label'), class: 'form-label' %>
+    <%= form.select :buyer_ids,
+                    @unique_buyers.map { |buyer| [buyer.name, buyer.id] },
+                    { selected: @buyer_ids },
                     { multiple: true, class: 'form-select form-select-sm' } %>
-    <%= form.label :shipping_method_ids, '配送方法選択', class: 'form-label' %>
+    <%= form.label :shipping_method_ids, t('.shipping_method_ids_label'), class: 'form-label' %>
     <%= form.select :shipping_method_ids, 
                     @unique_shipping_methods.map { |shipping_method| [shipping_method.name, shipping_method.id] }, 
                     { selected: @shipping_method_ids }, 

@@ -42,7 +42,7 @@ ja:
             filter_label: "フィルター"
             reset_label: "リセット"
             buyer_ids_label: "卸先選択"
-            buyer_category_ids_label: "注文カテゴリー選択"
+            buyer_category_ids_label: "卸先カテゴリー選択"
             order_category_ids_label: "注文カテゴリー選択"
             shipping_method_ids_label: "配送方法選択"
             show_model_buttons_label: "%{model}のボタンを表示する"

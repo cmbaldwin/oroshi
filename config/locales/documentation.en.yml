@@ -8,6 +8,7 @@ en:
         search_placeholder: "Search documentation..."
         see_also: "Related Pages"
         help_tooltip: "View help"
+        no_results: "No results found"
       messages:
         invalid_section: "The specified section was not found."
         invalid_page: "The specified page was not found."

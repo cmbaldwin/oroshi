@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["input", "results"]
+  static values = { noResults: String }
 
   connect() {
     this.buildIndex()
@@ -40,7 +41,8 @@ export default class extends Controller {
 
     if (matches.length === 0) {
       this.resultsTarget.style.display = "block"
-      this.resultsTarget.innerHTML = '<div class="p-2 text-muted small">No results</div>'
+      const noResultsText = this.hasNoResultsValue ? this.noResultsValue : "No results"
+      this.resultsTarget.innerHTML = `<div class="p-2 text-muted small">${noResultsText}</div>`
       return
     }
 

@@ -8,6 +8,7 @@ ja:
         search_placeholder: "ドキュメントを検索..."
         see_also: "関連ページ"
         help_tooltip: "ヘルプを見る"
+        no_results: "検索結果がありません"
       messages:
         invalid_section: "指定されたセクションが見つかりません。"
         invalid_page: "指定されたページが見つかりません。"

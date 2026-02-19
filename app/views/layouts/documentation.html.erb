@@ -53,7 +53,8 @@
 
   <div class="d-flex flex-column flex-lg-row flex-grow-1">
     <%# Sidebar Navigation %>
-    <aside class="doc-sidebar p-3" data-controller="documentation-search">
+    <aside class="doc-sidebar p-3" data-controller="documentation-search"
+           data-documentation-search-no-results-value="<%= t('oroshi.documentation.chrome.no_results') %>">
       <div class="mb-3">
         <%= doc_locale_toggle %>
       </div>

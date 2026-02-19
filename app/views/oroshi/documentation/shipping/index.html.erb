@@ -1,0 +1,14 @@
+<% title t('oroshi.documentation.shipping.index.title') %>
+
+<h1><%= t('oroshi.documentation.shipping.index.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.shipping.index.intro') %></p>
+
+<h2><%= t('oroshi.documentation.shipping.index.overview') %></h2>
+<p><%= t('oroshi.documentation.shipping.index.overview_body') %></p>
+
+<%= doc_diagram("graph LR
+  A[Shipping Organization] --> B[Shipping Method]
+  B --> C[Receptacle]
+  B --> D[Cost Calculation]") %>
+
+<%= doc_see_also("shipping/shipping_methods", "shipping/receptacles", "shipping/shipping_dashboard") %>

@@ -34,6 +34,11 @@ Oroshi::Engine.routes.draw do
   get "privacy_policy", to: "legal#privacy_policy", as: :privacy_policy
   get "terms_of_service", to: "legal#terms_of_service", as: :terms_of_service
 
+  # Documentation
+  get "documentation", to: "documentation#index", as: :documentation_index
+  get "documentation/:section", to: "documentation#section", as: :documentation_section
+  get "documentation/:section/:page", to: "documentation#page", as: :documentation_page
+
   # Onboarding wizard
   resources :onboarding, only: [ :index, :show, :update ] do
     member do

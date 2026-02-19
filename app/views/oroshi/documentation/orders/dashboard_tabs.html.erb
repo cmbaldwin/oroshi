@@ -1,0 +1,19 @@
+<% title t('oroshi.documentation.orders.dashboard_tabs.title') %>
+
+<h1><%= t('oroshi.documentation.orders.dashboard_tabs.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.orders.dashboard_tabs.intro') %></p>
+
+<div class="row g-3">
+  <% %w[orders templates supply_usage production shipping sales revenue].each_with_index do |tab, i| %>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-title"><%= i + 1 %>. <%= t("oroshi.documentation.orders.dashboard_tabs.tab_#{tab}") %></h6>
+          <p class="card-text small text-muted mb-0"><%= t("oroshi.documentation.orders.dashboard_tabs.tab_#{tab}_desc") %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= doc_see_also("orders/creating_orders", "production/factory_floor", "shipping/shipping_dashboard", "financials/revenue_tracking") %>

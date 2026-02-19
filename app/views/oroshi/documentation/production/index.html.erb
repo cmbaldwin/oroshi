@@ -1,0 +1,22 @@
+<% title t('oroshi.documentation.production.index.title') %>
+
+<h1><%= t('oroshi.documentation.production.index.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.production.index.intro') %></p>
+
+<h2><%= t('oroshi.documentation.production.index.overview') %></h2>
+<p><%= t('oroshi.documentation.production.index.overview_body') %></p>
+
+<h2><%= t('oroshi.documentation.production.index.flow') %></h2>
+<ul>
+  <li><%= t('oroshi.documentation.production.index.flow_step_1') %></li>
+  <li><%= t('oroshi.documentation.production.index.flow_step_2') %></li>
+  <li><%= t('oroshi.documentation.production.index.flow_step_3') %></li>
+  <li><%= t('oroshi.documentation.production.index.flow_step_4') %></li>
+</ul>
+
+<%= doc_diagram("graph TD
+  A[Orders] --> B[Production Requests]
+  B --> C[Manufacturing]
+  C --> D[Shipping / Inventory Update]") %>
+
+<%= doc_see_also("production/production_zones", "production/production_requests", "production/factory_floor") %>

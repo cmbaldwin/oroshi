@@ -1,0 +1,27 @@
+<% title t('oroshi.documentation.admin.product_management.title') %>
+
+<h1><%= t('oroshi.documentation.admin.product_management.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.admin.product_management.intro') %></p>
+
+<h2><%= t('oroshi.documentation.admin.product_management.product_hierarchy') %></h2>
+<p><%= t('oroshi.documentation.admin.product_management.product_hierarchy_body') %></p>
+
+<%= doc_diagram("graph TD
+  A[Product] --> B[Variation 1]
+  A --> C[Variation 2]
+  A --> D[Variation 3]
+  A --> E[Materials]") %>
+
+<h2><%= t('oroshi.documentation.admin.product_management.creating_products') %></h2>
+<p><%= t('oroshi.documentation.admin.product_management.creating_products_body') %></p>
+
+<h2><%= t('oroshi.documentation.admin.product_management.variations') %></h2>
+<p><%= t('oroshi.documentation.admin.product_management.variations_body') %></p>
+
+<h2><%= t('oroshi.documentation.admin.product_management.material_costs') %></h2>
+<p><%= t('oroshi.documentation.admin.product_management.material_costs_body') %></p>
+
+<h2><%= t('oroshi.documentation.admin.product_management.positioning') %></h2>
+<p><%= t('oroshi.documentation.admin.product_management.positioning_body') %></p>
+
+<%= doc_see_also("financials/materials_costs", "orders/creating_orders", "supply_chain/supply_types") %>

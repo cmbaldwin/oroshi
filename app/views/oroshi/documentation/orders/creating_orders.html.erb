@@ -1,0 +1,61 @@
+<% title t('oroshi.documentation.orders.creating_orders.title') %>
+
+<h1><%= t('oroshi.documentation.orders.creating_orders.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.orders.creating_orders.intro') %></p>
+
+<h2><%= t('oroshi.documentation.orders.creating_orders.how_it_works') %></h2>
+
+<%= doc_steps do %>
+  <%= doc_step(1, 'oroshi.documentation.orders.creating_orders.step_select_date') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.creating_orders.step_select_date_desc') %></p>
+  <% end %>
+  <%= doc_step(2, 'oroshi.documentation.orders.creating_orders.step_open_form') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.creating_orders.step_open_form_desc') %></p>
+  <% end %>
+  <%= doc_step(3, 'oroshi.documentation.orders.creating_orders.step_select_buyer') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.creating_orders.step_select_buyer_desc') %></p>
+  <% end %>
+  <%= doc_step(4, 'oroshi.documentation.orders.creating_orders.step_select_product') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.creating_orders.step_select_product_desc') %></p>
+  <% end %>
+  <%= doc_step(5, 'oroshi.documentation.orders.creating_orders.step_enter_quantities') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.creating_orders.step_enter_quantities_desc') %></p>
+  <% end %>
+  <%= doc_step(6, 'oroshi.documentation.orders.creating_orders.step_save') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.creating_orders.step_save_desc') %></p>
+  <% end %>
+<% end %>
+
+<%= doc_diagram("graph LR
+  A[Buyer] -->|filters| B[Shipping Method]
+  A -->|filters| C[Receptacle]
+  D[Product] -->|filters| E[Product Variation]
+  E -->|sets| F[Unit Price]
+  B & C & F -->|calculate| G[Costs]") %>
+
+<h2><%= t('oroshi.documentation.orders.creating_orders.cascading_fields') %></h2>
+<p><%= t('oroshi.documentation.orders.creating_orders.cascading_fields_body') %></p>
+
+<h2><%= t('oroshi.documentation.orders.creating_orders.auto_calculation') %></h2>
+<p><%= t('oroshi.documentation.orders.creating_orders.auto_calculation_body') %></p>
+
+<div class="table-responsive">
+  <table class="table table-sm table-bordered">
+    <tbody>
+      <% %w[shipping materials revenue profit].each do |calc| %>
+        <tr>
+          <td class="fw-semibold bg-light" style="width: 30%;"><%= t("oroshi.documentation.orders.creating_orders.label_#{calc}") %></td>
+          <td><code><%= t("oroshi.documentation.orders.creating_orders.calc_#{calc}") %></code></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<h2><%= t('oroshi.documentation.orders.creating_orders.realtime_updates') %></h2>
+
+<%= doc_callout(:info) do %>
+  <%= t('oroshi.documentation.orders.creating_orders.realtime_updates_body') %>
+<% end %>
+
+<%= doc_see_also("orders/order_templates", "orders/bundling_orders", "admin/buyer_management", "admin/product_management", "shipping/shipping_methods") %>

@@ -1,0 +1,36 @@
+<% title t('oroshi.documentation.orders.order_lifecycle.title') %>
+
+<h1><%= t('oroshi.documentation.orders.order_lifecycle.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.orders.order_lifecycle.intro') %></p>
+
+<h2><%= t('oroshi.documentation.orders.order_lifecycle.stages') %></h2>
+
+<%= doc_diagram("graph LR
+  A[#{t('oroshi.documentation.orders.order_lifecycle.stage_created')}] --> B[#{t('oroshi.documentation.orders.order_lifecycle.stage_shipped')}]
+  B --> C[#{t('oroshi.documentation.orders.order_lifecycle.stage_paid')}]
+  style A fill:#e3f2fd
+  style B fill:#fff3e0
+  style C fill:#e8f5e9") %>
+
+<%= doc_steps do %>
+  <%= doc_step(1, 'oroshi.documentation.orders.order_lifecycle.stage_created') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.order_lifecycle.stage_created_desc') %></p>
+  <% end %>
+  <%= doc_step(2, 'oroshi.documentation.orders.order_lifecycle.stage_shipped') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.order_lifecycle.stage_shipped_desc') %></p>
+  <% end %>
+  <%= doc_step(3, 'oroshi.documentation.orders.order_lifecycle.stage_paid') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.order_lifecycle.stage_paid_desc') %></p>
+  <% end %>
+<% end %>
+
+<h2><%= t('oroshi.documentation.orders.order_lifecycle.status_indicators') %></h2>
+<p><%= t('oroshi.documentation.orders.order_lifecycle.status_indicators_body') %></p>
+
+<h2><%= t('oroshi.documentation.orders.order_lifecycle.inventory_impact') %></h2>
+
+<%= doc_callout(:warning) do %>
+  <%= t('oroshi.documentation.orders.order_lifecycle.inventory_impact_body') %>
+<% end %>
+
+<%= doc_see_also("orders/creating_orders", "production/production_requests", "financials/payment_receipts") %>

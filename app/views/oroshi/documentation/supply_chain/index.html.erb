@@ -1,0 +1,22 @@
+<% title t('oroshi.documentation.supply_chain.index.title') %>
+
+<h1><%= t('oroshi.documentation.supply_chain.index.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.supply_chain.index.intro') %></p>
+
+<h2><%= t('oroshi.documentation.supply_chain.index.overview') %></h2>
+<p><%= t('oroshi.documentation.supply_chain.index.overview_body') %></p>
+
+<%= doc_diagram("graph LR
+  A[#{t('oroshi.documentation.supply_chain.index.diagram_supplier_org')}] --> B[#{t('oroshi.documentation.supply_chain.index.diagram_supplier')}]
+  B --> C[#{t('oroshi.documentation.supply_chain.index.diagram_supply_type')}]
+  C --> D[#{t('oroshi.documentation.supply_chain.index.diagram_variation')}]") %>
+
+<h2><%= t('oroshi.documentation.supply_chain.index.data_flow') %></h2>
+<ul>
+  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_1') %></li>
+  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_2') %></li>
+  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_3') %></li>
+  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_4') %></li>
+</ul>
+
+<%= doc_see_also("supply_chain/supply_intake", "supply_chain/suppliers", "supply_chain/supply_types") %>

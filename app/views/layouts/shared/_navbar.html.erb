@@ -30,6 +30,13 @@
             <% if user_signed_in? %>
             <%= render 'oroshi/onboarding/checklist_dropdown' %>
             <li class="nav-item">
+                <%= link_to documentation_index_path,
+                      class: 'btn btn-outline-dark border-0 tippy p-2',
+                      data: { tippy_content: t('oroshi.documentation.chrome.help_tooltip') } do %>
+                    <%= icon("question-circle") %>
+                <% end %>
+            </li>
+            <li class="nav-item">
                 <div class="btn-group" role="group" aria-label="Basic">
                     <%= button_to main_app.destroy_user_session_path,
                             id: "sign_out",

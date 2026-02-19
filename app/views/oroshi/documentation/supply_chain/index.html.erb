@@ -7,16 +7,16 @@
 <p><%= t('oroshi.documentation.supply_chain.index.overview_body') %></p>
 
 <%= doc_diagram("graph LR
-  A[#{t('oroshi.documentation.supply_chain.index.diagram_supplier_org')}] --> B[#{t('oroshi.documentation.supply_chain.index.diagram_supplier')}]
-  B --> C[#{t('oroshi.documentation.supply_chain.index.diagram_supply_type')}]
-  C --> D[#{t('oroshi.documentation.supply_chain.index.diagram_variation')}]") %>
+  A[#{t('oroshi.documentation.supply_chain.index.flow_supplier_org').split(' — ').first}] --> B[#{t('oroshi.documentation.supply_chain.index.flow_supplier').split(' — ').first}]
+  B --> C[#{t('oroshi.documentation.supply_chain.index.flow_supply_type').split(' — ').first}]
+  C --> D[#{t('oroshi.documentation.supply_chain.index.flow_variation').split(' — ').first}]") %>
 
 <h2><%= t('oroshi.documentation.supply_chain.index.data_flow') %></h2>
 <ul>
-  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_1') %></li>
-  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_2') %></li>
-  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_3') %></li>
-  <li><%= t('oroshi.documentation.supply_chain.index.data_flow_item_4') %></li>
+  <li><%= t('oroshi.documentation.supply_chain.index.flow_supplier_org') %></li>
+  <li><%= t('oroshi.documentation.supply_chain.index.flow_supplier') %></li>
+  <li><%= t('oroshi.documentation.supply_chain.index.flow_supply_type') %></li>
+  <li><%= t('oroshi.documentation.supply_chain.index.flow_variation') %></li>
 </ul>
 
 <%= doc_see_also("supply_chain/supply_intake", "supply_chain/suppliers", "supply_chain/supply_types") %>

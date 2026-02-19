@@ -1,0 +1,26 @@
+ja:
+  oroshi:
+    exports:
+      button: "エクスポート"
+      processing: "エクスポート処理中…"
+      completed: "エクスポート完了"
+      failed: "エクスポートに失敗しました: %{error}"
+      download: "ダウンロード"
+      start_date: "開始日"
+      end_date: "終了日"
+      format: "形式"
+      date_range: "期間指定エクスポート"
+      current_view: "現在の表示"
+      close: "閉じる"
+      formats:
+        csv: "CSV"
+        xlsx: "Excel (XLSX)"
+        pdf: "PDF"
+        json: "JSON"
+      types:
+        orders: "注文一覧"
+        revenue: "売上・利益"
+        production: "製造・工場"
+        inventory: "在庫一覧"
+        supply: "入荷一覧"
+        shipping: "出荷表"

@@ -1,0 +1,26 @@
+en:
+  oroshi:
+    exports:
+      button: "Export"
+      processing: "Generating export…"
+      completed: "Export completed"
+      failed: "Export failed: %{error}"
+      download: "Download"
+      start_date: "Start date"
+      end_date: "End date"
+      format: "Format"
+      date_range: "Date range export"
+      current_view: "Current view"
+      close: "Close"
+      formats:
+        csv: "CSV"
+        xlsx: "Excel (XLSX)"
+        pdf: "PDF"
+        json: "JSON"
+      types:
+        orders: "Orders"
+        revenue: "Revenue & Profit"
+        production: "Production"
+        inventory: "Inventory"
+        supply: "Supply intake"
+        shipping: "Shipping chart"

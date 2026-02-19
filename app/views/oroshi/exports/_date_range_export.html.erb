@@ -1,0 +1,47 @@
+<%# Date range export modal %>
+<%# locals: (export_type:) %>
+<div class="modal fade" id="date_range_export_modal_<%= export_type %>" tabindex="-1"
+     aria-labelledby="date_range_export_label_<%= export_type %>" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <%= form_with url: exports_path, method: :post, data: { turbo_prefetch: false } do |f| %>
+        <%= f.hidden_field :export_type, value: export_type %>
+        <div class="modal-header py-2">
+          <h6 class="modal-title" id="date_range_export_label_<%= export_type %>">
+            <%= icon("calendar-range") %> <%= t('oroshi.exports.date_range') %>
+          </h6>
+          <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"
+                  aria-label="<%= t('oroshi.exports.close') %>"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= f.label :start_date, t('oroshi.exports.start_date'), class: "form-label small" %>
+            <%= f.date_field :start_date, value: 1.month.ago.to_date, class: "form-control form-control-sm" %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :end_date, t('oroshi.exports.end_date'), class: "form-label small" %>
+            <%= f.date_field :end_date, value: Time.zone.today, class: "form-control form-control-sm" %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :format_type, t('oroshi.exports.format'), class: "form-label small" %>
+            <%= f.select :format_type,
+                  options_for_select([
+                    [t("oroshi.exports.formats.csv"), "csv"],
+                    [t("oroshi.exports.formats.xlsx"), "xlsx"],
+                    [t("oroshi.exports.formats.pdf"), "pdf"],
+                    [t("oroshi.exports.formats.json"), "json"]
+                  ], "xlsx"),
+                  {},
+                  { class: "form-select form-select-sm" } %>
+          </div>
+        </div>
+        <div class="modal-footer py-2">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+            <%= t('oroshi.exports.close') %>
+          </button>
+          <%= f.submit t('oroshi.exports.download'), class: "btn btn-sm btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

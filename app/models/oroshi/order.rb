@@ -74,7 +74,7 @@ class Oroshi::Order < ApplicationRecord
   # Authorization scope - returns orders accessible by the given user based on role
   def self.accessible_by(user)
     case
-    when user.admin?, user.vip?, user.employee?
+    when user.admin?, user.managerial?, user.employee?
       all
     else
       none

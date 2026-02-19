@@ -9,7 +9,7 @@
             <%= dashboard_nav_link(t('.home'), oroshi_dashboard_home_path, active: true) %>
             <%= dashboard_nav_link(t('.suppliers_organizations'), oroshi_dashboard_suppliers_organizations_path) %>
             
-            <% if current_user.try(:admin?) || current_user.try(:vip?) %>
+            <% if current_user.try(:admin?) || current_user.try(:managerial?) %>
               <%= dashboard_nav_link(t('.supply_types'), oroshi_dashboard_supply_types_path) %>
               <%= dashboard_nav_link(t('.shipping'), oroshi_dashboard_shipping_path) %>
             <% end %>

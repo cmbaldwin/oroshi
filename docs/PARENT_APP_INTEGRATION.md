@@ -64,7 +64,7 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates_format_of :username, with: /\A[a-zA-Z0-9_.]*\z/
 
-  enum :role, { user: 0, vip: 1, admin: 2, supplier: 3, employee: 4 }
+  enum :role, { user: 0, managerial: 1, admin: 2, supplier: 3, employee: 4 }
 
   has_one :onboarding_progress, class_name: "Oroshi::OnboardingProgress", dependent: :destroy
 

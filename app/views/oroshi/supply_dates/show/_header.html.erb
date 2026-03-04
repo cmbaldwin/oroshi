@@ -1,6 +1,9 @@
-<h4 class='w-100 flex-fill text-center d-flex justify-content-center align-items-center'>
-  <%= t('oroshi.supply_dates.show.header_title') %>
-</h4>
+<div class='w-100 flex-fill d-flex justify-content-center align-items-center gap-2'>
+  <h4 class="text-center mb-0">
+    <%= t('oroshi.supply_dates.show.header_title') %>
+  </h4>
+  <%= render 'oroshi/exports/export_button', export_type: 'supply', date: @supply_date.date %>
+</div>
 
 <%= form_with model: @supply_date,
               class: "container-xl d-block d-lg-flex gap-3 mb-3 justify-content-center align-items-center" do |f| %>

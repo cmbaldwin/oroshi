@@ -108,6 +108,9 @@ gem "prawn", "2.4.0"      # PDF generation
 gem "prawn-table"  # Table support for prawn
 gem "ttfunk", "1.7.0"     # TrueType font parsing (prawn dependency)
 
+# Export formats
+gem "caxlsx"  # Excel XLSX generation (community-maintained axlsx successor)
+
 # API and integrations
 gem "httparty" # HTTP client for API calls
 

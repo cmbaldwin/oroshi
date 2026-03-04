@@ -8,9 +8,12 @@
         <%= production_tab_link('出荷日表', 'shipping_date_production') %>
         <%= production_tab_link('製造依頼', 'production_request') %>
         <%= production_tab_link('在庫表', 'product_inventory') %>
-        <%= link_to "依頼反映 #{icon('fast-forward-circle-fill')}".html_safe, 
+        <li class="nav-item ms-auto d-flex align-items-center">
+          <%= render 'oroshi/exports/export_button', export_type: 'production', date: @date %>
+        </li>
+        <%= link_to "依頼反映 #{icon('fast-forward-circle-fill')}".html_safe,
                     convert_oroshi_production_requests_path(@date),
-                    class: "nav-link ms-auto",
+                    class: "nav-link",
                     data: {
                       controller: 'tippy',
                       tippy_content: '不足している在庫を生産リクエストに変換する',

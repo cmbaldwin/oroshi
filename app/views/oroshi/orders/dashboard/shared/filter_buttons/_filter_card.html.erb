@@ -34,5 +34,18 @@
 
       <%= render 'oroshi/orders/dashboard/shared/filter_buttons/filter_buttons', view:, filter_category:, filter_params: %>
     <% end %>
+
+    <% export_type = { 'orders' => 'orders', 'templates' => nil, 'shipping' => 'shipping', 'revenue' => 'revenue' }[view] %>
+    <% if export_type %>
+      <div class="ms-auto">
+        <%= render 'oroshi/exports/export_button', export_type: export_type, date: @date,
+              additional_params: {
+                buyer_ids: @buyer_ids,
+                shipping_method_ids: @shipping_method_ids,
+                order_category_ids: @order_category_ids,
+                buyer_category_ids: @buyer_category_ids
+              }.compact %>
+      </div>
+    <% end %>
   </div>
 </div>

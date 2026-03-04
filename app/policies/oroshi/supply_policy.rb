@@ -2,33 +2,33 @@
 
 module Oroshi
   class SupplyPolicy < ApplicationPolicy
-    # Admin and VIP have full access
+    # Admin and Managerial have full access
     # Employee has read-only access
     # Supplier can only access their own supplies
 
     def index?
-      user.admin? || user.vip? || user.employee? || user.supplier?
+      user.admin? || user.managerial? || user.employee? || user.supplier?
     end
 
     def show?
-      user.admin? || user.vip? || user.employee? || owns_supply?
+      user.admin? || user.managerial? || user.employee? || owns_supply?
     end
 
     def create?
-      user.admin? || user.vip? || owns_supplier_organization?
+      user.admin? || user.managerial? || owns_supplier_organization?
     end
 
     def update?
-      user.admin? || user.vip? || owns_supply?
+      user.admin? || user.managerial? || owns_supply?
     end
 
     def destroy?
-      user.admin? || user.vip?
+      user.admin? || user.managerial?
     end
 
     class Scope < ApplicationPolicy::Scope
       def resolve
-        if user.admin? || user.vip? || user.employee?
+        if user.admin? || user.managerial? || user.employee?
           scope.all
         elsif user.supplier?
           # Only supplies belonging to this supplier user's supplier record

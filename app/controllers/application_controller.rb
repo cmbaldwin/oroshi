@@ -53,9 +53,9 @@ class ApplicationController < ActionController::Base
     redirect_to oroshi_onboarding_index_path
   end
 
-  def check_vip
+  def check_managerial
     return unless respond_to?(:current_user) && current_user
-    return if current_user.admin? || current_user.vip?
+    return if current_user.admin? || current_user.managerial?
 
     authentication_notice
   end

@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   after_initialize :set_default_role, if: :new_record?
 
-  enum :role, { user: 0, vip: 1, admin: 2, supplier: 3, employee: 4 }
+  enum :role, { user: 0, managerial: 1, admin: 2, supplier: 3, employee: 4 }
 
   # Associations
   has_one :onboarding_progress, class_name: "Oroshi::OnboardingProgress", dependent: :destroy

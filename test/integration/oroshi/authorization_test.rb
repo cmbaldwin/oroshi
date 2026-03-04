@@ -5,7 +5,7 @@ require "test_helper"
 class Oroshi::AuthorizationTest < ActionDispatch::IntegrationTest
   setup do
     @admin = create(:user, :admin)
-    @vip = create(:user, :vip)
+    @managerial = create(:user, :managerial)
     @supplier_user = create(:user, :supplier)
     @employee = create(:user, :employee)
     @unapproved = create(:user, role: :user, approved: false)
@@ -18,7 +18,7 @@ class Oroshi::AuthorizationTest < ActionDispatch::IntegrationTest
     @other_supplier = create(:oroshi_supplier, supplier_organization: @other_supplier_org)
 
     # Skip onboarding for all users to avoid redirect issues
-    [ @admin, @vip, @supplier_user, @employee, @unapproved ].each do |user|
+    [ @admin, @managerial, @supplier_user, @employee, @unapproved ].each do |user|
       create(:onboarding_progress, :completed, user: user)
     end
   end
@@ -36,8 +36,8 @@ class Oroshi::AuthorizationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "vip has full access" do
-    sign_in @vip
+  test "managerial has full access" do
+    sign_in @managerial
     get oroshi_dashboard_home_path
     assert_response :success
   end

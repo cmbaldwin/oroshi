@@ -40,7 +40,7 @@ A complete Rails engine that provides:
 A fully-functional demo app showcasing integration:
 
 ✅ **3-Command Setup**: `bundle install` → `db:setup` → `rails server`
-✅ **Demo Users**: Admin, VIP, Regular (all password: `password123`)
+✅ **Demo Users**: Admin, Managerial, Regular (all password: `password123`)
 ✅ **Sample Data**: 12 categories of master data
 ✅ **Comprehensive README**: 400+ lines of documentation
 ✅ **Zero Configuration**: Works out-of-box
@@ -204,7 +204,7 @@ Production deployment automation:
 - 25 files in `sandbox/` directory
 - Minimal Rails app (20 lines in application.rb)
 - Gemfile pointing to local gem: `gem "oroshi", path: ".."`
-- 3 demo users (admin, VIP, regular)
+- 3 demo users (admin, managerial, regular)
 - 12 categories of sample data
 - Multi-database config (4 databases)
 - 400+ line README

@@ -6,7 +6,7 @@ module Oroshi
   class SupplyPolicyTest < ActiveSupport::TestCase
     setup do
       @admin = create(:user, :admin)
-      @vip = create(:user, :vip)
+      @managerial = create(:user, :managerial)
       @employee = create(:user, :employee)
       @supplier_user = create(:user, :supplier)
 
@@ -44,28 +44,28 @@ module Oroshi
       assert SupplyPolicy.new(@admin, @other_supply).destroy?
     end
 
-    # VIP permissions
-    test "vip can index supplies" do
-      assert SupplyPolicy.new(@vip, Supply).index?
+    # Managerial permissions
+    test "managerial can index supplies" do
+      assert SupplyPolicy.new(@managerial, Supply).index?
     end
 
-    test "vip can show any supply" do
-      assert SupplyPolicy.new(@vip, @my_supply).show?
-      assert SupplyPolicy.new(@vip, @other_supply).show?
+    test "managerial can show any supply" do
+      assert SupplyPolicy.new(@managerial, @my_supply).show?
+      assert SupplyPolicy.new(@managerial, @other_supply).show?
     end
 
-    test "vip can create supply" do
-      assert SupplyPolicy.new(@vip, Supply).create?
+    test "managerial can create supply" do
+      assert SupplyPolicy.new(@managerial, Supply).create?
     end
 
-    test "vip can update any supply" do
-      assert SupplyPolicy.new(@vip, @my_supply).update?
-      assert SupplyPolicy.new(@vip, @other_supply).update?
+    test "managerial can update any supply" do
+      assert SupplyPolicy.new(@managerial, @my_supply).update?
+      assert SupplyPolicy.new(@managerial, @other_supply).update?
     end
 
-    test "vip can destroy any supply" do
-      assert SupplyPolicy.new(@vip, @my_supply).destroy?
-      assert SupplyPolicy.new(@vip, @other_supply).destroy?
+    test "managerial can destroy any supply" do
+      assert SupplyPolicy.new(@managerial, @my_supply).destroy?
+      assert SupplyPolicy.new(@managerial, @other_supply).destroy?
     end
 
     # Employee permissions
@@ -126,8 +126,8 @@ module Oroshi
       assert_equal Supply.count, scope.count
     end
 
-    test "vip scope returns all supplies" do
-      scope = SupplyPolicy::Scope.new(@vip, Supply.all).resolve
+    test "managerial scope returns all supplies" do
+      scope = SupplyPolicy::Scope.new(@managerial, Supply.all).resolve
       assert_equal Supply.count, scope.count
     end
 

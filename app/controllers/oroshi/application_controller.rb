@@ -8,10 +8,10 @@ class Oroshi::ApplicationController < ApplicationController
     %i[id default active name company country_id subregion_id postal_code city address1 address2]
   end
 
-  def check_vip
+  def check_managerial
     return unless respond_to?(:current_user)
     return unless current_user
-    return if current_user.admin? || current_user.vip?
+    return if current_user.admin? || current_user.managerial?
 
     authentication_notice
   end

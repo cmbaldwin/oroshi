@@ -1,0 +1,26 @@
+<% title t('oroshi.documentation.admin.user_management.title') %>
+
+<h1><%= t('oroshi.documentation.admin.user_management.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.admin.user_management.intro') %></p>
+
+<h2><%= t('oroshi.documentation.admin.user_management.roles') %></h2>
+<div class="table-responsive">
+  <table class="table table-sm table-bordered">
+    <tbody>
+      <% %w[admin vip employee supplier user].each do |role| %>
+        <tr>
+          <td class="fw-semibold bg-light" style="width: 20%;"><%= role.capitalize %></td>
+          <td><%= t("oroshi.documentation.admin.user_management.role_#{role}") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<h2><%= t('oroshi.documentation.admin.user_management.approval') %></h2>
+<p><%= t('oroshi.documentation.admin.user_management.approval_body') %></p>
+
+<h2><%= t('oroshi.documentation.admin.user_management.profile') %></h2>
+<p><%= t('oroshi.documentation.admin.user_management.profile_body') %></p>
+
+<%= doc_see_also("getting_started/first_login") %>

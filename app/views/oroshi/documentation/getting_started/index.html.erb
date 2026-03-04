@@ -1,0 +1,43 @@
+<% title t('oroshi.documentation.getting_started.index.title') %>
+
+<h1><%= t('oroshi.documentation.getting_started.index.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.getting_started.index.intro') %></p>
+
+<h2><%= t('oroshi.documentation.getting_started.index.what_is_oroshi') %></h2>
+<p><%= t('oroshi.documentation.getting_started.index.what_is_oroshi_body') %></p>
+
+<h2><%= t('oroshi.documentation.getting_started.index.key_features') %></h2>
+<ul>
+  <li><%= t('oroshi.documentation.getting_started.index.feature_orders') %></li>
+  <li><%= t('oroshi.documentation.getting_started.index.feature_supply') %></li>
+  <li><%= t('oroshi.documentation.getting_started.index.feature_production') %></li>
+  <li><%= t('oroshi.documentation.getting_started.index.feature_shipping') %></li>
+  <li><%= t('oroshi.documentation.getting_started.index.feature_financials') %></li>
+  <li><%= t('oroshi.documentation.getting_started.index.feature_admin') %></li>
+</ul>
+
+<h2><%= t('oroshi.documentation.getting_started.index.quick_start') %></h2>
+<p><%= t('oroshi.documentation.getting_started.index.quick_start_body') %></p>
+
+<%= doc_steps do %>
+  <%= doc_step(1, 'oroshi.documentation.getting_started.index.step_1') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.getting_started.index.step_1_desc') %></p>
+  <% end %>
+  <%= doc_step(2, 'oroshi.documentation.getting_started.index.step_2') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.getting_started.index.step_2_desc') %></p>
+  <% end %>
+  <%= doc_step(3, 'oroshi.documentation.getting_started.index.step_3') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.getting_started.index.step_3_desc') %></p>
+  <% end %>
+  <%= doc_step(4, 'oroshi.documentation.getting_started.index.step_4') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.getting_started.index.step_4_desc') %></p>
+  <% end %>
+  <%= doc_step(5, 'oroshi.documentation.getting_started.index.step_5') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.getting_started.index.step_5_desc') %></p>
+  <% end %>
+  <%= doc_step(6, 'oroshi.documentation.getting_started.index.step_6') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.getting_started.index.step_6_desc') %></p>
+  <% end %>
+<% end %>
+
+<%= doc_see_also("getting_started/first_login", "getting_started/onboarding", "admin/company_setup") %>

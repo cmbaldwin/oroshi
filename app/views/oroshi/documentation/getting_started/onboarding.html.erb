@@ -1,0 +1,59 @@
+<% title t('oroshi.documentation.getting_started.onboarding.title') %>
+
+<h1><%= t('oroshi.documentation.getting_started.onboarding.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.getting_started.onboarding.intro') %></p>
+
+<h2><%= t('oroshi.documentation.getting_started.onboarding.what_is_onboarding') %></h2>
+<p><%= t('oroshi.documentation.getting_started.onboarding.what_is_onboarding_body') %></p>
+
+<h2><%= t('oroshi.documentation.getting_started.onboarding.phases') %></h2>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="card-title text-primary">1. <%= t('oroshi.documentation.getting_started.onboarding.phase_foundation') %></h6>
+        <p class="card-text small text-muted mb-0"><%= t('oroshi.documentation.getting_started.onboarding.phase_foundation_desc') %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="card-title text-primary">2. <%= t('oroshi.documentation.getting_started.onboarding.phase_supply') %></h6>
+        <p class="card-text small text-muted mb-0"><%= t('oroshi.documentation.getting_started.onboarding.phase_supply_desc') %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="card-title text-primary">3. <%= t('oroshi.documentation.getting_started.onboarding.phase_sales') %></h6>
+        <p class="card-text small text-muted mb-0"><%= t('oroshi.documentation.getting_started.onboarding.phase_sales_desc') %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="card-title text-primary">4. <%= t('oroshi.documentation.getting_started.onboarding.phase_shipping') %></h6>
+        <p class="card-text small text-muted mb-0"><%= t('oroshi.documentation.getting_started.onboarding.phase_shipping_desc') %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= doc_diagram("graph LR
+  A[#{t('oroshi.documentation.getting_started.onboarding.phase_foundation')}] --> B[#{t('oroshi.documentation.getting_started.onboarding.phase_supply')}]
+  B --> C[#{t('oroshi.documentation.getting_started.onboarding.phase_sales')}]
+  C --> D[#{t('oroshi.documentation.getting_started.onboarding.phase_shipping')}]") %>
+
+<h2><%= t('oroshi.documentation.getting_started.onboarding.checklist') %></h2>
+<p><%= t('oroshi.documentation.getting_started.onboarding.checklist_body') %></p>
+
+<%= doc_callout(:tip) do %>
+  <strong><%= t('oroshi.documentation.getting_started.onboarding.skip_option') %></strong><br>
+  <%= t('oroshi.documentation.getting_started.onboarding.skip_option_body') %>
+<% end %>
+
+<%= doc_see_also("admin/company_setup", "supply_chain/suppliers", "admin/buyer_management", "admin/product_management") %>

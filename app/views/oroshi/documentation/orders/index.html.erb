@@ -1,0 +1,32 @@
+<% title t('oroshi.documentation.orders.index.title') %>
+
+<h1><%= t('oroshi.documentation.orders.index.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.orders.index.intro') %></p>
+
+<h2><%= t('oroshi.documentation.orders.index.overview') %></h2>
+<p><%= t('oroshi.documentation.orders.index.overview_body') %></p>
+
+<h2><%= t('oroshi.documentation.orders.index.workflow_title') %></h2>
+<p><%= t('oroshi.documentation.orders.index.workflow_intro') %></p>
+
+<%= doc_diagram("graph TD
+  A[#{t('oroshi.documentation.orders.index.workflow_step_1')}] --> B[#{t('oroshi.documentation.orders.index.workflow_step_2')}]
+  B --> C[#{t('oroshi.documentation.orders.index.workflow_step_3')}]
+  C --> D[#{t('oroshi.documentation.orders.index.workflow_step_4')}]") %>
+
+<%= doc_steps do %>
+  <%= doc_step(1, 'oroshi.documentation.orders.index.workflow_step_1') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.index.workflow_step_1_desc') %></p>
+  <% end %>
+  <%= doc_step(2, 'oroshi.documentation.orders.index.workflow_step_2') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.index.workflow_step_2_desc') %></p>
+  <% end %>
+  <%= doc_step(3, 'oroshi.documentation.orders.index.workflow_step_3') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.index.workflow_step_3_desc') %></p>
+  <% end %>
+  <%= doc_step(4, 'oroshi.documentation.orders.index.workflow_step_4') do %>
+    <p class="text-muted mb-0"><%= t('oroshi.documentation.orders.index.workflow_step_4_desc') %></p>
+  <% end %>
+<% end %>
+
+<%= doc_see_also("orders/creating_orders", "orders/order_lifecycle", "orders/dashboard_tabs") %>

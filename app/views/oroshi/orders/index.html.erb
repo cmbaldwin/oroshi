@@ -6,8 +6,11 @@
 
     <div class="container-fluid overflow-x-auto">
         <div class="card text-center">
-            <div class="card-header">
-                <%= render partial: 'oroshi/orders/dashboard/shared/order_view_nav' %>
+            <div class="card-header d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <%= render partial: 'oroshi/orders/dashboard/shared/order_view_nav' %>
+                </div>
+                <%= documentation_help_link('orders', 'dashboard_tabs') %>
             </div>
             <div class="card-body" style="min-height: 45rem;">
                 <%= turbo_frame_tag 'orders_dashboard',

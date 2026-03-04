@@ -3,6 +3,7 @@
     <div class="material-navigation card" style="min-width: 15rem;">
         <div class="p-2 d-flex justify-content-between align-items-center align-middle">
             <h6 class="mb-0">製造材料</h6>
+            <%= documentation_help_link('financials', 'materials_costs') %>
         </div>
         <% if @materials.exists? %>
         <div class="list-group overflow-auto border" style="max-height: 65vh;">

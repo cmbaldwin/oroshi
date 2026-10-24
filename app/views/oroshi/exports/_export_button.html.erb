@@ -1,0 +1,31 @@
+<%# Reusable export dropdown button for dashboard views %>
+<%# locals: (export_type:, date:, additional_params: {}) %>
+<div class="dropdown d-inline-block">
+  <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+          data-bs-toggle="dropdown" aria-expanded="false">
+    <%= icon("download") %> <%= t('oroshi.exports.button') %>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><h6 class="dropdown-menu-header px-3 py-1 text-muted small"><%= t('oroshi.exports.current_view') %></h6></li>
+    <% %w[csv xlsx pdf json].each do |fmt| %>
+      <li>
+        <%= button_to exports_path,
+              method: :post,
+              params: { export_type: export_type, format_type: fmt, date: date }.merge(additional_params),
+              class: "dropdown-item small",
+              data: { turbo_prefetch: false } do %>
+          <%= export_format_icon(fmt) %> <%= t("oroshi.exports.formats.#{fmt}") %>
+        <% end %>
+      </li>
+    <% end %>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <a href="#" class="dropdown-item small"
+         data-bs-toggle="modal" data-bs-target="#date_range_export_modal_<%= export_type %>">
+        <%= icon("calendar-range") %> <%= t('oroshi.exports.date_range') %>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<%= render "oroshi/exports/date_range_export", export_type: export_type %>

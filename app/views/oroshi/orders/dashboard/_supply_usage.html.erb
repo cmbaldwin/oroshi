@@ -1,7 +1,10 @@
 <%= turbo_frame_tag 'orders_dashboard' do %>
   <div class="card mb-2">
-    <div class="card-header p-1 d-flex gap-2">
+    <div class="card-header p-1 d-flex gap-2 align-items-center">
       供給変種・在庫 表示/非表示
+      <div class="ms-auto">
+        <%= render 'oroshi/exports/export_button', export_type: 'inventory', date: @date %>
+      </div>
     </div>
     <div class="card-body">
       <div class="d-flex flex-column flex-lg-row justify-content-center align-items-stretch align-middle gap-2 mb-2">

@@ -30,6 +30,9 @@
 Oroshi::Engine.routes.draw do
   root to: "dashboard#index"
 
+  # Exports
+  resources :exports, only: [ :create ]
+
   # Legal pages
   get "privacy_policy", to: "legal#privacy_policy", as: :privacy_policy
   get "terms_of_service", to: "legal#terms_of_service", as: :terms_of_service

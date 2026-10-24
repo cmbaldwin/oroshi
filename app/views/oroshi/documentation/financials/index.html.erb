@@ -1,0 +1,24 @@
+<% title t('oroshi.documentation.financials.index.title') %>
+
+<h1><%= t('oroshi.documentation.financials.index.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.financials.index.intro') %></p>
+
+<h2><%= t('oroshi.documentation.financials.index.overview') %></h2>
+<p><%= t('oroshi.documentation.financials.index.overview_body') %></p>
+
+<h2><%= t('oroshi.documentation.financials.index.money_flow') %></h2>
+
+<%= doc_diagram("graph TD
+  A[Revenue] --> E[Profit]
+  B[Expenses] --> E
+  C[Commission] --> E
+  D[Adjustments] --> E") %>
+
+<ul>
+  <li><%= t('oroshi.documentation.financials.index.flow_revenue') %></li>
+  <li><%= t('oroshi.documentation.financials.index.flow_expenses') %></li>
+  <li><%= t('oroshi.documentation.financials.index.flow_commission') %></li>
+  <li><%= t('oroshi.documentation.financials.index.flow_profit') %></li>
+</ul>
+
+<%= doc_see_also("financials/revenue_tracking", "financials/profit_calculation", "financials/payment_receipts", "financials/invoices") %>

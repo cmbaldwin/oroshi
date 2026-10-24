@@ -1,0 +1,19 @@
+<% title t('oroshi.documentation.production.factory_floor.title') %>
+
+<h1><%= t('oroshi.documentation.production.factory_floor.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.production.factory_floor.intro') %></p>
+
+<h2><%= t('oroshi.documentation.production.factory_floor.views') %></h2>
+<ul>
+  <li><strong><%= t('oroshi.documentation.production.factory_floor.view_manufacture_date') %></strong></li>
+  <li><strong><%= t('oroshi.documentation.production.factory_floor.view_shipping_date') %></strong></li>
+  <li><strong><%= t('oroshi.documentation.production.factory_floor.view_by_zone') %></strong></li>
+</ul>
+
+<h2><%= t('oroshi.documentation.production.factory_floor.realtime') %></h2>
+
+<%= doc_callout(:info) do %>
+  <%= t('oroshi.documentation.production.factory_floor.realtime_body') %>
+<% end %>
+
+<%= doc_see_also("production/production_zones", "orders/dashboard_tabs") %>

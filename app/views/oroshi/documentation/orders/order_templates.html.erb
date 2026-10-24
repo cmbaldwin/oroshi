@@ -1,0 +1,21 @@
+<% title t('oroshi.documentation.orders.order_templates.title') %>
+
+<h1><%= t('oroshi.documentation.orders.order_templates.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.orders.order_templates.intro') %></p>
+
+<h2><%= t('oroshi.documentation.orders.order_templates.what_are_templates') %></h2>
+<p><%= t('oroshi.documentation.orders.order_templates.what_are_templates_body') %></p>
+
+<h2><%= t('oroshi.documentation.orders.order_templates.creating_template') %></h2>
+<p><%= t('oroshi.documentation.orders.order_templates.creating_template_body') %></p>
+
+<h2><%= t('oroshi.documentation.orders.order_templates.using_template') %></h2>
+
+<%= doc_callout(:tip) do %>
+  <%= t('oroshi.documentation.orders.order_templates.using_template_body') %>
+<% end %>
+
+<h2><%= t('oroshi.documentation.orders.order_templates.managing_templates') %></h2>
+<p><%= t('oroshi.documentation.orders.order_templates.managing_templates_body') %></p>
+
+<%= doc_see_also("orders/creating_orders", "orders/dashboard_tabs") %>

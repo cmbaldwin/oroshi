@@ -1,0 +1,32 @@
+<% title t('oroshi.documentation.chrome.title') %>
+
+<h1><%= t('oroshi.documentation.index.title') %></h1>
+<p class="lead text-muted"><%= t('oroshi.documentation.index.subtitle') %></p>
+
+<div class="row g-4 mt-2">
+  <% @sections.each do |section_key, pages| %>
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-<%= section_icon(section_key) %> text-primary me-2"></i>
+            <%= link_to t("oroshi.documentation.sections.#{section_key}"),
+                  documentation_section_path(section: section_key, locale: I18n.locale),
+                  class: "text-decoration-none" %>
+          </h5>
+          <p class="card-text text-muted small"><%= t("oroshi.documentation.section_descriptions.#{section_key}") %></p>
+          <ul class="list-unstyled small mb-0">
+            <% pages.each do |page_name| %>
+              <li class="mb-1">
+                <i class="bi bi-chevron-right text-muted me-1" style="font-size: 0.7rem;"></i>
+                <%= link_to t("oroshi.documentation.pages.#{section_key}.#{page_name}"),
+                      documentation_page_path(section: section_key, page: page_name, locale: I18n.locale),
+                      class: "text-decoration-none" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

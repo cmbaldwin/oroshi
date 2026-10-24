@@ -1,0 +1,18 @@
+<% title t('oroshi.documentation.orders.bundling_orders.title') %>
+
+<h1><%= t('oroshi.documentation.orders.bundling_orders.title') %></h1>
+<p class="lead"><%= t('oroshi.documentation.orders.bundling_orders.intro') %></p>
+
+<h2><%= t('oroshi.documentation.orders.bundling_orders.what_is_bundling') %></h2>
+<p><%= t('oroshi.documentation.orders.bundling_orders.what_is_bundling_body') %></p>
+
+<h2><%= t('oroshi.documentation.orders.bundling_orders.how_to_bundle') %></h2>
+<p><%= t('oroshi.documentation.orders.bundling_orders.how_to_bundle_body') %></p>
+
+<h2><%= t('oroshi.documentation.orders.bundling_orders.cost_savings') %></h2>
+
+<%= doc_callout(:tip) do %>
+  <%= t('oroshi.documentation.orders.bundling_orders.cost_savings_body') %>
+<% end %>
+
+<%= doc_see_also("orders/creating_orders", "shipping/shipping_methods", "financials/profit_calculation") %>

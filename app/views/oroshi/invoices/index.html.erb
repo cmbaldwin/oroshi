@@ -1,6 +1,8 @@
 <div class="container">
-    <div class="d-flex justify-content-center my-3">
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <div></div>
         <%= will_paginate @invoices %>
+        <%= documentation_help_link('financials', 'invoices') %>
     </div>
 
     <div class="row g-3">

@@ -5,7 +5,10 @@
     <%= render 'oroshi_modal' %>
 
     <div class="container-fluid d-flex flex-column flex-md-row align-items-start align-middle justify-content-center gap-2">
-        <div id="dashboard-nav" class="nav flex-column nav-pills me-3 text-center align-self-center align-self-md-start" style="min-width: 15rem;" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <div id="dashboard-nav" class="nav flex-column nav-pills me-3 text-center align-self-center align-self-md-start position-relative" style="min-width: 15rem;" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <div class="text-end mb-1">
+                <%= documentation_help_link('getting_started', 'navigation') %>
+            </div>
             <%= dashboard_nav_link(t('.home'), oroshi_dashboard_home_path, active: true) %>
             <%= dashboard_nav_link(t('.suppliers_organizations'), oroshi_dashboard_suppliers_organizations_path) %>
             

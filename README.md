@@ -86,7 +86,7 @@ bin/rails server
 2. **User モデルを作成**（`app/models/user.rb`）
 
    - Devise ベースの認証
-   - ロールベースアクセス（user、vip、admin、supplier、employee）
+   - ロールベースアクセス（user、managerial、admin、supplier、employee）
 
 3. **Oroshi エンジンをマウント**（routes）
 
@@ -156,7 +156,7 @@ bin/dev
 
 サンドボックスは以下を含む完全な Oroshi 統合をデモンストレーションします：
 
-- **3 人のデモユーザー**（管理者、VIP、一般）- すべてパスワード: `password123`
+- **3 人のデモユーザー**（管理者、マネジメント、一般）- すべてパスワード: `password123`
 - **完全なマスターデータ**（仕入先、商品、得意先、配送方法）
 - **マルチデータベース設定**（primary、queue、cache、cable）
 - **Bootstrap 5 CDN**（ビルドステップ不要）
@@ -181,7 +181,7 @@ bin/dev
 ### デモアカウント
 
 - **管理者**: `admin@oroshi.local` / `password123` - 全システムアクセス
-- **VIP**: `vip@oroshi.local` / `password123` - ダッシュボードと注文
+- **マネジメント**: `managerial@oroshi.local` / `password123` - ダッシュボードと注文
 - **一般**: `user@oroshi.local` / `password123` - 限定アクセス
 
 ### サンドボックスコマンド

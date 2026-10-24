@@ -6,7 +6,7 @@ FactoryBot.define do
     sequence(:username) { |n| "user#{n}" }
     password { "password123" }
     password_confirmation { "password123" }
-    role { :vip }
+    role { :managerial }
     approved { true }
     confirmed_at { Time.current }
 
@@ -25,8 +25,8 @@ FactoryBot.define do
       admin { true }
     end
 
-    trait :vip do
-      role { :vip }
+    trait :managerial do
+      role { :managerial }
     end
 
     trait :supplier do

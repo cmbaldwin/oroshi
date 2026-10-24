@@ -92,7 +92,7 @@ class Oroshi::DashboardController < Oroshi::ApplicationController
         @supplier_organization = Oroshi::SupplierOrganization.active.by_supplier_count.first
       end
     else
-      # Admin, VIP, Employee can view any organization
+      # Admin, Managerial, Employee can view any organization
       @supplier_organization = if params[:id].present?
                                  Oroshi::SupplierOrganization.find(params[:id])
       else

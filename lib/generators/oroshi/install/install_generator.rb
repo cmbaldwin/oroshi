@@ -23,7 +23,7 @@
 #
 # 2. Creates app/models/user.rb (unless --skip-user-model)
 #    - Devise-based authentication model
-#    - Role-based access (user, vip, admin, supplier, employee)
+#    - Role-based access (user, managerial, admin, supplier, employee)
 #
 # 3. Configures Devise routes (unless --skip-devise)
 #    - Adds devise_for :users to config/routes.rb

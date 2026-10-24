@@ -6,7 +6,7 @@ module Oroshi
   class OrderPolicyTest < ActiveSupport::TestCase
     setup do
       @admin = create(:user, :admin)
-      @vip = create(:user, :vip)
+      @managerial = create(:user, :managerial)
       @employee = create(:user, :employee)
       @supplier_user = create(:user, :supplier)
       @unapproved = create(:user, approved: false)
@@ -35,25 +35,25 @@ module Oroshi
       assert OrderPolicy.new(@admin, @order).destroy?
     end
 
-    # VIP permissions
-    test "vip can index orders" do
-      assert OrderPolicy.new(@vip, Order).index?
+    # Managerial permissions
+    test "managerial can index orders" do
+      assert OrderPolicy.new(@managerial, Order).index?
     end
 
-    test "vip can show order" do
-      assert OrderPolicy.new(@vip, @order).show?
+    test "managerial can show order" do
+      assert OrderPolicy.new(@managerial, @order).show?
     end
 
-    test "vip can create order" do
-      assert OrderPolicy.new(@vip, Order).create?
+    test "managerial can create order" do
+      assert OrderPolicy.new(@managerial, Order).create?
     end
 
-    test "vip can update order" do
-      assert OrderPolicy.new(@vip, @order).update?
+    test "managerial can update order" do
+      assert OrderPolicy.new(@managerial, @order).update?
     end
 
-    test "vip can destroy order" do
-      assert OrderPolicy.new(@vip, @order).destroy?
+    test "managerial can destroy order" do
+      assert OrderPolicy.new(@managerial, @order).destroy?
     end
 
     # Employee permissions
@@ -104,8 +104,8 @@ module Oroshi
       assert_equal Order.count, scope.count
     end
 
-    test "vip scope returns all orders" do
-      scope = OrderPolicy::Scope.new(@vip, Order.all).resolve
+    test "managerial scope returns all orders" do
+      scope = OrderPolicy::Scope.new(@managerial, Order.all).resolve
       assert_equal Order.count, scope.count
     end
 

@@ -15,7 +15,7 @@
             <li><%= link_to t('layouts.application.navbar.supplies'), oroshi.supplies_path, class: "nav-link light_link" %></li>
             <li class="nav-item"><%= link_to t('layouts.application.navbar.orders'), oroshi.orders_path, class: "nav-link light_link" %></li>
             <li class="nav-item"><%= link_to t('layouts.application.navbar.order_search'), oroshi.search_orders_path, class: "nav-link light_link" %></li>
-            <% if current_user.vip? || current_user.admin? %>
+            <% if current_user.managerial? || current_user.admin? %>
             <li><%= link_to t('layouts.application.navbar.payments'), oroshi.payment_receipts_path, class: "nav-link light_link" %></li>
             <% end %>
         </ul>

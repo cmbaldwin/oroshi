@@ -6,7 +6,7 @@ module Oroshi
   class SupplierPolicyTest < ActiveSupport::TestCase
     setup do
       @admin = create(:user, :admin)
-      @vip = create(:user, :vip)
+      @managerial = create(:user, :managerial)
       @employee = create(:user, :employee)
       @supplier_user = create(:user, :supplier)
 
@@ -40,28 +40,28 @@ module Oroshi
       assert SupplierPolicy.new(@admin, @other_supplier).destroy?
     end
 
-    # VIP permissions
-    test "vip can index suppliers" do
-      assert SupplierPolicy.new(@vip, Supplier).index?
+    # Managerial permissions
+    test "managerial can index suppliers" do
+      assert SupplierPolicy.new(@managerial, Supplier).index?
     end
 
-    test "vip can show any supplier" do
-      assert SupplierPolicy.new(@vip, @my_supplier).show?
-      assert SupplierPolicy.new(@vip, @other_supplier).show?
+    test "managerial can show any supplier" do
+      assert SupplierPolicy.new(@managerial, @my_supplier).show?
+      assert SupplierPolicy.new(@managerial, @other_supplier).show?
     end
 
-    test "vip can create supplier" do
-      assert SupplierPolicy.new(@vip, Supplier).create?
+    test "managerial can create supplier" do
+      assert SupplierPolicy.new(@managerial, Supplier).create?
     end
 
-    test "vip can update any supplier" do
-      assert SupplierPolicy.new(@vip, @my_supplier).update?
-      assert SupplierPolicy.new(@vip, @other_supplier).update?
+    test "managerial can update any supplier" do
+      assert SupplierPolicy.new(@managerial, @my_supplier).update?
+      assert SupplierPolicy.new(@managerial, @other_supplier).update?
     end
 
-    test "vip can destroy any supplier" do
-      assert SupplierPolicy.new(@vip, @my_supplier).destroy?
-      assert SupplierPolicy.new(@vip, @other_supplier).destroy?
+    test "managerial can destroy any supplier" do
+      assert SupplierPolicy.new(@managerial, @my_supplier).destroy?
+      assert SupplierPolicy.new(@managerial, @other_supplier).destroy?
     end
 
     # Employee permissions
@@ -122,8 +122,8 @@ module Oroshi
       assert_equal Supplier.count, scope.count
     end
 
-    test "vip scope returns all suppliers" do
-      scope = SupplierPolicy::Scope.new(@vip, Supplier.all).resolve
+    test "managerial scope returns all suppliers" do
+      scope = SupplierPolicy::Scope.new(@managerial, Supplier.all).resolve
       assert_equal Supplier.count, scope.count
     end
 

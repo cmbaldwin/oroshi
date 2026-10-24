@@ -40,7 +40,7 @@ class Oroshi::Supply < ApplicationRecord
   # Authorization scope - returns supplies accessible by the given user based on role
   def self.accessible_by(user)
     case
-    when user.admin?, user.vip?, user.employee?
+    when user.admin?, user.managerial?, user.employee?
       all
     when user.supplier?
       supplier_record = Oroshi::Supplier.find_by(user: user)

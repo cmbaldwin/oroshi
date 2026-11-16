@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "solid_cable", "~> 3.0"
 
   # Authentication & Authorization
-  spec.add_dependency "devise", "~> 4.9"
+  spec.add_dependency "devise", ">= 4.9", "< 6.0"
   spec.add_dependency "pundit", "~> 2.4"
 
   # Database

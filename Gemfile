@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "4.0.0"
+ruby "4.0.9"
 
 # Environment configuration
 gem "dotenv-rails", groups: %i[development test] # Load environment variables from .env files
